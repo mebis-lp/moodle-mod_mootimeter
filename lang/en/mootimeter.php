@@ -26,13 +26,20 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Mootimeter';
+$string['add_page'] = 'Add Page';
+$string['cannotview'] = 'You are not allowed to access this page!';
+$string['description'] = 'Description';
 $string['modulename'] = 'Mootimeter';
 $string['modulenameplural'] = 'Mootimeter';
+$string['pagetype'] = 'Page Type';
+$string['mootimeterfieldset'] = "More Mootimeter Settings";
 $string['mootimetername'] = "Name";
 $string['mootimetername_help'] = "Title of the Activity";
 $string['mootimetersettings'] = "Settings";
-$string['mootimeterfieldset'] = "More Mootimeter Settings";
+$string['please_select'] = 'Please select!';
 $string['pluginadministration'] = 'Moodimeter administration';
-$string['cannotview'] = 'You are not allowed to access this page!';
+$string['pluginname'] = 'Mootimeter';
+$string['subplugintype_mootimetertool'] = 'Mootimeter Tool';
+$string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
 $string['teacherview'] = 'Teacherview';
+$string['title'] = 'Title';

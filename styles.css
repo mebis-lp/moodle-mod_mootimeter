@@ -1,3 +1,87 @@
-#page-mod-mootimeter-teacherview .mootimetercontainer {
+.mootimetercontainer {
     height: 75vh;
+}
+
+.mootimetercard {
+    margin: 5px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+    height: 0;
+    width: calc(50% - 2 * 5px);
+    padding-bottom: calc(50% - 2 * 5px);
+}
+
+.mootimetercard:hover,
+.mootimetercardleftcol:hover,
+.active {
+    background-color: lightgray;
+}
+
+.mootimetercardleftcol {
+    margin: 5px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+    height: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.mootimetercardleftcol > p {
+    width: 100%;
+    padding: 10px;
+}
+
+.mootimeteraddpage {
+    padding-bottom: 50px;
+}
+
+.mootimeterpage {
+    padding-bottom: calc(100% - 2 * 5px);
+}
+
+@media (min-width: 768px) {
+    .mootimetercolselect {
+        margin-right: calc(-1 * var(--card-deck-margin));
+        margin-left: calc(-1 * var(--card-deck-margin));
+    }
+}
+
+@media (min-width: 576px) {
+    .mootimetercolselect {
+        margin-right: calc(-1 * var(--card-deck-margin));
+        margin-left: calc(-1 * var(--card-deck-margin));
+    }
+}
+
+@media (min-width: 480px) {
+    .mootimetercolselect {
+        margin-right: calc(- var(--card-deck-margin));
+        margin-left: calc(- var(--card-deck-margin));
+    }
+}
+
+.mootimetercolselect {
+    margin-top: 0px;
+    padding-left: 5px !important;
+    padding-right: 20px !important;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    height: 75vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    text-align: center;
+}
+
+.mootimeterfullwidth {
+    width: 100%;
+}
+
+.padding-left-5 {
+    padding-left: 5px;
 }

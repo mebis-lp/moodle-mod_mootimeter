@@ -44,5 +44,14 @@ function xmldb_mootimeter_upgrade($oldversion) {
     // You will also have to create the db/install.xml file by using the XMLDB Editor.
     // Documentation for the XMLDB Editor can be found at {@link https://docs.moodle.org/dev/XMLDB_editor}.
 
+    if ($oldversion < 2023020905) {
+
+        mootimetertool_wordcloud_create_tables();
+
+        // Mootimeter savepoint reached.
+        upgrade_mod_savepoint(true, 2023020905, 'mootimeter');
+    }
+
+
     return true;
 }

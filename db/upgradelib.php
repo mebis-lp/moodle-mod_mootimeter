@@ -35,3 +35,34 @@ function mod_mootimeter_helper_function() {
     //
     // For more information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
 }
+
+function mod_mootimeter_create_mootimeter_pages_table() {
+    global $DB;
+
+    $dbman = $DB->get_manager();
+
+    // Define table mootimeter_pages to be created.
+    $table = new xmldb_table('mootimeter_pages');
+
+    // Adding fields to table mootimeter_pages.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('instance', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('tool', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+    $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+    $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '5', null, null, null, null);
+    $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+    $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+    // Adding keys to table mootimeter_pages.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+    // Adding indexes to table mootimeter_pages.
+    $table->add_index('instance_tool', XMLDB_INDEX_NOTUNIQUE, ['instance', 'tool']);
+    $table->add_index('tool', XMLDB_INDEX_NOTUNIQUE, ['tool']);
+
+    // Conditionally launch create table for mootimeter_pages.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+}

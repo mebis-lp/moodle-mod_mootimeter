@@ -23,11 +23,15 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/lib.php');
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
 
 // Course module id.
 $id = optional_param('id', 0, PARAM_INT);
+$action = optional_param('a', "", PARAM_ALPHA);
+$paramtool = optional_param('tool', "", PARAM_ALPHA);
+$pageid = optional_param('pageid', 0, PARAM_INT);
+$paramtitle = optional_param('title', "", PARAM_ALPHA);
 
 // Activity instance id.
 $m = optional_param('m', 0, PARAM_INT);
@@ -42,6 +46,32 @@ if ($id) {
     $cm = get_coursemodule_from_instance('mootimeter', $moduleinstance->id, $course->id, false, MUST_EXIST);
 }
 
+$helper = new \mod_mootimeter\helper();
+
+if (!empty($action) && $action == "storepage") {
+    $record = new stdClass();
+    $record->tool = $paramtool;
+    $record->instance = $cm->instance;
+    $record->title = $paramtitle;
+    $record->description = optional_param('description', "", PARAM_ALPHA);
+    $pageid = $helper->store_page($record);
+    redirect(new moodle_url('/mod/mootimeter/teacherview.php', ['id' => $cm->id, 'pageid' => $pageid]));
+}
+
+$mt = new \mod_mootimeter\plugininfo\mootimetertool();
+$enabledtools = $mt->get_enabled_plugins();
+$tools = [];
+foreach ($enabledtools as $key => $tool) {
+    $tooltemp = [];
+    $tooltemp['pix'] = "tools/" . $tool . "/pix/" . $tool . ".svg";
+    $tooltemp['name'] = get_string('pluginname', 'mootimetertool_' . $tool);
+    $tooltemp['tool'] = $tool;
+    $tooltemp['selected'] = ($tool == $paramtool) ? "selected" : "";
+    $tools[] = $tooltemp;
+}
+
+$pages = $helper->get_pages($cm->instance);
+// print_r($pages);die;
 require_login($course, true, $cm);
 
 $modulecontext = context_module::instance($cm->id);
@@ -54,10 +84,12 @@ $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mootimeter', $moduleinstance);
 $event->trigger();
 
-$PAGE->set_url('/mod/mootimeter/teacherview.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/mootimeter/teacherview.php', ['id' => $cm->id]);
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
+$cmid = $PAGE->url->get_param('id');
+
 
 // Redirect to main view.php if user has not enough capabilities.
 if (!has_capability('mod/mootimeter:addinstance', \context_module::instance($cm->id))) {
@@ -66,10 +98,35 @@ if (!has_capability('mod/mootimeter:addinstance', \context_module::instance($cm-
 }
 
 echo $OUTPUT->header();
+
+$paramspages = $helper->get_pages_template($pages, $pageid);
 $params = [
-    'containerclasses' => "border rounded mod_introbox",
-    'mootimetercolselect' => "",
+    'containerclasses' => "border rounded",
+    'mootimetercolselect' => "border-left ",
+    'mootimetercard' => 'border rounded',
+    'cmid' => $cmid,
+    'pages' => $paramspages,
 ];
+
+if (!empty($action) && $action == 'addpage' || $action == 'editpage' || !empty($pageid)) {
+    $selectparams = [
+        'cmid' => $cmid,
+        'tools' => $tools,
+        'pageid' => $pageid,
+    ];
+    $params['select'] = $OUTPUT->render_from_template("mod_mootimeter/form_select_tool", $selectparams);
+}
+
+if ((!empty($action) && $action == 'editpage') || !empty($pageid)) {
+    $editformparams = [
+        'cmid' => $cmid,
+        'pageid' => $pageid,
+        'title' => $paramtitle,
+        'tool' => $tool,
+    ];
+    $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
+}
+//  print_R($params);die;
 echo $OUTPUT->render_from_template("mod_mootimeter/edit_screen", $params);
 
 echo $OUTPUT->footer();
