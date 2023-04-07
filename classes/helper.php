@@ -25,6 +25,8 @@
 
 namespace mod_mootimeter;
 
+use stdClass;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -73,6 +75,11 @@ class helper {
         return $DB->get_records('mootimeter_pages', ['instance' => $instanceid]);
     }
 
+    public function get_page(int $instanceid, $defaultpageid = 0){
+        global $DB;
+        return $DB->get_record('mootimeter_pages', ['id' => $defaultpageid]);
+    }
+
     /**
      * Get pages array for renderer.
      *
@@ -91,4 +98,5 @@ class helper {
         }
         return $temppages;
     }
+
 }

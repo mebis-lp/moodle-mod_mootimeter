@@ -1,8 +1,12 @@
+<script src="tools/wordcloud/node_modules/wordcloud/src/wordcloud2.js"></script>
 <div class="mootimetercontainer {{{containerclasses}}}">
 
   <div class="row ">
 
     <div class="mootimetercolcontent col-md-10">
+      <div class="mootimeterfullwidth" id="wordcloudcanvas" style="margin: 10px; height:70vH" data-answers="{{answerslist}}">
+
+      </div>
 
     </div>
 
@@ -13,3 +17,9 @@
   </div>
 
 </div>
+<script>
+  let mtmtcanvas = document.getElementById('wordcloudcanvas');
+  let answers = JSON.parse(mtmtcanvas.dataset.answers);
+  console.log(answers);
+  WordCloud(mtmtcanvas, { list : answers });
+</script>

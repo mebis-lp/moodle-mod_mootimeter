@@ -44,27 +44,27 @@
 }
 
 @media (min-width: 768px) {
-    .mootimetercolselect {
+    .mootimetercolright {
         margin-right: calc(-1 * var(--card-deck-margin));
         margin-left: calc(-1 * var(--card-deck-margin));
     }
 }
 
 @media (min-width: 576px) {
-    .mootimetercolselect {
+    .mootimetercolright {
         margin-right: calc(-1 * var(--card-deck-margin));
         margin-left: calc(-1 * var(--card-deck-margin));
     }
 }
 
 @media (min-width: 480px) {
-    .mootimetercolselect {
+    .mootimetercolright {
         margin-right: calc(- var(--card-deck-margin));
         margin-left: calc(- var(--card-deck-margin));
     }
 }
 
-.mootimetercolselect {
+.mootimetercolright {
     margin-top: 0px;
     padding-left: 5px !important;
     padding-right: 20px !important;

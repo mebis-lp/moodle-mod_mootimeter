@@ -23,14 +23,20 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/lib.php');
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
 
 // Course module id.
 $id = optional_param('id', 0, PARAM_INT);
 
 // Activity instance id.
 $m = optional_param('m', 0, PARAM_INT);
+
+// Page id to show.
+$pageid = optional_param('pageid', 0, PARAM_INT);
+
+// Get action parameter.
+$action = optional_param('a', "", PARAM_ALPHA);
 
 if ($id) {
     $cm = get_coursemodule_from_id('mootimeter', $id, 0, false, MUST_EXIST);
@@ -44,15 +50,21 @@ if ($id) {
 
 require_login($course, true, $cm);
 
+$helper = new \mod_mootimeter\helper();
+
+if (empty($pageid)) {
+    $pages = $helper->get_pages($cm->instance);
+    $page = array_shift($pages);
+} else {
+    $page = $helper->get_page($cm->instance, $pageid);
+}
+
 $modulecontext = context_module::instance($cm->id);
 
 $event = \mod_mootimeter\event\course_module_viewed::create(array(
     'objectid' => $moduleinstance->id,
     'context' => $modulecontext
 ));
-$event->add_record_snapshot('course', $course);
-$event->add_record_snapshot('mootimeter', $moduleinstance);
-$event->trigger();
 
 $PAGE->set_url('/mod/mootimeter/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
@@ -61,10 +73,38 @@ $PAGE->set_context($modulecontext);
 
 echo $OUTPUT->header();
 
-if(has_capability('mod/mootimeter:addinstance', \context_module::instance($cm->id))) {
-
-
-
+if (empty($page)) {
+    echo "No Page selected.";
+    echo $OUTPUT->footer();
+    die;
 }
+
+$classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+$toolhelper= new $classname();
+
+if(!empty($action) && $action == 'insertanswer'){
+    $answer = optional_param('answer', '', PARAM_TEXT);
+    $toolhelper->insert_answer($page, $answer);
+}
+
+
+
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot('mootimeter', $moduleinstance);
+$event->trigger();
+
+
+
+$params = [
+    'containerclasses' => "border rounded",
+    'mootimetercolright' => "border-left ",
+    'mootimetercard' => 'border rounded',
+    'cmid' => $cm->id,
+    'title' => s($page->title),
+    'description' => s($page->description),
+];
+$params = array_merge($params, $toolhelper->get_renderer_params($page));
+
+echo $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_wrapper", $params);
 
 echo $OUTPUT->footer();

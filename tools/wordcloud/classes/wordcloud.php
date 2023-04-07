@@ -25,7 +25,9 @@
 
 namespace mootimetertool_wordcloud;
 
-class wordcloud extends \mod_mootimeter\toolhelper{
+use dml_exception;
+
+class wordcloud extends \mod_mootimeter\toolhelper {
 
     /**
      *
@@ -49,9 +51,51 @@ class wordcloud extends \mod_mootimeter\toolhelper{
      * @param int $pageid
      * @return mixed
      */
-    public function get_user_answers(int $userid, int $pageid){
+    public function get_user_answers(int $userid, int $pageid) {
         global $DB;
         return $DB->get_records('mtmt_wordcloud_answers', ['usermodified' => $userid, 'pageid' => $pageid]);
+    }
+
+    /**
+     * Get all answers of a page.
+     *
+     * @param int $pageid
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_answers(int $pageid){
+        global $DB;
+        return $DB->get_records('mtmt_wordcloud_answers', ['pageid' => $pageid]);
+    }
+
+    /**
+     * Get all grouped and counted answers of a page.
+     *
+     * @param int $pageid
+     * @return array
+     * @throws dml_exception
+     */
+    protected function get_answers_list(int $pageid){
+        global $DB;
+        $params = [
+            'pageid' => $pageid,
+        ];
+        $sql = "SELECT answer, count(*) * 24 FROM {mtmt_wordcloud_answers} WHERE pageid = :pageid GROUP BY answer";
+        return $DB->get_records_sql($sql, $params);
+    }
+
+    /**
+     * Convert a grouped answer list to an array, that is readable by wordcloud2.js.
+     *
+     * @param array $answerslist
+     * @return array
+     */
+    protected function convert_answer_list_to_wordcloud_list(array $answerslist){
+        $templist = [];
+        foreach($answerslist as $key=>$value){
+            $templist[] = array_values((array)$value);
+        }
+        return $templist;
     }
 
     /**
@@ -60,13 +104,13 @@ class wordcloud extends \mod_mootimeter\toolhelper{
      * @param object $page
      * @return array
      */
-    public function get_renderer_params(object $page){
+    public function get_renderer_params(object $page) {
         global $USER;
         $answers = $this->get_user_answers($USER->id, $page->id);
-        foreach($answers as $answer){
+        foreach ($answers as $answer) {
             $params['answers'][] = ['answer' => $answer->answer];
         }
+        $params['answerslist'] = json_encode($this->convert_answer_list_to_wordcloud_list($this->get_answers_list($page->id)));
         return $params;
     }
-
 }

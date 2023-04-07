@@ -46,6 +46,14 @@ if ($id) {
     $cm = get_coursemodule_from_instance('mootimeter', $moduleinstance->id, $course->id, false, MUST_EXIST);
 }
 
+// Check if user is logged in.
+require_login($course, true, $cm);
+
+// Redirect user with too less capabilities.
+if (!has_capability('mod/mootimeter:addinstance', \context_module::instance($cm->id))) {
+    redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id]));
+}
+
 $helper = new \mod_mootimeter\helper();
 
 if (!empty($action) && $action == "storepage") {
@@ -71,8 +79,6 @@ foreach ($enabledtools as $key => $tool) {
 }
 
 $pages = $helper->get_pages($cm->instance);
-// print_r($pages);die;
-require_login($course, true, $cm);
 
 $modulecontext = context_module::instance($cm->id);
 
@@ -102,7 +108,7 @@ echo $OUTPUT->header();
 $paramspages = $helper->get_pages_template($pages, $pageid);
 $params = [
     'containerclasses' => "border rounded",
-    'mootimetercolselect' => "border-left ",
+    'mootimetercolright' => "border-left ",
     'mootimetercard' => 'border rounded',
     'cmid' => $cmid,
     'pages' => $paramspages,
