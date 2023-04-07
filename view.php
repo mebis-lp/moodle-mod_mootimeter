@@ -56,7 +56,7 @@ if (empty($pageid)) {
     $pages = $helper->get_pages($cm->instance);
     $page = array_shift($pages);
 } else {
-    $page = $helper->get_page($cm->instance, $pageid);
+    $page = $helper->get_page($pageid, $cm->instance,);
 }
 
 $modulecontext = context_module::instance($cm->id);
@@ -87,18 +87,15 @@ if(!empty($action) && $action == 'insertanswer'){
     $toolhelper->insert_answer($page, $answer);
 }
 
-
-
 $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mootimeter', $moduleinstance);
 $event->trigger();
-
-
 
 $params = [
     'containerclasses' => "border rounded",
     'mootimetercolright' => "border-left ",
     'mootimetercard' => 'border rounded',
+    'pageid' => $page->id,
     'cmid' => $cm->id,
     'title' => s($page->title),
     'description' => s($page->description),

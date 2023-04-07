@@ -25,6 +25,7 @@
 
 namespace mod_mootimeter;
 
+use dml_exception;
 use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -75,9 +76,21 @@ class helper {
         return $DB->get_records('mootimeter_pages', ['instance' => $instanceid]);
     }
 
-    public function get_page(int $instanceid, $defaultpageid = 0){
+    /**
+     * Get page object.
+     *
+     * @param int $pageid
+     * @param int $instanceid
+     * @return mixed
+     * @throws dml_exception
+     */
+    public function get_page(int $pageid, int $instanceid = 0) {
         global $DB;
-        return $DB->get_record('mootimeter_pages', ['id' => $defaultpageid]);
+        $params = ['id' => $pageid];
+        if (!empty($instanceid)) {
+            $params['instance'] = $instanceid;
+        }
+        return $DB->get_record('mootimeter_pages', $params);
     }
 
     /**
@@ -88,7 +101,7 @@ class helper {
      */
     public function get_pages_template($pages, $pageid) {
         $temppages = [];
-        foreach($pages as $page){
+        foreach ($pages as $page) {
             $temppages[] = [
                 'title' => $page->title,
                 'pix' => "tools/" . $page->tool . "/pix/" . $page->tool . ".svg",
@@ -98,5 +111,4 @@ class helper {
         }
         return $temppages;
     }
-
 }
