@@ -50,7 +50,7 @@ if ($id) {
 require_login($course, true, $cm);
 
 // Redirect user with too less capabilities.
-if (!has_capability('mod/mootimeter:addinstance', \context_module::instance($cm->id))) {
+if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
     redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id]));
 }
 

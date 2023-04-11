@@ -25,26 +25,38 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'mod/mootimeter:addinstance' => array(
+    'mod/mootimeter:addinstance' => [
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        ),
+        ],
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    ),
+    ],
 
-    'mod/mootimeter:view' => array(
+    'mod/mootimeter:moderator' => [
+        'riskbitmask' => RISK_XSS,
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+            'autor' => CAP_ALLOW,
+        ],
+    ],
+
+    'mod/mootimeter:view' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'user' => CAP_ALLOW,
             'guest' => CAP_ALLOW
-        )
-    ),
-);
+        ],
+    ],
+];

@@ -300,8 +300,10 @@ function mootimeter_extend_navigation($mootimeternode, $course, $module, $cm) {
  */
 function mootimeter_extend_settings_navigation($settingsnav, $mootimeternode = null) {
 
-    $url = new moodle_url('/mod/mootimeter/teacherview.php', ['id' => $settingsnav->get_page()->cm->id]);
-    $linktext =
-    get_string("teacherview", "mod_mootimeter");
-    $mootimeternode->add($linktext, $url);
+    if (has_capability('mod/mootimeter:moderator', $settingsnav->get_page()->cm->context)) {
+        $url = new moodle_url('/mod/mootimeter/teacherview.php', ['id' => $settingsnav->get_page()->cm->id]);
+        $linktext =
+            get_string("teacherview", "mod_mootimeter");
+        $mootimeternode->add($linktext, $url);
+    }
 }
