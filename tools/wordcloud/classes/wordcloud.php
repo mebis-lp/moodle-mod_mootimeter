@@ -63,7 +63,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @return array
      * @throws dml_exception
      */
-    public function get_answers(int $pageid){
+    public function get_answers(int $pageid) {
         global $DB;
         return $DB->get_records('mtmt_wordcloud_answers', ['pageid' => $pageid]);
     }
@@ -75,7 +75,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @return array
      * @throws dml_exception
      */
-    protected function get_answers_list(int $pageid){
+    protected function get_answers_list(int $pageid) {
         global $DB;
         $params = [
             'pageid' => $pageid,
@@ -90,12 +90,23 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @param array $answerslist
      * @return array
      */
-    protected function convert_answer_list_to_wordcloud_list(array $answerslist){
+    protected function convert_answer_list_to_wordcloud_list(array $answerslist) {
         $templist = [];
-        foreach($answerslist as $key=>$value){
+        foreach ($answerslist as $key => $value) {
             $templist[] = array_values((array)$value);
         }
         return $templist;
+    }
+
+    /**
+     * Get the answer list in wordcloud2 format.
+     *
+     * @param int $pageid
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_answerlist(int $pageid): array {
+        return $this->convert_answer_list_to_wordcloud_list($this->get_answers_list($pageid));
     }
 
     /**
@@ -106,11 +117,37 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      */
     public function get_renderer_params(object $page) {
         global $USER;
+
+        // Parameters for Badges list.
         $answers = $this->get_user_answers($USER->id, $page->id);
         foreach ($answers as $answer) {
             $params['answers'][] = ['answer' => $answer->answer];
         }
-        $params['answerslist'] = json_encode($this->convert_answer_list_to_wordcloud_list($this->get_answers_list($page->id)));
+
+        // Parameter for initial wordcloud rendering.
+        $params['answerslist'] = json_encode($this->get_answerlist($page->id));
+
+        // Parameter for last updated.
+        $params['lastupdated'] = $this->get_last_update_time($page->id);
+
         return $params;
+    }
+
+    /**
+     * Get the lastupdated timestamp.
+     *
+     * @param int $pageid
+     * @return int
+     */
+    public function get_last_update_time(int $pageid): int {
+        global $DB;
+
+        $records = $DB->get_records('mtmt_wordcloud_answers', ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
+
+        if(empty($records)){
+            return 0;
+        }
+        $record = array_shift($records);
+        return $record->timecreated;
     }
 }

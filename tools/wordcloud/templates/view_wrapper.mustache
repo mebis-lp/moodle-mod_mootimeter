@@ -15,11 +15,27 @@
     </div>
 
   </div>
-
+  <input type="hidden" id="mootimeter_lastupdated" value="{{lastupdated}}">
 </div>
 <script>
+  redrawwordcloud()
+
+  const event = new Event("redrawwordcloud");
   let mtmtcanvas = document.getElementById('wordcloudcanvas');
-  let answers = JSON.parse(mtmtcanvas.dataset.answers);
-  console.log(answers);
-  WordCloud(mtmtcanvas, { list : answers });
+  mtmtcanvas.addEventListener(
+    "redrawwordcloud",
+    (e) => {
+      redrawwordcloud();
+    },
+    false
+  );
+
+  function redrawwordcloud() {
+    let mtmtcanvas = document.getElementById('wordcloudcanvas');
+    let answers = JSON.parse(mtmtcanvas.dataset.answers);
+    WordCloud(mtmtcanvas, { list: answers });
+  }
 </script>
+{{#js}}
+require(['mootimetertool_wordcloud/redraw_wordcloud'], (module) => module.init());
+{{/js}}

@@ -32,6 +32,14 @@ $functions = [
         'description'   => 'Store answer of mootimetertool_wordcloud.',
         'type'          => 'write',
         'ajax'          => true,
-        'capabilities'  => '',//'mod/mootimeter:view',
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
+    'mootimetertool_wordcloud_get_answers' => [
+        'classname'     => 'mootimetertool_wordcloud\external\get_answers',
+        'methodname'    => 'execute',
+        'description'   => 'Store answer of mootimetertool_wordcloud.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
     ],
 ];

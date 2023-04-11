@@ -32,8 +32,10 @@ export const init = () => {
                 fail: notification.exception,
             }]);
 
+            // Empty the input field after post.
+            document.getElementById('mootimeter_type_answer').value = "";
+
             return;
         }
-        window.console.log("Knopf gedrückt");
     });
 };
