@@ -4,14 +4,8 @@
     <input type="hidden" name="pageid" value="{{pageid}}">
     <input type="hidden" name="tool" value="{{tool}}">
 
-    <div>
-        <label for="mootimeter_title" class="form-label">{{#str}} title , mod_mootimeter {{/str}}</label>
-        <input id="mootimeter_title" type="text" class="form-control mootimeterfullwidth" name="title" value="{{title}}">
-    </div>
-    <div>
-        <label for="mootimeter_description" class="form-label">{{#str}} description , mod_mootimeter {{/str}}</label>
-        <textarea class="form-control mootimeterfullwidth" id="mootimeter_description" name="description">{{{description}}}</textarea>
-    </div>
+    {{> mod_mootimeter/snippet_accordion_wrapper}}
+
     <hr>
     <button type="submit" name="a" value="storepage" class="btn btn-primary">{{#str}} save, core {{/str}}</button>
 

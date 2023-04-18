@@ -1,0 +1,45 @@
+{{!
+This file is part of Moodle - http://moodle.org/
+
+Moodle is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Moodle is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Moodle. If not, see
+<http: //www.gnu.org/licenses />.
+}}
+{{!
+Example context (json):
+    {
+        "accordionelementheaderid": 'myaccordionelement-1',
+        "accordionelementbodyid": "myaccordionelementbody-1",
+        "accordionwrapperid": "accordionwrapper-1",
+
+        "accordionelementheading": "My Heading",
+        "accordionelementcontent": "This is the body of the accordion",
+    }
+}}
+
+<div class="card">
+    <div class="card-header" id="{{accordionelementheaderid}}">
+        <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#{{accordionelementbodyid}}" aria-expanded="true"
+                aria-controls="{{accordionelementbodyid}}">
+                {{accordionelementheading}}
+            </button>
+        </h2>
+    </div>
+
+    <div id="{{accordionelementbodyid}}" class="collapse show" aria-labelledby="{{accordionelementheaderid}}" data-parent="#{{accordionwrapperid}}">
+        <div class="card-body">
+            {{accordionelementcontent}}
+        </div>
+    </div>
+</div>

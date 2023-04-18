@@ -28,3 +28,10 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Wordcloud';
 $string['type_answer'] = 'Insert a word or statement.';
+$string['showresult_label'] = 'Show results';
+$string['showresult_helptitle'] = 'Show results';
+$string['showresult_help'] = 'Controls the display of the results.';
+$string['showresultlive'] = 'live';
+$string['showresultteacherpermission'] = 'on teacher permission';
+$string['show_results'] ='Show result wordcloud';
+$string['hide_results'] ='Hide result wordcloud';

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/mootimeter/db" VERSION="20230406" COMMENT="XMLDB file for Moodle mod_mootimeter"
+<XMLDB PATH="mod/mootimeter/db" VERSION="20230412" COMMENT="XMLDB file for Moodle mod_mootimeter"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -36,6 +36,21 @@
       <INDEXES>
         <INDEX NAME="instance_tool" UNIQUE="false" FIELDS="instance, tool"/>
         <INDEX NAME="tool" UNIQUE="false" FIELDS="tool"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="mootimeter_tool_settings" COMMENT="Tool specific settings">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="tool" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="pageid" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="tool_pageid_name" UNIQUE="true" FIELDS="tool, pageid, name"/>
       </INDEXES>
     </TABLE>
   </TABLES>

@@ -10,6 +10,8 @@
         <input id="mootimeter_type_answer" type="text" class="form-control mootimeterfullwidth" name="answer" data-pageid="{{pageid}}">
     </div>
 </div>
+{{{teacherpermission}}}
 {{#js}}
 require(['mootimetertool_wordcloud/store_answer'], (module) => module.init());
+require(['mootimetertool_wordcloud/toggle_teacherpermission'], (module) => module.init());
 {{/js}}

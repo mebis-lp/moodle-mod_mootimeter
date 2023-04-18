@@ -2,6 +2,30 @@
     height: 75vh;
 }
 
+.mootimeter_textcenter {
+    text-align: center;
+}
+
+.mootimeter_margin_top_5 {
+    margin-top: 5px;
+}
+
+.mootimeter_margin_top_50 {
+    margin-top: 50px;
+}
+
+.mootimeterfullwidth {
+    width: 100%;
+}
+
+.padding-left-5 {
+    padding-left: 5px;
+}
+
+.mootimetertoolsettingsbody {
+    text-align: left;
+}
+
 .mootimetercard {
     margin: 5px;
     position: relative;
@@ -30,7 +54,7 @@
     text-align: center;
 }
 
-.mootimetercardleftcol > p {
+.mootimetercardleftcol>p {
     width: 100%;
     padding: 10px;
 }
@@ -65,7 +89,6 @@
 }
 
 .mootimetercolright {
-    margin-top: 0px;
     padding-left: 5px !important;
     padding-right: 20px !important;
     border-right: none;
@@ -75,13 +98,15 @@
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    text-align: center;
 }
 
-.mootimeterfullwidth {
-    width: 100%;
+.mootimetertoolsettingsdiv {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid lightgrey;
 }
 
-.padding-left-5 {
-    padding-left: 5px;
+.mootimetertoolsettingsdiv:last-child {
+    margin-bottom: 0;
+    border-bottom: 0;
 }

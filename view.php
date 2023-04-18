@@ -91,17 +91,6 @@ $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mootimeter', $moduleinstance);
 $event->trigger();
 
-$params = [
-    'containerclasses' => "border rounded",
-    'mootimetercolright' => "border-left ",
-    'mootimetercard' => 'border rounded',
-    'pageid' => $page->id,
-    'cmid' => $cm->id,
-    'title' => s($page->title),
-    'description' => s($page->description),
-];
-$params = array_merge($params, $toolhelper->get_renderer_params($page));
-
-echo $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_wrapper", $params);
+echo $helper->get_rendered_page_content($page, $cm);
 
 echo $OUTPUT->footer();

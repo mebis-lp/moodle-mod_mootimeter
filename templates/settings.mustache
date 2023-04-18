@@ -1,0 +1,108 @@
+{{!
+This file is part of Moodle - http://moodle.org/
+
+Moodle is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Moodle is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Moodle. If not, see
+<http: //www.gnu.org/licenses />.
+}}
+{{!
+Example context (json):
+{
+"{type}": true, => type = select || checkbox
+"id": 'labelid-1',
+"label": "This is the settings label",
+"helptitle": "This is the settings help title",
+"help": "This is the settings help string",
+"options": [
+'value': "abc123",
+'name': "optionname",
+'selected': true|false,
+]
+}
+}}
+<div>
+    {{#settingsarray}}
+
+    {{#checkbox}}
+    <div class="form-check d-flex mootimetertoolsettingsdiv">
+        <input type="checkbox" class="form-check-input " value="{{value}}" name="{{name}}" id="{{id}}" {{#checked}}checked{{/checked}}>
+        <label for="{{id}}" class="d-inline">{{{label}}}</label>
+        {{#help}}
+        <div class="ml-2 d-flex align-items-center align-self-start">
+            <a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover" data-placement="right" data-content="{{help}}" data-html="true" tabindex="0"
+                data-trigger="focus" aria-label="Hilfe">
+                <i class="icon fa fa-question-circle text-info fa-fw " title="{{helptitle}}" role="img" aria-label="{{helptitle}}"></i>
+            </a>
+        </div>
+        {{/help}}
+    </div>
+    {{/checkbox}}
+
+    {{#select}}
+    <div class="form-select mootimetertoolsettingsdiv">
+        <div class="d-flex">
+            <label for="{{id}}" class="d-inline">{{{label}}}</label>
+            {{#help}}
+            <div class="ml-2 d-flex align-items-center align-self-start">
+                <a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover" data-placement="right" data-content="{{help}}" data-html="true" tabindex="0"
+                    data-trigger="focus" aria-label="Hilfe">
+                    <i class="icon fa fa-question-circle text-info fa-fw " title="{{helptitle}}" role="img" aria-label="{{helptitle}}"></i>
+                </a>
+            </div>
+            {{/help}}
+        </div>
+        <select class="form-control mootimeterfullwidth" name="{{name}}">
+            <option>{{#str}} please_select, mod_mootimeter {{/str}}</option>
+            {{#options}}
+            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{title}}</option>
+            {{/options}}
+        </select>
+    </div>
+    {{/select}}
+
+    {{#number}}
+    <div class="form-select mootimetertoolsettingsdiv">
+        <div class="d-flex">
+            <label for="{{id}}" class="d-inline">{{{label}}}</label>
+            {{#help}}
+            <div class="ml-2 d-flex align-items-center align-self-start">
+                <a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover" data-placement="right" data-content="{{help}}" data-html="true" tabindex="0"
+                    data-trigger="focus" aria-label="Hilfe">
+                    <i class="icon fa fa-question-circle text-info fa-fw " title="{{helptitle}}" role="img" aria-label="{{helptitle}}"></i>
+                </a>
+            </div>
+            {{/help}}
+        </div>
+        <input type="number" class="form-control mootimeterfullwidth" name="{{name}}" id="{{id}}" value="{{value}}">
+    </div>
+    {{/number}}
+
+    {{#text}}
+    <div class="form-select mootimetertoolsettingsdiv">
+        <div class="d-flex">
+            <label for="{{id}}" class="d-inline">{{{label}}}</label>
+            {{#help}}
+            <div class="ml-2 d-flex align-items-center align-self-start">
+                <a class="btn btn-link p-0" role="button" data-container="body" data-toggle="popover" data-placement="right" data-content="{{help}}" data-html="true" tabindex="0"
+                    data-trigger="focus" aria-label="Hilfe">
+                    <i class="icon fa fa-question-circle text-info fa-fw " title="{{helptitle}}" role="img" aria-label="{{helptitle}}"></i>
+                </a>
+            </div>
+            {{/help}}
+        </div>
+        <input type="text" class="form-control mootimeterfullwidth" name="{{name}}" id="{{id}}" value="{{value}}">
+    </div>
+    {{/text}}
+
+    {{/settingsarray}}
+</div>

@@ -42,4 +42,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mootimetertool_wordcloud_set_show_results_state' => [
+        'classname'     => 'mootimetertool_wordcloud\external\set_show_results_state',
+        'methodname'    => 'execute',
+        'description'   => 'Set the state of show results..',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:moderator',
+    ],
 ];

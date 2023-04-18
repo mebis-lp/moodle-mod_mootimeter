@@ -52,6 +52,13 @@ function xmldb_mootimeter_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2023020905, 'mootimeter');
     }
 
+    if ($oldversion < 2023020908) {
+
+        mod_mootimeter_create_mootimeter_tool_settings_table();
+
+        // Mootimeter savepoint reached.
+        upgrade_mod_savepoint(true, 2023020908, 'mootimeter');
+    }
 
     return true;
 }

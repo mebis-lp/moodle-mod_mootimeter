@@ -57,26 +57,33 @@ if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->i
 $helper = new \mod_mootimeter\helper();
 
 if (!empty($action) && $action == "storepage") {
+
+    // Store page.
     $record = new stdClass();
+    $record->id = $pageid;
     $record->tool = $paramtool;
     $record->instance = $cm->instance;
     $record->title = $paramtitle;
     $record->description = optional_param('description', "", PARAM_ALPHA);
     $pageid = $helper->store_page($record);
+
+    // Get all settingparams from tool.
+    $page = $helper->get_page($pageid);
+    $parameters = $helper->get_tool_settings_parameters($page);
+
+    // Store pages tool config.
+    $helper->store_tool_config($page);
+
+    // Reload page.
     redirect(new moodle_url('/mod/mootimeter/teacherview.php', ['id' => $cm->id, 'pageid' => $pageid]));
+
+}
+
+if (!empty($pageid)) {
+    $page = $helper->get_page($pageid);
 }
 
 $mt = new \mod_mootimeter\plugininfo\mootimetertool();
-$enabledtools = $mt->get_enabled_plugins();
-$tools = [];
-foreach ($enabledtools as $key => $tool) {
-    $tooltemp = [];
-    $tooltemp['pix'] = "tools/" . $tool . "/pix/" . $tool . ".svg";
-    $tooltemp['name'] = get_string('pluginname', 'mootimetertool_' . $tool);
-    $tooltemp['tool'] = $tool;
-    $tooltemp['selected'] = ($tool == $paramtool) ? "selected" : "";
-    $tools[] = $tooltemp;
-}
 
 $pages = $helper->get_pages($cm->instance);
 
@@ -96,7 +103,6 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 $cmid = $PAGE->url->get_param('id');
 
-
 // Redirect to main view.php if user has not enough capabilities.
 if (!has_capability('mod/mootimeter:addinstance', \context_module::instance($cm->id))) {
     $url = new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id]);
@@ -114,24 +120,38 @@ $params = [
     'pages' => $paramspages,
 ];
 
-if (!empty($action) && $action == 'addpage' || $action == 'editpage' || !empty($pageid)) {
-    $selectparams = [
-        'cmid' => $cmid,
-        'tools' => $tools,
-        'pageid' => $pageid,
-    ];
-    $params['select'] = $OUTPUT->render_from_template("mod_mootimeter/form_select_tool", $selectparams);
-}
-
 if ((!empty($action) && $action == 'editpage') || !empty($pageid)) {
+    $enabledtools = $mt->get_enabled_plugins();
+    $tools = [];
+    foreach ($enabledtools as $key => $tool) {
+        $tooltemp = [];
+        $tooltemp['pix'] = "tools/" . $tool . "/pix/" . $tool . ".svg";
+        $tooltemp['name'] = get_string('pluginname', 'mootimetertool_' . $tool);
+        $tooltemp['tool'] = $tool;
+        $tooltemp['selected'] = ($tool == $page->tool) ? "selected" : "";
+        $tools[] = $tooltemp;
+    }
+
     $editformparams = [
         'cmid' => $cmid,
         'pageid' => $pageid,
         'title' => $paramtitle,
         'tool' => $tool,
+        'tools' => $tools,
+        'accordionwrapperid' => 'settingswrapper'
     ];
+    if(!empty($pageid)){
+        $editformparams['title'] = $page->title;
+        $editformparams['description'] = $page->description;
+        $editformparams['toolsettings'] = $helper->get_tool_settings($page);
+    }
+
     $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
+
+    $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
 }
+
+
 //  print_R($params);die;
 echo $OUTPUT->render_from_template("mod_mootimeter/edit_screen", $params);
 

@@ -43,7 +43,7 @@ require_once($CFG->libdir . '/externallib.php');
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_answers extends external_api {
+class set_show_results_state extends external_api {
     /**
      * Describes the parameters.
      *
@@ -52,7 +52,6 @@ class get_answers extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'lastupdated' => new external_value(PARAM_INT, 'The timestamp the last answer were added at.', VALUE_REQUIRED),
         ]);
     }
 
@@ -60,20 +59,32 @@ class get_answers extends external_api {
      * Execute the service.
      *
      * @param int $pageid
-     * @param int $lastupdated
      * @return array
      */
-    public static function execute(int $pageid, int $lastupdated): array {
-        ['pageid' => $pageid, 'lastupdated' => $lastupdated] = self::validate_parameters(
-            self::execute_parameters(),
-            ['pageid' => $pageid, 'lastupdated' => $lastupdated]
-        );
+    public static function execute(int $pageid): array {
+
+        [
+            'pageid' => $pageid,
+        ] = self::validate_parameters(self::execute_parameters(), [
+            'pageid' => $pageid,
+        ]);
+
+        $mtmhelper = new \mod_mootimeter\helper();
+        $page = $mtmhelper->get_page($pageid);
 
         $wordcloud = new \mootimetertool_wordcloud\wordcloud();
-        $lastupdatednew = $wordcloud->get_last_update_time($pageid);
+        $newstate = $wordcloud->toggle_show_results_state($page);
 
-        $answerlist = $wordcloud->get_answerlist($pageid);
-        return ['answerlist' => $answerlist, 'lastupdated' => $lastupdatednew];
+        switch ($newstate) {
+            case 0:
+                return ['buttontext' => get_string('show_results', 'mootimetertool_wordcloud')];
+                break;
+            case 1:
+                return ['buttontext' => get_string('hide_results', 'mootimetertool_wordcloud')];
+                break;
+        }
+
+        return ['buttontext' => "ERROR"];
     }
 
     /**
@@ -84,18 +95,10 @@ class get_answers extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'answerlist' =>  new external_multiple_structure(
-                    new external_multiple_structure(
-                        new external_value(PARAM_TEXT, 'Answertext'),
-                        new external_value(PARAM_INT, 'Fontsize of the answer'),
-                        "Answer"
-                    ),
-                    'The answerslist.',
-                ),
-                'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated')
+                'buttontext' => new external_value(PARAM_TEXT, 'Text of teacher permission button')
 
             ],
-            'Information to redraw wordcloud'
+            'Information to toggle teacher permission button'
         );
     }
 }

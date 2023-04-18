@@ -43,3 +43,5 @@ $string['subplugintype_mootimetertool'] = 'Mootimeter Tool';
 $string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
 $string['teacherview'] = 'Teacherview';
 $string['title'] = 'Title';
+$string['globalpagesettings'] = 'Global page settings';
+$string['toolsettings'] = 'Tool settings';

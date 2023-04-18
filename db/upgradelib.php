@@ -66,3 +66,30 @@ function mod_mootimeter_create_mootimeter_pages_table() {
         $dbman->create_table($table);
     }
 }
+
+function mod_mootimeter_create_mootimeter_tool_settings_table() {
+    global $DB;
+
+    $dbman = $DB->get_manager();
+
+    // Define table mootimeter_tool_settings to be created.
+    $table = new xmldb_table('mootimeter_tool_settings');
+
+    // Adding fields to table mootimeter_tool_settings.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('tool', XMLDB_TYPE_CHAR, '100', null, null, null, null);
+    $table->add_field('pageid', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+    $table->add_field('name', XMLDB_TYPE_CHAR, '100', null, null, null, null);
+    $table->add_field('value', XMLDB_TYPE_CHAR, '1333', null, null, null, null);
+
+    // Adding keys to table mootimeter_tool_settings.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+    // Adding indexes to table mootimeter_tool_settings.
+    $table->add_index('tool_pageid_name', XMLDB_INDEX_UNIQUE, ['tool', 'pageid', 'name']);
+
+    // Conditionally launch create table for mootimeter_tool_settings.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+}

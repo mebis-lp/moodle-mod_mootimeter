@@ -25,6 +25,7 @@
 
 namespace mod_mootimeter;
 
+use coding_exception;
 use dml_exception;
 use stdClass;
 
@@ -110,5 +111,164 @@ class helper {
             ];
         }
         return $temppages;
+    }
+
+    /**
+     * Get rendered page content.
+     *
+     * @param object $page
+     * @param object $cm
+     * @param bool $withwrapper
+     * @return string
+     */
+    public function get_rendered_page_content(object $page, object $cm, bool $withwrapper = true): string {
+        global $OUTPUT;
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_renderer_params')) {
+            return "Method 'get_renderer_params' is missing in tool helper class " . $page->tool;
+        }
+
+        $params = [
+            'containerclasses' => "border rounded",
+            'mootimetercolright' => "border-left ",
+            'mootimetercard' => 'border rounded',
+            'pageid' => $page->id,
+            'cmid' => $cm->id,
+            'title' => s($page->title),
+            'description' => s($page->description),
+        ];
+        $params = array_merge($params, $toolhelper->get_renderer_params($page));
+
+        if ($withwrapper) {
+            return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_wrapper", $params);
+        }
+        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content", $params);
+    }
+
+    /**
+     * Get all setting definitions of a page.
+     *
+     * @param object $page
+     * @return string
+     * @throws coding_exception
+     */
+    public function get_tool_settings(object $page): string {
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_tool_settings')) {
+            throw new \coding_exception("Method 'get_tool_settings' is missing in tool helper class " . $page->tool);
+        }
+
+        return $toolhelper->get_tool_settings($page);
+    }
+
+    /**
+     * Get all tool settings parameters.
+     *
+     * @param object $page
+     * @return array
+     * @throws coding_exception
+     */
+    public function get_tool_settings_parameters(object $page): array {
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_tool_settings_parameters')) {
+            throw new \coding_exception("Method 'get_tool_settings_parameters' is missing in tool helper class " . $page->tool);
+        }
+
+        return $toolhelper->get_tool_settings_parameters($page);
+    }
+
+    /**
+     * Store all tool page config settings during a form submit.
+     *
+     * @param object $page
+     * @return void
+     * @throws coding_exception
+     */
+    public function store_tool_config(object $page): void {
+        $parameters = $this->get_tool_settings_parameters($page);
+
+        foreach ($parameters as $parameter) {
+            $this->set_tool_config($page,  $parameter['name'], $parameter['value']);
+        }
+    }
+
+    /**
+     * Set a single config value.
+     *
+     * @param object|int $pageorid
+     * @param string $name
+     * @param string $value
+     * @return void
+     * @throws dml_exception
+     */
+    public function set_tool_config(object|int $pageorid, string $name, string $value): void {
+        global $DB, $PAGE;
+
+        if (!is_object($pageorid)) {
+            $page = $this->get_page($pageorid);
+        } else {
+            $page = $pageorid;
+        }
+
+        $conditions = [
+            'tool' => $page->tool,
+            'pageid' => $page->id,
+            'name' => $name
+        ];
+
+        if (empty($record = $DB->get_record('mootimeter_tool_settings', $conditions))) {
+            $dataobject = (object)$conditions;
+            $dataobject->value = $value;
+            $DB->insert_record('mootimeter_tool_settings', $dataobject);
+            return;
+        }
+
+        $record->value = $value;
+        $DB->update_record('mootimeter_tool_settings', $record);
+    }
+
+    /**
+     * Get the tools config.
+     *
+     * @param mixed $page
+     * @return array
+     */
+    public function get_tool_config($page) {
+        global $DB;
+
+        $conditions = [
+            'tool' => $page->tool,
+            'pageid' => $page->id,
+        ];
+        $configs = $DB->get_records('mootimeter_tool_settings', $conditions);
+
+        $returnconfig = [];
+
+        foreach ($configs as $config) {
+            $returnconfig[$config['name']] = $config['value'];
+        }
+
+        return $returnconfig;
     }
 }
