@@ -28,15 +28,13 @@ require_once(__DIR__ . '/lib.php');
 
 // Course module id.
 $id = optional_param('id', 0, PARAM_INT);
+$action = optional_param('a', "", PARAM_ALPHA);
+$paramtool = optional_param('tool', "", PARAM_ALPHA);
+$pageid = optional_param('pageid', 0, PARAM_INT);
+$paramtitle = optional_param('title', "", PARAM_ALPHA);
 
 // Activity instance id.
 $m = optional_param('m', 0, PARAM_INT);
-
-// Page id to show.
-$pageid = optional_param('pageid', 0, PARAM_INT);
-
-// Get action parameter.
-$action = optional_param('a', "", PARAM_ALPHA);
 
 if ($id) {
     $cm = get_coursemodule_from_id('mootimeter', $id, 0, false, MUST_EXIST);
@@ -48,16 +46,40 @@ if ($id) {
     $cm = get_coursemodule_from_instance('mootimeter', $moduleinstance->id, $course->id, false, MUST_EXIST);
 }
 
+// Check if user is logged in.
 require_login($course, true, $cm);
 
 $helper = new \mod_mootimeter\helper();
 
-if (empty($pageid)) {
-    $pages = $helper->get_pages($cm->instance);
-    $page = array_shift($pages);
-} else {
-    $page = $helper->get_page($pageid, $cm->instance,);
+if (!empty($action) && $action == "storepage") {
+
+    // Store page.
+    $record = new stdClass();
+    $record->id = $pageid;
+    $record->tool = $paramtool;
+    $record->instance = $cm->instance;
+    $record->title = $paramtitle;
+    $record->description = optional_param('description', "", PARAM_TEXT);
+    $pageid = $helper->store_page($record);
+
+    // Get all settingparams from tool.
+    $page = $helper->get_page($pageid);
+    $parameters = $helper->get_tool_settings_parameters($page);
+
+    // Store pages tool config.
+    $helper->store_tool_config($page);
+
+    // Reload page.
+    redirect(new moodle_url('/mod/mootimeter/teacherview.php', ['id' => $cm->id, 'pageid' => $pageid]));
 }
+
+if (!empty($pageid)) {
+    $page = $helper->get_page($pageid);
+}
+
+$mt = new \mod_mootimeter\plugininfo\mootimetertool();
+
+$pages = $helper->get_pages($cm->instance);
 
 $modulecontext = context_module::instance($cm->id);
 
@@ -65,32 +87,68 @@ $event = \mod_mootimeter\event\course_module_viewed::create(array(
     'objectid' => $moduleinstance->id,
     'context' => $modulecontext
 ));
-
-$PAGE->set_url('/mod/mootimeter/view.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($moduleinstance->name));
-$PAGE->set_heading(format_string($course->fullname));
-$PAGE->set_context($modulecontext);
-
-echo $OUTPUT->header();
-
-if (empty($page)) {
-    echo "No Page selected.";
-    echo $OUTPUT->footer();
-    die;
-}
-
-$classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-$toolhelper= new $classname();
-
-if(!empty($action) && $action == 'insertanswer'){
-    $answer = optional_param('answer', '', PARAM_TEXT);
-    $toolhelper->insert_answer($page, $answer);
-}
-
 $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mootimeter', $moduleinstance);
 $event->trigger();
 
-echo $helper->get_rendered_page_content($page, $cm);
+$PAGE->set_url('/mod/mootimeter/view.php', ['id' => $cm->id]);
+$PAGE->set_title(format_string($moduleinstance->name));
+$PAGE->set_heading(format_string($course->fullname));
+$PAGE->set_context($modulecontext);
+$cmid = $PAGE->url->get_param('id');
+
+echo $OUTPUT->header();
+
+$paramspages = $helper->get_pages_template($pages, $pageid);
+$params = [
+    'containerclasses' => "border rounded",
+    'mootimetercolright' => "border-left ",
+    'mootimetercard' => 'border rounded',
+    'cmid' => $cmid,
+    'pages' => $paramspages,
+];
+
+if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action == 'addpage') || !empty($pageid)) {
+    $enabledtools = $mt->get_enabled_plugins();
+    $tools = [];
+    foreach ($enabledtools as $key => $tool) {
+        $tooltemp = [];
+        $tooltemp['pix'] = "tools/" . $tool . "/pix/" . $tool . ".svg";
+        $tooltemp['name'] = get_string('pluginname', 'mootimetertool_' . $tool);
+        $tooltemp['tool'] = $tool;
+        if (!empty($page)) {
+            $tooltemp['selected'] = ($tool == $page->tool) ? "selected" : "";
+        }
+        $tools[] = $tooltemp;
+    }
+
+
+    $editformparams = [
+        'cmid' => $cmid,
+        'pageid' => $pageid,
+        'title' => $paramtitle,
+        'tool' => $tool,
+        'tools' => $tools,
+        'accordionwrapperid' => 'settingswrapper'
+    ];
+
+    if (!empty($pageid)) {
+        $editformparams['title'] = $page->title;
+        $editformparams['description'] = $page->description;
+        $editformparams['toolsettings'] = $helper->get_tool_settings($page);
+    }
+
+    $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
+
+    if (!empty($page)) {
+        $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
+    }
+
+    $params['isediting'] = $PAGE->user_is_editing();
+}
+
+
+//  print_R($params);die;
+echo $OUTPUT->render_from_template("mod_mootimeter/edit_screen", $params);
 
 echo $OUTPUT->footer();

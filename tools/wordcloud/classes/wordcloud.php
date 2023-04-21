@@ -178,11 +178,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         global $DB;
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
-        if (
-            $this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_LIVE
-            || ($this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-                && !empty($this->get_tool_config($pageid, 'teacherpermission'))
-            )
+        if ($this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+                && empty($this->get_tool_config($pageid, 'teacherpermission'))
         ) {
             return 0;
         }
