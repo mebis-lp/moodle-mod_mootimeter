@@ -228,6 +228,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             ]
         ];
 
+        // TODO: KEEPING THIS FOR DOCUMANTATION UNTIL A PROPPER DOC EXISTS.
+
         // $settings['settingsarray'][] = [
         //     "checkbox" => true,
         //     "id" => 'labelid-2',

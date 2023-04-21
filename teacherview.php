@@ -64,7 +64,7 @@ if (!empty($action) && $action == "storepage") {
     $record->tool = $paramtool;
     $record->instance = $cm->instance;
     $record->title = $paramtitle;
-    $record->description = optional_param('description', "", PARAM_ALPHA);
+    $record->description = optional_param('description', "", PARAM_TEXT);
     $pageid = $helper->store_page($record);
 
     // Get all settingparams from tool.
@@ -76,7 +76,6 @@ if (!empty($action) && $action == "storepage") {
 
     // Reload page.
     redirect(new moodle_url('/mod/mootimeter/teacherview.php', ['id' => $cm->id, 'pageid' => $pageid]));
-
 }
 
 if (!empty($pageid)) {
@@ -120,7 +119,7 @@ $params = [
     'pages' => $paramspages,
 ];
 
-if ((!empty($action) && $action == 'editpage') || !empty($pageid)) {
+if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action == 'addpage') || !empty($pageid)) {
     $enabledtools = $mt->get_enabled_plugins();
     $tools = [];
     foreach ($enabledtools as $key => $tool) {
@@ -128,9 +127,12 @@ if ((!empty($action) && $action == 'editpage') || !empty($pageid)) {
         $tooltemp['pix'] = "tools/" . $tool . "/pix/" . $tool . ".svg";
         $tooltemp['name'] = get_string('pluginname', 'mootimetertool_' . $tool);
         $tooltemp['tool'] = $tool;
-        $tooltemp['selected'] = ($tool == $page->tool) ? "selected" : "";
+        if (!empty($page)) {
+            $tooltemp['selected'] = ($tool == $page->tool) ? "selected" : "";
+        }
         $tools[] = $tooltemp;
     }
+
 
     $editformparams = [
         'cmid' => $cmid,
@@ -140,7 +142,8 @@ if ((!empty($action) && $action == 'editpage') || !empty($pageid)) {
         'tools' => $tools,
         'accordionwrapperid' => 'settingswrapper'
     ];
-    if(!empty($pageid)){
+
+    if (!empty($pageid)) {
         $editformparams['title'] = $page->title;
         $editformparams['description'] = $page->description;
         $editformparams['toolsettings'] = $helper->get_tool_settings($page);
@@ -148,7 +151,11 @@ if ((!empty($action) && $action == 'editpage') || !empty($pageid)) {
 
     $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
 
-    $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
+    if (!empty($page)) {
+        $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
+    }
+
+    $params['isediting'] = $PAGE->user_is_editing();
 }
 
 

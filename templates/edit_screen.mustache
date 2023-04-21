@@ -1,6 +1,8 @@
-<div class="mootimetercontainer {{{containerclasses}}}">
+<div class="container-fluid mootimetercontainer {{{containerclasses}}}">
   <div class="row ">
     <div class="mootimetercolpages col-lg-1  col-md-2 col-sm-3 col-xs-12 border-right">
+
+      {{#isediting}}
       <form action="teacherview.php" method="post" class="padding-left-5">
         <input type="hidden" name="id" value="{{cmid}}">
         <input type="hidden" name="a" value="addpage">
@@ -8,6 +10,7 @@
           <p>{{#str}} add_page, mod_mootimeter {{/str}}</p>
         </button>
       </form>
+      {{/isediting}}
 
       {{#pages}}
       <form action="" method="get" class="padding-left-5">
@@ -21,11 +24,12 @@
       {{/pages}}
 
     </div>
-    <div class="mootimetercolcontent col-lg-9 col-md-7 col-sm-12 col-xs-12 ">
+    <div class="mootimetercolcontent {{#isediting}}col-lg-9  col-md-7{{/isediting}}{{^isediting}}col-lg-11 col-md-11{{/isediting}} col-sm-12 col-xs-12">
       {{{pagecontent}}}
     </div>
 
-    <div class="mootimetercolright {{{mootimetercolright}}}  col-lg-2 col-sm-9 col-md-3 col-xs-12 ">
+    {{#isediting}}
+    <div class=" mootimetercolright {{{mootimetercolright}}} col-lg-2 col-sm-9 col-md-3 col-xs-12">
       {{#settings}}
       <hr>
       <div class="mootimetersettings mootimeterfullwidth">
@@ -33,6 +37,7 @@
       </div>
       {{/settings}}
     </div>
+    {{/isediting}}
 
   </div>
 </div>
