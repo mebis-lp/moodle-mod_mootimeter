@@ -1,8 +1,57 @@
 <div class="accordion mootimeter_margin_top_5" id="{{accordionwrapperid}}">
-    {{> mod_mootimeter/edit_snippet_title_description}}
+    <div class="card">
+        <div class="card-header" id="globalsettingsheading">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#globalsettingsbody" aria-expanded="true"
+                    aria-controls="globalsettingsbody">
+                    {{#str}} globalpagesettings , mod_mootimeter {{/str}}
+                </button>
+            </h2>
+        </div>
+
+        <div id="globalsettingsbody" class="collapse show" aria-labelledby="globalsettingsheading" data-parent="#{{accordionwrapperid}}">
+            <div class="card-body">
+                <div class="mootimetersettings mootimeterfullwidth">
+                    <label for="mootimeter_selecttype" class="form-label">{{#str}} pagetype , mod_mootimeter {{/str}}</label>
+                    <select id="mootimeter_selecttype" class="form-control mootimeterfullwidth" name="tool">
+                        <option>{{#str}} please_select, mod_mootimeter {{/str}}</option>
+                        {{#tools}}
+                        <option value="{{tool}}" {{selected}}>
+                            <img src="{{{pix}}}" width="80%" style="margin: 0 auto;">
+                            {{name}}
+                        </option>
+                        {{/tools}}
+                    </select>
+                </div>
+                <div>
+                    <label for="mootimeter_title" class="form-label">{{#str}} title , mod_mootimeter {{/str}}</label>
+                    <input id="mootimeter_title" type="text" class="form-control mootimeterfullwidth" name="title" value="{{title}}">
+                </div>
+                <div>
+                    <label for="mootimeter_description" class="form-label">{{#str}} description , mod_mootimeter {{/str}}</label>
+                    <textarea class="form-control mootimeterfullwidth" id="mootimeter_description" name="description">{{{description}}}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{#toolsettings}}
-    {{> mod_mootimeter/edit_snippet_tool_settings}}
+    <div class="card">
+        <div class="card-header" id="toolsettingsheading">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#toolsettingsbody" aria-expanded="false"
+                    aria-controls="toolsettingsbody">
+                    {{#str}} toolsettings , mod_mootimeter {{/str}}
+                </button>
+            </h2>
+        </div>
+
+        <div id="toolsettingsbody" class="collapse" aria-labelledby="toolsettingsheading" data-parent="#{{accordionwrapperid}}">
+            <div class="card-body">
+                {{{toolsettings}}}
+            </div>
+        </div>
+    </div>
     {{/toolsettings}}
 
 </div>

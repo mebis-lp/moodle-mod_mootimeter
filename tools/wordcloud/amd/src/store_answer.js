@@ -18,7 +18,7 @@ export const init = () => {
             };
 
             // Add the answer to the Badges list.
-            Templates.renderForPromise('mootimetertool_wordcloud/badge_answer', context)
+            Templates.renderForPromise('mod_mootimeter/badge_answer', context)
                 .then(({ html, js }) => {
                     Templates.appendNodeContents('#mtmt_wordcloud_badges', html, js);
                     return true;
