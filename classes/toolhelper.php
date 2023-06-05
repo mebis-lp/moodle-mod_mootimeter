@@ -184,4 +184,85 @@ abstract class toolhelper {
 
         return false;
     }
+
+    /**
+     * Clear all caches.
+     *
+     * @param int $pageid
+     * @return void
+     * @throws coding_exception
+     * @throws cache_exception
+     */
+    public function clear_caches(int $pageid): void {
+        $cache = \cache::make('mod_mootimeter', 'answers');
+        $cache->delete('answers_' . $pageid);
+        $cache->delete('cnt_' . $pageid);
+    }
+
+    /**
+     * Store the answer.
+     *
+     * @param string $table
+     * @param object $record
+     * @return int
+     */
+    public function store_answer(string $table, object $record): int {
+        global $DB;
+
+        // Store the answer to db.
+        $answerid = $DB->insert_record($table, $record);
+
+        // Recreate the cache.
+        $this->clear_caches($record->pageid);
+        $this->get_answers($table, $record->pageid);
+        $this->get_answers_grouped($table, ['pageid' => $record->pageid]);
+
+        return $answerid;
+    }
+
+    /**
+     * Get all answers of a page.
+     *
+     * @param string $table
+     * @param int $pageid
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_answers(string $table, int $pageid) {
+        global $DB;
+
+        $cache = \cache::make('mod_mootimeter', 'answers');
+        $cachekey = 'answers_' . $pageid;
+        $records = json_decode($cache->get($cachekey));
+
+        if (empty($records)) {
+            $records = $DB->get_records($table, ['pageid' => $pageid]);
+            $cache->set($cachekey, json_encode($records));
+        }
+
+        return $records;
+    }
+
+    /**
+     * Get all grouped and counted answers of a page.
+     *
+     * @param array $params
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_answers_grouped(string $table, array $params) {
+        global $DB;
+
+        $cache = \cache::make('mod_mootimeter', 'answers');
+        $cachekey = 'cnt_' . $params['pageid'];
+        $records = json_decode($cache->get($cachekey));
+
+        if (empty($records)) {
+            $sql = "SELECT answer, count(*) as cnt FROM {" . $table . "} WHERE pageid = :pageid GROUP BY answer";
+            $records = $DB->get_records_sql($sql, $params);
+            $cache->set($cachekey, json_encode($records));
+        }
+
+        return $records;
+    }
 }

@@ -40,13 +40,15 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @return void
      */
     public function insert_answer(object $page, $answer): void {
-        global $USER, $DB;
+        global $USER;
+
         $record = new \stdClass();
         $record->pageid = $page->id;
         $record->usermodified = $USER->id;
         $record->answer = $answer;
         $record->timecreated = time();
-        $DB->insert_record('mtmt_wordcloud_answers', $record);
+
+        $this->store_answer('mtmt_wordcloud_answers', $record);
     }
 
     /**
@@ -62,18 +64,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get all answers of a page.
-     *
-     * @param int $pageid
-     * @return array
-     * @throws dml_exception
-     */
-    public function get_answers(int $pageid) {
-        global $DB;
-        return $DB->get_records('mtmt_wordcloud_answers', ['pageid' => $pageid]);
-    }
-
-    /**
      * Get all grouped and counted answers of a page.
      *
      * @param int $pageid
@@ -81,7 +71,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @throws dml_exception
      */
     protected function get_answers_list(int $pageid) {
-        global $DB;
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
         if (
@@ -93,8 +82,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             $params = [
                 'pageid' => $pageid,
             ];
-            $sql = "SELECT answer, count(*) * 24 FROM {mtmt_wordcloud_answers} WHERE pageid = :pageid GROUP BY answer";
-            return $DB->get_records_sql($sql, $params);
+            return (array)$this->get_answers_grouped('mtmt_wordcloud_answers', $params);
         }
 
         return [];
@@ -116,13 +104,19 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
     /**
      * Get the answer list in wordcloud2 format.
+     * [{"answer":"Answer word 1","cnt":"3"},{"answer":"Answer word 2","cnt":"1"}, ...]
      *
      * @param int $pageid
      * @return array
      * @throws dml_exception
      */
     public function get_answerlist(int $pageid): array {
-        return $this->convert_answer_list_to_wordcloud_list($this->get_answers_list($pageid));
+
+        $answerlist = $this->get_answers_list($pageid);
+        foreach ($answerlist as &$answer) {
+            $answer->cnt = 24 * $answer->cnt;
+        }
+        return $this->convert_answer_list_to_wordcloud_list($answerlist);
     }
 
     /**
@@ -178,8 +172,9 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         global $DB;
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
-        if ($this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-                && empty($this->get_tool_config($pageid, 'teacherpermission'))
+        if (
+            $this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+            && empty($this->get_tool_config($pageid, 'teacherpermission'))
         ) {
             return 0;
         }
@@ -272,7 +267,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         $helper = new \mod_mootimeter\helper();
 
-        if(empty($teacherpermission)){
+        if (empty($teacherpermission)) {
             // The config is not set yet. Set the value to 1.
             $helper->set_tool_config($page, 'teacherpermission', 1);
             return 1;
