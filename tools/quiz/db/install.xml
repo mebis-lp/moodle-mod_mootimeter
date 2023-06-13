@@ -10,6 +10,7 @@
         <FIELD NAME="pageid" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="optiontext" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="optioniscorrect" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>

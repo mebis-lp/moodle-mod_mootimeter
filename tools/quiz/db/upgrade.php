@@ -15,9 +15,10 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Plugin upgrade steps are defined here.
  *
  * @package     mootimetertool_quiz
+ * @category    upgrade
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,6 +26,30 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023060801;
-$plugin->requires  = 2022111800;
-$plugin->component = 'mootimetertool_quiz';
+require_once(__DIR__ . '/upgradelib.php');
+
+/**
+ * Execute mootimetertool_quiz upgrade from the given old version.
+ *
+ * @param int $oldversion
+ * @return bool
+ */
+function xmldb_mootimetertool_quiz_upgrade($oldversion) {
+    global $DB;
+
+    $dbman = $DB->get_manager();
+
+    // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
+    //
+    // You will also have to create the db/install.xml file by using the XMLDB Editor.
+    // Documentation for the XMLDB Editor can be found at {@link https://docs.moodle.org/dev/XMLDB_editor}.
+    if ($oldversion < 2023060801) {
+
+        mootimetertool_quiz_create_tables();
+
+        // Quiz savepoint reached.
+        upgrade_plugin_savepoint(true, 2023060801, 'mootimetertool', 'quiz');
+    }
+
+    return true;
+}
