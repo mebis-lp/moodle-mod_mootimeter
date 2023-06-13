@@ -1,0 +1,61 @@
+<script src="tools/quiz/js/chart.umd.min.js"></script>
+<div class="row justify-content-md-center mootimeter_margin_top_50">
+
+  <div class="col-md-8">
+    <h2>
+      {{#isediting}}
+      <textarea type="text" class="form-control mootimeterfullwidth" name="edit_question">{{question_text}}</textarea>
+      {{/isediting}}
+      {{^isediting}}
+      {{question_text}}
+      {{/isediting}}
+    </h2>
+  </div>
+
+  <div class="col-md-8">
+    <mtmt_question_section id="mtmt_question_section" data-pageid="{{pageid}}">
+      {{#answer_options}}
+      {{> mootimetertool_quiz/answer_option}}
+      {{/answer_options}}
+
+      {{#isediting}}
+      <div>
+        <input type="radio" id="new_ao" class="mtmt_radio" name="select">
+        <label class="ao_label" for="new_ao" style="padding-bottom: 0;">
+          <div class="mootimeterfullwidth" style="display: table;height: 50px; overflow: hidden;">
+            <div class="mootimeterfullwidth" style="display: table-cell; vertical-align: middle;">
+              <div class="mootimeterfullwidth mootimeter_textcenter">
+                <h1 style="margin: 0"><i class="fa fa-plus"></i></h1>
+              </div>
+            </div>
+          </div>
+        </label>
+      </div>
+      {{/isediting}}
+
+    </mtmt_question_section>
+    {{! <button class="btn btn-primary mootimeterfullwidth">Absenden</button> }}
+  </div>
+
+</div>
+<input type="hidden" id="mootimeter_lastupdated" value="{{lastupdated}}">
+<script>
+  // redrawwordcloud()
+
+  // const event = new Event("redrawwordcloud");
+  // let mtmtcanvas = document.getElementById('wordcloudcanvas');
+  // mtmtcanvas.addEventListener(
+  //   "redrawwordcloud",
+  //   (e) => {
+  //     window.console.log("Redraw");
+  //     redrawwordcloud();
+  //   },
+  //   false
+  // );
+
+  // function redrawwordcloud() {
+  //   let mtmtcanvas = document.getElementById('wordcloudcanvas');
+  //   let answers = JSON.parse(mtmtcanvas.dataset.answers);
+  //   WordCloud(mtmtcanvas, { list: answers });
+  // }
+</script>

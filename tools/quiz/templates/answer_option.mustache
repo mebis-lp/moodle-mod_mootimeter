@@ -1,0 +1,46 @@
+<div>
+    <input type="radio" id="control_{{ao_id}}" class="mtmt_radio" name="select" value="{{ao_id}}">
+    <label class="ao_label" for="control_{{ao_id}}" data-aoid="{{ao_id}}">
+        {{#isediting}}
+        <button class="btn-trash float-right">{{#pix}}i/trash{{/pix}}</button>
+        {{/isediting}}
+
+
+        {{#isediting}}
+        <input id="ao_heading_{{ao_id}}" type="text" class="form-control mootimeterfullwidth mtmt-delayed-store" name="ao_heading" value="{{ao_heading}}">
+        {{/isediting}}
+        {{^isediting}}
+        {{#ao_heading}}<h3>{{ao_heading}}</h3>{{/ao_heading}}
+        {{/isediting}}
+
+        {{#isediting}}
+        <textarea id="ao_text_{{ao_id}}" type="text" class="form-control mootimeterfullwidth mtmt-delayed-store" name="ao_text">{{ao_text}}"</textarea>
+        {{/isediting}}
+        {{^isediting}}
+        <p>{{ao_text}}</p>
+        {{/isediting}}
+        {{#isediting}}
+
+
+        <div class="mtmt-state-switch">
+            {{#isquiz}}
+            <input type="radio" id="state_1_{{ao_id}}" class="mtmt_radio_state mtmt-true" name="switch-{{ao_id}}" value="1" />
+            <label class="ao_label_state" for="state_1_{{ao_id}}">Antwort ist richtig</label>
+            <input type="radio" id="state_2_{{ao_id}}" class="mtmt_radio_state mtmt-false" name="switch-{{ao_id}}" value="2" />
+            <label class="ao_label_state" for="state_2_{{ao_id}}">Antwort ist falsch</label>
+            {{/isquiz}}
+            {{#ispoll}}
+            <input type="radio" id="state_0_{{ao_id}}" class="mtmt_radio_state mtmt-neutral" name="switch-{{ao_id}}" value="0" checked />
+            <label class="ao_label_state" for="state_0_{{ao_id}}">Abstimmung</label>
+            {{/ispoll}}
+        </div>
+
+        {{/isediting}}
+    </label>
+</div>
+
+{{#isediting}}
+{{#js}}
+require(['mootimetertool_quiz/store_options'], (module) => module.init());
+{{/js}}
+{{/isediting}}

@@ -122,7 +122,7 @@ class helper {
      * @return string
      */
     public function get_rendered_page_content(object $page, object $cm, bool $withwrapper = true): string {
-        global $OUTPUT;
+        global $OUTPUT, $PAGE;
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
@@ -143,6 +143,7 @@ class helper {
             'cmid' => $cm->id,
             'title' => s($page->title),
             'description' => s($page->description),
+            'isediting' => $PAGE->user_is_editing(),
         ];
         $params = array_merge($params, $toolhelper->get_renderer_params($page));
 

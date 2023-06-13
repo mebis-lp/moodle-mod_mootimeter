@@ -31,6 +31,12 @@ $id = optional_param('id', 0, PARAM_INT);
 $action = optional_param('a', "", PARAM_ALPHA);
 $paramtool = optional_param('tool', "", PARAM_ALPHA);
 $pageid = optional_param('pageid', 0, PARAM_INT);
+
+// Set the pageid pageparam for $PAGE object.
+if($pageid){
+    $pageparams['pageid'] = $pageid;
+}
+
 $paramtitle = optional_param('title', "", PARAM_ALPHA);
 
 // Activity instance id.
@@ -45,6 +51,9 @@ if ($id) {
     $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('mootimeter', $moduleinstance->id, $course->id, false, MUST_EXIST);
 }
+
+// Set the cm pageparam for $PAGE object.
+$pageparams['id'] = $cm->id;
 
 // Check if user is logged in.
 require_login($course, true, $cm);
@@ -70,7 +79,7 @@ if (!empty($action) && $action == "storepage") {
     $helper->store_tool_config($page);
 
     // Reload page.
-    redirect(new moodle_url('/mod/mootimeter/teacherview.php', ['id' => $cm->id, 'pageid' => $pageid]));
+    redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $pageid]));
 }
 
 if (!empty($pageid)) {
@@ -91,7 +100,9 @@ $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mootimeter', $moduleinstance);
 $event->trigger();
 
-$PAGE->set_url('/mod/mootimeter/view.php', ['id' => $cm->id]);
+
+
+$PAGE->set_url('/mod/mootimeter/view.php', $pageparams);
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);

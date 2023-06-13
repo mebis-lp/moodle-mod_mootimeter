@@ -17,7 +17,7 @@
 /**
  * Plugin strings are defined here.
  *
- * @package     mod_mootimeter
+ * @package     mootimetertool_wordcloud
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
@@ -26,22 +26,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['add_page'] = 'Add Page';
-$string['cachedef_answers'] = 'Contains the pages answers.';
-$string['cannotview'] = 'You are not allowed to access this page!';
-$string['description'] = 'Description';
-$string['modulename'] = 'Mootimeter';
-$string['modulenameplural'] = 'Mootimeter';
-$string['pagetype'] = 'Page Type';
-$string['mootimeterfieldset'] = "More Mootimeter Settings";
-$string['mootimetername'] = "Name";
-$string['mootimetername_help'] = "Title of the Activity";
-$string['mootimetersettings'] = "Settings";
-$string['please_select'] = 'Please select!';
-$string['pluginadministration'] = 'Moodimeter administration';
-$string['pluginname'] = 'Mootimeter';
-$string['subplugintype_mootimetertool'] = 'Mootimeter Tool';
-$string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
-$string['title'] = 'Title';
-$string['globalpagesettings'] = 'Global page settings';
-$string['toolsettings'] = 'Tool settings';
+$string['pluginname'] = 'Quiz';
+
+$string['ispoll_label'] = "Quiztype";
+$string['ispoll_helptitle'] = "What kind of quiz is it?";
+$string['ispoll_help'] = "You can choos between poll and quiz. Quizzes have wrong and right answers";
+$string['poll'] = "Poll";
+$string['quiz'] = "Quiz";

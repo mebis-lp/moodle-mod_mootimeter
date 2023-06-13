@@ -93,6 +93,11 @@ abstract class toolhelper {
         $settings = $this->get_tool_setting_definitions($page);
 
         $parameters = [];
+
+        if(empty($settings['settingsarray'])) {
+            return $parameters;
+        }
+
         foreach ($settings['settingsarray'] as $setting) {
 
             foreach ($setting as $key => $value) {

@@ -1,0 +1,132 @@
+mtmt_question_section {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+mtmt_question_section>div {
+    flex: 1;
+    padding: 0.5rem;
+    flex-basis: 50%;
+    max-width: 50%;
+}
+
+mtmt_question_section .mtmt_radio {
+    display: none !important;
+}
+
+mtmt_question_section .mtmt_radio:not(:disabled)~label.ao_label {
+    cursor: pointer;
+}
+
+mtmt_question_section .mtmt_radio:disabled~label.ao_label {
+    color: #bcc2bf;
+    border-color: #bcc2bf;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+mtmt_question_section label.ao_label {
+    height: 100%;
+    display: block;
+    background: white;
+    border: 2px solid #bcc2bf;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    box-shadow: 0px 3px 10px -2px rgba(161, 170, 166, 0.5);
+    position: relative;
+}
+
+mtmt_question_section .mtmt_radio:checked+label.ao_label {
+    background: var(--info);
+    border: 2px solid var(--info);
+    color: white;
+    box-shadow: 0px 0px 10px var(--info);
+}
+
+mtmt_question_section .mtmt_radio:hover+label.ao_label {
+    background-color: var(--primary);
+}
+
+mtmt_question_section p {
+    font-weight: 900;
+}
+
+mtmt_question_section textarea[name="ao_text"] {
+    margin-top: 15px;
+}
+
+mtmt_question_section .btn-trash {
+    background: none;
+    border: none;
+    margin: -10px -10px 0 0;
+}
+
+@media only screen and (max-width: 700px) {
+    mtmt_question_section {
+        flex-direction: column;
+    }
+
+    mtmt_question_section>div {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+}
+
+.mtmt-state-switch {
+    display: flex;
+    margin: 15px 0 0 0;
+    overflow: hidden;
+}
+
+.mtmt-state-switch .mtmt_radio_state {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+}
+
+.mtmt-state-switch label.ao_label_state {
+    background-color: #e4e4e4;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    padding: 8px 16px;
+    margin-right: -1px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.1s ease-in-out;
+}
+
+.mtmt-state-switch label.ao_label_state:hover {
+    cursor: pointer;
+}
+
+.mtmt-state-switch .mtmt_radio_state:checked+label.ao_label_state {
+    box-shadow: none;
+}
+
+.mtmt-state-switch .mtmt-true.mtmt_radio_state:checked+label.ao_label_state {
+    background-color: var(--success);
+}
+
+.mtmt-state-switch .mtmt-neutral.mtmt_radio_state:checked+label.ao_label_state {
+    background-color: var(--light);
+}
+
+.mtmt-state-switch .mtmt-false.mtmt_radio_state:checked+label.ao_label_state {
+    background-color: var(--danger);
+    color: var(--white);
+}
+
+.mtmt-state-switch label.ao_label_state:first-of-type {
+    border-radius: 4px 0 0 4px;
+}
+
+.mtmt-state-switch label.ao_label_state:last-of-type {
+    border-radius: 0 4px 4px 0;
+}
