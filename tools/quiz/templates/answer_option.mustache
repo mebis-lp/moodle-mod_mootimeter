@@ -24,10 +24,8 @@
 
         <div class="mtmt-state-switch">
             {{#isquiz}}
-            <input type="radio" id="state_1_{{ao_id}}" class="mtmt_radio_state mtmt-true" name="switch-{{ao_id}}" value="1" />
+            <input type="radio" id="state_1_{{ao_id}}" class="mtmt_radio_state mtmt-true" name="switch" value="switch-{{ao_id}}" />
             <label class="ao_label_state" for="state_1_{{ao_id}}">Antwort ist richtig</label>
-            <input type="radio" id="state_2_{{ao_id}}" class="mtmt_radio_state mtmt-false" name="switch-{{ao_id}}" value="2" />
-            <label class="ao_label_state" for="state_2_{{ao_id}}">Antwort ist falsch</label>
             {{/isquiz}}
             {{#ispoll}}
             <input type="radio" id="state_0_{{ao_id}}" class="mtmt_radio_state mtmt-neutral" name="switch-{{ao_id}}" value="0" checked />
