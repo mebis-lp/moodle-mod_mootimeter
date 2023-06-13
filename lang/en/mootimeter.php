@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['add_page'] = 'Add Page';
+$string['addpage'] = 'Add Page';
 $string['cachedef_answers'] = 'Contains the pages answers.';
 $string['cannotview'] = 'You are not allowed to access this page!';
 $string['question'] = 'Question';

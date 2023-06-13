@@ -152,7 +152,6 @@ class helper {
 
         $params = [
             'containerclasses' => "border rounded",
-            'mootimetercolright' => "border-left ",
             'mootimetercard' => 'border rounded',
             'pageid' => $page->id,
             'cmid' => $cm->id,
