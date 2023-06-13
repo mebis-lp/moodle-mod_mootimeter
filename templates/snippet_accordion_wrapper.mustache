@@ -1,58 +1,88 @@
-<div class="accordion mootimeter_margin_top_5" id="{{accordionwrapperid}}">
-    <div class="card">
-        <div class="card-header" id="globalsettingsheading">
-            <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#globalsettingsbody" aria-expanded="true"
-                    aria-controls="globalsettingsbody">
-                    {{#str}} globalpagesettings , mod_mootimeter {{/str}}
-                </button>
-            </h2>
-        </div>
+<div class="accordion mootimeter_margin_top_5 overflow-scroll" id="{{accordionwrapperid}}">
+    <div class="container" >
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header" id="globalsettingsheading">
+                        <div id="linkwrapper" style="position-relative d-flex ftoggler align-items-center position-relative mr-1">
+                            <a data-toggle="collapse" data-target="#globalsettingsbody" aria-expanded="true" role="button" aria-controls="globalsettingsbody"
+                            class="btn btn-icon mr-1 icons-collapse-expand justify-content-center">
+                                <span class="expanded-icon icon-no-margin p-2" title="Collapse">
+                                    <i class="icon fa fa-chevron-down fa-fw " aria-hidden="true"></i>
+                                </span>
+                                <span class="collapsed-icon icon-no-margin p-2" title="Expand">
+                                <span class="dir-rtl-hide">
+                                    <i class="icon fa fa-chevron-right fa-fw " aria-hidden="true"></i>
+                                </span>
+                                <span class="dir-ltr-hide">
+                                    <i class="icon fa fa-chevron-left fa-fw " aria-hidden="true"></i>
+                                </span>
+                                </span>
+                            </a>
+                            <h4 class="mb-0" style="d-flex align-self-stretch align-items-center mb-0">{{#str}} globalpagesettings , mod_mootimeter {{/str}}</h4>
+                        </div>
+                    </div>
 
-        <div id="globalsettingsbody" class="collapse show" aria-labelledby="globalsettingsheading" data-parent="#{{accordionwrapperid}}">
-            <div class="card-body">
-                <div class="mootimetersettings mootimeterfullwidth">
-                    <label for="mootimeter_selecttype" class="form-label">{{#str}} pagetype , mod_mootimeter {{/str}}</label>
-                    <select id="mootimeter_selecttype" class="form-control mootimeterfullwidth" name="tool">
-                        <option>{{#str}} please_select, mod_mootimeter {{/str}}</option>
-                        {{#tools}}
-                        <option value="{{tool}}" {{selected}}>
-                            <img src="{{{pix}}}" width="80%" style="margin: 0 auto;">
-                            {{name}}
-                        </option>
-                        {{/tools}}
-                    </select>
-                </div>
-                <div>
-                    <label for="mootimeter_title" class="form-label">{{#str}} title , mod_mootimeter {{/str}}</label>
-                    <input id="mootimeter_title" type="text" class="form-control mootimeterfullwidth" name="title" value="{{title}}">
-                </div>
-                <div>
-                    <label for="mootimeter_description" class="form-label">{{#str}} description , mod_mootimeter {{/str}}</label>
-                    <textarea class="form-control mootimeterfullwidth" id="mootimeter_description" name="description">{{{description}}}</textarea>
+                    <div id="globalsettingsbody" class="collapse show" aria-labelledby="globalsettingsheading" data-parent="#{{accordionwrapperid}}">
+                        <div class="card-body">
+                            <div class="mootimetersettings mootimeterfullwidth">
+                                <label for="mootimeter_selecttype" class="form-label">{{#str}} pagetype , mod_mootimeter {{/str}}</label>
+                                <select id="mootimeter_selecttype" class="form-control mootimeterfullwidth" name="tool">
+                                    <option>{{#str}} please_select, mod_mootimeter {{/str}}</option>
+                                    {{#tools}}
+                                    <option value="{{tool}}" {{selected}}>
+                                        <img src="{{{pix}}}" width="80%" style="margin: 0 auto;">
+                                        {{name}}
+                                    </option>
+                                    {{/tools}}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="mootimeter_title" class="form-label">{{#str}} title , mod_mootimeter {{/str}}</label>
+                                <input id="mootimeter_title" type="text" class="form-control mootimeterfullwidth" name="title" value="{{title}}">
+                            </div>
+                            <div>
+                                <label for="mootimeter_description" class="form-label">{{#str}} description , mod_mootimeter {{/str}}</label>
+                                <textarea class="form-control mootimeterfullwidth" id="mootimeter_description" name="description">{{{description}}}</textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {{{tooladditionalfields}}}
 
-    {{#toolsettings}}
-    <div class="card">
-        <div class="card-header" id="toolsettingsheading">
-            <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#toolsettingsbody" aria-expanded="false"
-                    aria-controls="toolsettingsbody">
-                    {{#str}} toolsettings , mod_mootimeter {{/str}}
-                </button>
-            </h2>
-        </div>
 
-        <div id="toolsettingsbody" class="collapse" aria-labelledby="toolsettingsheading" data-parent="#{{accordionwrapperid}}">
-            <div class="card-body">
-                {{{toolsettings}}}
+    {{#toolsettings}}
+        <div class="row">
+            <div class="col">
+                <div class="card mt-4">
+                    <div class="card-header" id="toolsettingsheading">
+                            <a data-toggle="collapse" data-target="#toolsettingsbody" aria-expanded="true" role="button" aria-controls="toolsettingsbody"
+                               class="btn btn-icon mr-1 icons-collapse-expand justify-content-center">
+                                <span class="expanded-icon icon-no-margin p-2" title="Collapse">
+                                    <i class="icon fa fa-chevron-down fa-fw " aria-hidden="true"></i>
+                                </span>
+                                <span class="collapsed-icon icon-no-margin p-2" title="Expand">
+                                <span class="dir-rtl-hide">
+                                    <i class="icon fa fa-chevron-right fa-fw " aria-hidden="true"></i>
+                                </span>
+                                <span class="dir-ltr-hide">
+                                    <i class="icon fa fa-chevron-left fa-fw " aria-hidden="true"></i>
+                                </span>
+                                </span>
+                            </a>
+                        <h4 class="mb-0">{{#str}} toolsettings , mod_mootimeter {{/str}}</h4>
+                    </div>
+
+                <div id="toolsettingsbody" class="collapse show" aria-labelledby="toolsettingsheading" data-parent="#{{accordionwrapperid}}">
+                    <div class="card-body">
+                        {{{toolsettings}}}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        </div>
     {{/toolsettings}}
-
+    </div>
 </div>
