@@ -47,7 +47,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return array
      */
     public function get_renderer_params(object $page) {
-
+        global $OUTPUT;
         if (!empty($this->get_tool_config($page->id, 'ispoll'))) {
             switch ($this->get_tool_config($page->id, 'ispoll')) {
                 case self::MTMT_IS_QUIZ:
@@ -90,6 +90,13 @@ class quiz extends \mod_mootimeter\toolhelper {
             'pageid' => $page->id,
         ];
         $params['question_text'] = "Wie finden Sie Mootimeter?";
+        $tmparams = [
+            'id' => 'quiz_show_results',
+            'text' => get_string('show_results', 'mootimetertool_quiz'),
+            'cssclasses' => 'mootimeter_margin_top_5',
+        ];
+
+        //$params['redirect'] = new \moodle_url("tools/quiz/results.php", ["m"=> $page->instance,"pageid"=>$page->id]);
         return $params;
     }
 
@@ -125,5 +132,16 @@ class quiz extends \mod_mootimeter\toolhelper {
             ]
         ];
         return $settings;
+    }
+
+    public function get_result_page($page){
+        global $OUTPUT;
+        $chart = new \core\chart_bar();
+        $chart->set_labels(["test", "test2"]);
+        $series = new \core\chart_series("test",[100, 200]);
+        $chart->add_series($series);
+        $paramschart = ['charts' => $OUTPUT->render($chart)];
+
+        return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
     }
 }
