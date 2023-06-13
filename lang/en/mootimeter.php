@@ -45,3 +45,5 @@ $string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
 $string['title'] = 'Title';
 $string['globalpagesettings'] = 'Global page settings';
 $string['toolsettings'] = 'Tool settings';
+$string['show_results'] = 'Show Results';
+$string['show_options'] = 'Show Options';

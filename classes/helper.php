@@ -153,6 +153,21 @@ class helper {
         return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content", $params);
     }
 
+    public function get_rendered_page_result(object $page): string {
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_result_page')) {
+            return "Method 'get_renderer_params' is missing in tool helper class " . $page->tool;
+        }
+        return $toolhelper->get_result_page($page);
+    }
+
     /**
      * Get all setting definitions of a page.
      *

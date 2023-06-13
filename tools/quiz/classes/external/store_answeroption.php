@@ -83,7 +83,7 @@ class store_answeroption extends external_api {
             'id' => $id,
         ]);
 
-        \local_mbs\performance\debugger::print_debug('test', 'hook', [$pageid, $aoid, $value, $id]);
+        //\local_mbs\performance\debugger::print_debug('test', 'hook', [$pageid, $aoid, $value, $id]);
 
         // $mtmhelper = new \mod_mootimeter\helper();
         // $page = $mtmhelper->get_page($pageid);
