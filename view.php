@@ -31,6 +31,7 @@ $id = optional_param('id', 0, PARAM_INT);
 $action = optional_param('a', "", PARAM_ALPHA);
 $paramtool = optional_param('tool', "", PARAM_ALPHA);
 $pageid = optional_param('pageid', 0, PARAM_INT);
+$results = optional_param('results', false, PARAM_BOOL);
 
 // Set the pageid pageparam for $PAGE object.
 if($pageid){
@@ -117,6 +118,7 @@ $params = [
     'mootimetercard' => 'border rounded',
     'cmid' => $cmid,
     'pages' => $paramspages,
+    'results' => $results
 ];
 
 if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action == 'addpage') || !empty($pageid)) {
@@ -151,7 +153,15 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
     $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
 
     if (!empty($page)) {
-        $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
+        if(!$results){
+            $params['redirect_string'] = get_string("show_results", "mod_mootimeter");
+            $params['redirect_result'] = new moodle_url("view.php", ["m"=> $page->instance,"pageid"=>$page->id, "results"=>true]);
+            $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
+        } else {
+            $params['redirect_string'] = get_string("show_options", "mod_mootimeter");
+            $params['redirect_result'] = new moodle_url("view.php", ["m"=> $page->instance,"pageid"=>$page->id, "results"=>false]);
+            $params['pagecontent'] = $helper->get_rendered_page_result($page);
+        }
     }
 
     $params['isediting'] = $PAGE->user_is_editing();

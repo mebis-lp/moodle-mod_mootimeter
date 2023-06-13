@@ -33,3 +33,4 @@ $string['ispoll_helptitle'] = "What kind of quiz is it?";
 $string['ispoll_help'] = "You can choos between poll and quiz. Quizzes have wrong and right answers";
 $string['poll'] = "Poll";
 $string['quiz'] = "Quiz";
+$string['show_results'] = "Show results";
