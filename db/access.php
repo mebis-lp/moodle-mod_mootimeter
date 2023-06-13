@@ -46,8 +46,7 @@ $capabilities = [
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW,
-            'autor' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
         ],
     ],
 
