@@ -89,7 +89,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             $ispoll => true,
             'pageid' => $page->id,
         ];
-        $params['question_text'] = "Wie finden Sie Mootimeter?";
+        $params['question_text'] = "<h2>Wie finden Sie Mootimeter?</h2>";
         return $params;
     }
 
