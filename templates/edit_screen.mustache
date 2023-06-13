@@ -39,9 +39,11 @@
       {{/isediting}}
 
     <div class="mootimetercolcontent {{#isediting}}col-lg-9  col-md-7{{/isediting}}{{^isediting}}col-lg-11 col-md-11{{/isediting}} col-sm-12 col-xs-12">
-        <div>
-            <a href={{{redirect_result}}}>{{{redirect_string}}}</a>
-        </div>
+        {{#has_result}}
+            <div>
+                <a href={{{redirect_result}}}>{{{redirect_string}}}</a>
+            </div>
+        {{/has_result}}
       {{{pagecontent}}}
     </div>
   </div>

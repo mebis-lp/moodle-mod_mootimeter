@@ -151,16 +151,19 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
     }
 
     $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
+    $params['has_result'] = $helper->has_result_page($page);
 
     if (!empty($page)) {
         if(!$results){
             $params['redirect_string'] = get_string("show_results", "mod_mootimeter");
             $params['redirect_result'] = new moodle_url("view.php", ["m"=> $page->instance,"pageid"=>$page->id, "results"=>true]);
-            $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
         } else {
             $params['redirect_string'] = get_string("show_options", "mod_mootimeter");
             $params['redirect_result'] = new moodle_url("view.php", ["m"=> $page->instance,"pageid"=>$page->id, "results"=>false]);
             $params['pagecontent'] = $helper->get_rendered_page_result($page);
+        }
+        if(empty($params['pagecontent'])){
+            $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
         }
     }
 

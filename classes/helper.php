@@ -177,9 +177,20 @@ class helper {
 
         $toolhelper = new $classname();
         if (!method_exists($toolhelper, 'get_result_page')) {
-            return "Method 'get_renderer_params' is missing in tool helper class " . $page->tool;
+            return "";
         }
         return $toolhelper->get_result_page($page);
+    }
+
+    public function has_result_page(object $page){
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return false;
+        }
+
+        $toolhelper = new $classname();
+        return method_exists($toolhelper, 'get_result_page');
     }
 
     /**
