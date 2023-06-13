@@ -60,11 +60,11 @@ function xmldb_mootimeter_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2023020908, 'mootimeter');
     }
 
-    if ($oldversion < 2023020910) {
+    if ($oldversion < 2023020912) {
 
         // Define field question to be dropped from mootimeter_pages.
         $table = new xmldb_table('mootimeter_pages');
-        $field = new xmldb_field('question');
+        $field = new xmldb_field('description');
 
         // Conditionally launch drop field question.
         if ($dbman->field_exists($table, $field)) {
@@ -72,15 +72,15 @@ function xmldb_mootimeter_upgrade($oldversion) {
         }
 
         // Create new field question
-        $field = new xmldb_field('question');
+        $field = new xmldb_field('question', XMLDB_TYPE_TEXT, null, null, null, null, null, 'title');
 
-        // Conditionally launch drop field question.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->drop_field($table, $field);
+        // Conditionally launch add field question.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
         }
 
         // Mootimeter savepoint reached.
-        upgrade_mod_savepoint(true, 2023020910, 'mootimeter');
+        upgrade_mod_savepoint(true, 2023020912, 'mootimeter');
     }
 
 

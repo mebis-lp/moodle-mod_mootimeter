@@ -41,3 +41,9 @@
 
   </div>
 </div>
+
+{{#isediting}}
+{{#js}}
+require(['mod_mootimeter/edit'], (module) => module.init());
+{{/js}}
+{{/isediting}}

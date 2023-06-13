@@ -2,7 +2,7 @@
 <div class="row justify-content-md-center mootimeter_margin_top_50">
 
   <div class="col-md-8">
-    <div id="question_text">
+    <div id="mootimeter_question_div">
       {{{question_text}}}
     </div>
   </div>
@@ -15,7 +15,10 @@
 
       {{#isediting}}
       <div>
-        <input type="radio" id="new_ao" class="mtmt_radio" name="select">
+        <form>
+        <input type="hidden" name="pageid" value="{{pageid}}">
+        <input type="hidden" name="id" value="{{cmid}}">
+        <input type="submit" id="new_ao" class="mtmt_radio" name="new_ao">
         <label class="ao_label" for="new_ao" style="padding-bottom: 0;">
           <div class="mootimeterfullwidth" style="display: table;height: 50px; overflow: hidden;">
             <div class="mootimeterfullwidth" style="display: table-cell; vertical-align: middle;">
@@ -25,6 +28,7 @@
             </div>
           </div>
         </label>
+        </form>
       </div>
       {{/isediting}}
 

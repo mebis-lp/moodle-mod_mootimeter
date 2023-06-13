@@ -68,7 +68,7 @@ if (!empty($action) && $action == "storepage") {
     $record->tool = $paramtool;
     $record->instance = $cm->instance;
     $record->title = $paramtitle;
-    $record->description = optional_param('description', "", PARAM_TEXT);
+    $record->question = optional_param('question', "", PARAM_RAW);
     $pageid = $helper->store_page($record);
 
     // Get all settingparams from tool.
@@ -133,7 +133,6 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
         $tools[] = $tooltemp;
     }
 
-
     $editformparams = [
         'cmid' => $cmid,
         'pageid' => $pageid,
@@ -145,7 +144,7 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
 
     if (!empty($pageid)) {
         $editformparams['title'] = $page->title;
-        $editformparams['description'] = $page->description;
+        $editformparams['question'] = $page->question;
         $editformparams['toolsettings'] = $helper->get_tool_settings($page);
     }
 
@@ -157,7 +156,6 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
 
     $params['isediting'] = $PAGE->user_is_editing();
 }
-
 
 //  print_R($params);die;
 echo $OUTPUT->render_from_template("mod_mootimeter/edit_screen", $params);
