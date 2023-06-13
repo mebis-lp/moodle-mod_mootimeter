@@ -1,12 +1,12 @@
-<form method="post">
+<div style="overflow:auto;height:800px;">
+    <form method="post">
 
-    <input type="hidden" name="id" value="{{cmid}}">
-    <input type="hidden" name="pageid" value="{{pageid}}">
-    <input type="hidden" name="tool" value="{{tool}}">
+        <input type="hidden" name="id" value="{{cmid}}">
+        <input type="hidden" name="pageid" value="{{pageid}}">
+        <input type="hidden" name="tool" value="{{tool}}">
 
-    {{> mod_mootimeter/snippet_accordion_wrapper}}
-
-    <hr>
-    <button type="submit" name="a" value="storepage" class="btn btn-primary mootimeterfullwidth">{{#str}} save, core {{/str}}</button>
-
-</form>
+        {{> mod_mootimeter/snippet_accordion_wrapper}}
+        <br>
+        <button type="submit" name="a" value="storepage" class="btn btn-primary ml-lg-4">{{#str}} savechangesanddisplay, core {{/str}}</button>
+    </form>
+</div>
