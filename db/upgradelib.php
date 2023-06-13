@@ -49,7 +49,7 @@ function mod_mootimeter_create_mootimeter_pages_table() {
     $table->add_field('instance', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('tool', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
     $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-    $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+    $table->add_field('question', XMLDB_TYPE_TEXT, null, null, null, null, null);
     $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '5', null, null, null, null);
     $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
     $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);

@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__.'/upgradelib.php');
+require_once(__DIR__ . '/upgradelib.php');
 
 /**
  * Execute mod_mootimeter upgrade from the given old version.
@@ -59,6 +59,30 @@ function xmldb_mootimeter_upgrade($oldversion) {
         // Mootimeter savepoint reached.
         upgrade_mod_savepoint(true, 2023020908, 'mootimeter');
     }
+
+    if ($oldversion < 2023020910) {
+
+        // Define field question to be dropped from mootimeter_pages.
+        $table = new xmldb_table('mootimeter_pages');
+        $field = new xmldb_field('question');
+
+        // Conditionally launch drop field question.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Create new field question
+        $field = new xmldb_field('question');
+
+        // Conditionally launch drop field question.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Mootimeter savepoint reached.
+        upgrade_mod_savepoint(true, 2023020910, 'mootimeter');
+    }
+
 
     return true;
 }
