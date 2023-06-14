@@ -89,6 +89,30 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Store an answer option.
+     *
+     * @param object $record
+     * @return int
+     */
+    public function store_student_answer(object $record): int {
+        global $DB, $USER;
+
+        $origrecord = $DB->get_record('mtmt_quiz_answers',
+            ['pageid' => $record->pageid, 'usermodified' => $record->usermodified]);
+
+        if ($origrecord !== FALSE) {
+            $origrecord->optionid = $record->optionid;
+            $origrecord->timemodified = time();
+
+            $DB->update_record('mtmt_quiz_answers', $origrecord);
+            return $origrecord->id;
+        }
+
+        return $DB->insert_record('mtmt_quiz_answers', $record, true);
+
+    }
+
+    /**
      * Get all parameters that are necessary for rendering the tools view.
      *
      * @param object $page
