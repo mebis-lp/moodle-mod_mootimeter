@@ -188,7 +188,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             }
 
         }
-        $series = new \core\chart_series("tests",array_values($answers));
+        $series = new \core\chart_series($page->question,array_values($answers));
         $chart->add_series($series);
         $paramschart = ['charts' => $OUTPUT->render($chart)];
 
