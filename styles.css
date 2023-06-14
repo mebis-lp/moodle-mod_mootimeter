@@ -63,27 +63,27 @@
 }
 
 @media (min-width: 768px) {
-    .mootimetercolright {
+    .mootimetercoledit {
         margin-right: calc(-1 * var(--card-deck-margin));
         margin-left: calc(-1 * var(--card-deck-margin));
     }
 }
 
 @media (min-width: 576px) {
-    .mootimetercolright {
+    .mootimetercoledit {
         margin-right: calc(-1 * var(--card-deck-margin));
         margin-left: calc(-1 * var(--card-deck-margin));
     }
 }
 
 @media (min-width: 480px) {
-    .mootimetercolright {
+    .mootimetercoledit {
         margin-right: calc(- var(--card-deck-margin));
         margin-left: calc(- var(--card-deck-margin));
     }
 }
 
-.mootimetercolright {
+.mootimetercoledit {
     padding-left: 5px !important;
     padding-right: 5px !important;
     border-right: none;
