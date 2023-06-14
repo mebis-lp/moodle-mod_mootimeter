@@ -170,10 +170,25 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     public function get_result_page($page){
-        global $OUTPUT;
+        global $OUTPUT, $DB;
         $chart = new \core\chart_bar();
-        $chart->set_labels(["test", "test2"]);
-        $series = new \core\chart_series("test",[100, 200]);
+        $records = $DB->get_records('mtmt_quiz_options', ["pageid"=>$page->id]);
+        $labels = [];
+        foreach($records as $record){
+            $labels[] = $record->optiontext;
+        }
+        $chart->set_labels($labels);
+        $answers = [];
+        $answerrecords = $DB->get_records('mtmt_quiz_answers', ["pageid"=>$page->id]);
+        foreach($answerrecords as $ar){
+            if(isset($answers[$ar->optionid])){
+                $answers[$ar->optionid]++;
+            } else {
+                $answers[$ar->optionid] = 1;
+            }
+
+        }
+        $series = new \core\chart_series("tests",array_values($answers));
         $chart->add_series($series);
         $paramschart = ['charts' => $OUTPUT->render($chart)];
 
