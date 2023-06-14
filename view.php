@@ -156,7 +156,7 @@ $params = [
     'results' => $results
 ];
 
-if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action == 'addpage') || !empty($pageid)) {
+if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($action) && $action == 'addpage') || !empty($pageid)) {
     $enabledtools = $mt->get_enabled_plugins();
     $tools = [];
     foreach ($enabledtools as $key => $tool) {
