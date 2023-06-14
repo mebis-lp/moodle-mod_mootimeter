@@ -70,6 +70,7 @@ class store_answeroption extends external_api {
      * @throws dml_exception
      */
     public static function execute(int $pageid, int $aoid, string $value, string $id): void {
+        global $USER;
 
         [
             'pageid' => $pageid,
@@ -83,13 +84,24 @@ class store_answeroption extends external_api {
             'id' => $id,
         ]);
 
+
+
         // \local_mbs\performance\debugger::print_debug('test', 'hook', [$pageid, $aoid, $value, $id]);
 
         // $mtmhelper = new \mod_mootimeter\helper();
         // $page = $mtmhelper->get_page($pageid);
 
-        // $quiz = new \mootimetertool_quiz\quiz();
-        // $quiz->insert_answer($page, $answer);
+        $quiz = new \mootimetertool_quiz\quiz();
+
+        $record = new \stdClass();
+        $record->id = $aoid;
+        $record->pageid = $pageid;
+        $record->usermodified = $USER->id;
+        $record->optiontext = $value;
+        $record->optioniscorrect = 0;
+        $record->timecreated = time();
+
+        $quiz->store_answer_option($record);
 
         return;
     }
