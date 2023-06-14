@@ -29,7 +29,15 @@ $functions = [
     'mootimetertool_quiz_store_answeroption' => [
         'classname'     => 'mootimetertool_quiz\external\store_answeroption',
         'methodname'    => 'execute',
-        'description'   => 'Store answer option of mootimetertool_quiz.',
+        'description'   => 'Store an answer option of mootimetertool_quiz changed by the teacher',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
+    'mootimetertool_quiz_store_answer' => [
+        'classname'     => 'mootimetertool_quiz\external\store_answer',
+        'methodname'    => 'execute',
+        'description'   => 'Store an answer of mootimetertool_quiz by the student',
         'type'          => 'write',
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
