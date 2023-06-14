@@ -178,17 +178,8 @@ class quiz extends \mod_mootimeter\toolhelper {
             $labels[] = $record->optiontext;
         }
         $chart->set_labels($labels);
-        $answers = [];
-        $answerrecords = $DB->get_records('mtmt_quiz_answers', ["pageid"=>$page->id]);
-        foreach($answerrecords as $ar){
-            if(isset($answers[$ar->optionid])){
-                $answers[$ar->optionid]++;
-            } else {
-                $answers[$ar->optionid] = 1;
-            }
-
-        }
-        $series = new \core\chart_series($page->question,array_values($answers));
+        $values = array_map(function($obj){ return $obj->cnt;},(array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$page->id], 'optionid'));
+        $series = new \core\chart_series($page->question,array_values(array_map("floatval", $values)));
         $chart->add_series($series);
         $paramschart = ['charts' => $OUTPUT->render($chart)];
 
