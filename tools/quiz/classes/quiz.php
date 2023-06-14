@@ -202,6 +202,7 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function get_result_page($page){
 
         global $OUTPUT, $DB;
+
         $chart = new \core\chart_bar();
         $records = $DB->get_records('mtmt_quiz_options', ["pageid" => $page->id]);
         $labels = "[";
@@ -218,7 +219,9 @@ class quiz extends \mod_mootimeter\toolhelper {
             $paramschart = [
                 'labels' => $labels,
                 'values'=>'['.implode(',', $this->get_counted_answers($page->id)).']',
-                'question' => "\"test\""];
+                'question' => "\"test\"",
+                'lastupdated' => $this->get_last_update_time($page->id, "quiz"),
+                'pageid' => $page->id];
         }
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
@@ -232,7 +235,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_counted_answers(int $pageid){
         $values = array_map(function($obj){ return $obj->cnt;},(array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$pageid], 'optionid'));
-        return array_values(array_map("floatval", $values));
+        return array_values($values);
     }
 
     /**
