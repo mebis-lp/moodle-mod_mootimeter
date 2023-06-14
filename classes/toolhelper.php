@@ -271,7 +271,7 @@ abstract class toolhelper {
      * @return array
      * @throws dml_exception
      */
-    public function get_answers_grouped(string $table, array $params) {
+    public function get_answers_grouped(string $table, array $params, string $answercolumn = 'answer') {
         global $DB;
 
         $cache = \cache::make('mod_mootimeter', 'answers');
@@ -279,7 +279,7 @@ abstract class toolhelper {
         $records = json_decode($cache->get($cachekey));
 
         if (empty($records)) {
-            $sql = "SELECT answer, count(*) as cnt FROM {" . $table . "} WHERE pageid = :pageid GROUP BY answer";
+            $sql = "SELECT $answercolumn, count(*) as cnt FROM {" . $table . "} WHERE pageid = :pageid GROUP BY $answercolumn";
             $records = $DB->get_records_sql($sql, $params);
             $cache->set($cachekey, json_encode($records));
         }
