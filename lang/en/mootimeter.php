@@ -42,12 +42,11 @@ $string['pluginadministration'] = 'Moodimeter administration';
 $string['pluginname'] = 'Mootimeter';
 $string['subplugintype_mootimetertool'] = 'Mootimeter Tool';
 $string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
-$string['title'] = 'Title';
+$string['title'] = 'Page Title';
 $string['createnewpagesettings'] = 'New page settings';
 $string['settings'] = 'settings';
 $string['toolsettings'] = 'Tool settings';
 $string['show_results'] = 'Show Results';
 $string['show_options'] = 'Show Options';
 $string['deleteerror'] = 'Something went wrong while deleting the page. Please contact your support.';
-$string['description'] = 'Description';
 
