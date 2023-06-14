@@ -53,6 +53,15 @@ abstract class toolhelper {
     public abstract function insert_answer(object $page, $answer);
 
     /**
+     * Delete Page
+     *
+     * @param object $page
+     * @param mixed $answer
+     * @return bool
+     */
+    public abstract function delete_page(object $page);
+
+    /**
      * Get all parameters that are necessary for rendering the tools view.
      *
      * @param object $page

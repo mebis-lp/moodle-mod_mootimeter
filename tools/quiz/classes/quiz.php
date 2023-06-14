@@ -144,4 +144,24 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
     }
+
+    /**
+     * Delete all DB entries related to a specific page.
+     * @param object $page
+     * @return bool
+     */
+    public function delete_page(object $page) {
+        global $DB;
+        try {
+            $DB->delete_records('mtmt_quiz_options', array('pageid' => $page->id));
+            $DB->delete_records('mtmt_quiz_answers', array('pageid' => $page->id));
+            $DB->delete_records('mootimeter_pages', array('id' => $page->id));
+            $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
+        } catch (\Exception $e) {
+            // Todo handling
+            echo 'Something went wrong';
+            return false;
+        }
+        return true;
+    }
 }

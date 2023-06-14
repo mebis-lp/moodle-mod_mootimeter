@@ -60,9 +60,19 @@ $pageparams['id'] = $cm->id;
 require_login($course, true, $cm);
 
 $helper = new \mod_mootimeter\helper();
+$deleteerror = false;
+
+if (!empty($action) && $action == "deletepage") {
+    $page = $helper->get_page($pageid);
+    $success = $helper->delete_page($page);
+    if ($success) {
+        redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'a' => 'editpage']));
+    } else {
+        $deleteerror = true;
+    }
+}
 
 if (!empty($action) && $action == "storepage") {
-
     // Store page.
     $record = new stdClass();
     $record->id = $pageid;
@@ -110,7 +120,9 @@ $PAGE->set_context($modulecontext);
 $cmid = $PAGE->url->get_param('id');
 
 echo $OUTPUT->header();
-
+if ($deleteerror) {
+    echo html_writer::div(get_string('deleteerror', 'mod_mootimeter'), 'alert alert-danger alert-dismissible ');
+}
 $paramspages = $helper->get_pages_template($pages, $pageid);
 $params = [
     'containerclasses' => "border rounded",
@@ -142,13 +154,14 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
         'title' => $paramtitle,
         'tool' => $tool,
         'tools' => $tools,
-        'accordionwrapperid' => 'settingswrapper'
+        'accordionwrapperid' => 'settingswrapper',
     ];
 
     if (!empty($pageid)) {
         $editformparams['title'] = $page->title;
         $editformparams['description'] = $page->description;
         $editformparams['toolsettings'] = $helper->get_tool_settings($page);
+        $editformparams['instancename'] = $page->title;
     }
 
     $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);

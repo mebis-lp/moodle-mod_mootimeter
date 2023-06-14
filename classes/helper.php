@@ -286,4 +286,23 @@ class helper {
 
         return $returnconfig;
     }
+
+    /**
+     * Delete the page for the current subplugin.
+     * @param $page
+     * @return bool
+     */
+    public function delete_page($page) {
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'delete_page')) {
+            throw new \coding_exception("Method 'delete_page' is missing in tool helper class " . $page->tool);
+        }
+        return $toolhelper->delete_page($page);
+    }
 }

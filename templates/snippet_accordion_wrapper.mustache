@@ -19,7 +19,13 @@
                                 </span>
                                 </span>
                             </a>
-                            <h4 class="mb-0" style="d-flex align-self-stretch align-items-center mb-0">{{#str}} globalpagesettings , mod_mootimeter {{/str}}</h4>
+                            <h4 class="mb-0" style="d-flex align-self-stretch align-items-center mb-0">
+                                {{#instancename}}
+                                    {{instancename}} {{#str}} settings , mod_mootimeter {{/str}}</h4>
+                                {{/instancename}}
+                                {{^instancename}}
+                                    {{#str}} createnewpagesettings , mod_mootimeter {{/str}}</h4>
+                                {{/instancename}}
                         </div>
                     </div>
 
