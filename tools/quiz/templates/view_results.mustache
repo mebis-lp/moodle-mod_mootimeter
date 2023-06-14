@@ -1,4 +1,41 @@
-<div class="mootimeterfullwidth" id="quiz">
-    {{{charts}}}
+<script src="tools/quiz/js/chart.umd.min.js"></script>
+<div class="mootimeterfullwidth mootimetercontainer">
+    <canvas id="quizcanvas"></canvas>
 </div>
+<input type="hidden" id="mootimeter_lastupdated" value="{{lastupdated}}">
+<script>
+    var canvas = document.getElementById('quizcanvas');
+    var mydata = {
+    labels: {{{labels}}},
+    datasets: [
+        {
+            label: {{{question}}},
+            data: {{{values}}}
+        }
+    ]
+    };
+    var chart = new Chart(canvas, {
+        type: "bar",
+        data: mydata
+    });
+    redrawquiz()
+
+    const event = new Event("redrawquiz");
+    let mtmtcanvas = document.getElementById('quizcanvas');
+    mtmtcanvas.addEventListener(
+     "redrawquiz",
+     (e) => {
+       window.console.log("Redraw");
+       redrawquiz();
+     },
+     false
+   );
+
+    function redrawquiz() {
+        let mtmtcanvas = document.getElementById('quizcanvas');
+        let answers = JSON.parse(mtmtcanvas.data-count);
+        chart.data.datasets[0].data.push(answers);
+        chart.update();
+   }
+</script>
 

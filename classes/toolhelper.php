@@ -310,4 +310,22 @@ abstract class toolhelper {
 
         return $records;
     }
+
+    /**
+     * Get the lastupdated timestamp.
+     *
+     * @param int $pageid
+     * @return int
+     */
+    public function get_last_update_time(int $pageid, string $tool): int {
+        global $DB;
+
+        $records = $DB->get_records('mtmt_'.$tool.'_answers', ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
+
+        if (empty($records)) {
+            return 0;
+        }
+        $record = array_shift($records);
+        return $record->timecreated;
+    }
 }
