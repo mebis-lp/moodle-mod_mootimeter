@@ -57,11 +57,10 @@ class helper {
             $origrecord->question = $record->question;
             $origrecord->tool = $record->tool;
             $origrecord->timemodified = time();
-
+            $origrecord->sortorder = $record->sortorder;
             $DB->update_record('mootimeter_pages', $origrecord);
             return $origrecord->id;
         }
-
         $pageid = $DB->insert_record('mootimeter_pages', $record, true);
 
         // Hook to do further actions depending on mtmt tool.
@@ -89,7 +88,7 @@ class helper {
      */
     public function get_pages(int $instanceid) {
         global $DB;
-        return $DB->get_records('mootimeter_pages', ['instance' => $instanceid]);
+        return $DB->get_records('mootimeter_pages', ['instance' => $instanceid], 'sortorder');
     }
 
     /**
@@ -123,6 +122,7 @@ class helper {
                 'pix' => "tools/" . $page->tool . "/pix/" . $page->tool . ".svg",
                 'active' => ($page->id == $pageid) ? "active" : "",
                 'pageid' => $page->id,
+                'sortorder' => $page->sortorder,
             ];
         }
         return $temppages;

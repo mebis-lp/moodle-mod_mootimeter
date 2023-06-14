@@ -7,6 +7,7 @@
           <form action="" method="get" >
             <input type="hidden" name="id" value="{{cmid}}">
             <input type="hidden" name="pageid" value="{{pageid}}">
+              {{sortorder}}
             <button type="submit" class="{{mootimetercard}} {{active}}" style="max-height: 80px; max-width: 120px; min-height: 80px; min-width: 120px;">
                 <div class="pb-2">
                   <img src="{{{pix}}}" width="100%" style="margin: 0 auto;height: 40px">
@@ -29,7 +30,7 @@
     </div>
 
       {{#isediting}}
-          <div class=" mootimetercolright {{{mootimetercolright}}} col-lg-2 col-sm-9 col-md-3 col-xs-12 border-right">
+          <div class=" mootimetercoledit {{{mootimetercoledit}}} col-lg-2 col-sm-9 col-md-3 col-xs-12 border-right">
               {{#settings}}
                   <hr>
                   <div class="mootimetersettings mootimeterfullwidth">

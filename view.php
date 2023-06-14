@@ -39,6 +39,7 @@ if($pageid){
 }
 
 $paramtitle = optional_param('title', "", PARAM_ALPHA);
+$paramorder = optional_param('sortorder', "", PARAM_INT);
 
 // Activity instance id.
 $m = optional_param('m', 0, PARAM_INT);
@@ -79,6 +80,7 @@ if (!empty($action) && $action == "storepage") {
     $record->tool = $paramtool;
     $record->instance = $cm->instance;
     $record->title = $paramtitle;
+    $record->sortorder = $paramorder;
     $record->question = optional_param('question', "", PARAM_RAW);
     $pageid = $helper->store_page($record);
 
@@ -126,7 +128,7 @@ if ($deleteerror) {
 $paramspages = $helper->get_pages_template($pages, $pageid);
 $params = [
     'containerclasses' => "border rounded",
-    'mootimetercolright' => "border-left ",
+    'mootimetercoledit' => "border-left ",
     'mootimetercard' => 'border rounded',
     'cmid' => $cmid,
     'pages' => $paramspages,
@@ -146,11 +148,11 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
         }
         $tools[] = $tooltemp;
     }
-
     $editformparams = [
         'cmid' => $cmid,
         'pageid' => $pageid,
         'title' => $paramtitle,
+        'sortorder' => $paramorder,
         'tool' => $tool,
         'tools' => $tools,
         'accordionwrapperid' => 'settingswrapper',
@@ -158,6 +160,7 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
 
     if (!empty($pageid)) {
         $editformparams['title'] = $page->title;
+        $editformparams['sortorder'] = $page->sortorder;
         $editformparams['question'] = $page->question;
         $editformparams['toolsettings'] = $helper->get_tool_settings($page);
         $editformparams['instancename'] = $page->title;

@@ -43,6 +43,7 @@ $string['pluginname'] = 'Mootimeter';
 $string['subplugintype_mootimetertool'] = 'Mootimeter Tool';
 $string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
 $string['title'] = 'Title';
+$string['sortorder'] = 'Order';
 $string['createnewpagesettings'] = 'New page settings';
 $string['settings'] = 'settings';
 $string['toolsettings'] = 'Tool settings';
