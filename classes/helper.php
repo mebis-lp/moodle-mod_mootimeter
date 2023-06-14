@@ -54,7 +54,7 @@ class helper {
 
             $origrecord = $DB->get_record('mootimeter_pages', ['id' => $record->id]);
             $origrecord->title = $record->title;
-            $origrecord->description = $record->description;
+            $origrecord->question = $record->question;
             $origrecord->tool = $record->tool;
             $origrecord->timemodified = time();
 
@@ -62,7 +62,22 @@ class helper {
             return $origrecord->id;
         }
 
-        return $DB->insert_record('mootimeter_pages', $record, true);
+        $pageid = $DB->insert_record('mootimeter_pages', $record, true);
+
+        // Hook to do further actions depending on mtmt tool.
+        $classname = "\mootimetertool_" . $record->tool . "\\" . $record->tool;
+        if (!class_exists($classname)) {
+            return "Class '" . $record->tool . "' is missing in tool " . $record->tool;
+        }
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'hook_after_new_page_created')) {
+            return "Method 'get_renderer_params' is missing in tool helper class " . $record->tool;
+        }
+
+        $record->id = $pageid;
+        $toolhelper->hook_after_new_page_created($record);
+
+        return $pageid;
     }
 
     /**
@@ -141,7 +156,7 @@ class helper {
             'pageid' => $page->id,
             'cmid' => $cm->id,
             'title' => s($page->title),
-            'description' => s($page->description),
+            'question' => s($page->question),
             'isediting' => $PAGE->user_is_editing(),
         ];
         $params = array_merge($params, $toolhelper->get_renderer_params($page));
@@ -165,6 +180,18 @@ class helper {
             return "Method 'get_renderer_params' is missing in tool helper class " . $page->tool;
         }
         return $toolhelper->get_result_page($page);
+    }
+
+
+    public function has_result_page(object $page){
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return false;
+        }
+
+        $toolhelper = new $classname();
+        return method_exists($toolhelper, 'get_result_page');
     }
 
     /**

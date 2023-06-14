@@ -17,7 +17,7 @@
 /**
  * Plugin upgrade steps are defined here.
  *
- * @package     mod_mootimeter
+ * @package     mootimetertool_quiz
  * @category    upgrade
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
@@ -29,60 +29,32 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/upgradelib.php');
 
 /**
- * Execute mod_mootimeter upgrade from the given old version.
+ * Execute mootimetertool_quiz upgrade from the given old version.
  *
  * @param int $oldversion
  * @return bool
  */
-function xmldb_mootimeter_upgrade($oldversion) {
-    global $DB;
-
-    $dbman = $DB->get_manager();
+function xmldb_mootimetertool_quiz_upgrade($oldversion) {
 
     // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
     //
     // You will also have to create the db/install.xml file by using the XMLDB Editor.
     // Documentation for the XMLDB Editor can be found at {@link https://docs.moodle.org/dev/XMLDB_editor}.
+    if ($oldversion < 2023060801) {
 
-    if ($oldversion < 2023020905) {
+        mootimetertool_quiz_create_tables();
 
-        mootimetertool_wordcloud_create_tables();
-
-        // Mootimeter savepoint reached.
-        upgrade_mod_savepoint(true, 2023020905, 'mootimeter');
+        // Quiz savepoint reached.
+        upgrade_plugin_savepoint(true, 2023060801, 'mootimetertool', 'quiz');
     }
 
-    if ($oldversion < 2023020908) {
+    if ($oldversion < 2023061400) {
 
-        mod_mootimeter_create_mootimeter_tool_settings_table();
+        mootimeter_quiz_add_field_optioniscorrect();
 
-        // Mootimeter savepoint reached.
-        upgrade_mod_savepoint(true, 2023020908, 'mootimeter');
+        // Quiz savepoint reached.
+        upgrade_plugin_savepoint(true, 2023061400, 'mootimetertool', 'quiz');
     }
-
-    if ($oldversion < 2023020912) {
-
-        // Define field question to be dropped from mootimeter_pages.
-        $table = new xmldb_table('mootimeter_pages');
-        $field = new xmldb_field('description');
-
-        // Conditionally launch drop field question.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->drop_field($table, $field);
-        }
-
-        // Create new field question
-        $field = new xmldb_field('question', XMLDB_TYPE_TEXT, null, null, null, null, null, 'title');
-
-        // Conditionally launch add field question.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Mootimeter savepoint reached.
-        upgrade_mod_savepoint(true, 2023020912, 'mootimeter');
-    }
-
 
     return true;
 }

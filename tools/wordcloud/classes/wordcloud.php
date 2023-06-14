@@ -34,6 +34,16 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     /** Show Results after teacher permission */
     const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
 
+
+    /**
+     * Will be executed after the page is created.
+     * @object array $page
+     * @return void
+     */
+    public function hook_after_new_page_created(object $page): void {
+        return;
+    }
+
     /**
      *
      * @param string $answer

@@ -25,6 +25,8 @@
 
 namespace mootimetertool_quiz;
 
+use stdClass;
+
 class quiz extends \mod_mootimeter\toolhelper {
 
     const MTMT_IS_POLL = 1;
@@ -38,6 +40,52 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return void
      */
     public function insert_answer(object $page, $answer) {
+    }
+
+    /**
+     * Will be executed after the page is created.
+     * @param object $page
+     * @return void
+     */
+    public function hook_after_new_page_created(object $page): void {
+        global $USER;
+
+        $record = new stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $USER->id;
+        $record->optiontext = "";
+        $record->optioniscorrect = 0;
+        $record->timecreated =time();
+
+        // Store two answer options as default.
+        $this->store_answer_option($record);
+        $this->store_answer_option($record);
+        return;
+    }
+
+    /**
+     * Store an answer option.
+     *
+     * @param object $record
+     * @return int
+     */
+    public function store_answer_option(object $record): int {
+        global $DB, $USER;
+
+        if (!empty($record->id)) {
+            $origrecord = $DB->get_record('mtmt_quiz_options', ['id' => $record->id]);
+            $origrecord->pageid = $record->pageid;
+            $origrecord->usermodified = $USER->id;
+            $origrecord->optiontext = $record->optiontext;
+            $origrecord->optioniscorrect = $record->optioniscorrect;
+            $origrecord->timemodified = time();
+
+            $DB->update_record('mtmt_quiz_options', $origrecord);
+            return $origrecord->id;
+        }
+
+        return $DB->insert_record('mtmt_quiz_options', $record, true);
+
     }
 
     /**
@@ -61,43 +109,32 @@ class quiz extends \mod_mootimeter\toolhelper {
             $ispoll = "ispoll";
         }
 
-        $params['answer_options'][] = [
-            'ao_id' => 123,
-            'ao_heading' => 'Antwort 1',
-            'ao_text' => 'Das ist meine Frage',
-            $ispoll => true,
-            'pageid' => $page->id,
-        ];
-        $params['answer_options'][] = [
-            'ao_id' => 456,
-            'ao_heading' => 'Antwort 2',
-            'ao_text' => 'Das ist meine Frage 2',
-            $ispoll => true,
-            'pageid' => $page->id,
-        ];
-        $params['answer_options'][] = [
-            'ao_id' => 234,
-            'ao_heading' => 'Antwort 3',
-            'ao_text' => 'Das ist meine Frage 3',
-            $ispoll => true,
-            'pageid' => $page->id,
-        ];
-        $params['answer_options'][] = [
-            'ao_id' => 567,
-            'ao_heading' => 'Antwort 4',
-            'ao_text' => 'Das ist meine Frage 4',
-            $ispoll => true,
-            'pageid' => $page->id,
-        ];
-        $params['question_text'] = "Wie finden Sie Mootimeter?";
-        $tmparams = [
-            'id' => 'quiz_show_results',
-            'text' => get_string('show_results', 'mootimetertool_quiz'),
-            'cssclasses' => 'mootimeter_margin_top_5',
-        ];
 
         //$params['redirect'] = new \moodle_url("tools/quiz/results.php", ["m"=> $page->instance,"pageid"=>$page->id]);
+        $answeroptions = $this->get_answer_options($page->id);
+
+        foreach($answeroptions as $ao){
+            $params['answer_options'][] = [
+                'ao_id' => $ao->id,
+                'ao_text' => $ao->optiontext,
+                'ao_iscorrect' => $ao->optioniscorrect,
+                $ispoll => true,
+                'pageid' => $page->id,
+            ];
+        }
+        $params['question_text'] = $page->question;
         return $params;
+    }
+
+    /**
+     * Get all answer options of a page.
+     *
+     * @param int $pageid
+     * @return array
+     */
+    public function get_answer_options(int $pageid): array {
+        global $DB;
+        return $DB->get_records('mtmt_quiz_options', ['pageid' => $pageid]);
     }
 
     /**
@@ -135,10 +172,26 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     public function get_result_page($page){
-        global $OUTPUT;
+
+        global $OUTPUT, $DB;
         $chart = new \core\chart_bar();
-        $chart->set_labels(["test", "test2"]);
-        $series = new \core\chart_series("test",[100, 200]);
+        $records = $DB->get_records('mtmt_quiz_options', ["pageid"=>$page->id]);
+        $labels = [];
+        foreach($records as $record){
+            $labels[] = $record->optiontext;
+        }
+        $chart->set_labels($labels);
+        $answers = [];
+        $answerrecords = $DB->get_records('mtmt_quiz_answers', ["pageid"=>$page->id]);
+        foreach($answerrecords as $ar){
+            if(isset($answers[$ar->optionid])){
+                $answers[$ar->optionid]++;
+            } else {
+                $answers[$ar->optionid] = 1;
+            }
+
+        }
+        $series = new \core\chart_series($page->question,array_values($answers));
         $chart->add_series($series);
         $paramschart = ['charts' => $OUTPUT->render($chart)];
 

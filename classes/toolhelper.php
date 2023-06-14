@@ -78,6 +78,13 @@ abstract class toolhelper {
     public abstract function get_tool_setting_definitions(object $page);
 
     /**
+     * Will be executed after the page is created.
+     * @param object $page
+     * @return void
+     */
+    public abstract function hook_after_new_page_created(object $page);
+
+    /**
      * Get renderes setting output.
      *
      * @param mixed $page

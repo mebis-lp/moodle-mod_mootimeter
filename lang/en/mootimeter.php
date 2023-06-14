@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['addpage'] = 'Add Page';
 $string['cachedef_answers'] = 'Contains the pages answers.';
 $string['cannotview'] = 'You are not allowed to access this page!';
-$string['description'] = 'Description';
+$string['question'] = 'Question';
 $string['modulename'] = 'Mootimeter';
 $string['modulenameplural'] = 'Mootimeter';
 $string['pagetype'] = 'Page Type';
@@ -49,3 +49,5 @@ $string['toolsettings'] = 'Tool settings';
 $string['show_results'] = 'Show Results';
 $string['show_options'] = 'Show Options';
 $string['deleteerror'] = 'Something went wrong while deleting the page. Please contact your support.';
+$string['description'] = 'Description';
+

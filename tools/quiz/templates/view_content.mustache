@@ -2,14 +2,9 @@
 <div class="row justify-content-md-center mootimeter_margin_top_50">
 
   <div class="col-md-8">
-    <h2>
-      {{#isediting}}
-      <textarea type="text" class="form-control mootimeterfullwidth" name="edit_question">{{question_text}}</textarea>
-      {{/isediting}}
-      {{^isediting}}
-      {{question_text}}
-      {{/isediting}}
-    </h2>
+    <div id="mootimeter_question_div">
+      {{{question_text}}}
+    </div>
   </div>
 
   <div class="col-md-8">
@@ -20,7 +15,7 @@
 
       {{#isediting}}
       <div>
-        <input type="radio" id="new_ao" class="mtmt_radio" name="select">
+        <input type="button" id="new_ao" class="mtmt_radio" name="new_ao">
         <label class="ao_label" for="new_ao" style="padding-bottom: 0;">
           <div class="mootimeterfullwidth" style="display: table;height: 50px; overflow: hidden;">
             <div class="mootimeterfullwidth" style="display: table-cell; vertical-align: middle;">

@@ -48,7 +48,7 @@ function mootimetertool_wordcloud_create_tables() {
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('mtminstance', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-    $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+    $table->add_field('question', XMLDB_TYPE_TEXT, null, null, null, null, null);
     $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
     $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
     $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
