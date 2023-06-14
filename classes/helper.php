@@ -152,7 +152,6 @@ class helper {
 
         $params = [
             'containerclasses' => "border rounded",
-            'mootimetercolright' => "border-left ",
             'mootimetercard' => 'border rounded',
             'pageid' => $page->id,
             'cmid' => $cm->id,
@@ -166,6 +165,32 @@ class helper {
             return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_wrapper", $params);
         }
         return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content", $params);
+    }
+
+    public function get_rendered_page_result(object $page): string {
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_result_page')) {
+            return "";
+        }
+        return $toolhelper->get_result_page($page);
+    }
+
+    public function has_result_page(object $page){
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return false;
+        }
+
+        $toolhelper = new $classname();
+        return method_exists($toolhelper, 'get_result_page');
     }
 
     /**

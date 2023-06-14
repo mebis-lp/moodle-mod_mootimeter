@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['add_page'] = 'Add Page';
+$string['addpage'] = 'Add Page';
 $string['cachedef_answers'] = 'Contains the pages answers.';
 $string['cannotview'] = 'You are not allowed to access this page!';
 $string['question'] = 'Question';
@@ -45,3 +45,6 @@ $string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
 $string['title'] = 'Page Title';
 $string['globalpagesettings'] = 'Global page settings';
 $string['toolsettings'] = 'Tool settings';
+$string['show_results'] = 'Show Results';
+$string['show_options'] = 'Show Options';
+$string['description'] = 'Description';

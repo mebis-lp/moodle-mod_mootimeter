@@ -27,14 +27,6 @@
 /**
  * Helper function used by the upgrade.php file.
  */
-function mod_mootimeter_helper_function() {
-    global $DB;
-
-    // Please note: you can only use raw low level database access here.
-    // Avoid Moodle API calls in upgrade steps.
-    //
-    // For more information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
-}
 
 function mootimetertool_quiz_create_tables() {
     global $DB;
@@ -85,5 +77,20 @@ function mootimetertool_quiz_create_tables() {
     // Conditionally launch create table for mtmt_quiz_answers.
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
+    }
+}
+
+function mootimeter_quiz_add_field_optioniscorrect(){
+    global $DB;
+
+    $dbman = $DB->get_manager();
+
+    // Define table mtmt_quiz_options to be created.
+    $table = new xmldb_table('mtmt_quiz_options');
+    $field = new xmldb_field('optioniscorrect', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+    // Conditionally launch add field metadatasettings.
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
     }
 }
