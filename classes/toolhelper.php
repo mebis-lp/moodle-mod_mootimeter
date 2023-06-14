@@ -230,6 +230,11 @@ abstract class toolhelper {
     public function store_answer(string $table, object $record): int {
         global $DB;
 
+        // In case of anwsers by the guest user change usermodified to something random  so multiple users can anwser (non permanent workaround)
+        if ($record->usermodified == 1) {
+            $record->usermodified = time() + random_int(1, 10000);
+        }
+
         // Store the answer to db.
         $answerid = $DB->insert_record($table, $record);
 
