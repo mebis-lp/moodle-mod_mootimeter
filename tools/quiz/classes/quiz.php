@@ -55,7 +55,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         $record->usermodified = $USER->id;
         $record->optiontext = "";
         $record->optioniscorrect = 0;
-        $record->timecreated =time();
+        $record->timecreated = time();
 
         // Store two answer options as default.
         $this->store_answer_option($record);
@@ -89,15 +89,14 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get all parameters that are necessary for rendering the tools view.
+     * Get quiztype.
      *
-     * @param object $page
-     * @return array
+     * @param int $pageid
+     * @return string
      */
-    public function get_renderer_params(object $page) {
-        global $OUTPUT;
-        if (!empty($this->get_tool_config($page->id, 'ispoll'))) {
-            switch ($this->get_tool_config($page->id, 'ispoll')) {
+    public function get_quiztype(int $pageid): string {
+        if (!empty($this->get_tool_config($pageid, 'ispoll'))) {
+            switch ($this->get_tool_config($pageid, 'ispoll')) {
                 case self::MTMT_IS_QUIZ:
                     $ispoll = "isquiz";
                     break;
@@ -109,13 +108,23 @@ class quiz extends \mod_mootimeter\toolhelper {
             $ispoll = "ispoll";
         }
 
+        return $ispoll;
+    }
 
-        //$params['redirect'] = new \moodle_url("tools/quiz/results.php", ["m"=> $page->instance,"pageid"=>$page->id]);
+    /**
+     * Get all parameters that are necessary for rendering the tools view.
+     *
+     * @param object $page
+     * @return array
+     */
+    public function get_renderer_params(object $page) {
+
+        $ispoll = $this->get_quiztype($page->id);
         $answeroptions = $this->get_answer_options($page->id);
 
-        foreach($answeroptions as $ao){
+        foreach ($answeroptions as $ao) {
             $params['answer_options'][] = [
-                'ao_id' => $ao->id,
+                'aoid' => $ao->id,
                 'ao_text' => $ao->optiontext,
                 'ao_iscorrect' => $ao->optioniscorrect,
                 $ispoll => true,
@@ -184,7 +193,11 @@ class quiz extends \mod_mootimeter\toolhelper {
         $values = array_map(function($obj){ return $obj->cnt;},(array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$page->id], 'optionid'));
         $series = new \core\chart_series($page->question,array_values(array_map("floatval", $values)));
         $chart->add_series($series);
-        $paramschart = ['charts' => $OUTPUT->render($chart)];
+        if(empty($labels) || empty($values)){
+            $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];
+        } else {
+            $paramschart = ['charts' => $OUTPUT->render($chart)];
+        }
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
     }

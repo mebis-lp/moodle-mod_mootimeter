@@ -96,7 +96,6 @@ class set_show_results_state extends external_api {
         return new external_single_structure(
             [
                 'buttontext' => new external_value(PARAM_TEXT, 'Text of teacher permission button')
-
             ],
             'Information to toggle teacher permission button'
         );

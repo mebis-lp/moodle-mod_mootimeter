@@ -16,7 +16,7 @@
       {{#isediting}}
       <div>
         <input type="button" id="new_ao" class="mtmt_radio" name="new_ao">
-        <label class="ao_label" for="new_ao" style="padding-bottom: 0;">
+        <label class="ao_label" for="new_ao" style="padding-bottom: 0;" id="new_ao_label">
           <div class="mootimeterfullwidth" style="display: table;height: 50px; overflow: hidden;">
             <div class="mootimeterfullwidth" style="display: table-cell; vertical-align: middle;">
               <div class="mootimeterfullwidth mootimeter_textcenter">
@@ -34,7 +34,14 @@
 
 </div>
 <input type="hidden" id="mootimeter_lastupdated" value="{{lastupdated}}">
+{{#isediting}}
+{{#js}}
+require(['mootimetertool_quiz/store_answeroptions'], (module) => module.init());
+require(['mootimetertool_quiz/new_answeroption'], (module) => module.init());
+{{/js}}
+{{/isediting}}
 <script>
+
   // redrawwordcloud()
 
   // const event = new Event("redrawwordcloud");

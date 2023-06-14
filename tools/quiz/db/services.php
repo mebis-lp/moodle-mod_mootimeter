@@ -34,4 +34,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mootimetertool_quiz_new_answeroption' => [
+        'classname'     => 'mootimetertool_quiz\external\new_answeroption',
+        'methodname'    => 'execute',
+        'description'   => 'Store new answer option of mootimetertool_quiz.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];

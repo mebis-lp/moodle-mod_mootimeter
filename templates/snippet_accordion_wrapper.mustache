@@ -16,42 +16,43 @@
                         </span>
                         </span>
                     </a>
+                            <h4 class="mb-0" class="d-flex align-self-stretch align-items-center mb-0">
+                                {{#instancename}}
+                                    {{instancename}} {{#str}} settings , mod_mootimeter {{/str}}</h4>
+                                {{/instancename}}
+                                {{^instancename}}
+                                    {{#str}} createnewpagesettings , mod_mootimeter {{/str}}</h4>
+                                {{/instancename}}
+                        </div>
+                    </div>
 
-                    <h4 class="mb-0" class="d-flex align-self-stretch align-items-center mb-0">
-                        {{#instancename}}
-                            {{instancename}} {{#str}} settings , mod_mootimeter {{/str}}</h4>
-                        {{/instancename}}
-                        {{^instancename}}
-                            {{#str}} createnewpagesettings , mod_mootimeter {{/str}}</h4>
-                        {{/instancename}}
-                </div>
-            </div>
-
-            <div id="globalsettingsbody" class="collapse show" aria-labelledby="globalsettingsheading" data-parent="#{{accordionwrapperid}}">
-                <div class="card-body">
-                    <div class="mootimetersettings mootimeterfullwidth">
-                        <label for="mootimeter_selecttype" class="form-label">{{#str}} pagetype , mod_mootimeter {{/str}}</label>
-                        <select id="mootimeter_selecttype" class="form-control mootimeterfullwidth" name="tool">
-                            <option>{{#str}} please_select, mod_mootimeter {{/str}}</option>
-                            {{#tools}}
-                            <option value="{{tool}}" {{selected}}>
-                                <img src="{{{pix}}}" width="80%" style="margin: 0 auto;">
-                                {{name}}
-                            </option>
-                            {{/tools}}
-                        </select>
-                    </div>
-                    <div>
-                        <label for="mootimeter_title" class="form-label">{{#str}} title , mod_mootimeter {{/str}}</label>
-                        <input id="mootimeter_title" type="text" class="form-control mootimeterfullwidth" name="title" value="{{title}}">
-                    </div>
-                    <div>
-                        <label for="mootimeter_sortorder" class="form-label">{{#str}} sortorder , mod_mootimeter {{/str}}</label>
-                        <input id="mootimeter_sortorder" type="number" class="form-control mootimeterfullwidth" name="sortorder" value="{{sortorder}}">
-                    </div>
-                    <div>
-                        <label for="mootimeter_description" class="form-label">{{#str}} description , mod_mootimeter {{/str}}</label>
-                        <textarea class="form-control mootimeterfullwidth" id="mootimeter_description" name="description">{{{description}}}</textarea>
+                    <div id="globalsettingsbody" class="collapse show" aria-labelledby="globalsettingsheading" data-parent="#{{accordionwrapperid}}">
+                        <div class="card-body">
+                            <div class="mootimetersettings mootimeterfullwidth">
+                                <label for="mootimeter_selecttype" class="form-label">{{#str}} pagetype , mod_mootimeter {{/str}}</label>
+                                <select id="mootimeter_selecttype" class="form-control mootimeterfullwidth" name="tool">
+                                    <option>{{#str}} please_select, mod_mootimeter {{/str}}</option>
+                                    {{#tools}}
+                                    <option value="{{tool}}" {{selected}}>
+                                        <img src="{{{pix}}}" width="80%" style="margin: 0 auto;">
+                                        {{name}}
+                                    </option>
+                                    {{/tools}}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="mootimeter_title" class="form-label">{{#str}} title , mod_mootimeter {{/str}}</label>
+                                <input id="mootimeter_title" type="text" class="form-control mootimeterfullwidth" name="title" value="{{title}}">
+                            </div>
+                            <div>
+                                <label for="mootimeter_question" class="form-label">{{#str}} question , mod_mootimeter {{/str}}</label>
+                                <textarea class="form-control mootimeterfullwidth" id="mootimeter_question" name="question">{{{question}}}</textarea>
+                            </div>
+                             <div>
+                                <label for="mootimeter_sortorder" class="form-label">{{#str}} sortorder , mod_mootimeter {{/str}}</label>
+                                <input id="mootimeter_sortorder" type="number" class="form-control mootimeterfullwidth" name="sortorder" value="{{sortorder}}">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -44,7 +44,7 @@ require_once($CFG->libdir . '/externallib.php');
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class store_answeroption extends external_api {
+class new_answeroption extends external_api {
     /**
      * Describes the parameters.
      *
@@ -53,50 +53,35 @@ class store_answeroption extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'aoid' => new external_value(PARAM_INT, 'The id of the answer option.', VALUE_REQUIRED),
-            'value' => new external_value(PARAM_RAW, 'The text value of the answer option.', VALUE_REQUIRED),
-            'id' => new external_value(PARAM_RAW, 'The inputs id.', VALUE_REQUIRED),
         ]);
     }
 
     /**
      * Execute the service.
      * @param int $pageid
-     * @param int $aoid
-     * @param string $inputvalue
-     * @param string $inputid
-     * @return void
+     * @return array
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, int $aoid, string $value, string $id): void {
+    public static function execute(int $pageid): array {
         global $USER;
 
         [
             'pageid' => $pageid,
-            'aoid' => $aoid,
-            'value' => $value,
-            'id' => $id,
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
-            'aoid' => $aoid,
-            'value' => $value,
-            'id' => $id,
         ]);
 
         $quiz = new \mootimetertool_quiz\quiz();
 
         $record = new \stdClass();
-        $record->id = $aoid;
         $record->pageid = $pageid;
         $record->usermodified = $USER->id;
-        $record->optiontext = $value;
+        $record->optiontext = '';
         $record->optioniscorrect = 0;
         $record->timecreated = time();
 
-        $quiz->store_answer_option($record);
-
-        return;
+        return ['aoid' => $quiz->store_answer_option($record), 'quiztype' => $quiz->get_quiztype($pageid)];
     }
 
     /**
@@ -105,14 +90,12 @@ class store_answeroption extends external_api {
      * @return external_multiple_structure
      */
     public static function execute_returns() {
-        // return new external_multiple_structure(
-        //     new external_single_structure(
-        //         [
-        //             'cmid' => new external_value(PARAM_INT, 'ID'),
-        //             'numerrors' => new external_value(PARAM_INT, 'Number of errors.'),
-        //             'numchecks' => new external_value(PARAM_INT, 'Number of checks.'),
-        //         ]
-        //     )
-        // );
+        return new external_single_structure(
+            [
+                'aoid' => new external_value(PARAM_INT, 'ID of new Answer Option'),
+                'quiztype' => new external_value(PARAM_TEXT, 'Quiztype')
+            ],
+            'Informations of new answer option'
+        );
     }
 }

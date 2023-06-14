@@ -1,6 +1,4 @@
 import Ajax from 'core/ajax';
-import { exception as displayException } from 'core/notification';
-import Templates from 'core/templates';
 import notification from 'core/notification';
 
 export const init = () => {
@@ -9,12 +7,9 @@ export const init = () => {
     var elements = document.getElementsByClassName("mtmt-delayed-store");
     var pageid = document.getElementById('mtmt_question_section').dataset.pageid;
 
-    // var answer = document.getElementById('mootimeter_type_answer').value;
-
     Array.from(elements).forEach(function (element) {
-        element.addEventListener('keyup', delay(function (event) {
+        element.addEventListener('keyup', delay(function () {
             var aoid = this.parentElement.dataset.aoid;
-            window.console.log(this.id + " => pid: " + pageid + " => " + this.value + "=>" + aoid + " wird ausgeführt.");
 
             Ajax.call([{
                 methodname: 'mootimetertool_quiz_store_answeroption',

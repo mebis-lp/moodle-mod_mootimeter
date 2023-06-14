@@ -34,3 +34,4 @@ $string['ispoll_help'] = "You can choos between poll and quiz. Quizzes have wron
 $string['poll'] = "Poll";
 $string['quiz'] = "Quiz";
 $string['show_results'] = "Show results";
+$string['nodata'] = "No data available yet";
