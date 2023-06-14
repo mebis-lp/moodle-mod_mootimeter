@@ -23,7 +23,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mootimetertool_wordcloud\external;
+namespace mootimetertool_quiz\external;
 
 use external_api;
 use external_function_parameters;
@@ -85,13 +85,9 @@ class get_answers extends external_api {
         return new external_single_structure(
             [
                 'answerlist' =>  new external_multiple_structure(
-                    new external_multiple_structure(
-                        new external_value(PARAM_TEXT, 'Answertext'),
                         new external_value(PARAM_INT, 'Fontsize of the answer'),
                         "Answer"
                     ),
-                    'The answerslist.',
-                ),
                 'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated')
 
             ],

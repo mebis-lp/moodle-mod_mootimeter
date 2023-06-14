@@ -3,8 +3,7 @@ import notification from 'core/notification';
 
 export const init = () => {
     setInterval(function () {
-
-        var pageid = document.getElementById('mootimeter_type_answer').dataset.pageid;
+        var pageid = document.getElementById('quizcanvas').dataset.pageid;
         var lastposttimestamp = document.getElementById('mootimeter_lastupdated').value;
         const promise = Ajax.call([{
             methodname: 'mootimetertool_quiz_get_answers',
@@ -27,7 +26,7 @@ export const init = () => {
             // Redraw wordcloud.
             let mtmtcanvas = document.getElementById('quizcanvas');
             mtmtcanvas.setAttribute('data-count', JSON.stringify(results.answerlist));
-            document.getElementById('quizcanvas').dispatchEvent(new Event("redrawwordcloud"));
+            document.getElementById('quizcanvas').dispatchEvent(new Event("redrawquiz"));
 
             return;
         }).fail();

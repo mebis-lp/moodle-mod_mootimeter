@@ -50,4 +50,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mootimetertool_quiz_get_answers' => [
+        'classname'     => 'mootimetertool_quiz\external\get_answers',
+        'methodname'    => 'execute',
+        'description'   => 'Get Answers.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];
