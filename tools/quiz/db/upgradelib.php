@@ -80,7 +80,7 @@ function mootimetertool_quiz_create_tables() {
     }
 }
 
-function mootimeter_quiz_add_field_optioniscorrect(){
+function mootimeter_quiz_add_field_optioniscorrect() {
     global $DB;
 
     $dbman = $DB->get_manager();

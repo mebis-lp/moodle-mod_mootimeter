@@ -106,13 +106,13 @@ class store_answeroption extends external_api {
      */
     public static function execute_returns() {
         // return new external_multiple_structure(
-        //     new external_single_structure(
-        //         [
-        //             'cmid' => new external_value(PARAM_INT, 'ID'),
-        //             'numerrors' => new external_value(PARAM_INT, 'Number of errors.'),
-        //             'numchecks' => new external_value(PARAM_INT, 'Number of checks.'),
-        //         ]
-        //     )
+        // new external_single_structure(
+        // [
+        // 'cmid' => new external_value(PARAM_INT, 'ID'),
+        // 'numerrors' => new external_value(PARAM_INT, 'Number of errors.'),
+        // 'numchecks' => new external_value(PARAM_INT, 'Number of checks.'),
+        // ]
+        // )
         // );
     }
 }

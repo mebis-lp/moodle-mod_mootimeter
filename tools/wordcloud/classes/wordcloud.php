@@ -233,34 +233,34 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         // TODO: KEEPING THIS FOR DOCUMANTATION UNTIL A PROPPER DOC EXISTS.
 
         // $settings['settingsarray'][] = [
-        //     "checkbox" => true,
-        //     "id" => 'labelid-2',
-        //     "name" => 'name2',
-        //     "label" => "This is the settings label of setting 2",
-        //     "helptitle" => "This is the settings help title 2",
-        //     "help" => "Test 2",
-        //     "value" => 1,
-        //     "checked" => true
+        // "checkbox" => true,
+        // "id" => 'labelid-2',
+        // "name" => 'name2',
+        // "label" => "This is the settings label of setting 2",
+        // "helptitle" => "This is the settings help title 2",
+        // "help" => "Test 2",
+        // "value" => 1,
+        // "checked" => true
         // ];
 
         // $settings['settingsarray'][] = [
-        //     "number" => true,
-        //     "id" => 'labelid-3',
-        //     "name" => 'name3',
-        //     "label" => "This is the settings label of setting 3",
-        //     "helptitle" => "This is the settings help title 3",
-        //     "help" => "Test 3",
-        //     "value" => 122,
+        // "number" => true,
+        // "id" => 'labelid-3',
+        // "name" => 'name3',
+        // "label" => "This is the settings label of setting 3",
+        // "helptitle" => "This is the settings help title 3",
+        // "help" => "Test 3",
+        // "value" => 122,
         // ];
 
         // $settings['settingsarray'][] = [
-        //     "text" => true,
-        //     "id" => 'labelid-4',
-        //     "name" => 'name4',
-        //     "label" => "This is the settings label of setting 4",
-        //     "helptitle" => "This is the settings help title 4",
-        //     "help" => "Test 4",
-        //     "value" => "Testtext",
+        // "text" => true,
+        // "id" => 'labelid-4',
+        // "name" => 'name4',
+        // "label" => "This is the settings label of setting 4",
+        // "helptitle" => "This is the settings help title 4",
+        // "help" => "Test 4",
+        // "value" => "Testtext",
         // ];
         return $settings;
     }

@@ -39,7 +39,11 @@ if(!empty($pageid)) {
 }
 
 // Set the pageid pageparam for $PAGE object.
+<<<<<<< Updated upstream
+if($pageid) {
+=======
 if ($pageid) {
+>>>>>>> Stashed changes
     $pageparams['pageid'] = $pageid;
 }
 
@@ -123,8 +127,6 @@ if (!empty($pageid)) {
 $mt = new \mod_mootimeter\plugininfo\mootimetertool();
 
 $pages = $helper->get_pages($cm->instance);
-
-$modulecontext = context_module::instance($cm->id);
 
 $event = \mod_mootimeter\event\course_module_viewed::create(array(
     'objectid' => $moduleinstance->id,

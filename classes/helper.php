@@ -109,6 +109,11 @@ class helper {
         return $DB->get_record('mootimeter_pages', $params);
     }
 
+    public static function get_instance_by_pageid($pageid): object {
+        global $DB;
+        return $DB->get_record_sql('SELECT DISTINCT `instance` FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
+    }
+
     /**
      * Get pages array for renderer.
      *
@@ -184,7 +189,7 @@ class helper {
     }
 
 
-    public function has_result_page(object $page){
+    public function has_result_page(object $page) {
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {

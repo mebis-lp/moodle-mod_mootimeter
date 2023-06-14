@@ -40,6 +40,11 @@ require(['mootimetertool_quiz/store_answeroptions'], (module) => module.init());
 require(['mootimetertool_quiz/new_answeroption'], (module) => module.init());
 {{/js}}
 {{/isediting}}
+{{^isediting}}
+{{#js}}
+require(['mootimetertool_quiz/store_answer'], (module) => module.init());
+{{/js}}
+{{/isediting}}
 <script>
 
   // redrawwordcloud()
