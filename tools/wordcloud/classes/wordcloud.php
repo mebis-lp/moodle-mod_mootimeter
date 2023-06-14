@@ -178,8 +178,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @param int $pageid
      * @return int
      */
-    public function get_last_update_time(int $pageid): int {
-        global $DB;
+    public function get_last_update_time(int $pageid, string $tool = 'wordcloud'): int {
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
         if (
@@ -188,14 +187,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         ) {
             return 0;
         }
-
-        $records = $DB->get_records('mtmt_wordcloud_answers', ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
-
-        if (empty($records)) {
-            return 0;
-        }
-        $record = array_shift($records);
-        return $record->timecreated;
+        return parent::get_last_update_time($pageid, $tool);
     }
 
     /**
