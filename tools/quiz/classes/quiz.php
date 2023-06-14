@@ -184,7 +184,11 @@ class quiz extends \mod_mootimeter\toolhelper {
         $values = array_map(function($obj){ return $obj->cnt;},(array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$page->id], 'optionid'));
         $series = new \core\chart_series($page->question,array_values(array_map("floatval", $values)));
         $chart->add_series($series);
-        $paramschart = ['charts' => $OUTPUT->render($chart)];
+        if(empty($labels) || empty($values)){
+            $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];
+        } else {
+            $paramschart = ['charts' => $OUTPUT->render($chart)];
+        }
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
     }
