@@ -80,15 +80,15 @@ class store_answer extends external_api {
         // $mtmhelper = new \mod_mootimeter\helper();
         // $page = $mtmhelper->get_page($pageid);
 
-//        $quiz = new \mootimetertool_quiz\quiz();
-//
-//        $record = new \stdClass();
-//        $record->pageid = $pageid;
-//        $record->usermodified = $USER->id;
-//        $record->optionid = $aoid;
-//        $record->timecreated = time();
-//
-//        $quiz->store_answer_option($record);
+        $quiz = new \mootimetertool_quiz\quiz();
+
+        $record = new \stdClass();
+        $record->pageid = $pageid;
+        $record->usermodified = $USER->id;
+        $record->optionid = $aoid;
+        $record->timecreated = time();
+
+        $quiz->store_student_answer($record);
 
         return;
     }
