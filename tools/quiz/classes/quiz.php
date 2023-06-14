@@ -195,16 +195,30 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         global $OUTPUT, $DB;
         $chart = new \core\chart_bar();
-        $records = $DB->get_records('mtmt_quiz_options', ["pageid" => $page->id]);
+        $labelsrecords = $DB->get_records('mtmt_quiz_options', ["pageid" => $page->id]);
+        // var_dump($records);
+        // echo "<hr>";
         $labels = [];
-        foreach($records as $record){
+        foreach($labelsrecords as $record){
             $labels[] = $record->optiontext;
         }
+
+        $answersgrouped = $this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
+        foreach($labelsrecords as $key => $label){
+            if(empty($answersgrouped->$key)){
+                $answersgrouped->$key = 0;
+            }
+        }
+
+        // var_dump($labels);
         $chart->set_labels($labels);
         $values = array_map(function($obj){ return $obj->cnt;
-        }, (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid'));
+        }, (array)$answersgrouped);
         $series = new \core\chart_series($page->question, array_values(array_map("floatval", $values)));
         $chart->add_series($series);
+        // var_dump($series);
+        // echo "<hr>";
+        // var_dump($values);die;
         if(empty($labels) || empty($values)){
             $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];
         } else {
