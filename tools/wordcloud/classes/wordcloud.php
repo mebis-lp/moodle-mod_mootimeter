@@ -287,4 +287,24 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $helper->set_tool_config($page, 'teacherpermission', 0);
         return 0;
     }
+    /**
+     * Delete all DB entries related to a specific page.
+     * @param object $page
+     * @return bool
+     */
+    public function delete_page(object $page) {
+        global $DB;
+        try {
+            // Table not written yet
+            // $DB->delete_records('mtmt_wordcloud', array('pageid' => $page->id));
+            $DB->delete_records('mtmt_wordcloud_answers', array('pageid' => $page->id));
+            $DB->delete_records('mootimeter_pages', array('id' => $page->id));
+            $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
+        } catch (\Exception $e) {
+            // Todo handling
+            echo 'Something went wrong';
+            return false;
+        }
+        return true;
+    }
 }

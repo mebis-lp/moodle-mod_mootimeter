@@ -60,9 +60,19 @@ $pageparams['id'] = $cm->id;
 require_login($course, true, $cm);
 
 $helper = new \mod_mootimeter\helper();
+$deleteerror = false;
+
+if (!empty($action) && $action == "deletepage") {
+    $page = $helper->get_page($pageid);
+    $success = $helper->delete_page($page);
+    if ($success) {
+        redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'a' => 'editpage']));
+    } else {
+        $deleteerror = true;
+    }
+}
 
 if (!empty($action) && $action == "storepage") {
-
     // Store page.
     $record = new stdClass();
     $record->id = $pageid;
@@ -110,7 +120,9 @@ $PAGE->set_context($modulecontext);
 $cmid = $PAGE->url->get_param('id');
 
 echo $OUTPUT->header();
-
+if ($deleteerror) {
+    echo html_writer::div(get_string('deleteerror', 'mod_mootimeter'), 'alert alert-danger alert-dismissible ');
+}
 $paramspages = $helper->get_pages_template($pages, $pageid);
 $params = [
     'containerclasses' => "border rounded",
@@ -141,18 +153,20 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
         'title' => $paramtitle,
         'tool' => $tool,
         'tools' => $tools,
-        'accordionwrapperid' => 'settingswrapper'
+        'accordionwrapperid' => 'settingswrapper',
     ];
 
     if (!empty($pageid)) {
         $editformparams['title'] = $page->title;
         $editformparams['question'] = $page->question;
         $editformparams['toolsettings'] = $helper->get_tool_settings($page);
+        $editformparams['instancename'] = $page->title;
     }
 
     $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
 
     if (!empty($page)) {
+
         $params['has_result'] = $helper->has_result_page($page);
         if(!$results){
             $params['redirect_string'] = get_string("show_results", "mod_mootimeter");
@@ -162,6 +176,7 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
             $params['redirect_result'] = new moodle_url("view.php", ["m"=> $page->instance,"pageid"=>$page->id, "results"=>false]);
             $params['pagecontent'] = $helper->get_rendered_page_result($page);
         }
+
         if(empty($params['pagecontent'])){
             $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
         }

@@ -109,6 +109,8 @@ class quiz extends \mod_mootimeter\toolhelper {
             $ispoll = "ispoll";
         }
 
+
+        //$params['redirect'] = new \moodle_url("tools/quiz/results.php", ["m"=> $page->instance,"pageid"=>$page->id]);
         $answeroptions = $this->get_answer_options($page->id);
 
         foreach($answeroptions as $ao){
@@ -170,13 +172,44 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     public function get_result_page($page){
-        global $OUTPUT;
+
+        global $OUTPUT, $DB;
         $chart = new \core\chart_bar();
-        $chart->set_labels(["test", "test2"]);
-        $series = new \core\chart_series("test",[100, 200]);
+        $records = $DB->get_records('mtmt_quiz_options', ["pageid"=>$page->id]);
+        $labels = [];
+        foreach($records as $record){
+            $labels[] = $record->optiontext;
+        }
+        $chart->set_labels($labels);
+        $values = array_map(function($obj){ return $obj->cnt;},(array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$page->id], 'optionid'));
+        $series = new \core\chart_series($page->question,array_values(array_map("floatval", $values)));
         $chart->add_series($series);
-        $paramschart = ['charts' => $OUTPUT->render($chart)];
+        if(empty($labels) || empty($values)){
+            $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];
+        } else {
+            $paramschart = ['charts' => $OUTPUT->render($chart)];
+        }
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
+    }
+
+    /**
+     * Delete all DB entries related to a specific page.
+     * @param object $page
+     * @return bool
+     */
+    public function delete_page(object $page) {
+        global $DB;
+        try {
+            $DB->delete_records('mtmt_quiz_options', array('pageid' => $page->id));
+            $DB->delete_records('mtmt_quiz_answers', array('pageid' => $page->id));
+            $DB->delete_records('mootimeter_pages', array('id' => $page->id));
+            $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
+        } catch (\Exception $e) {
+            // Todo handling
+            echo 'Something went wrong';
+            return false;
+        }
+        return true;
     }
 }
