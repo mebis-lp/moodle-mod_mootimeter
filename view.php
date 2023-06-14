@@ -33,8 +33,13 @@ $paramtool = optional_param('tool', "", PARAM_ALPHA);
 $pageid = optional_param('pageid', 0, PARAM_INT);
 $results = optional_param('results', false, PARAM_BOOL);
 
+// Check if the provided pageid already exists / else throw error
+if(!empty($pageid)) {
+    $DB->get_record('mootimeter_pages', ['id' => $pageid], '*', MUST_EXIST);
+}
+
 // Set the pageid pageparam for $PAGE object.
-if($pageid){
+if($pageid) {
     $pageparams['pageid'] = $pageid;
 }
 
@@ -59,11 +64,14 @@ $pageparams['id'] = $cm->id;
 
 // Check if user is logged in.
 require_login($course, true, $cm);
+$modulecontext = context_module::instance($cm->id);
 
 $helper = new \mod_mootimeter\helper();
 $deleteerror = false;
 
 if (!empty($action) && $action == "deletepage") {
+    // Only allow deletion by moderators:
+    require_capability('mod/mootimeter:moderator', $modulecontext);
     $page = $helper->get_page($pageid);
     $success = $helper->delete_page($page);
     if ($success) {
@@ -74,6 +82,9 @@ if (!empty($action) && $action == "deletepage") {
 }
 
 if (!empty($action) && $action == "storepage") {
+    // Check if the user has the capability to manage the instance:
+    require_capability('mod/mootimeter:moderator', $modulecontext);
+
     // Store page.
     $record = new stdClass();
     $record->id = $pageid;
@@ -97,13 +108,17 @@ if (!empty($action) && $action == "storepage") {
 
 if (!empty($pageid)) {
     $page = $helper->get_page($pageid);
+
+    // Check if the accessed pageid is actually part of the Mootimeter instance:
+    $modulepages = $helper->get_pages($cm->instance);
+    if (array_search($pageid, array_column($modulepages, "id")) === false) {
+        throw new moodle_exception('generalexceptionmessage', 'error', '', get_string("pageaccessexception", "mootimeter"));
+    }
 }
 
 $mt = new \mod_mootimeter\plugininfo\mootimetertool();
 
 $pages = $helper->get_pages($cm->instance);
-
-$modulecontext = context_module::instance($cm->id);
 
 $event = \mod_mootimeter\event\course_module_viewed::create(array(
     'objectid' => $moduleinstance->id,
