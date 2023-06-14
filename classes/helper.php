@@ -61,6 +61,7 @@ class helper {
             $DB->update_record('mootimeter_pages', $origrecord);
             return $origrecord->id;
         }
+        $record->timecreated = time();
         $pageid = $DB->insert_record('mootimeter_pages', $record, true);
 
         // Hook to do further actions depending on mtmt tool.
