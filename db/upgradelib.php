@@ -27,14 +27,6 @@
 /**
  * Helper function used by the upgrade.php file.
  */
-function mod_mootimeter_helper_function() {
-    global $DB;
-
-    // Please note: you can only use raw low level database access here.
-    // Avoid Moodle API calls in upgrade steps.
-    //
-    // For more information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
-}
 
 function mod_mootimeter_create_mootimeter_pages_table() {
     global $DB;

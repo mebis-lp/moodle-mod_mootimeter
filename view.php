@@ -151,9 +151,9 @@ if ((!empty($action) && $action == 'editpage') || (!empty($action) && $action ==
     }
 
     $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
-    $params['has_result'] = $helper->has_result_page($page);
 
     if (!empty($page)) {
+        $params['has_result'] = $helper->has_result_page($page);
         if(!$results){
             $params['redirect_string'] = get_string("show_results", "mod_mootimeter");
             $params['redirect_result'] = new moodle_url("view.php", ["m"=> $page->instance,"pageid"=>$page->id, "results"=>true]);
