@@ -1,16 +1,16 @@
 <div class="accordion mootimeter_margin_top_5 overflow-scroll" id="{{accordionwrapperid}}">
-    <div class="card">
+    <div class="card border rounded">
         <div class="card-header" id="globalsettingsheading">
             <div id="linkwrapper" class="position-relative d-flex ftoggler align-items-center position-relative mr-1">
                 <a data-toggle="collapse" data-target="#globalsettingsbody" aria-expanded="true" role="button"
                    aria-controls="globalsettingsbody"
                    class="btn btn-icon mr-1 icons-collapse-expand justify-content-center">
                     <span class="expanded-icon icon-no-margin p-2" title="Collapse">
-                        <i class="icon fa fa-chevron-down fa-fw " aria-hidden="true"></i>
+                        <i class="icon fa fa-chevron-right fa-fw " aria-hidden="true"></i>
                     </span>
                     <span class="collapsed-icon icon-no-margin p-2" title="Expand">
                     <span class="dir-rtl-hide">
-                        <i class="icon fa fa-chevron-right fa-fw " aria-hidden="true"></i>
+                        <i class="icon fa fa-chevron-down fa-fw " aria-hidden="true"></i>
                     </span>
                     <span class="dir-ltr-hide">
                         <i class="icon fa fa-chevron-left fa-fw " aria-hidden="true"></i>
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div id="globalsettingsbody" class="collapse show" aria-labelledby="globalsettingsheading"
+        <div id="globalsettingsbody" class="collapse" aria-labelledby="globalsettingsheading"
              data-parent="#{{accordionwrapperid}}">
             <div class="card-body">
                 <div class="mootimetersettings mootimeterfullwidth">
@@ -65,8 +65,9 @@
     </div>
     {{{tooladditionalfields}}}
     {{#toolsettings}}
-        <div class="card mt-4">
+        <div class="card mt-4 rounded">
             <div class="card-header" id="toolsettingsheading">
+                <!-- TODO Make two collapsible elements
                 <a data-toggle="collapse" data-target="#toolsettingsbody" aria-expanded="true" role="button"
                    aria-controls="toolsettingsbody"
                    class="btn btn-icon mr-1 icons-collapse-expand justify-content-center">
@@ -81,11 +82,11 @@
                             <i class="icon fa fa-chevron-left fa-fw " aria-hidden="true"></i>
                         </span>
                         </span>
-                </a>
+                </a>-->
                 <h4 class="mb-0">{{#str}} toolsettings , mod_mootimeter {{/str}}</h4>
             </div>
 
-            <div id="toolsettingsbody" class="collapse show" aria-labelledby="toolsettingsheading"
+            <div id="toolsettingsbody" aria-labelledby="toolsettingsheading"
                  data-parent="#{{accordionwrapperid}}">
                 <div class="card-body">
                     {{{toolsettings}}}
