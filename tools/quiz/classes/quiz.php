@@ -32,6 +32,8 @@ class quiz extends \mod_mootimeter\toolhelper {
     const MTMT_IS_POLL = 1;
     const MTMT_IS_QUIZ = 2;
 
+    const ANSWER_COLUMN = "optionid";
+
     /**
      * Insert the answer.
      *
@@ -39,7 +41,16 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @param mixed $answer
      * @return void
      */
-    public function insert_answer(object $page, $answer) {
+    public function insert_answer($page, $aoid) {
+        global $USER;
+
+        $record = new \stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $USER->id;
+        $record->optionid = $aoid;
+        $record->timecreated = time();
+
+        $this->store_answer('mtmt_quiz_answers', $record, true, self::ANSWER_COLUMN);
     }
 
     /**
@@ -180,18 +191,19 @@ class quiz extends \mod_mootimeter\toolhelper {
         return $settings;
     }
 
-    public function get_result_page($page){
+    public function get_result_page($page) {
 
         global $OUTPUT, $DB;
         $chart = new \core\chart_bar();
-        $records = $DB->get_records('mtmt_quiz_options', ["pageid"=>$page->id]);
+        $records = $DB->get_records('mtmt_quiz_options', ["pageid" => $page->id]);
         $labels = [];
         foreach($records as $record){
             $labels[] = $record->optiontext;
         }
         $chart->set_labels($labels);
-        $values = array_map(function($obj){ return $obj->cnt;},(array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$page->id], 'optionid'));
-        $series = new \core\chart_series($page->question,array_values(array_map("floatval", $values)));
+        $values = array_map(function($obj){ return $obj->cnt;
+        }, (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid'));
+        $series = new \core\chart_series($page->question, array_values(array_map("floatval", $values)));
         $chart->add_series($series);
         if(empty($labels) || empty($values)){
             $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];

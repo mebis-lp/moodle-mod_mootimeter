@@ -61,6 +61,7 @@ class helper {
             $DB->update_record('mootimeter_pages', $origrecord);
             return $origrecord->id;
         }
+        $record->timecreated = time();
         $pageid = $DB->insert_record('mootimeter_pages', $record, true);
 
         // Hook to do further actions depending on mtmt tool.
@@ -106,6 +107,11 @@ class helper {
             $params['instance'] = $instanceid;
         }
         return $DB->get_record('mootimeter_pages', $params);
+    }
+
+    public static function get_instance_by_pageid($pageid): object {
+        global $DB;
+        return $DB->get_record_sql('SELECT DISTINCT `instance` FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
     }
 
     /**
@@ -183,7 +189,7 @@ class helper {
     }
 
 
-    public function has_result_page(object $page){
+    public function has_result_page(object $page) {
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {

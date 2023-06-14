@@ -60,8 +60,8 @@ export const init = () => {
 
     /**
     * Delay a callback for ms.
-    * @param callback
-    * @param ms {int}
+    * @param callback {{string}}
+    * @param ms
     * @returns {object}
     */
     function delay(callback, ms) {

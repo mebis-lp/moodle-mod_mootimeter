@@ -84,7 +84,7 @@ class get_answers extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'answerlist' =>  new external_multiple_structure(
+                'answerlist' => new external_multiple_structure(
                     new external_multiple_structure(
                         new external_value(PARAM_TEXT, 'Answertext'),
                         new external_value(PARAM_INT, 'Fontsize of the answer'),

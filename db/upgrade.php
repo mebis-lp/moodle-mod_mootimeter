@@ -83,6 +83,5 @@ function xmldb_mootimeter_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2023020912, 'mootimeter');
     }
 
-
     return true;
 }

@@ -58,12 +58,11 @@ class store_answer extends external_api {
      * Execute the service.
      * @param int $pageid
      * @param int $aoid answer option id selected by the student
-     * @return void
+     * @return array
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, int $aoid): void {
-        global $USER;
+    public static function execute(int $pageid, int $aoid): array {
 
         [
             'pageid' => $pageid,
@@ -73,24 +72,17 @@ class store_answer extends external_api {
             'aoid' => $aoid,
         ]);
 
+        $helper = new \mod_mootimeter\helper();
+        $page = $helper->get_page($pageid);
 
+        $quiz = new \mootimetertool_quiz\quiz();
+        $quiz->insert_answer($page, $aoid);
 
-        // \local_mbs\performance\debugger::print_debug('test', 'hook', [$pageid, $aoid, $value, $id]);
-
-        // $mtmhelper = new \mod_mootimeter\helper();
-        // $page = $mtmhelper->get_page($pageid);
-
-//        $quiz = new \mootimetertool_quiz\quiz();
-//
-//        $record = new \stdClass();
-//        $record->pageid = $pageid;
-//        $record->usermodified = $USER->id;
-//        $record->optionid = $aoid;
-//        $record->timecreated = time();
-//
-//        $quiz->store_answer_option($record);
-
-        return;
+        $return = [
+            'finished' => 1,
+            'redirecturl' => 'view.php?m=3&pageid=' . $pageid . '&results=1',
+        ];
+        return $return;
     }
 
     /**
@@ -99,5 +91,12 @@ class store_answer extends external_api {
      * @return external_multiple_structure
      */
     public static function execute_returns() {
+        return new external_single_structure(
+            [
+                'finished' => new external_value(PARAM_INT, 'ID of new Answer Option'),
+                'redirecturl' => new external_value(PARAM_URL, 'URL to redirect to.'),
+            ],
+            'What to do after selecting an answer option'
+        );
     }
 }

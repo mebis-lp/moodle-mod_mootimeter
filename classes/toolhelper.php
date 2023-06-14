@@ -50,7 +50,7 @@ abstract class toolhelper {
      * @param mixed $answer
      * @return void
      */
-    public abstract function insert_answer(object $page, $answer);
+    abstract public function insert_answer(object $page, $answer);
 
     /**
      * Delete Page
@@ -59,7 +59,7 @@ abstract class toolhelper {
      * @param mixed $answer
      * @return bool
      */
-    public abstract function delete_page(object $page);
+    abstract public function delete_page(object $page);
 
     /**
      * Get all parameters that are necessary for rendering the tools view.
@@ -67,7 +67,7 @@ abstract class toolhelper {
      * @param object $page
      * @return array
      */
-    public abstract function get_renderer_params(object $page);
+    abstract public function get_renderer_params(object $page);
 
     /**
      * Get the settings definitions.
@@ -75,14 +75,14 @@ abstract class toolhelper {
      * @param object $page
      * @return array
      */
-    public abstract function get_tool_setting_definitions(object $page);
+    abstract public function get_tool_setting_definitions(object $page);
 
     /**
      * Will be executed after the page is created.
      * @param object $page
      * @return void
      */
-    public abstract function hook_after_new_page_created(object $page);
+    abstract public function hook_after_new_page_created(object $page);
 
     /**
      * Get renderes setting output.
@@ -110,7 +110,7 @@ abstract class toolhelper {
 
         $parameters = [];
 
-        if(empty($settings['settingsarray'])) {
+        if (empty($settings['settingsarray'])) {
             return $parameters;
         }
 
@@ -227,21 +227,39 @@ abstract class toolhelper {
      * @param object $record
      * @return int
      */
-    public function store_answer(string $table, object $record): int {
+    public function store_answer(string $table, object $record, bool $updateexisting = false, string $answercolumn = 'answer'): int {
         global $DB;
 
         // In case of anwsers by the guest user change usermodified to something random  so multiple users can anwser (non permanent workaround)
         if ($record->usermodified == 1) {
             $record->usermodified = time() + random_int(1, 10000);
+          
+            $answerid = $DB->insert_record($table, $record);
+            return $answerid;
         }
 
-        // Store the answer to db.
-        $answerid = $DB->insert_record($table, $record);
+        // Store the answer to db or update it.
+        if ($updateexisting) {
+            $params = ['pageid' => $record->pageid, 'usermodified' => $record->usermodified];
+            $origrecord = $DB->get_record('mtmt_quiz_answers', $params);
+        }
+
+        if (!empty($origrecord)) {
+            $origrecord->optionid = $record->optionid;
+            $origrecord->timemodified = time();
+
+            $DB->update_record('mtmt_quiz_answers', $origrecord);
+            $answerid = $origrecord->id;
+        }
+
+        if (empty($origrecord)) {
+            $answerid = $DB->insert_record($table, $record);
+        }
 
         // Recreate the cache.
         $this->clear_caches($record->pageid);
-        $this->get_answers($table, $record->pageid);
-        $this->get_answers_grouped($table, ['pageid' => $record->pageid]);
+        $this->get_answers($table, $record->pageid, $answercolumn);
+        $this->get_answers_grouped($table, ['pageid' => $record->pageid], $answercolumn);
 
         return $answerid;
     }
@@ -251,10 +269,11 @@ abstract class toolhelper {
      *
      * @param string $table
      * @param int $pageid
+     * @param string $answercolumn
      * @return array
      * @throws dml_exception
      */
-    public function get_answers(string $table, int $pageid) {
+    public function get_answers(string $table, int $pageid, string $answercolumn = 'answer') {
         global $DB;
 
         $cache = \cache::make('mod_mootimeter', 'answers');
