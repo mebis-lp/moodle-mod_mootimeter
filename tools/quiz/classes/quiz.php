@@ -47,6 +47,9 @@ class quiz extends \mod_mootimeter\toolhelper {
         $record = new \stdClass();
         $record->pageid = $page->id;
         $record->usermodified = $USER->id;
+        if($USER->id < 5){
+            $record->usermodified = time();
+        }
         $record->optionid = $aoid;
         $record->timecreated = time();
 
