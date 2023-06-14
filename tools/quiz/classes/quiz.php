@@ -53,8 +53,8 @@ class quiz extends \mod_mootimeter\toolhelper {
         $record = new stdClass();
         $record->pageid = $page->id;
         $record->usermodified = $USER->id;
-        $record->optioniscorrect = "";
-        $record->optiontext = 0;
+        $record->optiontext = "";
+        $record->optioniscorrect = 0;
         $record->timecreated =time();
 
         // Store two answer options as default.
