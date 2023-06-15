@@ -72,7 +72,7 @@ class get_answers extends external_api {
         $wordcloud = new \mootimetertool_wordcloud\wordcloud();
         $lastupdatednew = $wordcloud->get_last_update_time($pageid);
 
-        $answerlist = $wordcloud->get_answerlist($pageid);
+        $answerlist = $wordcloud->get_answerlist_wordcloud($pageid);
         return ['answerlist' => $answerlist, 'lastupdated' => $lastupdatednew];
     }
 

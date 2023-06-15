@@ -68,7 +68,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @param int $pageid
      * @return mixed
      */
-    public function get_user_answers(int $userid, int $pageid) {
+    public function get_user_answers(int $pageid, int $userid) {
         global $DB;
         return $DB->get_records('mtmt_wordcloud_answers', ['usermodified' => $userid, 'pageid' => $pageid]);
     }
@@ -77,10 +77,11 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * Get all grouped and counted answers of a page.
      *
      * @param int $pageid
+     * @param int $userid
      * @return array
      * @throws dml_exception
      */
-    protected function get_answers_list(int $pageid) {
+    protected function get_answers_list(int $pageid, int $userid = 0) {
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
         if (
@@ -92,6 +93,11 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             $params = [
                 'pageid' => $pageid,
             ];
+
+            if(!empty($userid)){
+                $params['usermodified'] = $userid;
+            }
+
             return (array)$this->get_answers_grouped('mtmt_wordcloud_answers', $params);
         }
 
@@ -120,14 +126,15 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @return array
      * @throws dml_exception
      */
-    public function get_answerlist(int $pageid): array {
+    public function get_answerlist_wordcloud(int $pageid, int $userid = 0): array {
 
-        $answerlist = $this->get_answers_list($pageid);
+        $answerlist = $this->get_answers_list($pageid, $userid);
         foreach ($answerlist as &$answer) {
             $answer->cnt = 24 * $answer->cnt;
         }
         return $this->convert_answer_list_to_wordcloud_list($answerlist);
     }
+
 
     /**
      * Get all parameters that are necessary for rendering the tools view.
@@ -136,10 +143,15 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @return array
      */
     public function get_renderer_params(object $page) {
-        global $OUTPUT, $PAGE;
+        global $OUTPUT, $PAGE, $USER;
 
         // Parameter for initial wordcloud rendering.
-        $params['answerslist'] = json_encode($this->get_answerlist($page->id));
+        $params['answerslist'] = json_encode($this->get_answerlist_wordcloud($page->id));
+
+        // Parameter for initializing Badges.
+        $params['answers'] = array_map(function ($element) {
+            return ['answer' => $element->answer];
+        }, $this->get_user_answers($page->id, $USER->id));
 
         // Parameter for last updated.
         $params['lastupdated'] = $this->get_last_update_time($page->id);

@@ -233,7 +233,7 @@ abstract class toolhelper {
         // In case of anwsers by the guest user change usermodified to something random  so multiple users can anwser (non permanent workaround)
         if ($record->usermodified == 1) {
             $record->usermodified = time() + random_int(1, 10000);
-          
+
             $answerid = $DB->insert_record($table, $record);
             return $answerid;
         }
@@ -241,14 +241,14 @@ abstract class toolhelper {
         // Store the answer to db or update it.
         if ($updateexisting) {
             $params = ['pageid' => $record->pageid, 'usermodified' => $record->usermodified];
-            $origrecord = $DB->get_record('mtmt_quiz_answers', $params);
+            $origrecord = $DB->get_record($table, $params);
         }
 
         if (!empty($origrecord)) {
             $origrecord->optionid = $record->optionid;
             $origrecord->timemodified = time();
 
-            $DB->update_record('mtmt_quiz_answers', $origrecord);
+            $DB->update_record($table, $origrecord);
             $answerid = $origrecord->id;
         }
 
