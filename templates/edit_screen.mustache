@@ -1,5 +1,6 @@
 <div class="container-fluid mootimetercontainer {{{containerclasses}}}">
     <div class="row">
+        {{#showpagescol}}
         <div class=" mootimetercolpages col-lg-1 col-md-2 col-sm-3 col-xs-12 ">
             <div style="">
                 <ul style="list-style-type: none">
@@ -8,9 +9,9 @@
                             <form action="" method="get" class="">
                                 <input type="hidden" name="id" value="{{cmid}}">
                                 <input type="hidden" name="pageid" value="{{pageid}}">
-                                <span class="badge badge-primary mootimeter_margin_top_5">
+                                <!-- <span class="badge badge-primary mootimeter_margin_top_5">
                                     {{sortorder}}
-                                </span>
+                                </span> -->
                                 <button type="submit" class="btn border rounded"
                                         style="max-height: 80px; max-width: 150px; min-height: 80px; min-width: 150px;">
                                     <div class="pb-2">
@@ -35,6 +36,7 @@
                 {{/isediting}}
             </div>
         </div>
+        {{/showpagescol}}
 
         {{#isediting}}
             <div class=" mootimetercoledit {{{mootimetercoledit}}} col-lg-2 col-sm-9 col-md-3 col-xs-12 border-right">

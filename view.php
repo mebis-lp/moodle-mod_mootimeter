@@ -34,7 +34,7 @@ $pageid = optional_param('pageid', 0, PARAM_INT);
 $results = optional_param('results', false, PARAM_BOOL);
 
 // Check if the provided pageid already exists / else throw error
-if(!empty($pageid)) {
+if (!empty($pageid)) {
     $DB->get_record('mootimeter_pages', ['id' => $pageid], '*', MUST_EXIST);
 }
 
@@ -124,6 +124,11 @@ $mt = new \mod_mootimeter\plugininfo\mootimetertool();
 
 $pages = $helper->get_pages($cm->instance);
 
+if(count($pages) == 1 && empty($pageid)){
+    $page = array_pop($pages);
+    redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]));
+}
+
 $modulecontext = context_module::instance($cm->id);
 
 $event = \mod_mootimeter\event\course_module_viewed::create(array(
@@ -207,6 +212,11 @@ if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($acti
     }
 
     $params['isediting'] = $PAGE->user_is_editing();
+}
+
+// Hide Pages col if it is not needed at all.
+if ($PAGE->user_is_editing() || count($pages) > 1) {
+    $params['showpagescol'] = true;
 }
 
 echo $OUTPUT->render_from_template("mod_mootimeter/edit_screen", $params);
