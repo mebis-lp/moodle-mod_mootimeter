@@ -129,9 +129,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     public function get_answerlist_wordcloud(int $pageid, int $userid = 0): array {
 
         $answerlist = $this->get_answers_list($pageid, $userid);
-        foreach ($answerlist as &$answer) {
-            $answer->cnt = 24 * $answer->cnt;
-        }
         return $this->convert_answer_list_to_wordcloud_list($answerlist);
     }
 

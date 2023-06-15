@@ -29,7 +29,7 @@
   function redrawwordcloud() {
     let mtmtcanvas = document.getElementById('wordcloudcanvas');
     let answers = JSON.parse(mtmtcanvas.dataset.answers);
-    WordCloud(mtmtcanvas, { list: answers}); //, shape: 'star'});
+    WordCloud(mtmtcanvas, { list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans'});
   }
 </script>
 {{#js}}
