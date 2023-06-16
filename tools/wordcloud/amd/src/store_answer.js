@@ -8,14 +8,17 @@ export const init = () => {
     // Register event to input box.
     document.getElementById('mootimeter_type_answer').addEventListener("keyup", function (event) {
         if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-            store_answer(event);
+            storeAnswer();
         }
     });
-    document.getElementById('mootimeter_enter_answer').addEventListener("click", function (event) {
-        store_answer(event);
+    document.getElementById('mootimeter_enter_answer').addEventListener("click", function () {
+        storeAnswer();
     });
 
-    function store_answer(event) {
+    /**
+    * Store the Answer
+    */
+    function storeAnswer() {
         var pageid = document.getElementById('mootimeter_type_answer').dataset.pageid;
         var answer = document.getElementById('mootimeter_type_answer').value;
 
