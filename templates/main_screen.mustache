@@ -1,0 +1,54 @@
+<div class="container-fluid mootimetercontainer {{{containerclasses}}}">
+    <div class="row h-100">
+        {{#showpagescol}}
+        <div class="mootimetercolpages col-md-2 col-sm-3 col-xs-12 ">
+
+            <div>
+                <ul style="padding-left: 0; margin-top:10px;">
+                    {{#pages}}
+                    <li class="list-group-item mootimeter_pages_li {{active}}" data-pageid="{{pageid}}" data-cmid="{{cmid}}">
+                        <img src="{{{pix}}}" width="20px">
+                        {{title}}
+                    </li>
+                    {{/pages}}
+                    {{#isediting}}
+                    <li id="mootimeter_addpage" class="list-group-item mootimeter_addpage" data-action="addpage" data-cmid="{{cmid}}">
+                        <i class="fa fa-plus"></i> {{#str}} addpage, mod_mootimeter {{/str}}
+                    </li>
+                    {{/isediting}}
+                </ul>
+            </div>
+        </div>
+        {{/showpagescol}}
+
+        {{#isediting}}
+        <div class=" mootimetercoledit {{{mootimetercoledit}}} col-md-3 col-sm-9  col-xs-12 border-right">
+            {{#settings}}
+            <hr>
+            <div class="mootimetersettings mootimeterfullwidth">
+                {{{settings}}}
+            </div>
+            {{/settings}}
+        </div>
+        {{/isediting}}
+
+        <div class="mootimetercolcontent {{#isediting}}col-md-7{{/isediting}}{{^isediting}}col-md-10{{/isediting}} col-sm-12 col-xs-12">
+            {{#has_result}}
+            <div class="m-2">
+                <a class="btn btn-light" href={{{redirect_result}}}>{{{redirect_string}}}</a>
+            </div>
+            {{/has_result}}
+            {{{pagecontent}}}
+        </div>
+    </div>
+</div>
+
+{{#isediting}}
+{{#js}}
+require(['mod_mootimeter/edit'], (module) => module.init());
+{{/js}}
+{{/isediting}}
+
+{{#js}}
+require(['mod_mootimeter/main'], (module) => module.init());
+{{/js}}

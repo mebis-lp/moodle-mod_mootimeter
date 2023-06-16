@@ -1,9 +1,9 @@
-mtmt_question_section {
+mtmt_question_section>div {
     display: flex;
     flex-wrap: wrap;
 }
 
-mtmt_question_section>div {
+mtmt_question_section>div>div {
     flex: 1;
     padding: 0.5rem;
     flex-basis: 50%;

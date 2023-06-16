@@ -215,7 +215,7 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         // var_dump($labels);
         $chart->set_labels($labels);
-        $values = array_map(function($obj){ return $obj->cnt;
+        $values = array_map(function($obj){ return (!empty($obj->cnt)) ? $obj->cnt : 0;
         }, (array)$answersgrouped);
         $series = new \core\chart_series($page->question, array_values(array_map("floatval", $values)));
         $chart->add_series($series);

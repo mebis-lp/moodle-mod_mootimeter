@@ -9,22 +9,26 @@
 
   <div class="col-md-8">
     <mtmt_question_section id="mtmt_question_section" data-pageid="{{pageid}}">
-      {{#answer_options}}
-      {{> mootimetertool_quiz/answer_option}}
-      {{/answer_options}}
+      <div  id="mtmt_questions">
+        {{#answer_options}}
+        {{> mootimetertool_quiz/answer_option}}
+        {{/answer_options}}
+      </div>
 
       {{#isediting}}
       <div>
-        <input type="button" id="new_ao" class="mtmt_radio" name="new_ao">
-        <label class="ao_label" for="new_ao" style="padding-bottom: 0;" id="new_ao_label">
-          <div class="mootimeterfullwidth" style="display: table;height: 50px; overflow: hidden;">
-            <div class="mootimeterfullwidth" style="display: table-cell; vertical-align: middle;">
-              <div class="mootimeterfullwidth mootimeter_textcenter">
-                <h1 style="margin: 0"><i class="fa fa-plus"></i></h1>
+        <div>
+          <input type="button" id="new_ao" class="mtmt_radio" name="new_ao">
+          <label class="ao_label" for="new_ao" style="padding-bottom: 0;" id="new_ao_label">
+            <div class="mootimeterfullwidth" style="display: table;height: 50px; overflow: hidden;">
+              <div class="mootimeterfullwidth" style="display: table-cell; vertical-align: middle;">
+                <div class="mootimeterfullwidth mootimeter_textcenter">
+                  <h1 style="margin: 0"><i class="fa fa-plus"></i></h1>
+                </div>
               </div>
             </div>
-          </div>
-        </label>
+          </label>
+        </div>
       </div>
       {{/isediting}}
 

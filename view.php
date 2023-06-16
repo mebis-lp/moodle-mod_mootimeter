@@ -219,6 +219,6 @@ if ($PAGE->user_is_editing() || count($pages) > 1) {
     $params['showpagescol'] = true;
 }
 
-echo $OUTPUT->render_from_template("mod_mootimeter/edit_screen", $params);
+echo $OUTPUT->render_from_template("mod_mootimeter/main_screen", $params);
 
 echo $OUTPUT->footer();

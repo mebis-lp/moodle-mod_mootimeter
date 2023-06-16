@@ -31,7 +31,7 @@ export const init = () => {
             // Add the answer to the Badges list.
             Templates.renderForPromise('mootimetertool_quiz/answer_option', context)
                 .then(({ html, js }) => {
-                    Templates.appendNodeContents('#mtmt_question_section', html, js);
+                    Templates.appendNodeContents('#mtmt_questions', html, js);
 
                     // Now add an event listener.
                     document.getElementById('ao_text_' + results.aoid).addEventListener('keyup', delay(function () {
