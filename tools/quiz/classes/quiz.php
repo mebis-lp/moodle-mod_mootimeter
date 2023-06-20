@@ -25,6 +25,8 @@
 
 namespace mootimetertool_quiz;
 
+use dml_exception;
+use coding_exception;
 use stdClass;
 
 class quiz extends \mod_mootimeter\toolhelper {
@@ -194,34 +196,42 @@ class quiz extends \mod_mootimeter\toolhelper {
         return $settings;
     }
 
-    public function get_result_page($page) {
+    /**
+     * Renders the result page of the quiz.
+     *
+     * @param object $page
+     * @return string
+     * @throws dml_exception
+     * @throws coding_exception
+     */
+    public function get_result_page(object $page):string {
 
         global $OUTPUT, $DB;
         $chart = new \core\chart_bar();
         $labelsrecords = $DB->get_records('mtmt_quiz_options', ["pageid" => $page->id]);
-        // var_dump($records);
-        // echo "<hr>";
+
         $labels = [];
         foreach($labelsrecords as $record){
             $labels[] = $record->optiontext;
         }
 
         $answersgrouped = $this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
+        // var_dump($answersgrouped);
         foreach($labelsrecords as $key => $label){
-            if(empty($answersgrouped->$key)){
-                $answersgrouped->$key = 0;
+            if(!key_exists($key, $answersgrouped)){
+                $answersgrouped[$key] = ['optionid' => $label->id, 'cnt' => 0];
             }
         }
+        // var_dump($answersgrouped);
 
-        // var_dump($labels);
+        // var_dump($labelsrecords);die;
+
         $chart->set_labels($labels);
         $values = array_map(function($obj){ return (!empty($obj->cnt)) ? $obj->cnt : 0;
         }, (array)$answersgrouped);
         $series = new \core\chart_series($page->question, array_values(array_map("floatval", $values)));
         $chart->add_series($series);
-        // var_dump($series);
-        // echo "<hr>";
-        // var_dump($values);die;
+
         if(empty($labels) || empty($values)){
             $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];
         } else {

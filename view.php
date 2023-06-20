@@ -115,6 +115,7 @@ if (!empty($pageid)) {
 
     // Check if the accessed pageid is actually part of the Mootimeter instance:
     $modulepages = $helper->get_pages($cm->instance);
+
     if (array_search($pageid, array_column($modulepages, "id")) === false) {
         throw new moodle_exception('generalexceptionmessage', 'error', '', get_string("pageaccessexception", "mootimeter"));
     }

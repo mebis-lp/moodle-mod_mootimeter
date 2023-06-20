@@ -34,10 +34,9 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     /** Show Results after teacher permission */
     const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
 
-
     /**
      * Will be executed after the page is created.
-     * @object array $page
+     * @param object $page
      * @return void
      */
     public function hook_after_new_page_created(object $page): void {
@@ -45,7 +44,9 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Page type specivic insert_answer
      *
+     * @param object $page
      * @param string $answer
      * @return void
      */
@@ -131,7 +132,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $answerlist = $this->get_answers_list($pageid, $userid);
         return $this->convert_answer_list_to_wordcloud_list($answerlist);
     }
-
 
     /**
      * Get all parameters that are necessary for rendering the tools view.

@@ -295,12 +295,12 @@ abstract class toolhelper {
      * @return array
      * @throws dml_exception
      */
-    public function get_answers_grouped(string $table, array $params, string $answercolumn = 'answer') {
+    public function get_answers_grouped(string $table, array $params, string $answercolumn = 'answer'): array {
         global $DB;
 
         $cache = \cache::make('mod_mootimeter', 'answers');
         $cachekey = 'cnt_' . $params['pageid'];
-        $records = json_decode($cache->get($cachekey));
+        $records = json_decode($cache->get($cachekey), true);
 
         if (empty($records)) {
             $sql = "SELECT $answercolumn, count(*) as cnt FROM {" . $table . "} WHERE pageid = :pageid GROUP BY $answercolumn";
