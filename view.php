@@ -154,7 +154,6 @@ if ($deleteerror) {
 $paramspages = $helper->get_pages_template($pages, $pageid);
 $params = [
     'containerclasses' => "border rounded",
-    'mootimetercoledit' => "border-left ",
     'mootimetercard' => 'border rounded',
     'cmid' => $cmid,
     'pages' => $paramspages,

@@ -1,38 +1,32 @@
 <div class="container-fluid mootimetercontainer {{{containerclasses}}}">
     <div class="row h-100">
         {{#showpagescol}}
-        <div class="mootimetercolpages col-md-2 col-sm-3 col-xs-12 ">
-
-            <div>
-                <ul style="padding-left: 0; margin-top:10px;">
-                    {{#pages}}
-                    <li class="list-group-item mootimeter_pages_li {{active}}" data-pageid="{{pageid}}" data-cmid="{{cmid}}">
-                        <img src="{{{pix}}}" width="20px">
-                        {{title}}
-                    </li>
-                    {{/pages}}
-                    {{#isediting}}
-                    <li id="mootimeter_addpage" class="list-group-item mootimeter_addpage" data-action="addpage" data-cmid="{{cmid}}">
-                        <i class="fa fa-plus"></i> {{#str}} addpage, mod_mootimeter {{/str}}
-                    </li>
-                    {{/isediting}}
-                </ul>
-            </div>
+        <div class="mootimetercol mootimetercolpages">
+            <ul class="m-0 p-0">
+                {{#pages}}
+                <li class="list-group-item mootimeter_pages_li py-0 px-2 d-flex clickable {{active}}" data-pageid="{{pageid}}" data-cmid="{{cmid}}">
+                    <img src="{{{pix}}}" width="20px" class="m-1">
+                    <span class="flex-shrink-1 text-break m-2" >{{title}}</span>
+                </li>
+                {{/pages}}
+                {{#isediting}}
+                <li id="mootimeter_addpage" class="list-group-item py-0 px-2 d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{cmid}}">
+                    <i class="fa fa-plus p-1 mx-1 my-auto"></i><span class="flex-shrink-1 text-break m-2">{{#str}} addpage, mod_mootimeter {{/str}}</span>
+                </li>
+                {{/isediting}}
+            </ul>
         </div>
         {{/showpagescol}}
-
         {{#isediting}}
-        <div class=" mootimetercoledit {{{mootimetercoledit}}} col-md-3 col-sm-9  col-xs-12 border-right">
+        <div class="mootimetercol mootimetercoledit p-1">
             {{#settings}}
-            <hr>
             <div class="mootimetersettings mootimeterfullwidth">
                 {{{settings}}}
             </div>
             {{/settings}}
         </div>
         {{/isediting}}
-
-        <div class="mootimetercolcontent {{#isediting}}col-md-7{{/isediting}}{{^isediting}}col-md-10{{/isediting}} col-sm-12 col-xs-12">
+        <div class="mootimetercol mootimetercolcontent">
             {{#has_result}}
             <div class="m-2">
                 <a class="btn btn-light" href={{{redirect_result}}}>{{{redirect_string}}}</a>
