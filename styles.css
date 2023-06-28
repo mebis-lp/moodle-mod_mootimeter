@@ -1,5 +1,7 @@
 .mootimetercontainer {
-    height: 75vh;
+    /* Just to hide borders of mootimetercols when flex-wrapping which
+        overflow the rounded corners of the mootimetercontainer a tiny bit */
+    overflow: hidden;
 }
 
 .mootimeter_textcenter {
@@ -46,53 +48,28 @@
     border: green;
 }
 
-.mootimetercardleftcol {
-    margin: 5px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    word-wrap: break-word;
-    height: 0;
-    width: 100%;
-    text-align: center;
-}
-
-.mootimetercardleftcol>p {
-    width: 100%;
-    padding: 10px;
-}
-
-@media (min-width: 768px) {
-    .mootimetercoledit {
-        margin-right: calc(-1 * var(--card-deck-margin));
-        margin-left: calc(-1 * var(--card-deck-margin));
-    }
-}
-
-@media (min-width: 576px) {
-    .mootimetercoledit {
-        margin-right: calc(-1 * var(--card-deck-margin));
-        margin-left: calc(-1 * var(--card-deck-margin));
-    }
-}
-
-@media (min-width: 480px) {
-    .mootimetercoledit {
-        margin-right: calc(- var(--card-deck-margin));
-        margin-left: calc(- var(--card-deck-margin));
-    }
+.mootimetercolpages {
+    flex: 150px 1 0;
 }
 
 .mootimetercoledit {
-    padding-left: 5px !important;
-    padding-right: 5px !important;
-    border-right: none;
-    border-top: none;
-    border-bottom: none;
-    height: 75vh;
+    flex: 200px 2 0;
+}
+
+.mootimetercolcontent {
+    flex: 400px 10 0;
+}
+
+.mootimetercol {
     display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    flex-direction: column;
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: -1px;
+}
+
+.mootimetercol + .mootimetercol {
+    border-left: 1px solid lightgrey;
+    margin-left: -1px;
 }
 
 .mootimetertoolsettingsdiv {
