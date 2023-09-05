@@ -1,99 +1,39 @@
-.mootimetercontainer {
-    /* Just to hide borders of mootimetercols when flex-wrapping which
-        overflow the rounded corners of the mootimetercontainer a tiny bit */
-    overflow: hidden;
-}
-
-.mootimeter_textcenter {
-    text-align: center;
-}
-
-.mootimeter_margin_top_5 {
-    margin-top: 5px;
-}
-
-.mootimeter_margin_top_50 {
-    margin-top: 50px;
-}
-
-.mootimeterfullwidth {
-    width: 100%;
-}
-
-.padding-left-5 {
-    padding-left: 5px;
-}
-
-.mootimetertoolsettingsbody {
-    text-align: left;
-}
-
-.mootimetercard {
-    margin: 5px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    word-wrap: break-word;
-    height: 0;
-    width: calc(50% - 2 * 5px);
-    padding-bottom: calc(50% - 2 * 5px);
-}
-
-.mootimetercard:hover,
-.mootimetercardleftcol:hover {
-    background-color: lightgray;
-}
-
-.mootimetercardleftcol .active {
-    border: green;
-}
-
 .mootimetercolpages {
-    flex: 150px 1 0;
+  background-color: #00091E;
+}
+.mootimetercolpages ul {
+  padding: 2.5rem 1.0625rem;
+}
+.mootimetercolpages ul li {
+  border-radius: 0.25rem;
+  background-color: #303142;
+  color: #fff;
+  margin-bottom: 1rem;
+  border: 1px #DC6534 solid;
+  min-height: 3.75rem;
+  justify-content: center;
+}
+.mootimetercolpages ul .mootimeter_addpage {
+  background-color: #D33F01;
+  border: 1px #D33F01 solid;
 }
 
 .mootimetercoledit {
-    flex: 200px 2 0;
+  background-color: #303142;
 }
 
 .mootimetercolcontent {
-    flex: 400px 10 0;
+  background-color: #E8E8EA;
 }
 
-.mootimetercol {
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid lightgrey;
-    margin-bottom: -1px;
+.mootimetercolpages {
+  flex: 120px 1 0;
 }
 
-.mootimetercol + .mootimetercol {
-    border-left: 1px solid lightgrey;
-    margin-left: -1px;
+.mootimetercoledit {
+  flex: 320px 2 0;
 }
 
-.mootimetertoolsettingsdiv {
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid lightgrey;
-}
-
-.mootimetertoolsettingsdiv:last-child {
-    margin-bottom: 0;
-    border-bottom: 0;
-}
-
-.mootimeter_pages_li:hover{
-    background-color: var(--primary);
-    color: var(--light);
-}
-
-.list-group-item.mootimeter_addpage {
-    background-color: var(--success);
-    color: var(--light);
-}
-
-.list-group-item.mootimeter_addpage:hover {
-    background-color: var(--green);
-    color: var(--light);
+.mootimetercolcontent {
+  flex: 400px 10 0;
 }

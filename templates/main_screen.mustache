@@ -2,16 +2,15 @@
     <div class="row h-100">
         {{#showpagescol}}
         <div class="mootimetercol mootimetercolpages">
-            <ul class="m-0 p-0">
+            <ul class="">
                 {{#pages}}
-                <li class="list-group-item mootimeter_pages_li py-0 px-2 d-flex clickable {{active}}" data-pageid="{{pageid}}" data-cmid="{{cmid}}">
+                <li class="mootimeter_pages_li d-flex clickable {{active}}" data-pageid="{{pageid}}" data-cmid="{{cmid}}">
                     <img src="{{{pix}}}" width="20px" class="m-1">
-                    <span class="flex-shrink-1 text-break m-2" >{{title}}</span>
                 </li>
                 {{/pages}}
                 {{#isediting}}
-                <li id="mootimeter_addpage" class="list-group-item py-0 px-2 d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{cmid}}">
-                    <i class="fa fa-plus p-1 mx-1 my-auto"></i><span class="flex-shrink-1 text-break m-2">{{#str}} addpage, mod_mootimeter {{/str}}</span>
+                <li id="mootimeter_addpage" class="d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{cmid}}">
+                    <i class="fa fa-plus p-1 mx-1 my-auto"></i>
                 </li>
                 {{/isediting}}
             </ul>

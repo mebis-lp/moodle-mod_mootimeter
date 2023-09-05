@@ -1,0 +1,24 @@
+.mootimetercolpages {
+	background-color: $grey-500;
+
+	ul {
+		padding: 2.5rem 1.0625rem;
+
+		li {
+			@include rounded;
+			background-color: $grey-400;
+			color: $white-standard;
+			margin-bottom: 1rem;
+			border: 1px $lernplatform-300 solid;
+			min-height: 3.75rem;
+			justify-content: center;
+		}
+
+		.mootimeter_addpage {
+			background-color: $lernplatform-400;
+			border: 1px $lernplatform-400 solid;
+		}
+	}
+
+
+}

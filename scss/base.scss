@@ -1,0 +1,17 @@
+@import "../../../theme/boost/scss/bootstrap/functions";
+@import "../../../theme/boost/scss/bootstrap/variables";
+@import "../../../theme/boost/scss/bootstrap/mixins";
+
+$grey-100: #E8E8EA;
+$grey-400: #303142;
+$grey-500: #00091E;
+
+$white-standard: #fff;
+
+// wahrscheinlich ersetzen durch moodle vars:
+$lernplatform-300: #DC6534;
+$lernplatform-400: #D33F01;
+
+@mixin rounded {
+		border-radius: 0.25rem;
+}
