@@ -158,7 +158,8 @@ $params = [
     'mootimetercard' => 'border rounded',
     'cmid' => $cmid,
     'pages' => $paramspages,
-    'results' => $results
+    'results' => $results,
+	'isNewPage' => empty($pageid) ? 'isNewPage' : 'isNotNewPage',
 ];
 
 if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($action) && $action == 'addpage') || !empty($pageid)) {
