@@ -17,7 +17,7 @@
 			display: flex;
 			flex-direction: column;
 			gap: 2.5rem;
-			border-radius: 8px;
+			border-radius: 0.5rem;
 		}
 
 		.mootimeter-colcontent-preview-header {
@@ -29,7 +29,7 @@
 
 		.mootimeter-content-menu {
 			position: absolute;
-			top: 20px;
+			top: 1.25rem;
 			background: #00091E;
 			padding: 0.5rem 1.25rem;
 			border-radius: 3.125rem;
@@ -42,7 +42,7 @@
 			display: flex;
 			flex-wrap: wrap;
 			flex-direction: column;
-			gap: 16px;
+			gap: 1rem;
 		}
 
 		.mootimeter-colcontent-preview-send {
@@ -50,7 +50,7 @@
 			flex-direction: column;
 			justify-content: center;
 			text-align: center;
-			gap: 20px;
+			gap: 1.25rem;
 		}
 	}
 

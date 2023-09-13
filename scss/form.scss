@@ -1,9 +1,9 @@
-.mootimeter-answer-option_wrapper {
+.input-with-checkbox-icon_wrapper {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 
-  .mootimeter-answer-option {
+  .input-with-checkbox-icon {
     display: flex;
     gap: 0.5rem;
     align-items: center;
@@ -18,7 +18,7 @@
   }
 }
 
-.mootimeter-answer-option-add {
+.input-with-checkbox-icon-add {
   display: flex;
   align-items: center;
   justify-content: center;

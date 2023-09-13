@@ -1,6 +1,38 @@
+.mootimeter-btn {
+	display: flex;
+	height: 3.625rem;
+	padding: 1rem 1.625rem;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+	align-self: flex-start;
+	background-color: $lernplatform-400;
+	border-radius: 0.5rem;
+	border: none;
+	font-family: Atkinson Hyperlegible;
+	font-size: 1.125rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1.625rem;
+	color: $white-standard;
+
+	&:hover {
+		background-color: $lernplatform-500;
+	}
+
+	&.disabled {
+		pointer-events: none;
+		background-color: $grey-200;
+	}
+
+	&.mootimeter-btn-full {
+		align-self: stretch;
+	}
+}
+
 .btn.mootimeter-btn-small {
 	margin: 0 auto;
-	padding: 16px 26px;
+	padding: 1rem 1.625rem;
 	border: none;
 	background-color: $lernplatform-400;
 }
