@@ -1,0 +1,13 @@
+.mootimeter-input {
+  height: 2.625rem;
+  padding: 0.5rem 0.875rem 0.5rem 0.875rem;
+  border-radius: 0.25rem;
+  border: 0.0625rem solid $grey-300;
+  background-color: unset;
+  color: $white-standard;
+  width: 100%;
+
+	&:focus {
+		border-color: $white-standard;
+	}
+}

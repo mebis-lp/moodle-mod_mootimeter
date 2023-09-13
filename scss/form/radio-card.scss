@@ -1,0 +1,108 @@
+.card {
+  background-color: $white-standard;
+  border-radius: var(--card-radius);
+  position: relative;
+  padding: 1.8125rem 1rem 1rem 1rem;
+  text-align: center;
+  max-width: 17.5rem;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-img {
+    margin: 0 auto 1rem auto;
+    width: 2.5rem;
+  }
+
+  .radio {
+    font-size: inherit;
+    margin: 0;
+    position: absolute;
+    right: calc(var(--card-padding) + var(--radio-border-width));
+    top: calc(var(--card-padding) + var(--radio-border-width));
+  }
+
+  @supports (-webkit-appearance: none) or (-moz-appearance: none) {
+    .radio {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: #fff;
+      border: var(--radio-border-width) solid var(--color-gray);
+      border-radius: 50%;
+      cursor: pointer;
+      height: var(--radio-size);
+      outline: none !important;
+      transition: background 0.2s ease-out, border-color 0.2s ease-out;
+      width: var(--radio-size);
+
+      &::after {
+        border: var(--radio-border-width) solid #fff;
+        border-top: 0;
+        border-left: 0;
+        content: "";
+        display: block;
+        height: 0.75rem;
+        left: 25%;
+        position: absolute;
+        top: 50%;
+        transform: rotate(45deg) translate(-50%, -50%);
+        width: 0.375rem;
+      }
+
+      &:checked {
+        background: var(--color-green);
+        border-color: var(--color-green);
+      }
+    }
+  }
+
+  .card-details {
+    border: var(--radio-border-width) solid var(--color-gray);
+    border-radius: var(--card-radius);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    padding: var(--card-padding);
+    transition: border-color 0.2s ease-out;
+  }
+
+  .card:hover .card-details {
+    border-color: var(--color-dark-gray);
+  }
+
+  .radio:checked ~ .card-details {
+    border-color: var(--color-green);
+  }
+
+  .radio:focus ~ .card-details {
+    box-shadow: 0 0 0 2px var(--color-dark-gray);
+  }
+
+  .radio:disabled ~ .card-details {
+    color: var(--color-dark-gray);
+    cursor: default;
+  }
+
+  .radio:disabled ~ .card-details .card-type {
+    color: var(--color-dark-gray);
+  }
+
+  .card:hover .radio:disabled ~ .card-details {
+    border-color: var(--color-gray);
+    box-shadow: none;
+  }
+
+  .card:hover .radio:disabled {
+    border-color: var(--color-gray);
+  }
+
+  .card-type {
+    color: var(--color-green);
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1em;
+    margin-bottom: 0.25rem;
+  }
+}
