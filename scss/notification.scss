@@ -1,0 +1,29 @@
+.mootimeter-colcontent-preview-notification {
+			    display: flex;
+    			align-items: center;
+				background-color: $grey-100;
+    			border-radius: 8px;
+
+				p {
+					padding: 12px 16px 12px 0;
+				}
+
+				&.notification-info {
+					background-color: $grey-100;
+					color: $grey-400;
+				}
+
+				&.notification-warning {
+					background-color: $notification-warning;
+					color: $feedback-error;
+				}
+
+				.icon {
+					width: 1.5rem;
+					height: 1.5rem;
+					text-align: center;
+					margin: 0;
+					font-size: 1.5rem;
+					padding: 20px;
+				}
+		}

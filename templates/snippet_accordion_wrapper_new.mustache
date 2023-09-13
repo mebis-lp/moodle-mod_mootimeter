@@ -1,0 +1,40 @@
+{{#isNewPage}}
+	<div class="mootimetersettings-head">
+		<h4>{{tool}}</h4>
+		<i class="icon fa fa-gear fa-light" aria-hidden="true"></i>
+	</div>
+	<div>
+		<label for="mootimeter_title" class="form-label">{{#str}} title , mod_mootimeter {{/str}}</label>
+		<input id="mootimeter_title" type="text" class="mootimeter-input mootimeterfullwidth" name="title"
+			value="{{ title }}" />
+	</div>
+	<div>
+		<label for="mootimeter_question" class="form-label">{{#str}} question , mod_mootimeter {{/str}}</label>
+		<textarea class="mootimeter-input mootimeterfullwidth" id="mootimeter_question"
+			name="question">{{{question}}}</textarea>
+	</div>
+	<div>
+		<label for="mootimeter_sortorder" class="form-label">{{#str}} sortorder , mod_mootimeter {{/str}}</label>
+		<input id="mootimeter_sortorder" type="number" class="form-control mootimeterfullwidth" name="sortorder"
+			value="{{ sortorder }}" />
+	</div>
+{{/isNewPage}}
+{{^isNewPage}}
+<div>
+	<h3>Art der Frage wählen</h3>
+	<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</p>
+</div>
+<div class="mootimetersettingsdiv mootimeterfullwidth">
+    {{#tools}}
+    <label class="card">
+        <input type="radio" class="radio" name="tool" value="{{ tool }}" {{selected}}>
+        <img src="{{{pix}}}" class="card-img" />
+		<span class="card-details">
+			<span class="card-type">{{ name }}</span>
+			<span class="card-desc">Stimmungsbild aus mehreren Fragen </span>
+    	</span>
+    </label>
+    {{/tools}}
+</div>
+
+{{/isNewPage}}

@@ -1,3 +1,62 @@
-.mootimetercolcontent {
-	background-color: $grey-100;
+.mootimetercontainer {
+	.mootimetercolcontent {
+		background-color: $grey-100;
+		flex: 25rem 10 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+		flex-direction: column;
+		position: relative;
+		padding: 6.25rem 2.5rem;
+
+		.mootimeter-colcontent-preview {
+			background-color: $white-standard;
+			max-width: 32.25rem;
+			padding: 2.5rem;
+			display: flex;
+			flex-direction: column;
+			gap: 2.5rem;
+			border-radius: 8px;
+		}
+
+		.mootimeter-colcontent-preview-header {
+			display: flex;
+			flex-direction: column;
+			justify-content: start;
+			gap: 1rem;
+		}
+
+		.mootimeter-content-menu {
+			position: absolute;
+			top: 20px;
+			background: #00091E;
+			padding: 0.5rem 1.25rem;
+			border-radius: 3.125rem;
+			display: flex;
+    		gap: 1rem;
+			box-shadow: 0px 12px 26px 0px #3E455B26;
+		}
+
+		.mootimeter-colcontent-preview-options {
+			display: flex;
+			flex-wrap: wrap;
+			flex-direction: column;
+			gap: 16px;
+		}
+
+		.mootimeter-colcontent-preview-send {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			text-align: center;
+			gap: 20px;
+		}
+	}
+
+	&.isNewPage {
+		.mootimetercolcontent {
+			flex: 0 0 0;
+		}
+	}
 }

@@ -3,6 +3,8 @@
 @import "../../../theme/boost/scss/bootstrap/mixins";
 
 $grey-100: #E8E8EA;
+$grey-200: #A4A5AC;
+$grey-300: #60616D;
 $grey-400: #303142;
 $grey-500: #00091E;
 
@@ -12,6 +14,10 @@ $white-standard: #fff;
 $lernplatform-300: #DC6534;
 $lernplatform-400: #D33F01;
 
+$feedback-error: #FF0000;
+$notification-warning: #FF00001A;
+
 @mixin rounded {
 		border-radius: 0.25rem;
 }
+

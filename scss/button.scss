@@ -1,0 +1,73 @@
+.btn.mootimeter-btn-small {
+	margin: 0 auto;
+	padding: 16px 26px;
+	border: none;
+	background-color: $lernplatform-400;
+}
+
+.btn.mootimeter-icon-button {
+	width: 3.875rem;
+	height: 2.25rem;
+    padding: 0.4375rem 1.25rem 0.4375rem 1.25rem;
+	border-radius: 0.25rem;
+	background-color: $grey-300;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&.active {
+		background-color: $lernplatform-400;
+	}
+
+	&:hover {
+		background-color: $grey-100;
+	}
+
+	.icon {
+		color: $white-standard;
+		font-size: 1.375rem;
+		width: unset;
+		height: unset;
+		margin: 0;
+	}
+}
+
+.mootimeter-content-action-btn, .mootimeter-content-icon-only-btn {
+	padding: 0.625rem;
+	border-radius: 3.125rem;
+	width: 2.5rem;
+	height: 2.5rem;
+	border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.icon {
+		margin: 0;
+		width: unset;
+		height: unset;
+		font-size: 1.25rem;
+	}
+}
+
+.mootimeter-content-action-btn {
+	&.active {
+		background-color: $lernplatform-400;
+		color: $white-standard;
+	}
+
+	&.disabled {
+		color: $grey-200;
+		pointer-events: none;
+	}
+
+	&:not(.disabled):hover {
+		background-color: $grey-200;
+		color: $grey-500;
+	}
+}
+
+.mootimeter-content-icon-only-btn {
+	background-color: transparent;
+    color: $white-standard;
+}

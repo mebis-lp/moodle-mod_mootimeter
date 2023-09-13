@@ -1,6 +1,6 @@
 <div class="accordion overflow-scroll" id="{{accordionwrapperid}}">
-    <div class="card border rounded">
-        <div class="card-header" id="globalsettingsheading">
+    <div class="">
+        <div class="" id="globalsettingsheading">
             <div id="linkwrapper" class="position-relative d-flex ftoggler align-items-center position-relative mr-1">
                 <a data-toggle="collapse" data-target="#globalsettingsbody" aria-expanded="true" role="button"
                    aria-controls="globalsettingsbody"
@@ -17,19 +17,20 @@
                     </span>
                     </span>
                 </a>
-            <h4 class="mb-0" class="d-flex align-self-stretch align-items-center mb-0">
-                {{#instancename}}
-                    {{instancename}} {{#str}} settings , mod_mootimeter {{/str}}</h4>
-                {{/instancename}}
-                {{^instancename}}
-                    {{#str}} createnewpagesettings , mod_mootimeter {{/str}}</h4>
-                {{/instancename}}
+            	<h4 class="mb-0" class="d-flex align-self-stretch align-items-center mb-0">
+					{{#instancename}}
+						{{instancename}} {{#str}} settings , mod_mootimeter {{/str}}</h4>
+					{{/instancename}}
+					{{^instancename}}
+						{{#str}} createnewpagesettings , mod_mootimeter {{/str}}
+				</h4>
+					{{/instancename}}
             </div>
         </div>
 
         <div id="globalsettingsbody" class="collapse" aria-labelledby="globalsettingsheading"
              data-parent="#{{accordionwrapperid}}">
-            <div class="card-body">
+            <div class="">
                 <div class="mootimetersettings mootimeterfullwidth">
                     <label for="mootimeter_selecttype" class="form-label">{{#str}}
                         pagetype , mod_mootimeter {{/str}}</label>
@@ -65,7 +66,7 @@
     </div>
     {{{tooladditionalfields}}}
     {{#toolsettings}}
-        <div class="card mt-4 rounded">
+        <div class="">
             <div class="card-header" id="toolsettingsheading">
                 <!-- TODO Make two collapsible elements
                 <a data-toggle="collapse" data-target="#toolsettingsbody" aria-expanded="true" role="button"
