@@ -1,0 +1,112 @@
+<div
+  class="container-fluid mootimetercontainer isNotNewPage {{{containerclasses}}}"
+>
+  <div class="row h-100">
+    {{#showpagescol}}
+    <div class="mootimetercol mootimetercolpages">
+      <ul class="">
+        {{#pages}}
+        <li
+          class="mootimeter_pages_li d-flex clickable {{ active }}"
+          data-pageid="{{ pageid }}"
+          data-cmid="{{ cmid }}"
+        >
+          <img src="{{{pix}}}" width="20px" class="m-1" />
+        </li>
+        {{/pages}}
+        {{#isediting}}
+        <li
+          id="mootimeter_addpage"
+          class="d-flex mootimeter_addpage clickable"
+          data-action="addpage"
+          data-cmid="{{ cmid }}"
+        >
+          <i class="fa fa-plus p-1 mx-1 my-auto"></i>
+        </li>
+        {{/isediting}}
+      </ul>
+    </div>
+    {{/showpagescol}}
+    {{#isediting}}
+    <div class="mootimetercol mootimetercoledit">
+      {{#settings}}
+      <div class="mootimetersettings mootimeterfullwidth">
+        <h4>Abstimmung</h4>
+
+        {{> mod_mootimeter/elements/snippet_input}}
+
+        {{> mod_mootimeter/elements/snippet_divider}}
+
+        <p class="text-bold">Antworten</p>
+
+		{{> mod_mootimeter/elements/snippet_notification}}
+
+        <div class="mootimeter-answer-option_wrapper">
+          {{> mod_mootimeter/elements/snippet_answer_option}}
+          {{> mod_mootimeter/elements/snippet_answer_option}}
+          {{> mod_mootimeter/elements/snippet_answer_option}}
+          {{> mod_mootimeter/elements/snippet_answer_option}}
+					{{> mod_mootimeter/elements/snippet_answer_option_with_checkbox}}
+					{{> mod_mootimeter/elements/snippet_number_input}}
+        </div>
+
+        {{> mod_mootimeter/elements/snippet_answer_option_add}}
+
+        {{> mod_mootimeter/elements/snippet_divider}}
+
+        <p class="text-bold">Visualisierung</p>
+
+		<div class="mootimeter-visualization-options-wrapper">
+			{{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+			{{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+			{{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+			{{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+		</div>
+
+        {{> mod_mootimeter/elements/snippet_divider}}
+
+        <p class="text-bold">Einstellungen</p>
+
+        {{> mod_mootimeter/elements/snippet_checkbox_switch}}
+        {{> mod_mootimeter/elements/snippet_checkbox_switch}}
+      </div>
+      {{/settings}}
+    </div>
+    {{/isediting}}
+    <div class="mootimetercol mootimetercolcontent">
+
+		{{> mod_mootimeter/snippet_content_menu}}
+
+      <div class="mootimeter-colcontent-preview">
+	  	<div class="mootimeter-colcontent-preview-header">
+			{{> mod_mootimeter/elements/snippet_pill}}
+			<h4>How much is the Fish?</h4>
+		</div>
+
+		{{> mod_mootimeter/elements/snippet_notification}}
+
+        <div class="mootimeter-colcontent-preview-options">
+			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+			{{> mod_mootimeter/elements/snippet_radio_button}}
+        </div>
+        <div class="mootimeter-colcontent-preview-send">
+          <button class="btn btn-primary mootimeter-btn-small">Senden</button>
+          <small>Du hast mehrere Antwortoptionen</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#isediting}}
+{{#js}}
+require(['mod_mootimeter/edit'], (module) => module.init());
+{{/js}}
+{{/isediting}}
+
+{{#js}}
+require(['mod_mootimeter/main'], (module) => module.init());
+{{/js}}

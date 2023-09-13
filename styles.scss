@@ -1,20 +1,25 @@
 @import 'scss/base.scss';
 
+@import 'scss/font.scss';
+
 @import 'scss/pages.scss';
 @import 'scss/edit.scss';
 @import 'scss/content.scss';
 
-.mootimetercolpages {
-    flex: 120px 1 0;
-}
+@import 'scss/divider.scss';
+@import 'scss/pill.scss';
+@import 'scss/notification.scss';
 
-.mootimetercoledit {
-    flex: 320px 2 0;
-}
+@import 'scss/form.scss';
 
-.mootimetercolcontent {
-    flex: 400px 10 0;
-}
+@import 'scss/form/checkbox.scss';
+@import 'scss/form/radio-button.scss';
+@import 'scss/form/checkbox-switch.scss';
+@import 'scss/form/input.scss';
+@import 'scss/form/radio-card.scss';
+@import 'scss/form/number-input.scss';
+
+@import 'scss/button.scss';
 
 
 // .mootimetercontainer {

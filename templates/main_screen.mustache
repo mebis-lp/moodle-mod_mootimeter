@@ -1,4 +1,4 @@
-<div class="container-fluid mootimetercontainer {{{containerclasses}}}">
+<div class="container-fluid mootimetercontainer {{#isNewPage}}{{.}}{{/isNewPage}} {{{containerclasses}}}">
     <div class="row h-100">
         {{#showpagescol}}
         <div class="mootimetercol mootimetercolpages">
@@ -17,7 +17,7 @@
         </div>
         {{/showpagescol}}
         {{#isediting}}
-        <div class="mootimetercol mootimetercoledit p-1">
+        <div class="mootimetercol mootimetercoledit">
             {{#settings}}
             <div class="mootimetersettings mootimeterfullwidth">
                 {{{settings}}}

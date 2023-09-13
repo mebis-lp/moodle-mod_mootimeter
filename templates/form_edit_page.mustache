@@ -5,9 +5,8 @@
         <input type="hidden" name="pageid" value="{{pageid}}">
         <input type="hidden" name="tool" value="{{tool}}">
 
-        {{> mod_mootimeter/snippet_accordion_wrapper}}
-        <br>
-        <button type="submit" name="a" value="storepage" class="btn btn-primary ml-lg-4">{{#str}} savechangesanddisplay, core {{/str}}</button>
+        {{> mod_mootimeter/snippet_accordion_wrapper_new}}
+        <button type="submit" name="a" value="storepage" class="btn btn-primary mootimeter-btn-small">{{#str}} savechangesanddisplay, core {{/str}}</button>
         {{#pageid}}
             <button type="cancel" name="a" value="deletepage" class="btn btn-danger ml-lg-4">{{#str}} delete, core {{/str}}</button>
         {{/pageid}}
