@@ -189,6 +189,7 @@ if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($acti
         $editformparams['title'] = $page->title;
         $editformparams['sortorder'] = $page->sortorder;
         $editformparams['question'] = $page->question;
+		$editformparams['isNewPage'] = 'isNotNewPage';
         $editformparams['toolsettings'] = $helper->get_tool_settings($page);
         $editformparams['instancename'] = $page->title;
     }
@@ -220,6 +221,6 @@ if ($PAGE->user_is_editing() || count($pages) > 1) {
     $params['showpagescol'] = true;
 }
 
-echo $OUTPUT->render_from_template("mod_mootimeter/main_screen", $params);
+echo $OUTPUT->render_from_template("mod_mootimeter/main_screen_new", $params);
 
 echo $OUTPUT->footer();

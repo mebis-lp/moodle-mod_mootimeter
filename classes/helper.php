@@ -163,6 +163,7 @@ class helper {
             'cmid' => $cm->id,
             'title' => s($page->title),
             'question' => s($page->question),
+			'isNewPage' => s($page->isNewPage),
             'isediting' => $PAGE->user_is_editing(),
         ];
         $params = array_merge($params, $toolhelper->get_renderer_params($page));
