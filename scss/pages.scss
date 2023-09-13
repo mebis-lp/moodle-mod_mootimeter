@@ -11,14 +11,27 @@
 				background-color: $grey-400;
 				color: $white-standard;
 				margin-bottom: 1rem;
-				border: 1px $lernplatform-300 solid;
+				border: 0.0625rem $lernplatform-300 solid;
 				min-height: 3.75rem;
 				justify-content: center;
+				position: relative;
+
+				.mootimeter_pages_count {
+					position: absolute;
+					left: 0.4375rem;
+					top: 0.25rem;
+					font-family: Atkinson Hyperlegible;
+					font-size: 0.75rem;
+					font-style: normal;
+					font-weight: 400;
+					line-height: 1rem;
+					color: $grey-300;
+				}
 			}
 
 			.mootimeter_addpage {
 				background-color: $lernplatform-400;
-				border: 1px $lernplatform-400 solid;
+				border: 0.0625rem $lernplatform-400 solid;
 			}
 		}
 	}
