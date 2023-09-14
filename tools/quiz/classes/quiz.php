@@ -235,7 +235,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_counted_answers(int $pageid){
         $values = array_map(
-                function($obj){ return $obj['cnt'];},
+                function($obj){ return ((array) $obj)['cnt'];},
                 $this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$pageid], 'optionid')
         );
         return array_values($values);
