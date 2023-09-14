@@ -32,6 +32,7 @@ use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
+use mod_mootimeter\page_manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
@@ -72,8 +73,7 @@ class store_answer extends external_api {
             'aoid' => $aoid,
         ]);
 
-        $helper = new \mod_mootimeter\helper();
-        $page = $helper->get_page($pageid);
+        $page = page_manager::get_page($pageid);
 
         $quiz = new \mootimetertool_quiz\quiz();
         $quiz->insert_answer($page, $aoid);

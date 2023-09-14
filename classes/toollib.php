@@ -41,7 +41,7 @@ use stdClass;
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  */
-abstract class toolhelper {
+abstract class toollib {
 
     /**
      * Insert the answer.
@@ -82,7 +82,8 @@ abstract class toolhelper {
      * @param object $page
      * @return void
      */
-    abstract public function hook_after_new_page_created(object $page);
+    public function hook_after_new_page_created(object $page) {
+    }
 
     /**
      * Get renderes setting output.
@@ -118,6 +119,7 @@ abstract class toolhelper {
 
             foreach ($setting as $key => $value) {
                 switch ($key) {
+                    case 'select':
                     case 'text':
                         $parameters[$setting['name']] = [
                             'tool' => $page->tool,
@@ -127,25 +129,8 @@ abstract class toolhelper {
                             'value' => optional_param($setting['name'], "", PARAM_TEXT),
                         ];
                         break;
-                    case 'number':
-                        $parameters[$setting['name']] = [
-                            'tool' => $page->tool,
-                            'type' => $key,
-                            'pageid' => $page->id,
-                            'name' => $setting['name'],
-                            'value' => optional_param($setting['name'], "", PARAM_INT),
-                        ];
-                        break;
-                    case 'select':
-                        $parameters[$setting['name']] = [
-                            'tool' => $page->tool,
-                            'type' => $key,
-                            'pageid' => $page->id,
-                            'name' => $setting['name'],
-                            'value' => optional_param($setting['name'], "", PARAM_TEXT),
-                        ];
-                        break;
                     case 'checkbox':
+                    case 'number':
                         $parameters[$setting['name']] = [
                             'tool' => $page->tool,
                             'type' => $key,
@@ -327,5 +312,27 @@ abstract class toolhelper {
         }
         $record = array_shift($records);
         return $record->timecreated;
+    }
+
+    /**
+     * Should return whether this tool has a result page.
+     *
+     * @return bool
+     */
+    public function has_result_page(): bool {
+        return false;
+    }
+
+    /***
+     * Render the result page and display the bar chart.
+     * @param $page
+     * @return string
+     */
+    public function get_result_page($page): string {
+        if ($this->has_result_page()) {
+            throw new coding_exception('Missing implementation for get_result_page!');
+        } else {
+            throw new coding_exception('This tool does not have a result page!');
+        }
     }
 }

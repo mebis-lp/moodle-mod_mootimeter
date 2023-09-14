@@ -25,12 +25,6 @@
 
 namespace mod_mootimeter;
 
-use coding_exception;
-use dml_exception;
-use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_mootimeter helper class.
  *
@@ -39,7 +33,27 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  */
-class helper {
+class page_manager {
+
+    /**
+     * Returns the tool lib for the given tool.
+     *
+     * @param string $tool
+     * @return toollib
+     */
+    public static function get_tool_lib(string $tool): toollib {
+        $classname = "\mootimetertool_" . $tool . "\\" . $tool;
+        if (!class_exists($classname)) {
+            throw new \coding_exception("Class $classname is missing for mootimeter tool $tool.");
+        }
+
+        $object = new $classname();
+        if (!($object instanceof toollib)) {
+            throw new \coding_exception("Class $classname does not extend \\mod_mootimeter\\toollib.");
+        }
+
+        return $object;
+    }
 
     /**
      * Insert or update a page record.
@@ -47,7 +61,7 @@ class helper {
      * @param object $record
      * @return int pageid
      */
-    public function store_page(object $record) {
+    public static function store_page(object $record) {
         global $DB;
 
         if (!empty($record->id)) {
@@ -65,14 +79,7 @@ class helper {
         $pageid = $DB->insert_record('mootimeter_pages', $record, true);
 
         // Hook to do further actions depending on mtmt tool.
-        $classname = "\mootimetertool_" . $record->tool . "\\" . $record->tool;
-        if (!class_exists($classname)) {
-            return "Class '" . $record->tool . "' is missing in tool " . $record->tool;
-        }
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'hook_after_new_page_created')) {
-            return "Method 'get_renderer_params' is missing in tool helper class " . $record->tool;
-        }
+        $toolhelper = self::get_tool_lib($record->tool);
 
         $record->id = $pageid;
         $toolhelper->hook_after_new_page_created($record);
@@ -84,10 +91,9 @@ class helper {
      * Get all pages of an instance.
      *
      * @param int $instanceid
-     * @param bool $asarray
      * @return mixed
      */
-    public function get_pages(int $instanceid) {
+    public static function get_pages(int $instanceid) {
         global $DB;
         return $DB->get_records('mootimeter_pages', ['instance' => $instanceid], 'sortorder');
     }
@@ -98,9 +104,8 @@ class helper {
      * @param int $pageid
      * @param int $instanceid
      * @return mixed
-     * @throws dml_exception
      */
-    public function get_page(int $pageid, int $instanceid = 0) {
+    public static function get_page(int $pageid, int $instanceid = 0) {
         global $DB;
         $params = ['id' => $pageid];
         if (!empty($instanceid)) {
@@ -111,7 +116,7 @@ class helper {
 
     public static function get_instance_by_pageid($pageid): object {
         global $DB;
-        return $DB->get_record_sql('SELECT DISTINCT `instance` FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
+        return $DB->get_record_sql('SELECT DISTINCT instance FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
     }
 
     /**
@@ -120,7 +125,7 @@ class helper {
      * @param mixed $pages
      * @return array
      */
-    public function get_pages_template($pages, $pageid) {
+    public static function get_pages_template($pages, $pageid) {
         $temppages = [];
         foreach ($pages as $page) {
             $temppages[] = [
@@ -142,19 +147,12 @@ class helper {
      * @param bool $withwrapper
      * @return string
      */
-    public function get_rendered_page_content(object $page, object $cm, bool $withwrapper = true): string {
+    public static function get_rendered_page_content(object $page, object $cm, bool $withwrapper = true): string {
         global $OUTPUT, $PAGE;
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
-        if (!class_exists($classname)) {
-            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
-        }
-
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_renderer_params')) {
-            return "Method 'get_renderer_params' is missing in tool helper class " . $page->tool;
-        }
+        $toolhelper = self::get_tool_lib($page->tool);
 
         $params = [
             'containerclasses' => "border rounded",
@@ -173,31 +171,14 @@ class helper {
         return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content", $params);
     }
 
-    public function get_rendered_page_result(object $page): string {
-
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-        if (!class_exists($classname)) {
-            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
-        }
-
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_result_page')) {
-            return "Method 'get_renderer_params' is missing in tool helper class " . $page->tool;
-        }
+    public static function get_rendered_page_result(object $page): string {
+        $toolhelper = self::get_tool_lib($page->tool);
         return $toolhelper->get_result_page($page);
     }
 
-
-    public function has_result_page(object $page) {
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-        if (!class_exists($classname)) {
-            return false;
-        }
-
-        $toolhelper = new $classname();
-        return method_exists($toolhelper, 'get_result_page');
+    public static function has_result_page(object $page): bool {
+        $toolhelper = self::get_tool_lib($page->tool);
+        return $toolhelper->has_result_page();
     }
 
     /**
@@ -205,21 +186,9 @@ class helper {
      *
      * @param object $page
      * @return string
-     * @throws coding_exception
      */
-    public function get_tool_settings(object $page): string {
-
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-        if (!class_exists($classname)) {
-            throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
-        }
-
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_tool_settings')) {
-            throw new \coding_exception("Method 'get_tool_settings' is missing in tool helper class " . $page->tool);
-        }
-
+    public static function get_tool_settings(object $page): string {
+        $toolhelper = self::get_tool_lib($page->tool);
         return $toolhelper->get_tool_settings($page);
     }
 
@@ -228,21 +197,9 @@ class helper {
      *
      * @param object $page
      * @return array
-     * @throws coding_exception
      */
-    public function get_tool_settings_parameters(object $page): array {
-
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-        if (!class_exists($classname)) {
-            throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
-        }
-
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_tool_settings_parameters')) {
-            throw new \coding_exception("Method 'get_tool_settings_parameters' is missing in tool helper class " . $page->tool);
-        }
-
+    public static function get_tool_settings_parameters(object $page): array {
+        $toolhelper = self::get_tool_lib($page->tool);
         return $toolhelper->get_tool_settings_parameters($page);
     }
 
@@ -251,13 +208,12 @@ class helper {
      *
      * @param object $page
      * @return void
-     * @throws coding_exception
      */
-    public function store_tool_config(object $page): void {
-        $parameters = $this->get_tool_settings_parameters($page);
+    public static function store_tool_config(object $page): void {
+        $parameters = self::get_tool_settings_parameters($page);
 
         foreach ($parameters as $parameter) {
-            $this->set_tool_config($page,  $parameter['name'], $parameter['value']);
+            self::set_tool_config($page, $parameter['name'], $parameter['value']);
         }
     }
 
@@ -268,13 +224,12 @@ class helper {
      * @param string $name
      * @param string $value
      * @return void
-     * @throws dml_exception
      */
-    public function set_tool_config(object|int $pageorid, string $name, string $value): void {
-        global $DB, $PAGE;
+    public static function set_tool_config(object|int $pageorid, string $name, string $value): void {
+        global $DB;
 
         if (!is_object($pageorid)) {
-            $page = $this->get_page($pageorid);
+            $page = self::get_page($pageorid);
         } else {
             $page = $pageorid;
         }
@@ -302,7 +257,7 @@ class helper {
      * @param mixed $page
      * @return array
      */
-    public function get_tool_config($page) {
+    public static function get_tool_config($page) {
         global $DB;
 
         $conditions = [
@@ -325,17 +280,8 @@ class helper {
      * @param $page
      * @return bool
      */
-    public function delete_page($page) {
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-        if (!class_exists($classname)) {
-            throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
-        }
-
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'delete_page')) {
-            throw new \coding_exception("Method 'delete_page' is missing in tool helper class " . $page->tool);
-        }
+    public static function delete_page($page): bool {
+        $toolhelper = self::get_tool_lib($page->tool);
         return $toolhelper->delete_page($page);
     }
 }

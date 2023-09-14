@@ -30,6 +30,7 @@ use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
 use external_value;
+use mod_mootimeter\page_manager;
 use tool_brickfield\manager;
 
 defined('MOODLE_INTERNAL') || die();
@@ -72,8 +73,7 @@ class store_answer extends external_api {
             'answer' => $answer,
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
-        $page = $mtmhelper->get_page($pageid);
+        $page = page_manager::get_page($pageid);
 
         $wordcloud = new \mootimetertool_wordcloud\wordcloud();
         $wordcloud->insert_answer($page, $answer);

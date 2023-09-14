@@ -27,7 +27,7 @@ namespace mootimetertool_quiz;
 
 use stdClass;
 
-class quiz extends \mod_mootimeter\toolhelper {
+class quiz extends \mod_mootimeter\toollib {
 
     const MTMT_IS_POLL = 1;
     const MTMT_IS_QUIZ = 2;
@@ -192,14 +192,20 @@ class quiz extends \mod_mootimeter\toolhelper {
         return $settings;
     }
 
+    /**
+     * Quiz has a result page.
+     * @return bool
+     */
+    public function has_result_page(): bool {
+        return true;
+    }
+
     /***
      * Render the result page and display the bar chart.
      * @param $page
      * @return mixed
-     * @throws \coding_exception
-     * @throws \dml_exception
      */
-    public function get_result_page($page){
+    public function get_result_page($page): string {
 
         global $OUTPUT, $DB;
 

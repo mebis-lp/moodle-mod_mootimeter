@@ -23,6 +23,8 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_mootimeter\page_manager;
+
 require(__DIR__ . '/../../config.php');
 global $DB, $OUTPUT, $PAGE;
 require_once(__DIR__ . '/lib.php');
@@ -68,16 +70,14 @@ $results = optional_param('results', false, PARAM_BOOL);
 $paramtitle = optional_param('title', "", PARAM_ALPHA);
 $paramorder = optional_param('sortorder', "", PARAM_INT);
 
-$helper = new \mod_mootimeter\helper();
-
 if ($action) {
     require_capability('mod/mootimeter:moderator', $modulecontext);
     require_sesskey();
 
     switch ($action) {
         case 'deletepage':
-            $page = $helper->get_page($pageid);
-            $success = $helper->delete_page($page);
+            $page = page_manager::get_page($pageid);
+            $success = page_manager::delete_page($page);
             if ($success) {
                 redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'a' => 'editpage']));
             } else {
@@ -93,14 +93,14 @@ if ($action) {
             $record->title = $paramtitle;
             $record->sortorder = $paramorder;
             $record->question = optional_param('question', "", PARAM_RAW);
-            $pageid = $helper->store_page($record);
+            $pageid = page_manager::store_page($record);
 
             // Get all settingparams from tool.
-            $page = $helper->get_page($pageid);
-            $parameters = $helper->get_tool_settings_parameters($page);
+            $page = page_manager::get_page($pageid);
+            $parameters = page_manager::get_tool_settings_parameters($page);
 
             // Store pages tool config.
-            $helper->store_tool_config($page);
+            page_manager::store_tool_config($page);
 
             // Reload page.
             redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $pageid]));
@@ -110,7 +110,7 @@ if ($action) {
 
 $mt = new \mod_mootimeter\plugininfo\mootimetertool();
 
-$pages = $helper->get_pages($cm->instance);
+$pages = page_manager::get_pages($cm->instance);
 
 $event = \mod_mootimeter\event\course_module_viewed::create(array(
     'objectid' => $moduleinstance->id,
@@ -128,7 +128,7 @@ $context = [
     'containerclasses' => "border rounded",
     'mootimetercard' => 'border rounded',
     'cmid' => $cm->id,
-    'pages' => $helper->get_pages_template($pages, $pageid),
+    'pages' => page_manager::get_pages_template($pages, $pageid),
     'results' => $results
 ];
 
@@ -158,7 +158,7 @@ if (!empty($pageid)) {
     $editformcontext['title'] = $page->title;
     $editformcontext['sortorder'] = $page->sortorder;
     $editformcontext['question'] = $page->question;
-    $editformcontext['toolsettings'] = $helper->get_tool_settings($page);
+    $editformcontext['toolsettings'] = page_manager::get_tool_settings($page);
     $editformcontext['instancename'] = $page->title;
 }
 
@@ -166,18 +166,18 @@ $context['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_p
 
 if (!empty($page)) {
 
-    $context['has_result'] = $helper->has_result_page($page);
+    $context['has_result'] = page_manager::has_result_page($page);
     if (!$results) {
         $context['redirect_string'] = get_string("show_results", "mod_mootimeter");
         $context['redirect_result'] = new moodle_url("view.php", ["m" => $page->instance, "pageid" => $page->id, "results" => true]);
     } else {
         $context['redirect_string'] = get_string("show_options", "mod_mootimeter");
         $context['redirect_result'] = new moodle_url("view.php", ["m" => $page->instance, "pageid" => $page->id, "results" => false]);
-        $context['pagecontent'] = $helper->get_rendered_page_result($page);
+        $context['pagecontent'] = page_manager::get_rendered_page_result($page);
     }
 
     if (empty($context['pagecontent'])) {
-        $context['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
+        $context['pagecontent'] = page_manager::get_rendered_page_content($page, $cm, false);
     }
 }
 

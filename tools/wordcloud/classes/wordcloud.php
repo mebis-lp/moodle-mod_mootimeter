@@ -26,22 +26,14 @@
 namespace mootimetertool_wordcloud;
 
 use dml_exception;
+use mod_mootimeter\page_manager;
 
-class wordcloud extends \mod_mootimeter\toolhelper {
+class wordcloud extends \mod_mootimeter\toollib {
 
     /** Show Results live */
     const MTMT_VIEW_RESULT_LIVE = 1;
     /** Show Results after teacher permission */
     const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
-
-    /**
-     * Will be executed after the page is created.
-     * @param object $page
-     * @return void
-     */
-    public function hook_after_new_page_created(object $page): void {
-        return;
-    }
 
     /**
      * Page type specivic insert_answer
@@ -276,16 +268,14 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         $teacherpermission = $this->get_tool_config($page->id, 'teacherpermission');
 
-        $helper = new \mod_mootimeter\helper();
-
         if (empty($teacherpermission)) {
             // The config is not set yet. Set the value to 1.
-            $helper->set_tool_config($page, 'teacherpermission', 1);
+            page_manager::set_tool_config($page, 'teacherpermission', 1);
             return 1;
         }
 
         // The config was already set. Toggle it.
-        $helper->set_tool_config($page, 'teacherpermission', 0);
+        page_manager::set_tool_config($page, 'teacherpermission', 0);
         return 0;
     }
     /**
