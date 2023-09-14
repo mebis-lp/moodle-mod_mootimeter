@@ -308,7 +308,7 @@ abstract class toolhelper {
             $cache->set($cachekey, json_encode($records));
         }
 
-        return $records;
+        return (array) $records;
     }
 
     /**

@@ -234,7 +234,10 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @throws \dml_exception
      */
     public function get_counted_answers(int $pageid){
-        $values = array_map(function($obj){ return $obj->cnt;},(array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$pageid], 'optionid'));
+        $values = array_map(
+                function($obj){ return $obj['cnt'];},
+                $this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$pageid], 'optionid')
+        );
         return array_values($values);
     }
 
