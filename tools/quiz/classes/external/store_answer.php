@@ -80,7 +80,7 @@ class store_answer extends external_api {
 
         $return = [
             'finished' => 1,
-            'redirecturl' => 'view.php?m=3&pageid=' . $pageid . '&results=1',
+            'redirecturl' => "view.php?m=$page->instance&pageid=$page->id&results=1",
         ];
         return $return;
     }
