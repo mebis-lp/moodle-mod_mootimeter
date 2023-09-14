@@ -1,6 +1,7 @@
 <div
   class="container-fluid mootimetercontainer isNotNewPage {{{containerclasses}}}"
 >
+
   <div class="row h-100">
     {{#showpagescol}}
     <div class="mootimetercol mootimetercolpages">
@@ -11,6 +12,7 @@
           data-pageid="{{ pageid }}"
           data-cmid="{{ cmid }}"
         >
+					<span class="mootimeter_pages_count">1</span>
           <img src="{{{pix}}}" width="20px" class="m-1" />
         </li>
         {{/pages}}
@@ -42,10 +44,10 @@
 		{{> mod_mootimeter/elements/snippet_notification}}
 
         <div class="input-with-checkbox-icon_wrapper">
-          {{> mod_mootimeter/elements/snippet_answer_option}}
-          {{> mod_mootimeter/elements/snippet_answer_option}}
-          {{> mod_mootimeter/elements/snippet_answer_option}}
-          {{> mod_mootimeter/elements/snippet_answer_option}}
+          {{> mod_mootimeter/elements/snippet_input_with_icon}}
+          {{> mod_mootimeter/elements/snippet_input_with_icon}}
+          {{> mod_mootimeter/elements/snippet_input_with_icon}}
+          {{> mod_mootimeter/elements/snippet_input_with_icon}}
 					{{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
 					{{> mod_mootimeter/elements/snippet_number_input}}
         </div>
@@ -91,6 +93,7 @@
 			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
 			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
 			{{> mod_mootimeter/elements/snippet_radio_button}}
+			{{> mod_mootimeter/elements/snippet_input_with_inner_icon}}
         </div>
         <div class="mootimeter-colcontent-preview-send">
           {{> mod_mootimeter/elements/snippet_button_full}}
@@ -99,6 +102,7 @@
       </div>
     </div>
   </div>
+	{{! {{> mod_mootimeter/elements/snippet_modal}}
 </div>
 
 {{#isediting}}

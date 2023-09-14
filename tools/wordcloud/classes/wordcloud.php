@@ -164,7 +164,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                     'text' => get_string('show_results', 'mootimetertool_wordcloud'),
                     'cssclasses' => 'mootimeter_margin_top_50 mootimeterfullwidth',
                 ];
-                $params['teacherpermission'] = $OUTPUT->render_from_template('mod_mootimeter/snippet_button', $tmparams);
+                $params['teacherpermission'] = $OUTPUT->render_from_template('mod_mootimeter/elements/snippet_button', $tmparams);
             }
 
             if (!empty($this->get_tool_config($page->id, 'teacherpermission'))) {
@@ -174,7 +174,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                     'cssclasses' => 'mootimeter_margin_top_50 mootimeterfullwidth',
                     'pageid' => $page->id,
                 ];
-                $params['teacherpermission'] = $OUTPUT->render_from_template('mod_mootimeter/snippet_button', $tmparams);
+                $params['teacherpermission'] = $OUTPUT->render_from_template('mod_mootimeter/elements/snippet_button', $tmparams);
             }
         }
 

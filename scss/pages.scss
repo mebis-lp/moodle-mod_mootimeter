@@ -2,6 +2,9 @@
 	.mootimetercolpages {
 		background-color: $grey-500;
 		flex: 7.5rem 0 0;
+		max-width: 100%;
+		max-height: 100vh;
+		overflow-y: auto;
 
 		ul {
 			padding: 2.5rem 1.0625rem;
@@ -32,6 +35,21 @@
 			.mootimeter_addpage {
 				background-color: $lernplatform-400;
 				border: 0.0625rem $lernplatform-400 solid;
+			}
+		}
+
+		@media screen and (max-width: 469px) {
+			flex-grow: 1;
+
+			ul {
+				display: flex;
+    			gap: 20px;
+
+				li {
+					width: 5.375rem;
+					margin-bottom: 0;
+					flex-shrink: 0;
+				}
 			}
 		}
 	}

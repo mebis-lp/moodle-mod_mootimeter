@@ -10,4 +10,9 @@
 	&:focus {
 		border-color: $white-standard;
 	}
+
+	&.light-background {
+		color: $grey-500;
+		border-color: $grey-500;
+	}
 }

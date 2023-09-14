@@ -2,8 +2,9 @@
   .mootimetercoledit {
     flex: 20rem 2 0;
     background-color: $grey-400;
-		max-height: 688px;
-    overflow-y: scroll;
+		max-height: 100vh;
+		max-width: 100%;
+    overflow-y: auto;
   }
 
   &.isNewPage {
