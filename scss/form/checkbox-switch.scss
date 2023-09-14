@@ -4,7 +4,7 @@
   height: 1.5625rem;
   padding: 0.125rem 1.5rem 0.125rem 0.125rem;
   border-radius: 3.125rem;
-  border: 2px solid $grey-200;
+  border: 0.125rem solid $grey-200;
   -webkit-appearance: none;
   appearance: none;
   outline: none;
@@ -38,5 +38,13 @@
 .mootimeter-checkbox-switch-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
+}
+
+.dark {
+  .mootimeter-checkbox-switch {
+    &:checked::before {
+      background-color: $white-standard;
+    }
+  }
 }

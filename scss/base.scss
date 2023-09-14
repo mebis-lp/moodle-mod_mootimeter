@@ -2,23 +2,33 @@
 @import "../../../theme/boost/scss/bootstrap/variables";
 @import "../../../theme/boost/scss/bootstrap/mixins";
 
-$grey-100: #E8E8EA;
-$grey-200: #A4A5AC;
-$grey-300: #60616D;
+$grey-100: #e8e8ea;
+$grey-200: #a4a5ac;
+$grey-300: #60616d;
 $grey-400: #303142;
-$grey-500: #00091E;
+$grey-500: #00091e;
 
 $white-standard: #fff;
 
 // wahrscheinlich ersetzen durch moodle vars:
-$lernplatform-300: #DC6534;
-$lernplatform-400: #D33F01;
-$lernplatform-500: #A93201;
+$lernplatform-200: #e99f80;
+$lernplatform-300: #dc6534;
+$lernplatform-400: #d33f01;
+$lernplatform-500: #a93201;
 
-$feedback-error: #FF0000;
-$notification-warning: #FF00001A;
+$feedback-error: #ff0000;
+$notification-warning: #ff00001a;
 
-@mixin rounded {
-		border-radius: 0.25rem;
+@mixin rounded-s {
+  border-radius: 0.25rem;
 }
 
+@mixin rounded-m {
+  border-radius: 0.5rem;
+}
+
+@mixin flex-center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

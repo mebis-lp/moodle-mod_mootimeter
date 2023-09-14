@@ -1,29 +1,29 @@
 .mootimeter-colcontent-preview-notification {
-			    display: flex;
-    			align-items: center;
-				background-color: $grey-100;
-    			border-radius: 0.5rem;
+  @include rounded-m;
+  display: flex;
+  align-items: center;
+  background-color: $grey-100;
 
-				p {
-					padding: 0.75rem 1rem 0.75rem 0;
-				}
+  p {
+    padding: 0.75rem 1rem 0.75rem 0;
+  }
 
-				&.notification-info {
-					background-color: $grey-100;
-					color: $grey-400;
-				}
+  &.notification-info {
+    background-color: $grey-100;
+    color: $grey-400;
+  }
 
-				&.notification-warning {
-					background-color: $notification-warning;
-					color: $feedback-error;
-				}
+  &.notification-warning {
+    background-color: $notification-warning;
+    color: $feedback-error;
+  }
 
-				.icon {
-					width: 1.5rem;
-					height: 1.5rem;
-					text-align: center;
-					margin: 0;
-					font-size: 1.5rem;
-					padding: 1.25rem;
-				}
-		}
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    text-align: center;
+    margin: 0;
+    font-size: 1.5rem;
+    padding: 1.25rem;
+  }
+}

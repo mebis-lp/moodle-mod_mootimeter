@@ -3,18 +3,16 @@
     display: flex;
     align-items: center;
     cursor: pointer;
- margin: 0;
+    margin: 0;
 
     .checkbox-icon-wrapper {
+      @include flex-center-all;
       position: relative;
       border: 0.0938rem solid $lernplatform-400;
       border-radius: 0.125rem;
       width: 1.25rem;
       height: 1.25rem;
       margin-right: 0.625rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       padding: 0.125rem;
       .checkbox-icon {
         font-size: 1rem;
@@ -43,13 +41,12 @@
       }
     }
 
-		input[type="checkbox"]:not(:checked):hover + .checkbox-icon-wrapper > .checkbox-icon {
-    transform: scale(1);
-    opacity: 1;
-		color: $lernplatform-400;
-		}
-
-
+    input[type="checkbox"]:not(:checked):hover
+      + .checkbox-icon-wrapper
+      > .checkbox-icon {
+      transform: scale(1);
+      opacity: 1;
+      color: $lernplatform-400;
+    }
   }
 }
-

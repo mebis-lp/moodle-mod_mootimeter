@@ -1,64 +1,72 @@
 .mootimetercontainer {
-	.mootimetercolcontent {
-		background-color: $grey-100;
-		flex: 25rem 10 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-wrap: wrap;
-		position: relative;
-		padding: 6.25rem 2.5rem;
-		max-width: 100%;
-		max-height: 100vh;
-		overflow-y: auto;
+  .mootimetercolcontent {
+    @include flex-center-all;
+    background-color: $grey-100;
+    flex: 25rem 10 0;
+    flex-wrap: wrap;
+    position: relative;
+    padding: 6.25rem 2.5rem;
+    max-width: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
 
-		.mootimeter-colcontent-preview {
-			background-color: $white-standard;
-			max-width: 32.25rem;
-			padding: 2.5rem;
-			display: flex;
-			flex-direction: column;
-			gap: 2.5rem;
-			border-radius: 8px;
-		}
+    .mootimeter-colcontent-preview {
+      @include rounded-m;
+      background-color: $white-standard;
+      max-width: 32.25rem;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
 
-		.mootimeter-colcontent-preview-header {
-			display: flex;
-			flex-direction: column;
-			justify-content: start;
-			gap: 1rem;
-		}
+    .mootimeter-colcontent-preview-header {
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      gap: 1rem;
+    }
 
-		.mootimeter-content-menu {
-			position: absolute;
-			top: 1.25rem;
-			background: #00091E;
-			padding: 0.5rem 1.25rem;
-			border-radius: 3.125rem;
-			display: flex;
-    		gap: 1rem;
-			box-shadow: 0px 12px 26px 0px #3E455B26;
-		}
+    .mootimeter-content-menu {
+      position: absolute;
+      top: 1.25rem;
+      background: #00091e;
+      padding: 0.5rem 1.25rem;
+      border-radius: 3.125rem;
+      display: flex;
+      gap: 1rem;
+      box-shadow: 0px 12px 26px 0px #3e455b26;
+    }
 
-		.mootimeter-colcontent-preview-options {
-			display: flex;
-			flex-wrap: wrap;
-			flex-direction: column;
-			gap: 1rem;
-		}
+    .mootimeter-colcontent-preview-options {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 1rem;
+    }
 
-		.mootimeter-colcontent-preview-send {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			text-align: center;
-			gap: 1.25rem;
-		}
-	}
+    .mootimeter-colcontent-preview-send {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      gap: 1.25rem;
+    }
+  }
 
-	&.isNewPage {
-		.mootimetercolcontent {
-			flex: 0 0 0;
-		}
-	}
+  &.isNewPage {
+    .mootimetercolcontent {
+      flex: 0 0 0;
+    }
+  }
+}
+
+.dark {
+  .mootimetercolcontent {
+    background-color: $grey-500;
+  }
+
+  .mootimetercolcontent .mootimeter-content-menu {
+    background-color: $white-standard;
+  }
 }

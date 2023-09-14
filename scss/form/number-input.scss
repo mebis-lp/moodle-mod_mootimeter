@@ -1,20 +1,18 @@
 .mootimeter-number-input {
+  input {
+    @include rounded-s;
+    height: 2.625rem;
+    padding: 0.5rem 0.875rem 0.5rem 0.875rem;
+    border: 0.0625rem solid $white-standard;
+    background-color: unset;
+    color: $white-standard;
+    max-width: 4.25rem;
+  }
 
-	input {
-		height: 2.625rem;
-		padding: 0.5rem 0.875rem 0.5rem 0.875rem;
-		border-radius: 0.25rem;
-		border: 0.0625rem solid $white-standard;
-		background-color: unset;
-		color: $white-standard;
-		max-width: 4.25rem;
-	}
-
-	label {
-		display: flex;
-		width: 100%;
-		gap: 0.5rem;
-		    align-items: center;
-	}
-
+  label {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
+    align-items: center;
+  }
 }

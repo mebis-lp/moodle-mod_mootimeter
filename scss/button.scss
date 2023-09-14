@@ -1,105 +1,140 @@
 .mootimeter-btn {
-	display: flex;
-	height: 3.625rem;
-	padding: 1rem 1.625rem;
-	justify-content: center;
-	align-items: center;
-	gap: 0.5rem;
-	align-self: flex-start;
-	background-color: $lernplatform-400;
-	border-radius: 0.5rem;
-	border: none;
-	font-family: Atkinson Hyperlegible;
-	font-size: 1.125rem;
-	font-style: normal;
-	font-weight: 400;
-	line-height: 1.625rem;
-	color: $white-standard;
+  @include rounded-m;
+  @include flex-center-all;
+  height: 3.625rem;
+  padding: 1rem 1.625rem;
+  gap: 0.5rem;
+  align-self: flex-start;
+  background-color: $lernplatform-400;
+  border: none;
+  font-family: Atkinson Hyperlegible;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.625rem;
+  color: $white-standard;
 
-	&:hover {
-		background-color: $lernplatform-500;
-	}
+  &:hover {
+    background-color: $lernplatform-500;
+  }
 
-	&.disabled {
-		pointer-events: none;
-		background-color: $grey-200;
-	}
+  &.disabled {
+    pointer-events: none;
+    background-color: $grey-200;
+  }
 
-	&.mootimeter-btn-full {
-		align-self: stretch;
-	}
+  &.mootimeter-btn-full {
+    align-self: stretch;
+  }
 }
 
 .btn.mootimeter-btn-small {
-	margin: 0 auto;
-	padding: 1rem 1.625rem;
-	border: none;
-	background-color: $lernplatform-400;
+  margin: 0 auto;
+  padding: 1rem 1.625rem;
+  border: none;
+  background-color: $lernplatform-400;
 }
 
 .btn.mootimeter-icon-button {
-	width: 3.875rem;
-	height: 2.25rem;
-    padding: 0.4375rem 1.25rem 0.4375rem 1.25rem;
-	border-radius: 0.25rem;
-	background-color: $grey-300;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  @include rounded-s;
+  @include flex-center-all;
+  width: 3.875rem;
+  height: 2.25rem;
+  padding: 0.4375rem 1.25rem 0.4375rem 1.25rem;
+  background-color: $grey-300;
 
-	&.active {
-		background-color: $lernplatform-400;
-	}
+  &.active {
+    background-color: $lernplatform-400;
+  }
 
-	&:hover {
-		background-color: $grey-100;
-	}
+  &:hover {
+    background-color: $grey-200;
+  }
 
-	.icon {
-		color: $white-standard;
-		font-size: 1.375rem;
-		width: unset;
-		height: unset;
-		margin: 0;
-	}
+  .icon {
+    color: $white-standard;
+    font-size: 1.375rem;
+    width: unset;
+    height: unset;
+    margin: 0;
+  }
 }
 
-.mootimeter-content-action-btn, .mootimeter-content-icon-only-btn {
-	padding: 0.625rem;
-	border-radius: 3.125rem;
-	width: 2.5rem;
-	height: 2.5rem;
-	border: none;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+.mootimeter-content-action-btn,
+.mootimeter-content-icon-only-btn {
+  @include flex-center-all;
+  padding: 0.625rem;
+  border-radius: 3.125rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
 
-	.icon {
-		margin: 0;
-		width: unset;
-		height: unset;
-		font-size: 1.25rem;
-	}
+  .icon {
+    margin: 0;
+    width: unset;
+    height: unset;
+    font-size: 1.25rem;
+  }
 }
 
 .mootimeter-content-action-btn {
-	&.active {
-		background-color: $lernplatform-400;
-		color: $white-standard;
-	}
+  &.active {
+    background-color: $lernplatform-400;
+    color: $white-standard;
+  }
 
-	&.disabled {
-		color: $grey-200;
-		pointer-events: none;
-	}
+  &.disabled {
+    color: $grey-200;
+    pointer-events: none;
+  }
 
-	&:not(.disabled):hover {
-		background-color: $grey-200;
-		color: $grey-500;
-	}
+  &:not(.disabled):hover {
+    background-color: $grey-200;
+    color: $grey-500;
+  }
 }
 
 .mootimeter-content-icon-only-btn {
-	background-color: transparent;
+  background-color: transparent;
+  color: $white-standard;
+}
+
+.dark {
+  .mootimeter-content-action-btn {
+    background-color: $grey-400;
     color: $white-standard;
+
+    &.active {
+      background-color: $lernplatform-400;
+    }
+
+    &.disabled {
+      background-color: $grey-200;
+    }
+  }
+
+  .mootimeter-content-icon-only-btn {
+    color: $grey-500;
+  }
+
+  .btn.mootimeter-icon-button {
+    background-color: $white-standard;
+    .icon {
+      color: $grey-500;
+    }
+
+    &:hover {
+      background: $grey-200;
+      .icon {
+        color: $white-standard;
+      }
+    }
+
+    &.active {
+      background-color: $lernplatform-400;
+      .icon {
+        color: $white-standard;
+      }
+    }
+  }
 }

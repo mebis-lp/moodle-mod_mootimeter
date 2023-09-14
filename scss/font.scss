@@ -1,40 +1,40 @@
 .mootimetercontainer {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Lexend", sans-serif;
+    margin: 0;
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Lexend', sans-serif;
-  margin: 0;
-}
+  h1 {
+  }
 
-	h1 {
+  h2 {
+  }
 
-	}
+  h3 {
+  }
 
-	h2 {
+  h4 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 2.125rem;
+    letter-spacing: 0rem;
+  }
 
-	}
+  p {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.625rem;
+    letter-spacing: 0em;
+    margin-bottom: 0;
 
-	h3 {
-
-	}
-
-	h4 {
-		font-size: 1.5rem;
-		font-weight: 500;
-		line-height: 2.125rem;
-		letter-spacing: 0rem;
-	}
-
-	p {
-		font-family: 'Atkinson Hyperlegible', sans-serif;
-		font-size: 1.125rem;
-		font-weight: 400;
-		line-height: 1.625rem;
-		letter-spacing: 0em;
-		margin-bottom: 0;
-
-		&.text-bold {
-			font-weight: 700;
-		}
-
-	}
+    &.text-bold {
+      font-weight: 700;
+    }
+  }
 }

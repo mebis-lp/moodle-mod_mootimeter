@@ -1,6 +1,6 @@
 .mootimeter-pill {
-	background-color: $grey-100;
-	border-radius: 0.25rem;
-	align-self:flex-start;
-	padding: 0.125rem 0.75rem;
+  @include rounded-s;
+  background-color: $grey-100;
+  align-self: flex-start;
+  padding: 0.125rem 0.75rem;
 }
