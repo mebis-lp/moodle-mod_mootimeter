@@ -25,6 +25,8 @@
 
 namespace mod_mootimeter;
 
+use context_module;
+
 /**
  * The mod_mootimeter helper class.
  *
@@ -114,9 +116,25 @@ class page_manager {
         return $DB->get_record('mootimeter_pages', $params);
     }
 
-    public static function get_instance_by_pageid($pageid): object {
+    /**
+     * Returns the context for a given pageid.
+     * @param int $pageid
+     * @return context_module
+     */
+    public static function get_context_for_page(int $pageid): context_module {
+        $instanceid = self::get_instanceid_for_pageid($pageid);
+        $cmid = get_coursemodule_from_instance('mootimeter', $instanceid)->id;
+        return context_module::instance($cmid);
+    }
+
+    /**
+     * Returns the instance id for a given pageid.
+     * @param int $pageid
+     * @return int
+     */
+    public static function get_instanceid_for_pageid(int $pageid): int {
         global $DB;
-        return $DB->get_record_sql('SELECT DISTINCT instance FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
+        return $DB->get_field_sql('SELECT DISTINCT instance FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
     }
 
     /**
@@ -137,43 +155,6 @@ class page_manager {
             ];
         }
         return $temppages;
-    }
-
-    /**
-     * Get rendered page content.
-     *
-     * @param object $page
-     * @param object $cm
-     * @param bool $withwrapper
-     * @return string
-     */
-    public static function get_rendered_page_content(object $page, object $cm, bool $withwrapper = true): string {
-        global $OUTPUT, $PAGE;
-
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-        $toolhelper = self::get_tool_lib($page->tool);
-
-        $params = [
-            'containerclasses' => "border rounded",
-            'mootimetercard' => 'border rounded',
-            'pageid' => $page->id,
-            'cmid' => $cm->id,
-            'title' => s($page->title),
-            'question' => s($page->question),
-            'isediting' => $PAGE->user_is_editing(),
-        ];
-        $params = array_merge($params, $toolhelper->get_renderer_params($page));
-
-        if ($withwrapper) {
-            return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_wrapper", $params);
-        }
-        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content", $params);
-    }
-
-    public static function get_rendered_page_result(object $page): string {
-        $toolhelper = self::get_tool_lib($page->tool);
-        return $toolhelper->get_result_page($page);
     }
 
     public static function has_result_page(object $page): bool {
@@ -269,7 +250,7 @@ class page_manager {
         $returnconfig = [];
 
         foreach ($configs as $config) {
-            $returnconfig[$config['name']] = $config['value'];
+            $returnconfig[$config->name] = $config->value;
         }
 
         return $returnconfig;
@@ -289,4 +270,5 @@ class page_manager {
         $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
         return $success;
     }
+
 }

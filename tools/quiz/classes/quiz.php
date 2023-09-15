@@ -123,31 +123,6 @@ class quiz extends \mod_mootimeter\toollib {
     }
 
     /**
-     * Get all parameters that are necessary for rendering the tools view.
-     *
-     * @param object $page
-     * @return array
-     */
-    public function get_renderer_params(object $page) {
-
-        $ispoll = $this->get_quiztype($page->id);
-        $answeroptions = $this->get_answer_options($page->id);
-        $params['lastupdated'] = $this->get_last_update_time($page->id, "quiz");
-
-        foreach ($answeroptions as $ao) {
-            $params['answer_options'][] = [
-                'aoid' => $ao->id,
-                'ao_text' => $ao->optiontext,
-                'ao_iscorrect' => $ao->optioniscorrect,
-                $ispoll => true,
-                'pageid' => $page->id,
-            ];
-        }
-        $params['question_text'] = $page->question;
-        return $params;
-    }
-
-    /**
      * Get all answer options of a page.
      *
      * @param int $pageid
@@ -200,51 +175,14 @@ class quiz extends \mod_mootimeter\toollib {
         return true;
     }
 
-    /***
-     * Render the result page and display the bar chart.
-     * @param $page
-     * @return mixed
-     */
-    public function get_result_page($page): string {
-
-        global $OUTPUT, $DB;
-
-        $chart = new \core\chart_bar();
-        $records = $DB->get_records('mtmt_quiz_options', ["pageid" => $page->id]);
-        $labels = "[";
-        foreach($records as $record){
-            $labels .= "\"$record->optiontext\",";
-        }
-        $labels .= "]";
-        //$chart->set_labels($labels);
-        //$series = new \core\chart_series($page->question,$this->get_counted_answers($page->id));
-        //$chart->add_series($series);
-        if(empty($labels)){// || empty($series->get_values())){
-            $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];
-        } else {
-            $paramschart = [
-                'labels' => $labels,
-                'values'=>'['.implode(',', $this->get_counted_answers($page->id)).']',
-                'question' => "\"test\"",
-                'lastupdated' => $this->get_last_update_time($page->id, "quiz"),
-                'pageid' => $page->id];
-        }
-
-        return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
-    }
-
     /**
      * Get array of counted values for each answer/ option.
      * @param int $pageid
      * @return array
      * @throws \dml_exception
      */
-    public function get_counted_answers(int $pageid){
-        $values = array_map(
-                function($obj){ return ((array) $obj)['cnt'];},
-                $this->get_answers_grouped("mtmt_quiz_answers", ["pageid"=>$pageid], 'optionid')
-        );
-        return array_values($values);
+    public function get_counted_answers(int $pageid) {
+        return $this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $pageid], 'optionid');
     }
 
     /**

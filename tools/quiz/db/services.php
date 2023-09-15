@@ -28,34 +28,32 @@ defined('MOODLE_INTERNAL') || die();
 $functions = [
     'mootimetertool_quiz_store_answeroption' => [
         'classname'     => 'mootimetertool_quiz\external\store_answeroption',
-        'methodname'    => 'execute',
         'description'   => 'Store an answer option of mootimetertool_quiz changed by the teacher',
         'type'          => 'write',
         'ajax'          => true,
-        'capabilities'  => 'mod/mootimeter:view',
     ],
     'mootimetertool_quiz_store_answer' => [
         'classname'     => 'mootimetertool_quiz\external\store_answer',
-        'methodname'    => 'execute',
         'description'   => 'Store an answer of mootimetertool_quiz by the student',
         'type'          => 'write',
         'ajax'          => true,
-        'capabilities'  => 'mod/mootimeter:view',
     ],
     'mootimetertool_quiz_new_answeroption' => [
         'classname'     => 'mootimetertool_quiz\external\new_answeroption',
-        'methodname'    => 'execute',
         'description'   => 'Store new answer option of mootimetertool_quiz.',
         'type'          => 'write',
         'ajax'          => true,
-        'capabilities'  => 'mod/mootimeter:view',
     ],
     'mootimetertool_quiz_get_answers' => [
         'classname'     => 'mootimetertool_quiz\external\get_answers',
-        'methodname'    => 'execute',
         'description'   => 'Get Answers.',
-        'type'          => 'write',
+        'type'          => 'read',
         'ajax'          => true,
-        'capabilities'  => 'mod/mootimeter:view',
+    ],
+    'mootimetertool_quiz_get_answeroptions' => [
+        'classname'     => 'mootimetertool_quiz\external\get_answeroptions',
+        'description'   => 'Get the answeroptions',
+        'type'          => 'read',
+        'ajax'          => true,
     ],
 ];

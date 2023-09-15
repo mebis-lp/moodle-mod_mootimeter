@@ -17,15 +17,15 @@
 /**
  * Web service to get all answers.
  *
- * @package     mootimetertool_wordcloud
- * @copyright   2023, ISB Bayern
- * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @package     mootimetertool_quiz
+ * @copyright   2023 Justus Dieckmann WWU
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mootimetertool_quiz\external;
 
 use external_api;
+use external_description;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
@@ -39,12 +39,11 @@ require_once($CFG->libdir . '/externallib.php');
 /**
  * Web service to get all answers.
  *
- * @package     mootimetertool_wordcloud
- * @copyright   2023, ISB Bayern
- * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @package     mootimetertool_quiz
+ * @copyright   2023 Justus Dieckmann WWU
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_answers extends external_api {
+class get_answeroptions extends external_api {
     /**
      * Describes the parameters.
      *
@@ -52,7 +51,7 @@ class get_answers extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED)
+            'pageid' => new external_value(PARAM_INT, 'The page id to obtain answer options for', VALUE_REQUIRED),
         ]);
     }
 
@@ -60,10 +59,10 @@ class get_answers extends external_api {
      * Execute the service.
      *
      * @param int $pageid
-     * @param int $lastupdated
      * @return array
      */
     public static function execute(int $pageid): array {
+        global $DB;
         ['pageid' => $pageid] = self::validate_parameters(
             self::execute_parameters(),
             ['pageid' => $pageid]
@@ -72,31 +71,20 @@ class get_answers extends external_api {
         $context = page_manager::get_context_for_page($pageid);
         require_capability('mod/mootimeter:view', $context);
 
-        $quiz = new \mootimetertool_quiz\quiz();
-        $lastupdatednew = $quiz->get_last_update_time($pageid, "quiz");
-
-        $answerlist = $quiz->get_counted_answers($pageid);
-        return ['answerlist' => $answerlist, 'lastupdated' => $lastupdatednew];
+        return $DB->get_records('mtmt_quiz_options', ['pageid' => $pageid], 'id', 'id, optiontext, optioniscorrect');
     }
 
     /**
-     * Describes the return structure of the service..
+     * Describes the return structure.
      *
-     * @return external_single_structure
+     * @return external_description
      */
-    public static function execute_returns() {
-        return new external_single_structure(
-            [
-                'answerlist' => new external_multiple_structure(
-                    new external_single_structure([
-                        'optionid' => new external_value(PARAM_INT, 'Option id'),
-                        'count' => new external_value(PARAM_INT, 'Amount of answers for option'),
-                    ]),
-                    "Answer"
-                ),
-                'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated')
-            ],
-            'Get Answers'
-        );
+    public static function execute_returns(): external_description {
+        return new external_multiple_structure(
+                new external_single_structure([
+                        'id' => new external_value(PARAM_INT, 'id of the answer'),
+                        'optiontext' => new external_value(PARAM_TEXT, 'text of the answer'),
+                        'optioniscorrect' => new external_value(PARAM_BOOL, 'is answer correct')
+                ]), 'a answer');
     }
 }

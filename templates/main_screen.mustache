@@ -1,40 +1,31 @@
-<div class="container-fluid mootimetercontainer {{{containerclasses}}}">
-    <div class="row h-100">
-        {{#showpagescol}}
-        <div class="mootimetercol mootimetercolpages">
-            <ul class="m-0 p-0">
-                {{#pages}}
-                <li class="list-group-item mootimeter_pages_li py-0 px-2 d-flex clickable {{active}}" data-pageid="{{pageid}}" data-cmid="{{cmid}}">
-                    <img src="{{{pix}}}" width="20px" class="m-1">
-                    <span class="flex-shrink-1 text-break m-2" >{{title}}</span>
-                </li>
-                {{/pages}}
-                {{#isediting}}
-                <li id="mootimeter_addpage" class="list-group-item py-0 px-2 d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{cmid}}">
-                    <i class="fa fa-plus p-1 mx-1 my-auto"></i><span class="flex-shrink-1 text-break m-2">{{#str}} addpage, mod_mootimeter {{/str}}</span>
-                </li>
-                {{/isediting}}
-            </ul>
-        </div>
-        {{/showpagescol}}
-        {{#isediting}}
-        <div class="mootimetercol mootimetercoledit p-1">
-            {{#settings}}
-            <div class="mootimetersettings mootimeterfullwidth">
-                {{{settings}}}
-            </div>
-            {{/settings}}
-        </div>
-        {{/isediting}}
-        <div class="mootimetercol mootimetercolcontent">
-            {{#has_result}}
-            <div class="m-2">
-                <a class="btn btn-light" href={{{redirect_result}}}>{{{redirect_string}}}</a>
-            </div>
-            {{/has_result}}
-            {{{pagecontent}}}
-        </div>
+<div class="mootimetercontainer border rounded d-flex">
+    {{#showpagescol}}
+    <div class="mootimetercol mootimetercolpages">
+        <ul class="m-0 p-0">
+            {{#pages}}
+            <li class="list-group-item mootimeter_pages_li py-0 px-2 d-flex clickable {{active}}" data-pageid="{{pageid}}" data-cmid="{{cmid}}">
+                <img src="{{{pix}}}" width="20px" class="m-1">
+                <span class="flex-shrink-1 text-break m-2" >{{title}}</span>
+            </li>
+            {{/pages}}
+            {{#isediting}}
+            <li id="mootimeter_addpage" class="list-group-item py-0 px-2 d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{cmid}}">
+                <i class="fa fa-plus p-1 mx-1 my-auto"></i><span class="flex-shrink-1 text-break m-2">{{#str}} addpage, mod_mootimeter {{/str}}</span>
+            </li>
+            {{/isediting}}
+        </ul>
     </div>
+    {{/showpagescol}}
+    {{#isediting}}
+    <div class="mootimetercol mootimetercoledit p-1">
+        {{#settings}}
+        <div class="mootimetersettings mootimeterfullwidth">
+            {{{settings}}}
+        </div>
+        {{/settings}}
+    </div>
+    {{/isediting}}
+    <div class="mootimetercol mootimetercolcontent"></div>
 </div>
 
 {{#isediting}}
@@ -42,7 +33,3 @@
 require(['mod_mootimeter/edit'], (module) => module.init());
 {{/js}}
 {{/isediting}}
-
-{{#js}}
-require(['mod_mootimeter/main'], (module) => module.init());
-{{/js}}

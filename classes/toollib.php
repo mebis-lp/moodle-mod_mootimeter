@@ -62,14 +62,6 @@ abstract class toollib {
     abstract public function delete_page(object $page);
 
     /**
-     * Get all parameters that are necessary for rendering the tools view.
-     *
-     * @param object $page
-     * @return array
-     */
-    abstract public function get_renderer_params(object $page);
-
-    /**
      * Get the settings definitions.
      *
      * @param object $page
@@ -288,7 +280,7 @@ abstract class toollib {
         $records = json_decode($cache->get($cachekey), true);
 
         if (empty($records)) {
-            $sql = "SELECT $answercolumn, count(*) as cnt FROM {" . $table . "} WHERE pageid = :pageid GROUP BY $answercolumn";
+            $sql = "SELECT $answercolumn, count(*) as count FROM {" . $table . "} WHERE pageid = :pageid GROUP BY $answercolumn";
             $records = $DB->get_records_sql($sql, $params);
             $cache->set($cachekey, json_encode($records));
         }

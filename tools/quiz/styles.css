@@ -130,3 +130,11 @@ mtmt_question_section .btn-trash {
 .mtmt-state-switch label.ao_label_state:last-of-type {
     border-radius: 0 4px 4px 0;
 }
+
+.mootimeterquizresult {
+    margin: 1rem;
+}
+
+#quizcanvas {
+    max-width: calc(100% - 2rem);
+}

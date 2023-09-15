@@ -24,6 +24,7 @@
  */
 
 use mod_mootimeter\page_manager;
+use mod_mootimeter\plugininfo\mootimetertool;
 
 require(__DIR__ . '/../../config.php');
 global $DB, $OUTPUT, $PAGE;
@@ -108,9 +109,12 @@ if ($action) {
     }
 }
 
-$mt = new \mod_mootimeter\plugininfo\mootimetertool();
+$mt = new mootimetertool();
 
 $pages = page_manager::get_pages($cm->instance);
+foreach ($pages as &$p) {
+    $p->config = page_manager::get_tool_config($p);
+}
 
 $event = \mod_mootimeter\event\course_module_viewed::create(array(
     'objectid' => $moduleinstance->id,
@@ -120,7 +124,8 @@ $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mootimeter', $moduleinstance);
 $event->trigger();
 
-$PAGE->requires->js_call_amd('mod_mootimeter/toolmanager', 'init', [['quiz', 'wordcloud'], [], 3]);
+$PAGE->requires->js_call_amd('mod_mootimeter/toolmanager', 'init',
+        [array_values(mootimetertool::get_enabled_plugins()), $pages, $moduleinstance->id, $PAGE->user_is_editing()]);
 
 echo $OUTPUT->header();
 
@@ -163,23 +168,6 @@ if (!empty($pageid)) {
 }
 
 $context['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformcontext);
-
-if (!empty($page)) {
-
-    $context['has_result'] = page_manager::has_result_page($page);
-    if (!$results) {
-        $context['redirect_string'] = get_string("show_results", "mod_mootimeter");
-        $context['redirect_result'] = new moodle_url("view.php", ["m" => $page->instance, "pageid" => $page->id, "results" => true]);
-    } else {
-        $context['redirect_string'] = get_string("show_options", "mod_mootimeter");
-        $context['redirect_result'] = new moodle_url("view.php", ["m" => $page->instance, "pageid" => $page->id, "results" => false]);
-        $context['pagecontent'] = page_manager::get_rendered_page_result($page);
-    }
-
-    if (empty($context['pagecontent'])) {
-        $context['pagecontent'] = page_manager::get_rendered_page_content($page, $cm, false);
-    }
-}
 
 $context['isediting'] = $PAGE->user_is_editing();
 

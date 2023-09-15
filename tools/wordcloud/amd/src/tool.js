@@ -1,4 +1,3 @@
-<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,16 +13,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+import SuperTool from "mod_mootimeter/tool";
+
 /**
- * External service definitions for mod_mootimeter.
+ * Super class for tools.
  *
- * @package     mod_mootimeter
- * @copyright   2023, ISB Bayern
- * @author      Peter Mayer <peter.mayer@isb.bayern.de>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @module     mootimetertool_wordcloud/tool
+ * @copyright  2023 Justus Dieckmann WWU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+export default class Tool extends SuperTool {
 
-defined('MOODLE_INTERNAL') || die();
+    /**
+     * Renders a page.
+     *
+     * @return {Promise<HTMLElement>}
+     */
+    // eslint-disable-next-line no-unused-vars,no-empty-function
+    render() {
+    }
 
-$functions = [
-];
+}

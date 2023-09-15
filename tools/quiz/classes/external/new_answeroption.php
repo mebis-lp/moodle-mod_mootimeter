@@ -81,21 +81,17 @@ class new_answeroption extends external_api {
         $record->optioniscorrect = 0;
         $record->timecreated = time();
 
-        return ['aoid' => $quiz->store_answer_option($record), 'quiztype' => $quiz->get_quiztype($pageid)];
+        return ['aoid' => $quiz->store_answer_option($record)];
     }
 
     /**
-     * Describes the return structure of the service..
+     * Describes the return structure of the service.
      *
-     * @return external_multiple_structure
+     * @return external_single_structure
      */
     public static function execute_returns() {
-        return new external_single_structure(
-            [
+        return new external_single_structure([
                 'aoid' => new external_value(PARAM_INT, 'ID of new Answer Option'),
-                'quiztype' => new external_value(PARAM_TEXT, 'Quiztype')
-            ],
-            'Informations of new answer option'
-        );
+        ], 'Informations of new answer option');
     }
 }

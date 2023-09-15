@@ -2,6 +2,7 @@
     /* Just to hide borders of mootimetercols when flex-wrapping which
         overflow the rounded corners of the mootimetercontainer a tiny bit */
     overflow: hidden;
+    min-height: 60vh;
 }
 
 .mootimeter_textcenter {
