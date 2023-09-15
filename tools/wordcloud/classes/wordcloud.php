@@ -31,9 +31,9 @@ use mod_mootimeter\page_manager;
 class wordcloud extends \mod_mootimeter\toollib {
 
     /** Show Results live */
-    const MTMT_VIEW_RESULT_LIVE = 1;
+    const VIEW_RESULT_LIVE = 1;
     /** Show Results after teacher permission */
-    const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
+    const VIEW_RESULT_TEACHERPERMISSION = 2;
 
     /**
      * Page type specivic insert_answer
@@ -78,8 +78,8 @@ class wordcloud extends \mod_mootimeter\toollib {
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
         if (
-            $this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_LIVE
-            || ($this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+            $this->get_tool_config($pageid, 'showresult') == self::VIEW_RESULT_LIVE
+            || ($this->get_tool_config($pageid, 'showresult') == self::VIEW_RESULT_TEACHERPERMISSION
                 && !empty($this->get_tool_config($pageid, 'teacherpermission'))
             )
         ) {
@@ -87,7 +87,7 @@ class wordcloud extends \mod_mootimeter\toollib {
                 'pageid' => $pageid,
             ];
 
-            if(!empty($userid)){
+            if (!empty($userid)) {
                 $params['usermodified'] = $userid;
             }
 
@@ -147,7 +147,7 @@ class wordcloud extends \mod_mootimeter\toollib {
 
         if (
             has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
-            && $this->get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+            && $this->get_tool_config($page->id, 'showresult') == self::VIEW_RESULT_TEACHERPERMISSION
         ) {
 
             if (empty($this->get_tool_config($page->id, 'teacherpermission'))) {
@@ -183,7 +183,7 @@ class wordcloud extends \mod_mootimeter\toollib {
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
         if (
-            $this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+            $this->get_tool_config($pageid, 'showresult') == self::VIEW_RESULT_TEACHERPERMISSION
             && empty($this->get_tool_config($pageid, 'teacherpermission'))
         ) {
             return 0;
@@ -212,13 +212,13 @@ class wordcloud extends \mod_mootimeter\toollib {
             "options" => [
                 [
                     'title' => get_string('showresultlive', 'mootimetertool_wordcloud'),
-                    'value' => self::MTMT_VIEW_RESULT_LIVE,
-                    'selected' => $this->is_option_selected(self::MTMT_VIEW_RESULT_LIVE, $config, 'showresult'),
+                    'value' => self::VIEW_RESULT_LIVE,
+                    'selected' => $this->is_option_selected(self::VIEW_RESULT_LIVE, $config, 'showresult'),
                 ],
                 [
                     'title' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
-                    'value' => self::MTMT_VIEW_RESULT_TEACHERPERMISSION,
-                    'selected' => $this->is_option_selected(self::MTMT_VIEW_RESULT_TEACHERPERMISSION, $config, 'showresult'),
+                    'value' => self::VIEW_RESULT_TEACHERPERMISSION,
+                    'selected' => $this->is_option_selected(self::VIEW_RESULT_TEACHERPERMISSION, $config, 'showresult'),
                 ],
             ]
         ];
@@ -285,17 +285,8 @@ class wordcloud extends \mod_mootimeter\toollib {
      */
     public function delete_page(object $page) {
         global $DB;
-        try {
-            // Table not written yet
-            // $DB->delete_records('mtmt_wordcloud', array('pageid' => $page->id));
-            $DB->delete_records('mtmt_wordcloud_answers', array('pageid' => $page->id));
-            $DB->delete_records('mootimeter_pages', array('id' => $page->id));
-            $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
-        } catch (\Exception $e) {
-            // Todo handling
-            echo 'Something went wrong';
-            return false;
-        }
+        $DB->delete_records('mtmt_wordcloud', array('pageid' => $page->id));
+        $DB->delete_records('mtmt_wordcloud_answers', array('pageid' => $page->id));
         return true;
     }
 }

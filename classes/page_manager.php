@@ -281,7 +281,12 @@ class page_manager {
      * @return bool
      */
     public static function delete_page($page): bool {
+        global $DB;
+
         $toolhelper = self::get_tool_lib($page->tool);
-        return $toolhelper->delete_page($page);
+        $success = $toolhelper->delete_page($page);
+        $DB->delete_records('mootimeter_pages', array('id' => $page->id));
+        $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
+        return $success;
     }
 }

@@ -29,8 +29,8 @@ use stdClass;
 
 class quiz extends \mod_mootimeter\toollib {
 
-    const MTMT_IS_POLL = 1;
-    const MTMT_IS_QUIZ = 2;
+    const IS_POLL = 1;
+    const IS_QUIZ = 2;
 
     const ANSWER_COLUMN = "optionid";
 
@@ -108,7 +108,7 @@ class quiz extends \mod_mootimeter\toollib {
     public function get_quiztype(int $pageid): string {
         if (!empty($this->get_tool_config($pageid, 'ispoll'))) {
             switch ($this->get_tool_config($pageid, 'ispoll')) {
-                case self::MTMT_IS_QUIZ:
+                case self::IS_QUIZ:
                     $ispoll = "isquiz";
                     break;
                 default:
@@ -179,13 +179,13 @@ class quiz extends \mod_mootimeter\toollib {
             "options" => [
                 [
                     'title' => get_string('poll', 'mootimetertool_quiz'),
-                    'value' => self::MTMT_IS_POLL,
-                    'selected' => $this->is_option_selected(self::MTMT_IS_POLL, $config, 'showresult'),
+                    'value' => self::IS_POLL,
+                    'selected' => $this->is_option_selected(self::IS_POLL, $config, 'showresult'),
                 ],
                 [
                     'title' => get_string('quiz', 'mootimetertool_quiz'),
-                    'value' => self::MTMT_IS_QUIZ,
-                    'selected' => $this->is_option_selected(self::MTMT_IS_QUIZ, $config, 'showresult'),
+                    'value' => self::IS_QUIZ,
+                    'selected' => $this->is_option_selected(self::IS_QUIZ, $config, 'showresult'),
                 ],
             ]
         ];
@@ -254,16 +254,8 @@ class quiz extends \mod_mootimeter\toollib {
      */
     public function delete_page(object $page) {
         global $DB;
-        try {
-            $DB->delete_records('mtmt_quiz_options', array('pageid' => $page->id));
-            $DB->delete_records('mtmt_quiz_answers', array('pageid' => $page->id));
-            $DB->delete_records('mootimeter_pages', array('id' => $page->id));
-            $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
-        } catch (\Exception $e) {
-            // Todo handling
-            echo 'Something went wrong';
-            return false;
-        }
+        $DB->delete_records('mtmt_quiz_options', array('pageid' => $page->id));
+        $DB->delete_records('mtmt_quiz_answers', array('pageid' => $page->id));
         return true;
     }
 }
