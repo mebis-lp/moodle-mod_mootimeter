@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <libraries>
   <library>
-    <location>node_modules/quiz</location>
+    <location>js/chart.umd.min.js</location>
     <name>Quiz</name>
     <description>A JS library for generating a live quiz</description>
     <version>4.3.0</version>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <libraries>
   <library>
-    <location>node_modules/wordcloud</location>
+    <location>js/wordcloud2.js</location>
     <name>WordCloud2</name>
     <description>A JS library for generating wordclouds</description>
     <version>1.2.2</version>
