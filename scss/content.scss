@@ -76,10 +76,23 @@
 
 .dark {
   .mootimetercolcontent {
-    background-color: $grey-500;
-  }
+    background-color: $grey-300;
 
-  .mootimetercolcontent .mootimeter-content-menu {
+		.mootimeter-content-menu {
     background-color: $white-standard;
+		}
+
+		.mootimeter-colcontent-preview {
+			background-color: $grey-400;
+
+
+			.mootimeter-btn-icon-only-transparent {
+				color: $white-standard;
+			}
+
+			h3, h4, p, small, input, label {
+				color: $white-standard;
+			}
+		}
   }
 }

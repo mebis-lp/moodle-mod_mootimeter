@@ -45,3 +45,28 @@
     }
   }
 }
+
+.contrast {
+	.mootimeter-btn-icon-only-rounded {
+    background-color: $grey-300;
+		border: 1px solid $white-standard;
+    .icon {
+      color: $white-standard;
+    }
+
+    &:hover {
+      background: $grey-200;
+      .icon {
+        color: $grey-500;
+      }
+    }
+
+    &.active {
+      background-color: $grey-500;
+			border: 1px solid $white-standard;
+			.icon {
+				color: $white-standard;
+			}
+    }
+  }
+}

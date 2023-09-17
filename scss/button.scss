@@ -28,42 +28,16 @@
   }
 }
 
-.dark {
-  .mootimeter-btn-icon-only-rounded {
-    background-color: $grey-400;
-    color: $white-standard;
 
-    &.active {
-      background-color: $lernplatform-400;
-    }
-
-    &.disabled {
-      background-color: $grey-200;
-    }
-  }
-
-  .mootimeter-btn-icon-only-transparent {
-    color: $grey-500;
-  }
-
-  .mootimeter-btn-icon {
-    background-color: $white-standard;
-    .icon {
-      color: $grey-500;
-    }
+.contrast {
+	.mootimeter-btn {
+    background-color: $grey-500;
+		border: 1px solid $white-standard;
 
     &:hover {
       background: $grey-200;
-      .icon {
-        color: $white-standard;
-      }
-    }
-
-    &.active {
-      background-color: $lernplatform-400;
-      .icon {
-        color: $white-standard;
-      }
+			color: $grey-500;
+			border: 1px solid $grey-500;
     }
   }
 }
