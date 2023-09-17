@@ -10,6 +10,19 @@
     max-height: 100vh;
     overflow-y: auto;
 
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $grey-400;
+      border-radius: 20px;
+      border: 3px solid $grey-100;
+    }
+    &::-webkit-scrollbar-track {
+      background: $grey-100;
+    }
+
     .mootimeter-colcontent-preview {
       @include rounded-m;
       background-color: $white-standard;
