@@ -1,7 +1,6 @@
 <div
-  class="container-fluid mootimetercontainer dark isNotNewPage {{{containerclasses}}}"
+  class="container-fluid mootimetercontainer isNotNewPage {{{containerclasses}}}"
 >
-
   <div class="row h-100">
     {{#showpagescol}}
     <div class="mootimetercol mootimetercolpages">
@@ -12,7 +11,7 @@
           data-pageid="{{ pageid }}"
           data-cmid="{{ cmid }}"
         >
-					<span class="mootimeter_pages_count">1</span>
+          <span class="mootimeter_pages_count">1</span>
           <img src="{{{pix}}}" width="20px" class="m-1" />
         </li>
         {{/pages}}
@@ -41,15 +40,15 @@
 
         <p class="text-bold">Antworten</p>
 
-		{{> mod_mootimeter/elements/snippet_notification}}
+        {{> mod_mootimeter/elements/snippet_notification}}
 
         <div class="input-with-checkbox-icon_wrapper">
           {{> mod_mootimeter/elements/snippet_input_with_icon}}
           {{> mod_mootimeter/elements/snippet_input_with_icon}}
           {{> mod_mootimeter/elements/snippet_input_with_icon}}
           {{> mod_mootimeter/elements/snippet_input_with_icon}}
-					{{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
-					{{> mod_mootimeter/elements/snippet_number_input}}
+          {{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
+          {{> mod_mootimeter/elements/snippet_number_input}}
         </div>
 
         {{> mod_mootimeter/elements/snippet_answer_option_add}}
@@ -58,12 +57,12 @@
 
         <p class="text-bold">Visualisierung</p>
 
-		<div class="mootimeter-visualization-options-wrapper">
-			{{> mod_mootimeter/elements/snippet_settings_visualization_option}}
-			{{> mod_mootimeter/elements/snippet_settings_visualization_option}}
-			{{> mod_mootimeter/elements/snippet_settings_visualization_option}}
-			{{> mod_mootimeter/elements/snippet_settings_visualization_option}}
-		</div>
+        <div class="mootimeter-visualization-options-wrapper">
+          {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+          {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+          {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+          {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+        </div>
 
         {{> mod_mootimeter/elements/snippet_divider}}
 
@@ -76,24 +75,23 @@
     </div>
     {{/isediting}}
     <div class="mootimetercol mootimetercolcontent">
-
-		{{> mod_mootimeter/snippet_content_menu}}
+      {{> mod_mootimeter/snippet_content_menu}}
 
       <div class="mootimeter-colcontent-preview">
-	  	<div class="mootimeter-colcontent-preview-header">
-			{{> mod_mootimeter/elements/snippet_pill}}
-			<h4>How much is the Fish?</h4>
-		</div>
+        <div class="mootimeter-colcontent-preview-header">
+          {{> mod_mootimeter/elements/snippet_pill}}
+          <h4>How much is the Fish?</h4>
+        </div>
 
-		{{> mod_mootimeter/elements/snippet_notification}}
+        {{> mod_mootimeter/elements/snippet_notification}}
 
         <div class="mootimeter-colcontent-preview-options">
-			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-			{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-			{{> mod_mootimeter/elements/snippet_radio_button}}
-			{{> mod_mootimeter/elements/snippet_input_with_inner_icon}}
+          {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+          {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+          {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+          {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+          {{> mod_mootimeter/elements/snippet_radio_button}}
+          {{> mod_mootimeter/elements/snippet_input_with_inner_icon}}
         </div>
         <div class="mootimeter-colcontent-preview-send">
           {{> mod_mootimeter/elements/snippet_button_full}}
@@ -102,7 +100,7 @@
       </div>
     </div>
   </div>
-	{{! {{> mod_mootimeter/elements/snippet_modal}}
+  {{! {{> mod_mootimeter/elements/snippet_modal}}
 </div>
 
 {{#isediting}}
