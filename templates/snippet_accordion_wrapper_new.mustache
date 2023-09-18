@@ -26,14 +26,15 @@
 </div>
 <div class="mootimetersettingsdiv mootimeterfullwidth">
     {{#tools}}
-    <label class="card">
-        <input type="radio" class="radio" name="tool" value="{{ tool }}" {{selected}}>
-        <img src="{{{pix}}}" class="card-img" />
+    <label class="mootimeter-radio-card">
+		<input type="radio" class="radio" name="tool" value="{{ tool }}" {{selected}}>
+		<i class="card-icon icon fa fa-chart-simple fa-light checkbox-icon" aria-hidden="true"></i>
 		<span class="card-details">
 			<span class="card-type">{{ name }}</span>
 			<span class="card-desc">Stimmungsbild aus mehreren Fragen </span>
-    	</span>
-    </label>
+		</span>
+		<span class="active-border"></span>
+	</label>
     {{/tools}}
 </div>
 

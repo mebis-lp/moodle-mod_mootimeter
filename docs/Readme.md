@@ -26,6 +26,9 @@ Folgende Tags werden innerhalb der Klasse .*mootimetercontainer* automatisch dur
 h1 - h6; p, small
 ```
 
+TODO:
+Die Settings Spalte (*mootimetercoledit*) wird zu Testzwecken über die Klassen *isNotNewPage* und *isNewPage* auf dem Hauptcontainer ein und ausgeblendet. Sollte dies anders gesteuert werden, muss das Styling angepasst werden.
+
 ## Wrapper
 
 Die Struktur ist aktuell am besten der Datei /templates/main_screen_new.mustache zu entnehmen. (Nach der Anpassung auch diesen Abschnitt aktualisieren) Die Wrapper Klassen sorgen vor allem für die korrekte mobile Darstellung und den Abstand zwischen den Elementen im entsprechenden Wrapper. Folgend eine grundlegende Auflistung der notwendigen Wrapper Klassen (zum Teil wurden hier für besseren Kontrast die Dark-Mode Varianten genutzt):
@@ -198,3 +201,8 @@ Heller Hintergrund
 **/elements/snippet_pill**
 
 ![Untitled](img/Untitled%2020.png)
+
+**/elements/snippet_radio_card**
+(Darstellung entspricht active state)
+
+![Alt text](img/image.png)

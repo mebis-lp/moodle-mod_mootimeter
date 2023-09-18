@@ -1,0 +1,12 @@
+.button-icon-with-text {
+  @include flex-center-all;
+  gap: 0.5rem;
+
+  .icon {
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    text-align: center;
+  }
+}
