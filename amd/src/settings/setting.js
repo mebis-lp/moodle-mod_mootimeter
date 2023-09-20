@@ -14,42 +14,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Super class for tools.
+ * Super class for settings.
  *
- * @module     mod_mootimeter/tool
+ * @module     mod_mootimeter/settings/setting
  * @copyright  2023 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-export default class SuperTool {
+export default class Setting {
 
-    /** @type {Page} */
-    page;
-    /** @type {boolean} */
-    isEditing;
+    value;
+    /** @type {{help: string}}*/
+    config;
 
-    constructor(page, isEditing) {
-        this.page = page;
-        this.isEditing = isEditing;
+    constructor(config, value) {
+        this.value = value;
+        this.config = config;
     }
 
-    /**
-     * Renders a page.
-     *
-     * @return {Promise<HTMLElement>}
-     */
-    // eslint-disable-next-line no-unused-vars
-    async render() {
-        throw new Error("Missing Implementation");
+    async renderSetting() {
     }
 
-    /**
-     * Renders the result page.
-     *
-     * @return {Promise<HTMLElement>}
-     */
-    // eslint-disable-next-line no-unused-vars
-    async renderResult() {
-        throw new Error("Missing Implementation");
+    async getValue() {
     }
 
 }

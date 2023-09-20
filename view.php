@@ -23,6 +23,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_mootimeter\local\settings\setting;
 use mod_mootimeter\page_manager;
 use mod_mootimeter\plugininfo\mootimetertool;
 
@@ -124,8 +125,20 @@ $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mootimeter', $moduleinstance);
 $event->trigger();
 
+$tools = [];
+foreach (mootimetertool::get_enabled_plugins() as $tool) {
+    $lib = page_manager::get_tool_lib($tool);
+    $tools[] = [
+        'name' => $tool,
+        'label' => get_string('pluginname', "mootimetertool_$tool"),
+        'settings' => array_map(function (setting $x) {
+            return $x->get_config();
+        }, $lib->get_tool_setting_definitions())
+    ];
+}
+
 $PAGE->requires->js_call_amd('mod_mootimeter/toolmanager', 'init',
-        [array_values(mootimetertool::get_enabled_plugins()), $pages, $moduleinstance->id, $PAGE->user_is_editing()]);
+        [$tools, $pages, $moduleinstance->id, $PAGE->user_is_editing()]);
 
 echo $OUTPUT->header();
 
@@ -136,38 +149,6 @@ $context = [
     'pages' => page_manager::get_pages_template($pages, $pageid),
     'results' => $results
 ];
-
-$tools = [];
-foreach ($mt->get_enabled_plugins() as $key => $tool) {
-    $tooltemp = [];
-    $tooltemp['pix'] = "tools/" . $tool . "/pix/" . $tool . ".svg";
-    $tooltemp['name'] = get_string('pluginname', 'mootimetertool_' . $tool);
-    $tooltemp['tool'] = $tool;
-    if ($page) {
-        $tooltemp['selected'] = ($tool == $page->tool) ? "selected" : "";
-    }
-    $tools[] = $tooltemp;
-}
-$editformcontext = [
-    'cmid' => $cm->id,
-    'pageid' => $pageid,
-    'title' => $paramtitle,
-    'sortorder' => $paramorder,
-    'tool' => $tool,
-    'tools' => $tools,
-    'accordionwrapperid' => 'settingswrapper',
-    'sesskey' => sesskey()
-];
-
-if (!empty($pageid)) {
-    $editformcontext['title'] = $page->title;
-    $editformcontext['sortorder'] = $page->sortorder;
-    $editformcontext['question'] = $page->question;
-    $editformcontext['toolsettings'] = page_manager::get_tool_settings($page);
-    $editformcontext['instancename'] = $page->title;
-}
-
-$context['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformcontext);
 
 $context['isediting'] = $PAGE->user_is_editing();
 

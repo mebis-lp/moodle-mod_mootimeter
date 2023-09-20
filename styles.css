@@ -84,7 +84,7 @@
     border-bottom: 0;
 }
 
-.mootimeter_pages_li:hover{
+.mootimeter_pages_li:hover {
     background-color: var(--primary);
     color: var(--light);
 }
@@ -97,4 +97,8 @@
 .list-group-item.mootimeter_addpage:hover {
     background-color: var(--green);
     color: var(--light);
+}
+
+.mootimeter-accordion > .card:not(:last-child) {
+    margin-bottom: 0.25rem;
 }

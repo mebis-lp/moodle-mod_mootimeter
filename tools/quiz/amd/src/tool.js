@@ -19,6 +19,7 @@ import notification from "core/notification";
 import Templates from 'core/templates';
 import {ToolManager} from "mod_mootimeter/toolmanager";
 import ChartJS from 'core/chartjs';
+import * as Util from "mod_mootimeter/util";
 
 /**
  * Super class for tools.
@@ -61,7 +62,7 @@ export default class Tool extends SuperTool {
             'isediting': this.isEditing
         };
 
-        const element = await this.renderTemplate('mootimetertool_quiz/view_content', context);
+        const element = await Util.renderTemplate('mootimetertool_quiz/view_content', context);
 
         if (!this.isEditing) {
             // Store data on click thing.

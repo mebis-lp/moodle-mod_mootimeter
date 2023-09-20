@@ -13,43 +13,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+import Setting from "mod_mootimeter/settings/setting";
+import * as Util from "mod_mootimeter/util";
+
 /**
- * Super class for tools.
+ * Class for textarea setting.
  *
- * @module     mod_mootimeter/tool
+ * @module     mod_mootimeter/settings/textarea
  * @copyright  2023 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-export default class SuperTool {
+export default class Textarea extends Setting {
 
-    /** @type {Page} */
-    page;
-    /** @type {boolean} */
-    isEditing;
+    input;
 
-    constructor(page, isEditing) {
-        this.page = page;
-        this.isEditing = isEditing;
+    async renderSetting() {
+        const node = await Util.renderTemplate('mod_mootimeter/settings/textarea', this.config);
+        this.input = node.querySelector('input');
+        return node;
     }
 
-    /**
-     * Renders a page.
-     *
-     * @return {Promise<HTMLElement>}
-     */
-    // eslint-disable-next-line no-unused-vars
-    async render() {
-        throw new Error("Missing Implementation");
-    }
-
-    /**
-     * Renders the result page.
-     *
-     * @return {Promise<HTMLElement>}
-     */
-    // eslint-disable-next-line no-unused-vars
-    async renderResult() {
-        throw new Error("Missing Implementation");
+    async getValue() {
+        return this.input.value;
     }
 
 }

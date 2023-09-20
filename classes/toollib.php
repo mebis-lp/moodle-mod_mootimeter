@@ -31,6 +31,7 @@ use coding_exception;
 use cache_exception;
 use core\plugininfo\base, core_plugin_manager, moodle_url;
 use dml_exception;
+use mod_mootimeter\local\settings\setting;
 use stdClass;
 
 /**
@@ -64,10 +65,9 @@ abstract class toollib {
     /**
      * Get the settings definitions.
      *
-     * @param object $page
-     * @return array
+     * @return setting[]
      */
-    abstract public function get_tool_setting_definitions(object $page);
+    abstract public function get_tool_setting_definitions(): array;
 
     /**
      * Will be executed after the page is created.
@@ -80,13 +80,12 @@ abstract class toollib {
     /**
      * Get renderes setting output.
      *
-     * @param mixed $page
      * @return string
      */
-    public function get_tool_settings($page): string {
+    public function get_tool_settings(): string {
         global $OUTPUT;
 
-        $settings = $this->get_tool_setting_definitions($page);
+        $settings = $this->get_tool_setting_definitions();
         return $OUTPUT->render_from_template("mod_mootimeter/settings", $settings);
     }
 

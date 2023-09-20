@@ -25,6 +25,9 @@
 
 namespace mootimetertool_quiz;
 
+use lang_string;
+use mod_mootimeter\local\settings\select;
+use mod_mootimeter\local\settings\setting;
 use stdClass;
 
 class quiz extends \mod_mootimeter\toollib {
@@ -136,34 +139,18 @@ class quiz extends \mod_mootimeter\toollib {
     /**
      * Get the settings definitions.
      *
-     * @param object $page
-     * @return array
+     * @return setting[]
      */
-    public function get_tool_setting_definitions(object $page): array {
+    public function get_tool_setting_definitions(): array {
         $settings = [];
 
-        $config = $this->get_tool_config($page);
+        $settings[] = $ispoll = new select('ispoll', new lang_string('ispoll', 'mootimetertool_quiz'),
+                self::IS_POLL, [
+                self::IS_POLL => get_string('poll', 'mootimetertool_quiz'),
+                self::IS_QUIZ => get_string('quiz', 'mootimetertool_quiz')
+        ]);
+        $ispoll->set_help('ispoll', 'mootimetertool_quiz');
 
-        $settings['settingsarray'][] = [
-            "select" => true,
-            "id" => 'ispoll',
-            "name" => 'ispoll',
-            "label" => get_string('ispoll_label', 'mootimetertool_quiz'),
-            "helptitle" => get_string('ispoll_helptitle', 'mootimetertool_quiz'),
-            "help" => get_string('ispoll_help', 'mootimetertool_quiz'),
-            "options" => [
-                [
-                    'title' => get_string('poll', 'mootimetertool_quiz'),
-                    'value' => self::IS_POLL,
-                    'selected' => $this->is_option_selected(self::IS_POLL, $config, 'showresult'),
-                ],
-                [
-                    'title' => get_string('quiz', 'mootimetertool_quiz'),
-                    'value' => self::IS_QUIZ,
-                    'selected' => $this->is_option_selected(self::IS_QUIZ, $config, 'showresult'),
-                ],
-            ]
-        ];
         return $settings;
     }
 

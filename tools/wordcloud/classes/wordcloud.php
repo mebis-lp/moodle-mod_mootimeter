@@ -26,6 +26,8 @@
 namespace mootimetertool_wordcloud;
 
 use dml_exception;
+use lang_string;
+use mod_mootimeter\local\settings\select;
 use mod_mootimeter\page_manager;
 
 class wordcloud extends \mod_mootimeter\toollib {
@@ -194,67 +196,18 @@ class wordcloud extends \mod_mootimeter\toollib {
     /**
      * Get the settings definitions.
      *
-     * @param object $page
      * @return array
      */
-    public function get_tool_setting_definitions(object $page): array {
+    public function get_tool_setting_definitions(): array {
         $settings = [];
 
-        $config = $this->get_tool_config($page);
+        $settings[] = $ispoll = new select('showresult', new lang_string('showresult', 'mootimetertool_wordcloud'),
+                self::VIEW_RESULT_LIVE, [
+                        self::VIEW_RESULT_LIVE => get_string('showresultlive', 'mootimetertool_wordcloud'),
+                        self::VIEW_RESULT_TEACHERPERMISSION => get_string('showresultteacherpermission', 'mootimetertool_wordcloud')
+                ]);
+        $ispoll->set_help('showresult', 'mootimetertool_wordcloud');
 
-        $settings['settingsarray'][] = [
-            "select" => true,
-            "id" => 'showresult',
-            "name" => 'showresult',
-            "label" => get_string('showresult_label', 'mootimetertool_wordcloud'),
-            "helptitle" => get_string('showresult_helptitle', 'mootimetertool_wordcloud'),
-            "help" => get_string('showresult_help', 'mootimetertool_wordcloud'),
-            "options" => [
-                [
-                    'title' => get_string('showresultlive', 'mootimetertool_wordcloud'),
-                    'value' => self::VIEW_RESULT_LIVE,
-                    'selected' => $this->is_option_selected(self::VIEW_RESULT_LIVE, $config, 'showresult'),
-                ],
-                [
-                    'title' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
-                    'value' => self::VIEW_RESULT_TEACHERPERMISSION,
-                    'selected' => $this->is_option_selected(self::VIEW_RESULT_TEACHERPERMISSION, $config, 'showresult'),
-                ],
-            ]
-        ];
-
-        // TODO: KEEPING THIS FOR DOCUMANTATION UNTIL A PROPPER DOC EXISTS.
-
-        // $settings['settingsarray'][] = [
-        // "checkbox" => true,
-        // "id" => 'labelid-2',
-        // "name" => 'name2',
-        // "label" => "This is the settings label of setting 2",
-        // "helptitle" => "This is the settings help title 2",
-        // "help" => "Test 2",
-        // "value" => 1,
-        // "checked" => true
-        // ];
-
-        // $settings['settingsarray'][] = [
-        // "number" => true,
-        // "id" => 'labelid-3',
-        // "name" => 'name3',
-        // "label" => "This is the settings label of setting 3",
-        // "helptitle" => "This is the settings help title 3",
-        // "help" => "Test 3",
-        // "value" => 122,
-        // ];
-
-        // $settings['settingsarray'][] = [
-        // "text" => true,
-        // "id" => 'labelid-4',
-        // "name" => 'name4',
-        // "label" => "This is the settings label of setting 4",
-        // "helptitle" => "This is the settings help title 4",
-        // "help" => "Test 4",
-        // "value" => "Testtext",
-        // ];
         return $settings;
     }
 

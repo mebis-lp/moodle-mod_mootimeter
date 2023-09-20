@@ -28,9 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Quiz';
 
-$string['ispoll_label'] = "Quiztype";
-$string['ispoll_helptitle'] = "What kind of quiz is it?";
-$string['ispoll_help'] = "You can choos between poll and quiz. Quizzes have wrong and right answers";
+$string['ispoll'] = "Quiztype";
+$string['ispoll_help'] = "You can choose between poll and quiz. Quizzes have a correct answer.";
 $string['poll'] = "Poll";
 $string['quiz'] = "Quiz";
 $string['show_results'] = "Show results";
