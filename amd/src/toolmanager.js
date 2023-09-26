@@ -17,6 +17,7 @@ import notification from 'core/notification';
 import * as Util from "mod_mootimeter/util";
 import Templates from 'core/templates';
 import {get_string as getString, get_strings as getStrings} from "core/str";
+import Ajax from "../../../../lib/amd/src/ajax";
 
 /**
  * @typedef {{id: int, tool: string, title: string, question: string,
@@ -40,6 +41,7 @@ class ToolManagerClass {
     instanceid;
     /** @type {boolean} */
     isEditing;
+    /** @type {{[name: string]: Setting}} */
     settings;
 
     elRoot;
@@ -62,7 +64,6 @@ class ToolManagerClass {
             'mod_mootimeter/settings_column'
         ]);
         getStrings([
-            {key: 'pagetype', component: 'mod_mootimeter'},
             {key: 'title', component: 'mod_mootimeter'},
             {key: 'question', component: 'mod_mootimeter'},
             {key: 'pagesettings', component: 'mod_mootimeter'},
@@ -102,7 +103,7 @@ class ToolManagerClass {
         }
     }
 
-    async route(pageID, results = false) {
+    async route(pageID, results = false, noCache = false) {
         const newUrl = new URL(location);
         newUrl.search = '';
         newUrl.searchParams.set('pageid', pageID);
@@ -115,7 +116,7 @@ class ToolManagerClass {
             location = newUrl;
         }
 
-        if (!page.toolInstance) {
+        if (!page.toolInstance || noCache) {
             page.toolInstance = new this.tools[page.tool].constructor(page, this.isEditing);
         }
 
@@ -155,44 +156,31 @@ class ToolManagerClass {
      * @returns {Promise<HTMLElement>}
      */
     async renderSettings(page) {
-        const settings = this.tools[page.tool].settings;
-
 
         const tools = {};
         for (let key in this.tools) {
             tools[key] = this.tools[key].label;
         }
 
-        const firstsettings = [
-            {
-                module: 'mod_mootimeter/settings/select',
-                config: {
-                    elementname: 'tool',
-                    id: 'id_tool',
-                    label: await getString('pagetype', 'mod_mootimeter'),
-                    value: page.tool,
-                    options: tools
-                }
-            }, {
-                module: 'mod_mootimeter/settings/textarea',
-                config: {
-                    elementname: 'title',
-                    id: 'id_title',
-                    label: await getString('title', 'mod_mootimeter'),
-                    value: page.title,
-                    paramtype: 'text'
-                }
-            }, {
-                module: 'mod_mootimeter/settings/textarea',
-                config: {
-                    elementname: 'question',
-                    id: 'id_question',
-                    label: await getString('question', 'mod_mootimeter'),
-                    value: page.question,
-                    paramtype: 'text'
-                }
+        const firstsettings = [{
+            module: 'mod_mootimeter/settings/textarea',
+            config: {
+                name: 'title',
+                id: 'id_title',
+                label: await getString('title', 'mod_mootimeter'),
+                value: page.title,
+                paramtype: 'text'
             }
-        ];
+        }, {
+            module: 'mod_mootimeter/settings/textarea',
+            config: {
+                name: 'question',
+                id: 'id_question',
+                label: await getString('question', 'mod_mootimeter'),
+                value: page.question,
+                paramtype: 'text'
+            }
+        }];
 
         const content = await Util.renderTemplate('mod_mootimeter/settings_column', {
             accordionwrapperid: 'accordionwrapper',
@@ -207,54 +195,84 @@ class ToolManagerClass {
             }]
         });
 
-        window.console.log({
-            accordionwrapperid: 'accordionwrapper',
-            instancename: page.title,
-            pageid: page.id,
-            section: [{
-                sectionid: 'generalsettings',
-                title: await getString('pagesettings', 'mod_mootimeter')
-            }, {
-                sectionid: 'toolsettings',
-                title: await getString('toolsettings', 'mod_mootimeter')
-            }]
-        });
+        const [node1, settings] = await this.renderSettingsAccordion(firstsettings, page);
+        content.querySelector('#generalsettings .card-body').append(...node1.children);
 
-        content.querySelector('#generalsettings .card-body')
-            .append(...(await this.renderSettingsAccordion(firstsettings, page)).children);
+        const [node2, settings2] = await this.renderSettingsAccordion(this.tools[page.tool].settings, page.config);
+        content.querySelector('#toolsettings .card-body').append(...node2.children);
+        Object.assign(settings, settings2);
 
-        content.querySelector('#toolsettings .card-body')
-            .append(...(await this.renderSettingsAccordion(settings, page.config)).children);
+        content.querySelector('.savebutton').onclick = async () => {
+            const tosave = {};
+            for (let name in settings) {
+                tosave[name] = settings[name].getValue();
+            }
+
+            const responseJson = await Ajax.call([{
+                methodname: 'mod_mootimeter_save_settings',
+                args: {
+                    pageid: page.id,
+                    settings: JSON.stringify(tosave)
+                },
+                fail: notification.exception,
+            }])[0];
+
+            const response = JSON.parse(responseJson);
+
+            let hasError = false;
+
+            for (let name in settings) {
+                if (response[name]) {
+                    if (response[name].value) {
+                        settings[name].setValue(response[name].value);
+                        if (['title', 'question'].includes(name)) {
+                            page[name] = response[name].value;
+                        } else {
+                            page.config[name] = response[name].value;
+                        }
+                    } else if (response[name].error) {
+                        window.console.log(response[name].error);
+                        hasError = true;
+                    }
+                }
+            }
+
+            this.elPagesCol.querySelector(`[data-pageid="${page.id}"] span`).textContent = page.title;
+
+            if (!hasError) {
+                ToolManager.route(page.id, false, true);
+            }
+        };
 
         return content;
     }
 
-    async renderSettingsAccordion(settings, data) {
+    async renderSettingsAccordion(settingDefs, data) {
         const content = document.createElement('div');
 
         const promises = [];
-        for (const setting of settings) {
-            let name = setting.config.name;
-            let value = data[name] ?? setting.config.initialvalue;
+        for (const settingDef of settingDefs) {
+            let name = settingDef.config.name;
+            let value = data[name] ?? settingDef.config.initialvalue;
             promises.push(
-                import(setting.module).then(async constructor => {
-                    const controller = new constructor(setting.config, value);
+                import(settingDef.module).then(async constructor => {
+                    const controller = new constructor({...settingDef.config}, value);
                     const node = await controller.renderSetting();
                     return {controller: controller, node: node};
                 }).catch(notification.exception)
             );
         }
 
-        this.settings = [];
+        const settings = {};
 
         const resolved = await Promise.all(promises);
         for (let i = 0; i < promises.length; i++) {
             const {controller, node} = resolved[i];
             content.append(...node.children);
-            this.settings.push({controller, node});
+            settings[settingDefs[i].config.name] = controller;
         }
 
-        return content;
+        return [content, settings];
     }
 }
 

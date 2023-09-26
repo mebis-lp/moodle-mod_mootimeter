@@ -23,7 +23,7 @@ import * as Util from "mod_mootimeter/util";
  * @copyright  2023 Justus Dieckmann WWU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-export default class Textarea extends Setting {
+export default class Select extends Setting {
 
     input;
 
@@ -33,7 +33,7 @@ export default class Textarea extends Setting {
             options.push({
                 value: key,
                 label: this.config.options[key],
-                selected: key + '' === this.config.value + ''
+                selected: key + '' === this.value + ''
             });
         }
 
@@ -46,12 +46,16 @@ export default class Textarea extends Setting {
         };
 
         const node = await Util.renderTemplate('mod_mootimeter/settings/select', context);
-        this.input = node.querySelector('input');
+        this.input = node.querySelector('select');
         return node;
     }
 
-    async getValue() {
+    getValue() {
         return this.input.value;
+    }
+
+    async setValue(value) {
+        this.input.value = value;
     }
 
 }

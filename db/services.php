@@ -26,4 +26,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $functions = [
+    'mod_mootimeter_save_settings' => [
+        'classname'     => 'mod_mootimeter\external\save_settings',
+        'description'   => 'Save settings of a page',
+        'type'          => 'write',
+        'ajax'          => true,
+    ],
 ];

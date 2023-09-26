@@ -34,7 +34,11 @@ export default class Setting {
     async renderSetting() {
     }
 
-    async getValue() {
+    getValue() {
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    async setValue(value) {
     }
 
 }

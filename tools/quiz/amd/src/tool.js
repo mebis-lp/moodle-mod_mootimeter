@@ -119,7 +119,7 @@ export default class Tool extends SuperTool {
                 fail: notification.exception,
             }])[0];
 
-            const element = await this.renderTemplate('mootimetertool_quiz/answer_option', {
+            const element = await Util.renderTemplate('mootimetertool_quiz/answer_option', {
                 aoid: result.aoid,
                 isediting: true,
                 ispoll: this.isPoll(),
@@ -176,7 +176,7 @@ export default class Tool extends SuperTool {
             data.datasets[0].data[answermapping[answer.optionid]] = answer.count;
         }
 
-        const element = await this.renderTemplate('mootimetertool_quiz/view_results', {});
+        const element = await Util.renderTemplate('mootimetertool_quiz/view_results', {});
 
         const canvas = element.querySelector('#quizcanvas');
 

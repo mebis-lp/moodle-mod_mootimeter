@@ -33,8 +33,12 @@ export default class Textarea extends Setting {
         return node;
     }
 
-    async getValue() {
+    getValue() {
         return this.input.value;
+    }
+
+    async setValue(value) {
+        this.input.value = value;
     }
 
 }

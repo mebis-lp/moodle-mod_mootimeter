@@ -53,7 +53,7 @@ abstract class setting {
 
         return ['module' => $this->get_javascript_module_name(),
                 'config' => array_merge([
-                        'elementname' => $this->elementname,
+                        'name' => $this->elementname,
                         'id' => "id_$this->elementname",
                         'label' => $this->label->out(),
                         'value' => $this->initialvalue,
@@ -64,6 +64,10 @@ abstract class setting {
 
     public function set_help(string $identifier, string $component) {
         $this->help = new help_icon($identifier, $component);
+    }
+
+    public function get_name(): string {
+        return $this->elementname;
     }
 
 }
