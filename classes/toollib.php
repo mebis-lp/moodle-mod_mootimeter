@@ -29,10 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 
 use coding_exception;
 use cache_exception;
-use core\plugininfo\base, core_plugin_manager, moodle_url;
 use dml_exception;
 use mod_mootimeter\local\settings\setting;
-use stdClass;
 
 /**
  * The toolhelper methods must be implemented of each tool.
@@ -78,65 +76,6 @@ abstract class toollib {
     }
 
     /**
-     * Get renderes setting output.
-     *
-     * @return string
-     */
-    public function get_tool_settings(): string {
-        global $OUTPUT;
-
-        $settings = $this->get_tool_setting_definitions();
-        return $OUTPUT->render_from_template("mod_mootimeter/settings", $settings);
-    }
-
-    /**
-     * Get all tool settings parameters.
-     *
-     * @param object $page
-     * @return array
-     * @throws coding_exception
-     */
-    public function get_tool_settings_parameters(object $page): array {
-
-        $settings = $this->get_tool_setting_definitions($page);
-
-        $parameters = [];
-
-        if (empty($settings['settingsarray'])) {
-            return $parameters;
-        }
-
-        foreach ($settings['settingsarray'] as $setting) {
-
-            foreach ($setting as $key => $value) {
-                switch ($key) {
-                    case 'select':
-                    case 'text':
-                        $parameters[$setting['name']] = [
-                            'tool' => $page->tool,
-                            'type' => $key,
-                            'pageid' => $page->id,
-                            'name' => $setting['name'],
-                            'value' => optional_param($setting['name'], "", PARAM_TEXT),
-                        ];
-                        break;
-                    case 'checkbox':
-                    case 'number':
-                        $parameters[$setting['name']] = [
-                            'tool' => $page->tool,
-                            'type' => $key,
-                            'pageid' => $page->id,
-                            'name' => $setting['name'],
-                            'value' => optional_param($setting['name'], "", PARAM_INT),
-                        ];
-                        break;
-                }
-            }
-        }
-        return $parameters;
-    }
-
-    /**
      * Get the config of a pages tool.
      *
      * @param object|int $page
@@ -159,27 +98,6 @@ abstract class toollib {
         }
 
         return (object)$DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, value');
-    }
-
-    /**
-     * Checks if a select option is selected.
-     *
-     * @param int $optionid
-     * @param object $config
-     * @param string $attribute
-     * @return bool
-     */
-    public function is_option_selected(int $optionid, object $config, string $attribute): bool {
-
-        if (empty($config->{$attribute})) {
-            return false;
-        }
-
-        if ($config->{$attribute} == $optionid) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

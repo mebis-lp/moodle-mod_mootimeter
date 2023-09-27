@@ -168,42 +168,6 @@ class page_manager {
     }
 
     /**
-     * Get all setting definitions of a page.
-     *
-     * @param object $page
-     * @return string
-     */
-    public static function get_tool_settings(object $page): string {
-        $toolhelper = self::get_tool_lib($page->tool);
-        return $toolhelper->get_tool_settings($page);
-    }
-
-    /**
-     * Get all tool settings parameters.
-     *
-     * @param object $page
-     * @return array
-     */
-    public static function get_tool_settings_parameters(object $page): array {
-        $toolhelper = self::get_tool_lib($page->tool);
-        return $toolhelper->get_tool_settings_parameters($page);
-    }
-
-    /**
-     * Store all tool page config settings during a form submit.
-     *
-     * @param object $page
-     * @return void
-     */
-    public static function store_tool_config(object $page): void {
-        $parameters = self::get_tool_settings_parameters($page);
-
-        foreach ($parameters as $parameter) {
-            self::set_tool_config($page, $parameter['name'], $parameter['value']);
-        }
-    }
-
-    /**
      * Set a single config value.
      *
      * @param object|int $pageorid

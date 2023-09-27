@@ -67,48 +67,7 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
 $action = optional_param('a', "", PARAM_ALPHA);
-$paramtool = optional_param('tool', "", PARAM_ALPHA);
 $results = optional_param('results', false, PARAM_BOOL);
-$paramtitle = optional_param('title', "", PARAM_ALPHA);
-$paramorder = optional_param('sortorder', "", PARAM_INT);
-
-if ($action) {
-    require_capability('mod/mootimeter:moderator', $modulecontext);
-    require_sesskey();
-
-    switch ($action) {
-        case 'deletepage':
-            $page = page_manager::get_page($pageid);
-            $success = page_manager::delete_page($page);
-            if ($success) {
-                redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'a' => 'editpage']));
-            } else {
-                redirect($PAGE->url, get_string('deleteerror', 'mod_mootimeter'), null, \core\output\notification::NOTIFY_ERROR);
-            }
-            break;
-        case 'storepage':
-            // Store page.
-            $record = new stdClass();
-            $record->id = $pageid;
-            $record->tool = $paramtool;
-            $record->instance = $cm->instance;
-            $record->title = $paramtitle;
-            $record->sortorder = $paramorder;
-            $record->question = optional_param('question', "", PARAM_RAW);
-            $pageid = page_manager::store_page($record);
-
-            // Get all settingparams from tool.
-            $page = page_manager::get_page($pageid);
-            $parameters = page_manager::get_tool_settings_parameters($page);
-
-            // Store pages tool config.
-            page_manager::store_tool_config($page);
-
-            // Reload page.
-            redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $pageid]));
-
-    }
-}
 
 $pages = page_manager::get_pages($cm->instance);
 foreach ($pages as $p) {
