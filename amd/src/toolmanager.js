@@ -17,7 +17,8 @@ import notification from 'core/notification';
 import * as Util from "mod_mootimeter/util";
 import Templates from 'core/templates';
 import {get_string as getString, get_strings as getStrings} from "core/str";
-import Ajax from "../../../../lib/amd/src/ajax";
+import Ajax from "core/ajax";
+import {handleNewPage} from "mod_mootimeter/newpage";
 
 /**
  * @typedef {{id: int, tool: string, title: string, question: string,
@@ -41,8 +42,6 @@ class ToolManagerClass {
     instanceid;
     /** @type {boolean} */
     isEditing;
-    /** @type {{[name: string]: Setting}} */
-    settings;
 
     elRoot;
     /** @type HTMLElement */
@@ -51,8 +50,6 @@ class ToolManagerClass {
     elEditCol;
     /** @type HTMLElement */
     elContentCol;
-
-    strings;
 
     async prefetch() {
         import('mod_mootimeter/settings/select');
@@ -68,6 +65,7 @@ class ToolManagerClass {
             {key: 'question', component: 'mod_mootimeter'},
             {key: 'pagesettings', component: 'mod_mootimeter'},
             {key: 'toolsettings', component: 'mod_mootimeter'},
+            {key: 'choosepagetype', component: 'mod_mootimeter'}
         ]);
     }
 
@@ -94,6 +92,8 @@ class ToolManagerClass {
             const element = e.target.closest('.mootimeter_pages_li');
             if (element && element.dataset.pageid) {
                 this.route(element.dataset.pageid);
+            } else if (e.target.closest('#mootimeter_addpage')) {
+                handleNewPage();
             }
         };
 
@@ -126,7 +126,8 @@ class ToolManagerClass {
             .forEach(x => x.classList.remove('active'));
         this.elPagesCol.querySelector(`.mootimeter_pages_li[data-pageid="${page.id}"]`)?.classList?.add('active');
 
-        this.elContentCol.replaceChildren('plz wait');
+        this.elContentCol.replaceChildren();
+        this.elContentCol.classList.add('loading');
 
         const promises = [];
 
@@ -137,16 +138,18 @@ class ToolManagerClass {
         }
 
         if (this.isEditing) {
-            this.elEditCol.replaceChildren('plz wait');
+            this.elEditCol.classList.add('loading');
             promises.push(this.renderSettings(page));
         }
 
         const [documentFragment, settingsFragment] = await Promise.all(promises);
 
         this.elContentCol.replaceChildren(...documentFragment.children);
+        this.elContentCol.classList.remove('loading');
 
         if (settingsFragment) {
             this.elEditCol.replaceChildren(...settingsFragment.children);
+            this.elEditCol.classList.remove('loading');
         }
     }
 
@@ -279,7 +282,8 @@ class ToolManagerClass {
 /** @type ToolManagerClass */
 export let ToolManager;
 
-export const init = async(tools, pages, instanceid, isEditing) => {
+export const init = async() => {
     ToolManager = new ToolManagerClass();
-    await ToolManager.init(tools, pages, instanceid, isEditing);
+    const data = JSON.parse(document.getElementById('mootimeterroot').dataset.data);
+    await ToolManager.init(data.tools, data.pages, data.instanceid, data.isEditing);
 };

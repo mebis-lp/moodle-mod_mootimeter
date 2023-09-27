@@ -32,4 +32,10 @@ $functions = [
         'type'          => 'write',
         'ajax'          => true,
     ],
+    'mod_mootimeter_create_page' => [
+        'classname'     => 'mod_mootimeter\external\create_page',
+        'description'   => 'Create a new page',
+        'type'          => 'write',
+        'ajax'          => true,
+    ],
 ];

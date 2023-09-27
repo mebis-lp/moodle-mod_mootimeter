@@ -26,6 +26,7 @@
 namespace mod_mootimeter;
 
 use context_module;
+use mod_mootimeter\plugininfo\mootimetertool;
 
 /**
  * The mod_mootimeter helper class.
@@ -44,6 +45,10 @@ class page_manager {
      * @return toollib
      */
     public static function get_tool_lib(string $tool): toollib {
+        if (!mootimetertool::get_enabled_plugin($tool)) {
+            throw new \coding_exception("The mootimeter tool $tool is not installed!");
+        }
+
         $classname = "\mootimetertool_" . $tool . "\\" . $tool;
         if (!class_exists($classname)) {
             throw new \coding_exception("Class $classname is missing for mootimeter tool $tool.");

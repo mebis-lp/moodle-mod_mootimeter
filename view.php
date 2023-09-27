@@ -110,10 +110,8 @@ if ($action) {
     }
 }
 
-$mt = new mootimetertool();
-
 $pages = page_manager::get_pages($cm->instance);
-foreach ($pages as &$p) {
+foreach ($pages as $p) {
     $p->config = page_manager::get_tool_config($p);
 }
 
@@ -137,14 +135,22 @@ foreach (mootimetertool::get_enabled_plugins() as $tool) {
     ];
 }
 
-$PAGE->requires->js_call_amd('mod_mootimeter/toolmanager', 'init',
-        [$tools, $pages, $moduleinstance->id, $PAGE->user_is_editing()]);
+$PAGE->requires->js_call_amd('mod_mootimeter/toolmanager', 'init', []);
 
 echo $OUTPUT->header();
 
+// Stupid hack because this *is* the best way to pass the data to JS.
+echo html_writer::div('', '', [
+    'id' => 'mootimeterroot',
+    'data-data' => json_encode([
+        'tools' => $tools,
+        'pages' => $pages,
+        'instanceid' => $moduleinstance->id,
+        'isEditing' => $PAGE->user_is_editing()
+    ])
+]);
+
 $context = [
-    'containerclasses' => "border rounded",
-    'mootimetercard' => 'border rounded',
     'cmid' => $cm->id,
     'pages' => page_manager::get_pages_template($pages, $pageid),
     'results' => $results

@@ -62,6 +62,7 @@
 }
 
 .mootimetercol {
+    position: relative;
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid lightgrey;
@@ -101,4 +102,21 @@
 
 .mootimeter-accordion > .card:not(:last-child) {
     margin-bottom: 0.25rem;
+}
+
+.mootimetercol::after {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: transparent;
+    transition: background-color 0.1s;
+    pointer-events: none;
+}
+
+.mootimetercol.loading::after {
+    background-color: #eee;
 }
