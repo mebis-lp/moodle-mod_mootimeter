@@ -1,8 +1,15 @@
 <script src="tools/wordcloud/node_modules/wordcloud/src/wordcloud2.js"></script>
 
-<div class="mootimeterfullwidth" id="wordcloudcanvas" style="margin: 10px; height:70vH" data-answers="{{answerslist}}"></div>
+<div
+  class="mootimeterfullwidth"
+  id="wordcloudcanvas"
+  style="display:block; margin: 10px; height:70vH; width: 100%;"
+  data-answers="{{answerslist}}"
+  data-pageid="{{pageid}}"
+  data-lastupdated="{{lastupdated}}"
+>
+</div>
 
-<input type="hidden" id="mootimeter_lastupdated" value="{{lastupdated}}">
 <script>
   redrawwordcloud()
 
@@ -18,8 +25,11 @@
   );
 
   function redrawwordcloud() {
+    window.console.log("redraw start");
     let mtmtcanvas = document.getElementById('wordcloudcanvas');
     let answers = JSON.parse(mtmtcanvas.dataset.answers);
+        window.console.log(answers);
+
     WordCloud(mtmtcanvas, { list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans' });
   }
 </script>

@@ -31,7 +31,7 @@ $id = optional_param('id', 0, PARAM_INT);
 $action = optional_param('a', "", PARAM_ALPHA);
 $paramtool = optional_param('tool', "", PARAM_ALPHA);
 $pageid = optional_param('pageid', 0, PARAM_INT);
-$results = optional_param('results', false, PARAM_BOOL);
+$isresultpage = optional_param('r', false, PARAM_BOOL);
 
 // Check if the provided pageid already exists / else throw error
 if (!empty($pageid)) {
@@ -158,7 +158,6 @@ $params = [
     'mootimetercard' => 'border rounded',
     'cmid' => $cmid,
     'pages' => $paramspages,
-    'results' => $results,
 	'isNewPage' => empty($pageid) ? 'isNewPage' : 'isNotNewPage',
 ];
 
@@ -203,17 +202,11 @@ if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($acti
         $page->isNewPage = 'isNewPage';
 
         $params['has_result'] = $helper->has_result_page($page);
-        if (!$results) {
-            $params['redirect_string'] = get_string("show_results", "mod_mootimeter");
-            $params['redirect_result'] = new moodle_url("view.php", ["m" => $page->instance, "pageid" => $page->id, "results" => true]);
-        } else {
-            $params['redirect_string'] = get_string("show_options", "mod_mootimeter");
-            $params['redirect_result'] = new moodle_url("view.php", ["m" => $page->instance, "pageid" => $page->id, "results" => false]);
+        if ($isresultpage) {
             $params['pagecontent'] = $helper->get_rendered_page_result($page);
-        }
-
-        if (empty($params['pagecontent'])) {
+        } else {
             $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
+
         }
     }
 

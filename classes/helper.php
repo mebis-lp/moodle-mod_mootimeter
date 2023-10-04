@@ -81,6 +81,30 @@ class helper {
     }
 
     /**
+     * Store one single page detail.
+     *
+     * @param object|int $pageorid
+     * @param string $column
+     * @param string $value
+     * @return void
+     * @throws dml_exception
+     */
+    public function store_page_detail(object|int $pageorid, string $column, string $value) {
+
+        if(is_object($pageorid)){
+            $pageid = $pageorid->id;
+        } else {
+            $pageid = $pageorid;
+        }
+
+        $dataobject = $this->get_page($pageid);
+        $dataobject->{$column} = $value;
+
+        $this->store_page($dataobject);
+
+    }
+
+    /**
      * Get all pages of an instance.
      *
      * @param int $instanceid
@@ -166,7 +190,7 @@ class helper {
             'cmid' => $cm->id,
             'title' => s($page->title),
             'question' => s($page->question),
-			'isNewPage' => s($page->isNewPage),
+            'isNewPage' => s($page->isNewPage),
             'isediting' => $PAGE->user_is_editing(),
         ];
         $params = array_merge($params, $toolhelper->get_renderer_params($page));
@@ -187,7 +211,7 @@ class helper {
 
         $toolhelper = new $classname();
         if (!method_exists($toolhelper, 'get_result_page')) {
-            return "Method 'get_renderer_params' is missing in tool helper class " . $page->tool;
+            return "Method 'get_result_page' is missing in tool helper class " . $page->tool;
         }
         return $toolhelper->get_result_page($page);
     }
@@ -197,6 +221,7 @@ class helper {
      *
      * @param object $page
      * @return bool
+     * @deprecated
      */
     public function has_result_page(object $page) {
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
@@ -349,15 +374,21 @@ class helper {
      * Get the tools config.
      *
      * @param mixed $page
-     * @return array
+     * @return array|object
      */
-    public function get_tool_config($page) {
+    public function get_tool_config($page, $name = "") {
         global $DB;
 
         $conditions = [
             'tool' => $page->tool,
             'pageid' => $page->id,
         ];
+
+        if (!empty($name)) {
+            $conditions['name'] = $name;
+            return $DB->get_record('mootimeter_tool_settings', $conditions);
+        }
+
         $configs = $DB->get_records('mootimeter_tool_settings', $conditions);
 
         $returnconfig = [];

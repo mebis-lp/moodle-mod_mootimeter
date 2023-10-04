@@ -6,3 +6,7 @@
     {{> mod_mootimeter/elements/snippet_button_icon_only_rounded}}
     {{/icon-restart}}
 </div>
+
+{{#js}}
+require(['mod_mootimeter/redirect_by_click'], (module) => module.init());
+{{/js}}

@@ -8,12 +8,10 @@ export const init = () => {
     // Register event to input box.
     document.getElementById('mootimeter_type_answer').addEventListener("keyup", function (event) {
         if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-            window.console.log('ENTER PRESSED');
             storeAnswer();
         }
     });
     document.getElementById('mootimeter_enter_answer').addEventListener("click", function () {
-        window.console.log('BUTTON PRESSED');
         storeAnswer();
     });
 

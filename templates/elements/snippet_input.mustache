@@ -1,2 +1,16 @@
-<input id="{{mtm-input-id}}" type="text" class="mootimeter-input mootimeterfullwidth" name="{{mtm-input-name}}"
-	value="{{mtm-input-value}}" placeholder="{{mtm-input-placeholder}}" {{{dataset}}}/>
+<input
+	id="{{mtm-input-id}}"
+	type="text"
+	class="mootimeter-input mootimeterfullwidth"
+	name="{{mtm-input-name}}"
+	value="{{mtm-input-value}}"
+	placeholder="{{mtm-input-placeholder}}"
+	{{{dataset}}}
+	{{#ajaxmethode}}data-ajaxmethode="{{ajaxmethode}}"{{/ajaxmethode}}
+	{{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
+	{{#mtm-input-name}}data-name="{{mtm-input-name}}"{{/mtm-input-name}}
+/>
+
+{{#js}}
+require(['mod_mootimeter/handler_input'], (module) => module.init());
+{{/js}}

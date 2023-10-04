@@ -58,4 +58,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:moderator',
     ],
+    'mod_mootimeter_store_page_details' => [
+        'classname'     => 'mod_mootimeter\external\store_page_details',
+        'methodname'    => 'execute',
+        'description'   => 'Set a new setting value.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:moderator',
+    ],
 ];

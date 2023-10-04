@@ -52,6 +52,10 @@ export const init = () => {
         var ajaxmethode = obj.dataset.ajaxmethode;
         var inputname = obj.dataset.name;
         var inputvalue = document.getElementById(id).value;
+        window.console.log(pageid);
+        window.console.log(ajaxmethode);
+        window.console.log(inputname);
+        window.console.log(inputvalue);
 
         Ajax.call([{
             methodname: ajaxmethode,

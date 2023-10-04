@@ -1,4 +1,19 @@
 <label for="mootimeter-checkbox" class="mootimeter-checkbox-switch-label">
-    <input type="checkbox" id="mootimeter-checkbox" class="mootimeter-checkbox-switch {{additional_class}}" {{checked}} {{dataset}} {{#name}}name="{{name}}"{{/name}}>
+    <input
+        type="checkbox"
+        id="{{id}}"
+        class="mootimeter-checkbox-switch {{additional_class}}"
+        {{checked}}
+        {{dataset}}
+        {{#name}}name="{{name}}"{{/name}}
+
+		{{#ajaxmethode}}data-ajaxmethode="{{ajaxmethode}}"{{/ajaxmethode}}
+		{{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
+		{{#name}}data-name="{{name}}"{{/name}}
+    >
     {{title}}
 </label>
+
+{{#js}}
+require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init());
+{{/js}}

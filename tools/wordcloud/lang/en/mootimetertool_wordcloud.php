@@ -33,6 +33,6 @@ $string['showresult_label'] = 'Show results';
 $string['showresult_helptitle'] = 'Show results';
 $string['showresult_help'] = 'Controls the display of the results.';
 $string['showresultlive'] = 'live';
-$string['showresultteacherpermission'] = 'on teacher permission';
+$string['showresultteacherpermission'] = 'Show results on teacher permission';
 $string['show_results'] = 'Show result wordcloud';
 $string['hide_results'] = 'Hide result wordcloud';
