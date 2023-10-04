@@ -122,6 +122,7 @@ class helper {
      */
     public function get_pages_template($pages, $pageid) {
         $temppages = [];
+        $pagenumber = 1;
         foreach ($pages as $page) {
             $temppages[] = [
                 'title' => $page->title,
@@ -129,7 +130,9 @@ class helper {
                 'active' => ($page->id == $pageid) ? "active" : "",
                 'pageid' => $page->id,
                 'sortorder' => $page->sortorder,
+                'pagenumber' => $pagenumber,
             ];
+            $pagenumber++;
         }
         return $temppages;
     }
@@ -171,7 +174,7 @@ class helper {
         if ($withwrapper) {
             return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_wrapper", $params);
         }
-        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content", $params);
+        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content2", $params);
     }
 
     public function get_rendered_page_result(object $page): string {
@@ -189,7 +192,12 @@ class helper {
         return $toolhelper->get_result_page($page);
     }
 
-
+    /**
+     * Checks if the toll has a result page.
+     *
+     * @param object $page
+     * @return bool
+     */
     public function has_result_page(object $page) {
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
@@ -199,6 +207,46 @@ class helper {
 
         $toolhelper = new $classname();
         return method_exists($toolhelper, 'get_result_page');
+    }
+
+    /**
+     * Calls tool method if exists.
+     *
+     * @param object $page
+     * @return mixed
+     */
+    public function get_content_menu(object $page) {
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return false;
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_content_menu')) {
+            return "Method 'get_content_menu' is missing in tool helper class " . $page->tool;
+        }
+        return $toolhelper->get_content_menu($page);
+    }
+
+    /**
+     * Get the html snippet of the settings column.
+     *
+     * @param object $page
+     * @return mixed
+     */
+    public function get_col_settings(object $page) {
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return false;
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_col_settings')) {
+            return "Method 'get_col_settings' is missing in tool helper class " . $page->tool;
+        }
+        return $toolhelper->get_col_settings($page);
     }
 
     /**
@@ -272,7 +320,7 @@ class helper {
      * @throws dml_exception
      */
     public function set_tool_config(object|int $pageorid, string $name, string $value): void {
-        global $DB, $PAGE;
+        global $DB;
 
         if (!is_object($pageorid)) {
             $page = $this->get_page($pageorid);

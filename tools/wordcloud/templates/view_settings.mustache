@@ -1,0 +1,22 @@
+<h4>{{toolname}}</h4>
+
+{{#question}}
+{{> mod_mootimeter/elements/snippet_input}}
+{{/question}}
+
+{{> mod_mootimeter/elements/snippet_divider}}
+
+<p class="text-bold">{{#str}} heading_answer , mootimetertool_wordcloud{{/str}}</p>
+
+{{#maxinputsperuser}}
+{{> mod_mootimeter/elements/snippet_number_input}}
+{{/maxinputsperuser}}
+
+
+{{> mod_mootimeter/elements/snippet_divider}}
+
+<p class="text-bold">{{#str}} settings {{/str}}</p>
+
+{{#teacherpermission}}
+{{> mod_mootimeter/elements/snippet_checkbox_switch}}
+{{/teacherpermission}}

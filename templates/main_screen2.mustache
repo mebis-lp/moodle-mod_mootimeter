@@ -1,0 +1,48 @@
+<div class="container-fluid mootimetercontainer isNotNewPage {{{containerclasses}}}">
+  <div class="row h-100">
+    {{#showpagescol}}
+    <div class="mootimetercol mootimetercolpages">
+      <ul class="">
+        {{#pages}}
+        <li class="mootimeter_pages_li d-flex clickable {{ active }}" data-pageid="{{ pageid }}" data-cmid="{{ cmid }}">
+          <span class="mootimeter_pages_count">{{pagenumber}}</span>
+          <img src="{{{pix}}}" width="20px" class="m-1" />
+        </li>
+        {{/pages}}
+        {{#isediting}}
+        <li id="mootimeter_addpage" class="d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{ cmid }}">
+          <i class="fa fa-plus p-1 mx-1 my-auto"></i>
+        </li>
+        {{/isediting}}
+      </ul>
+    </div>
+    {{/showpagescol}}
+    {{#isediting}}
+    <div class="mootimetercol mootimetercoledit">
+      {{#settings}}
+      <div class="mootimetersettings mootimeterfullwidth">
+        {{{settings}}}
+      </div>
+      {{/settings}}
+    </div>
+    {{/isediting}}
+    <div class="mootimetercol mootimetercolcontent">
+      {{{snippet_content_menu}}}
+
+      <div class="mootimeter-colcontent-preview">
+        {{{pagecontent}}}
+      </div>
+    </div>
+  </div>
+  {{! {{> mod_mootimeter/elements/snippet_modal}}
+</div>
+
+{{#isediting}}
+{{#js}}
+require(['mod_mootimeter/edit'], (module) => module.init());
+{{/js}}
+{{/isediting}}
+
+{{#js}}
+require(['mod_mootimeter/main'], (module) => module.init());
+{{/js}}

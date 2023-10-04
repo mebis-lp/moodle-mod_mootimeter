@@ -70,10 +70,19 @@ abstract class toolhelper {
     abstract public function get_renderer_params(object $page);
 
     /**
+     * Get the settings column.
+     *
+     * @param object $page
+     * @return mixed
+     */
+    abstract public function get_col_settings(object $page);
+
+    /**
      * Get the settings definitions.
      *
      * @param object $page
      * @return array
+     * @deprecated since 28.09.2023
      */
     abstract public function get_tool_setting_definitions(object $page);
 
@@ -89,6 +98,7 @@ abstract class toolhelper {
      *
      * @param mixed $page
      * @return string
+     * @deprecated since 28.09.2023
      */
     public function get_tool_settings($page): string {
         global $OUTPUT;
@@ -103,6 +113,7 @@ abstract class toolhelper {
      * @param object $page
      * @return array
      * @throws coding_exception
+     * @deprecated since 28.09.2023
      */
     public function get_tool_settings_parameters(object $page): array {
 

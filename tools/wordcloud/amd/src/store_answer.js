@@ -8,10 +8,12 @@ export const init = () => {
     // Register event to input box.
     document.getElementById('mootimeter_type_answer').addEventListener("keyup", function (event) {
         if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+            window.console.log('ENTER PRESSED');
             storeAnswer();
         }
     });
     document.getElementById('mootimeter_enter_answer').addEventListener("click", function () {
+        window.console.log('BUTTON PRESSED');
         storeAnswer();
     });
 
@@ -23,13 +25,14 @@ export const init = () => {
         var answer = document.getElementById('mootimeter_type_answer').value;
 
         const context = {
-            answer: answer
+            pill: answer,
+            additional_class: 'mootimeter-pill-inline'
         };
 
         // Add the answer to the Badges list.
-        Templates.renderForPromise('mod_mootimeter/badge_answer', context)
+        Templates.renderForPromise('mod_mootimeter/elements/snippet_pill', context)
             .then(({ html, js }) => {
-                Templates.appendNodeContents('#mtmt_wordcloud_badges', html, js);
+                Templates.appendNodeContents('#mtmt_wordcloud_pills', html, js);
                 return true;
             })
             .catch((error) => displayException(error));

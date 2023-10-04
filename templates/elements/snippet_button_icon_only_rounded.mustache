@@ -1,3 +1,3 @@
-<button href="" class="mootimeter-btn-icon-only-rounded active">
-	<i class="icon fa fa-eye fa-light" aria-hidden="true"></i>
+<button {{#href}} href="{{href}}" {{/href}} id="{{id}}" class="mootimeter-btn-icon-only-rounded {{additional_class}}" {{#tooltip}}data-toggle="tooltip" data-placement="top" title="{{tooltip}}"{{/tooltip}}>
+	<i class="icon fa {{icon}} fa-light" aria-hidden="true"></i>
 </button>

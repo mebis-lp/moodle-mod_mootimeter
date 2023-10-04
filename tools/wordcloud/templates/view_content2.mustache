@@ -1,0 +1,33 @@
+<script src="tools/wordcloud/node_modules/wordcloud/src/wordcloud2.js"></script>
+
+<div class="mootimeter-colcontent-preview-header">
+
+  {{#toolname}}
+  {{> mod_mootimeter/elements/snippet_pill}}
+  {{/toolname}}
+
+  <h4>{{{question}}}</h4>
+
+</div>
+
+{{> mod_mootimeter/elements/snippet_notification}}
+
+<div id="mtmt_wordcloud_pills">
+  {{#answers}}
+  {{> mod_mootimeter/elements/snippet_pill}}
+  {{/answers}}
+</div>
+
+{{#input_answer}}
+{{> mod_mootimeter/elements/snippet_input}}
+{{/input_answer}}
+
+{{#button_answer}}
+{{> mod_mootimeter/elements/snippet_button_full}}
+{{/button_answer}}
+
+{{#js}}
+require(['mootimetertool_wordcloud/store_answer'], (module) => module.init());
+{{/js}}
+
+require(['mootimetertool_wordcloud/toggle_teacherpermission'], (module) => module.init());

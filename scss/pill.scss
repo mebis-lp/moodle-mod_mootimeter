@@ -3,4 +3,9 @@
   background-color: $grey-100;
   align-self: flex-start;
   padding: 0.125rem 0.75rem;
+
+  &.mootimeter-pill-inline{
+    display: inline-block;
+    margin-bottom: 3px;
+  }
 }

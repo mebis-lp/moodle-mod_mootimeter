@@ -189,14 +189,18 @@ if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($acti
         $editformparams['title'] = $page->title;
         $editformparams['sortorder'] = $page->sortorder;
         $editformparams['question'] = $page->question;
-		$editformparams['isNewPage'] = 'isNotNewPage';
         $editformparams['toolsettings'] = $helper->get_tool_settings($page);
         $editformparams['instancename'] = $page->title;
     }
 
-    $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
+    // $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
 
     if (!empty($page)) {
+        $params['snippet_content_menu'] = $helper->get_content_menu($page);
+        $params['settings'] = $helper->get_col_settings($page);
+
+        $page->isNewPage = 'isNotNewPage';
+        $page->isNewPage = 'isNewPage';
 
         $params['has_result'] = $helper->has_result_page($page);
         if (!$results) {
@@ -221,6 +225,6 @@ if ($PAGE->user_is_editing() || count($pages) > 1) {
     $params['showpagescol'] = true;
 }
 
-echo $OUTPUT->render_from_template("mod_mootimeter/main_screen_new", $params);
+echo $OUTPUT->render_from_template("mod_mootimeter/main_screen2", $params);
 
 echo $OUTPUT->footer();

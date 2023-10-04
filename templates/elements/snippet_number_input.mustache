@@ -1,13 +1,29 @@
 <div class="mootimeter-number-input">
-
-  <label>
+		<label>
 		<span class="mootimeter-number-input-wrapper">
-		<input type="number" />
-		<button class="mootimeter-btn-icon-only-transparent mootimeter-number-input-btn-up" aria-hidden="true">
-<i class="icon fa fa-sort-up fa-light" aria-hidden="true"></i></button>
-<button class="mootimeter-btn-icon-only-transparent mootimeter-number-input-btn-down" aria-hidden="true">
-<i class="icon fa fa-sort-down fa-light" aria-hidden="true"></i></button>
+			<input
+				type="number"
+				{{#id}} id="{{id}}"{{/id}}
+				{{#value}} value="{{value}}"{{/value}}
+				{{#name}} name="{{name}}"{{/name}}
+				class="{{additional_class}}"
+			>
+			<button
+				class="mootimeter-btn-icon-only-transparent mootimeter-number-input-btn-up"
+				aria-hidden="true"
+				data-id="{{id}}"
+				{{#ajaxmethode}}data-ajaxmethode="{{ajaxmethode}}"{{/ajaxmethode}}
+				{{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
+				{{#name}}data-name="{{name}}"{{/name}}
+			>
+				<i class="icon fa fa-sort-up fa-light" aria-hidden="true"></i></button>
+			<button class="mootimeter-btn-icon-only-transparent mootimeter-number-input-btn-down" aria-hidden="true" data-id="{{id}}" {{#ajaxmethode}}data-ajaxmethode"{{ajaxmethode}}"{{/ajaxmethode}}>
+				<i class="icon fa fa-sort-down fa-light" aria-hidden="true"></i></button>
 		</span>
-    Max. Eingabe(n) pro Teilnehmer
-  </label>
+		{{title}}
+	</label>
 </div>
+
+{{#js}}
+require(['mod_mootimeter/handler_input_number'], (module) => module.init());
+{{/js}}

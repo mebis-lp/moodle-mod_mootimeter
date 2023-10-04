@@ -25,7 +25,9 @@
 
 namespace mootimetertool_wordcloud;
 
+use coding_exception;
 use dml_exception;
+use moodle_exception;
 
 class wordcloud extends \mod_mootimeter\toolhelper {
 
@@ -146,39 +148,75 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $params['answerslist'] = json_encode($this->get_answerlist_wordcloud($page->id));
 
         // Parameter for initializing Badges.
-        $params['answers'] = array_map(function ($element) {
-            return ['answer' => $element->answer];
-        }, $this->get_user_answers($page->id, $USER->id));
+        // $params['pills'] = array_map(function ($element) {
+        //     return ['pill' => $element->answer];
+        // }, $this->get_user_answers($page->id, $USER->id));
+
+        $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
+        $params["answers"] = [['pill' => "Hallo"], ['pill' => "Maxi"]];
+
+        $params["answers"] = array_values(array_map(function ($element) {
+                return [
+                    'pill' => $element->answer,
+                    'additional_class' => 'mootimeter-pill-inline'
+                ];
+            }, $this->get_user_answers($page->id, $USER->id)));
+
+        $params['input_answer'] = [
+            'mtm-input-id' => 'mootimeter_type_answer',
+            'mtm-input-name' => 'answer',
+            'dataset' => 'data-pageid="' . $page->id . '"',
+        ];
+
+        $params['button_answer'] = [
+            'mtm-button-id' => 'mootimeter_enter_answer',
+            'mtm-button-text' => 'Senden',
+        ];
 
         // Parameter for last updated.
         $params['lastupdated'] = $this->get_last_update_time($page->id);
+        return $params;
+    }
 
-        if (
-            has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
-            && $this->get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-        ) {
+    /**
+     * Get the settings column.
+     *
+     * @param object $page
+     * @return mixed
+     */
+    public function get_col_settings(object $page) {
+        global $OUTPUT, $PAGE;
 
-            if (empty($this->get_tool_config($page->id, 'teacherpermission'))) {
-                $tmparams = [
-                    'id' => 'toggleteacherpermission',
-                    'text' => get_string('show_results', 'mootimetertool_wordcloud'),
-                    'cssclasses' => 'mootimeter_margin_top_50 mootimeterfullwidth',
-                ];
-                $params['teacherpermission'] = $OUTPUT->render_from_template('mod_mootimeter/elements/snippet_button', $tmparams);
-            }
+        $params["toolname"] = get_string("pluginname", "mootimetertool_" . $page->tool);
+        $params['question'] = [
+            'mtm-input-value'=>$page->question,
+            'mtm-input-placeholder' => 'Gib gibtte eine Frage ein.',
+            'mtm-input-name' => "question",
+            'additional_class' => 'mootimeter_page_setting_selector',
+        ];
 
-            if (!empty($this->get_tool_config($page->id, 'teacherpermission'))) {
-                $tmparams = [
-                    'id' => 'toggleteacherpermission',
-                    'text' => get_string('hide_results', 'mootimetertool_wordcloud'),
-                    'cssclasses' => 'mootimeter_margin_top_50 mootimeterfullwidth',
-                    'pageid' => $page->id,
-                ];
-                $params['teacherpermission'] = $OUTPUT->render_from_template('mod_mootimeter/elements/snippet_button', $tmparams);
-            }
+        $params['teacherpermission'] = [
+            'pageid' => $page->id,
+            'title' => "Hallo",
+            'dataset' => "xxx",
+            'name' => 'teacherpermission',
+            'additional_class' => 'mootimeter_tool_setting_selector',
+        ];
+
+        if ($this->get_tool_config($page->id, 'teacherpermission')) {
+            $params['teacherpermission']['checked'] = 'checked';
         }
 
-        return $params;
+        $params['maxinputsperuser'] =[
+            'title' => 'Max. Eingabe(n) pro Teilnehmer',
+            'additional_class' => 'mootimeter_tool_setting_selector',
+            'id' => "maxinputsperuser",
+            'name' => "maxinputsperuser",
+            'pageid' => $page->id,
+            'ajaxmethode' => "mod_mootimeter_store_setting",
+        ];
+
+        return $OUTPUT->render_from_template("mootimetertool_wordcloud/view_settings", $params);
     }
 
     /**
@@ -316,4 +354,49 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         }
         return true;
     }
+
+    /**
+     * Get content menu bar.
+     *
+     * @param object $page
+     * @return mixed
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
+    public function get_content_menu(object $page) {
+        global $OUTPUT, $PAGE;
+        $params = [];
+        $params['icon-eye'] = [
+            'icon' => 'fa-eye',
+            'id' => 'toggleteacherpermission',
+        ];
+        $params['icon-restart'] = [
+            'icon' => 'fa-rotate-left',
+            'id' => 'resetanswers',
+        ];
+
+        if (empty($this->get_tool_config($page->id, 'teacherpermission'))) {
+            $params['icon-eye']['additional_class'] = "disabled";
+            $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
+        } else if (!empty($this->get_tool_config($page->id, 'teacherpermission'))) {
+            $params['icon-eye']['additional_class'] = "";
+        }
+
+        if (
+            has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
+            && $this->get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+        ) {
+
+            if (empty($this->get_tool_config($page->id, 'teacherpermission'))) {
+                $params['icon-eye']['additional_class'] = "disabled";
+             } else if (!empty($this->get_tool_config($page->id, 'teacherpermission'))) {
+                $params['icon-eye']['additional_class'] = "";
+            }
+        }
+
+        return $OUTPUT->render_from_template("mootimetertool_wordcloud/snippet_content_menu", $params);
+
+    }
+
 }

@@ -1,0 +1,28 @@
+<script src="tools/wordcloud/node_modules/wordcloud/src/wordcloud2.js"></script>
+
+<div class="mootimeterfullwidth" id="wordcloudcanvas" style="margin: 10px; height:70vH" data-answers="{{answerslist}}"></div>
+
+<input type="hidden" id="mootimeter_lastupdated" value="{{lastupdated}}">
+<script>
+  redrawwordcloud()
+
+  const event = new Event("redrawwordcloud");
+  let mtmtcanvas = document.getElementById('wordcloudcanvas');
+  mtmtcanvas.addEventListener(
+    "redrawwordcloud",
+    (e) => {
+      window.console.log("Redraw");
+      redrawwordcloud();
+    },
+    false
+  );
+
+  function redrawwordcloud() {
+    let mtmtcanvas = document.getElementById('wordcloudcanvas');
+    let answers = JSON.parse(mtmtcanvas.dataset.answers);
+    WordCloud(mtmtcanvas, { list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans' });
+  }
+</script>
+{{#js}}
+require(['mootimetertool_wordcloud/redraw_wordcloud'], (module) => module.init());
+{{/js}}
