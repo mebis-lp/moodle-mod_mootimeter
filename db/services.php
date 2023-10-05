@@ -66,4 +66,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:moderator',
     ],
+    'mod_mootimeter_add_new_page' => [
+        'classname'     => 'mod_mootimeter\external\add_new_page',
+        'methodname'    => 'execute',
+        'description'   => 'Add a new page.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:moderator',
+    ],
 ];

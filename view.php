@@ -140,8 +140,6 @@ $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mootimeter', $moduleinstance);
 $event->trigger();
 
-
-
 $PAGE->set_url('/mod/mootimeter/view.php', $pageparams);
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
@@ -212,6 +210,11 @@ if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($acti
 
     $params['isediting'] = $PAGE->user_is_editing();
 }
+
+if (empty($page)) {
+    $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page();
+}
+
 
 // Hide Pages col if it is not needed at all.
 if ($PAGE->user_is_editing() || count($pages) > 1) {

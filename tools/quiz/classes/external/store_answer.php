@@ -88,7 +88,7 @@ class store_answer extends external_api {
     /**
      * Describes the return structure of the service..
      *
-     * @return external_multiple_structure
+     * @return external_single_structure
      */
     public static function execute_returns() {
         return new external_single_structure(

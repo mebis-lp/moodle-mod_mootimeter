@@ -47,11 +47,10 @@ class helper {
      * @param object $record
      * @return int pageid
      */
-    public function store_page(object $record) {
+    public function store_page(object $record) :int {
         global $DB;
 
         if (!empty($record->id)) {
-
             $origrecord = $DB->get_record('mootimeter_pages', ['id' => $record->id]);
             $origrecord->title = $record->title;
             $origrecord->question = $record->question;
@@ -133,9 +132,22 @@ class helper {
         return $DB->get_record('mootimeter_pages', $params);
     }
 
+    /**
+     * Get instance by pageid
+     * @param mixed $pageid
+     * @return object
+     */
     public static function get_instance_by_pageid($pageid): object {
         global $DB;
         return $DB->get_record_sql('SELECT DISTINCT `instance` FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
+    }
+
+    public static function get_cm_by_instance(int $instance): object {
+        global $DB;
+
+        $module = $DB->get_record('modules', ['name' => 'mootimeter']);
+
+        return $DB->get_record('course_modules', ['module' => $module->id, 'instance' => $instance]);
     }
 
     /**

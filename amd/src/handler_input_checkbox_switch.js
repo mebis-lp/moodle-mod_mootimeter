@@ -13,7 +13,6 @@ export const init = () => {
         switches[i].addEventListener("click", store);
     }
 
-
     /**
      * Store the value.
      * @param {*} obj

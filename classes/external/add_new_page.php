@@ -15,35 +15,37 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to store a answer.
+ * Web service to create a new page.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mootimetertool_wordcloud\external;
+namespace mod_mootimeter\external;
 
+use dml_exception;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
 use external_value;
+use invalid_parameter_exception;
 use tool_brickfield\manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
 /**
- * Web service to store a answer.
+ * Web service to create a new page.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class store_answer extends external_api {
+class add_new_page extends external_api {
     /**
      * Describes the parameters.
      *
@@ -51,41 +53,60 @@ class store_answer extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'answer' => new external_value(PARAM_RAW, 'The answer the user entered.', VALUE_REQUIRED),
+            'tool' => new external_value(PARAM_TEXT, 'The new page tool.', VALUE_REQUIRED),
+            'instance' => new external_value(PARAM_INT, 'The mootimeter instance.', VALUE_REQUIRED),
         ]);
     }
 
     /**
      * Execute the service.
      *
-     * @param int $pageid
-     * @return void
+     * @param string $tool
+     * @param int $instance
+     * @return array
+     * @throws invalid_parameter_exception
+     * @throws dml_exception
      */
-    public static function execute(int $pageid, string $answer): void {
+    public static function execute(string $tool, int $instance): array {
+        global $PAGE;
 
         [
-            'pageid' => $pageid,
-            'answer' => $answer,
+            'tool' => $tool,
+            'instance' => $instance,
         ] = self::validate_parameters(self::execute_parameters(), [
-            'pageid' => $pageid,
-            'answer' => $answer,
+            'tool' => $tool,
+            'instance' => $instance,
         ]);
 
         $mtmhelper = new \mod_mootimeter\helper();
-        $page = $mtmhelper->get_page($pageid);
+        $record = new \stdClass();
+        $record->tool = $tool;
+        $record->instance = $instance;
+        $record->title = "";
 
-        $wordcloud = new \mootimetertool_wordcloud\wordcloud();
-        $wordcloud->insert_answer($page, $answer);
+        $pageid = $mtmhelper->store_page($record);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
 
-        return;
+        $return = [
+            'pageid' => $pageid,
+            'cmid' => $cm->id,
+        ];
+
+        return $return;
     }
 
     /**
      * Describes the return structure of the service..
      *
-     * @return external_multiple_structure
+     * @return external_single_structure
      */
     public static function execute_returns() {
+        return new external_single_structure(
+            [
+                'pageid' => new external_value(PARAM_INT, 'Pageid of the page created.'),
+                'cmid' => new external_value(PARAM_INT, 'Pageid of the page created.'),
+            ],
+            'New page info.'
+        );
     }
 }

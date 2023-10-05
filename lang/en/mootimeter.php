@@ -52,3 +52,6 @@ $string['show_options'] = 'Show Options';
 $string['deleteerror'] = 'Something went wrong while deleting the page. Please contact your support.';
 
 $string['pageaccessexception'] = 'The provided pageid is not part of Mootimeter instance.';
+
+$string['select_page_type_heading'] = 'Please select the question type.';
+$string['select_page_type_paragraph'] = '';
