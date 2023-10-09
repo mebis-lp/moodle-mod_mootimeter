@@ -28,8 +28,10 @@ export const init = () => {
      */
     function count_up() {
         var id = this.dataset.id;
-        document.getElementById(id).value = Math.floor(document.getElementById(id).value) + 1;
-        store(this, id);
+        if (Math.floor(document.getElementById(id).dataset.min) <= Math.floor(document.getElementById(id).value) + 1) {
+            document.getElementById(id).value = Math.floor(document.getElementById(id).value) + 1;
+            store(this, id);
+        }
     }
 
     /**
@@ -37,8 +39,10 @@ export const init = () => {
      */
     function count_down() {
         var id = this.dataset.id;
-        document.getElementById(id).value = Math.floor(document.getElementById(id).value) - 1;
-        store(this, id);
+        if (Math.floor(document.getElementById(id).dataset.min) <= Math.floor(document.getElementById(id).value) - 1) {
+            document.getElementById(id).value = Math.floor(document.getElementById(id).value) - 1;
+            store(this, id);
+        }
     }
 
     /**
@@ -59,7 +63,7 @@ export const init = () => {
 
         Ajax.call([{
             methodname: ajaxmethode,
-            args: {pageid: pageid, inputname: inputname, inputvalue: inputvalue},
+            args: { pageid: pageid, inputname: inputname, inputvalue: inputvalue },
             fail: notification.exception,
         }]);
     }

@@ -212,6 +212,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'additional_class' => 'mootimeter_settings_selector',
             'id' => "maxinputsperuser",
             'name' => "maxinputsperuser",
+            'min' => 1,
             'pageid' => $page->id,
             'ajaxmethode' => "mod_mootimeter_store_setting",
             'value' => $this->get_tool_config($page->id, "maxinputsperuser"),
