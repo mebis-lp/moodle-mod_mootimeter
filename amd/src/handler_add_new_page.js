@@ -16,6 +16,7 @@ export const init = () => {
      * Create new page.
      */
     function store() {
+
         var tool = this.dataset.name;
         var instance = this.dataset.instance;
 
@@ -47,5 +48,6 @@ const createNewPage = (
  */
 const storeNewPage = async (tool, instance) => {
     const response = await createNewPage(tool, instance);
-    window.location.href = window.location.origin + window.location.pathname + "?id=" + response.cmid + "&pageid=" + response.pageid;
+    window.location.href = window.location.origin
+        + window.location.pathname + "?id=" + response.cmid + "&pageid=" + response.pageid;
 };

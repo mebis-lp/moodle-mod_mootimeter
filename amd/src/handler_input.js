@@ -1,36 +1,62 @@
-import Ajax from 'core/ajax';
-import notification from 'core/notification';
+import { call as fetchMany } from 'core/ajax';
 
 export const init = () => {
 
     // Get all up elements.
-    var switches = document.getElementsByClassName('mod_mootimeter_store_setting mootimootimeter-input');
+    var inputs = document.getElementsByClassName('mootimeter-input mootimeterfullwidth mootimeter_settings_selector');
 
-    for (let i = 0; i < switches.length; i++) {
+    for (let i = 0; i < inputs.length; i++) {
         // Remove old listener if exists.
-        switches[i].removeEventListener("change", store);
+        inputs[i].removeEventListener("keyup", mootimeterStoreInput);
         // Finally add the new listener.
-        switches[i].addEventListener("change", store);
+        inputs[i].addEventListener("keyup", mootimeterStoreInput);
     }
 
     /**
      * Store the value.
-     * @param {*} obj
-     * @param {*} id
      */
-    function store() {
+    function mootimeterStoreInput() {
         var id = this.id;
         var pageid = this.dataset.pageid;
         var ajaxmethode = this.dataset.ajaxmethode;
         var inputname = this.dataset.name;
         var inputvalue = document.getElementById(id).value;
-
-        return;
-
-        Ajax.call([{
-            methodname: ajaxmethode,
-            args: { pageid: pageid, inputname: inputname, inputvalue: inputvalue },
-            fail: notification.exception,
-        }]);
+        execStoreInputValue(ajaxmethode, pageid, inputname, inputvalue);
     }
-}
+};
+
+/**
+ * Call to store input value
+ * @param {string} ajaxmethode
+ * @param {int} pageid
+ * @param {string} inputname
+ * @param {string} inputvalue
+ * @returns
+ */
+const storeInputValue = (
+    ajaxmethode,
+    pageid,
+    inputname,
+    inputvalue
+) => fetchMany([{
+    methodname: ajaxmethode,
+    args: {
+        pageid,
+        inputname,
+        inputvalue
+    },
+}])[0];
+
+/**
+ * Executes the call to store input value.
+ * @param {string} ajaxmethode
+ * @param {int} pageid
+ * @param {string} inputname
+ * @param {string} inputvalue
+ */
+const execStoreInputValue = async (ajaxmethode, pageid, inputname, inputvalue) => {
+    const response = await storeInputValue(ajaxmethode, pageid, inputname, inputvalue);
+    if (response.code != 200) {
+        window.console.log(response.string);
+    }
+};

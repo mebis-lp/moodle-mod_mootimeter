@@ -68,7 +68,6 @@ class add_new_page extends external_api {
      * @throws dml_exception
      */
     public static function execute(string $tool, int $instance): array {
-        global $PAGE;
 
         [
             'tool' => $tool,

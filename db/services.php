@@ -74,4 +74,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:moderator',
     ],
+    'mod_mootimeter_delete_page' => [
+        'classname'     => 'mod_mootimeter\external\delete_page',
+        'methodname'    => 'execute',
+        'description'   => 'Delete a page.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:moderator',
+    ],
 ];

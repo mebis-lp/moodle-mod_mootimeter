@@ -180,17 +180,14 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      *
      * @param object $page
      * @return mixed
-     * @deprecated
      */
     public function get_col_settings(object $page) {
         global $OUTPUT;
 
-        $params["toolname"] = get_string("pluginname", "mootimetertool_" . $page->tool);
-
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
             'mtm-input-value'=>$page->question,
-            'mtm-input-placeholder' => 'Gib gibtte eine Frage ein.',
+            'mtm-input-placeholder' => get_string('enter_question', 'mod_mootimeter'),
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
             'pageid' => $page->id,
@@ -211,7 +208,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         }
 
         $params['maxinputsperuser'] =[
-            'title' => 'Max. Eingabe(n) pro Teilnehmer',
+            'title' => get_string('answers_max_number', 'mootimetertool_wordcloud'),
             'additional_class' => 'mootimeter_settings_selector',
             'id' => "maxinputsperuser",
             'name' => "maxinputsperuser",
@@ -351,8 +348,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             // Table not written yet
             // $DB->delete_records('mtmt_wordcloud', array('pageid' => $page->id));
             $DB->delete_records('mtmt_wordcloud_answers', array('pageid' => $page->id));
-            $DB->delete_records('mootimeter_pages', array('id' => $page->id));
-            $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
         } catch (\Exception $e) {
             // Todo handling
             echo 'Something went wrong';

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to store a page detail.
+ * Web service to delete a page.
  *
  * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
@@ -38,14 +38,14 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
 /**
- * Web service to store setting.
+ * Web service to delete a page.
  *
  * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class store_page_details extends external_api {
+class delete_page extends external_api {
     /**
      * Describes the parameters.
      *
@@ -53,9 +53,7 @@ class store_page_details extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'inputname' => new external_value(PARAM_RAW, 'The name of the input to store.', VALUE_REQUIRED),
-            'inputvalue' => new external_value(PARAM_RAW, 'The value of the input to store.', VALUE_REQUIRED),
+            'pageid' => new external_value(PARAM_INT, 'The new pageid.', VALUE_REQUIRED),
         ]);
     }
 
@@ -63,31 +61,39 @@ class store_page_details extends external_api {
      * Execute the service.
      *
      * @param int $pageid
-     * @param string $inputname
-     * @param string $inputvalue
      * @return array
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, string $inputname, string $inputvalue): array {
-
+    public static function execute(int $pageid): array {
+        global $DB;
         [
-            'pageid' => $pageid,
-            'inputname' => $inputname,
-            'inputvalue' => $inputvalue,
+            'pageid' => $pageid
         ] = self::validate_parameters(self::execute_parameters(), [
-            'pageid' => $pageid,
-            'inputname' => $inputname,
-            'inputvalue' => $inputvalue,
+            'pageid' => $pageid
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+
         try {
-            $mtmhelper->store_page_detail($pageid, $inputname, $inputvalue);
-            return ['code' => 200, 'string' => get_string('ok')];
+
+            $transaction = $DB->start_delegated_transaction();
+
+            $mtmhelper = new \mod_mootimeter\helper();
+            $mtmhelper->delete_page($pageid);
+
+            $transaction->allow_commit();
+
+            $return = ['code' => 200, 'string' => 'ok', 'cmid' => $cm->id];
+
         } catch (\Exception $e) {
-            return ['code' => 500, 'string' => get_string('page_detail_could_not_be_store', 'mod_mootimeter')];
+
+            $transaction->rollback($e);
+            $return = ['code' => 500, 'string' => $e->getMessage(), 'cmid' => $cm->id ];
+
         }
+        return $return;
     }
 
     /**
@@ -100,8 +106,9 @@ class store_page_details extends external_api {
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
                 'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+                'cmid' => new external_value(PARAM_INT, 'cmid of mootimeter instance'),
             ],
-            'Store status.'
+            'Delete page status.'
         );
     }
 }

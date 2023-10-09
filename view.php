@@ -43,8 +43,8 @@ if ($pageid) {
     $pageparams['pageid'] = $pageid;
 }
 
-$paramtitle = optional_param('title', "", PARAM_ALPHA);
-$paramorder = optional_param('sortorder', "", PARAM_INT);
+// $paramtitle = optional_param('title', "", PARAM_ALPHA);
+// $paramorder = optional_param('sortorder', "", PARAM_INT);
 
 // Activity instance id.
 $m = optional_param('m', 0, PARAM_INT);
@@ -71,45 +71,13 @@ require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 
 $helper = new \mod_mootimeter\helper();
-$deleteerror = false;
 
-if (!empty($action) && $action == "deletepage") {
-    // Only allow deletion by moderators:
-    require_capability('mod/mootimeter:moderator', $modulecontext);
-    $page = $helper->get_page($pageid);
-    $success = $helper->delete_page($page);
-    if ($success) {
-        redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'a' => 'editpage']));
-    } else {
-        $deleteerror = true;
-    }
-}
+// Show Pagetype selector.
+// if(empty($pageid)) {
+//     $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page();
+// }
 
-if (!empty($action) && $action == "storepage") {
-    // Check if the user has the capability to manage the instance:
-    require_capability('mod/mootimeter:moderator', $modulecontext);
-
-    // Store page.
-    $record = new stdClass();
-    $record->id = $pageid;
-    $record->tool = $paramtool;
-    $record->instance = $cm->instance;
-    $record->title = $paramtitle;
-    $record->sortorder = $paramorder;
-    $record->question = optional_param('question', "", PARAM_RAW);
-    $pageid = $helper->store_page($record);
-
-    // Get all settingparams from tool.
-    $page = $helper->get_page($pageid);
-    $parameters = $helper->get_tool_settings_parameters($page);
-
-    // Store pages tool config.
-    $helper->store_tool_config($page);
-
-    // Reload page.
-    redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $pageid]));
-}
-
+// Show Page.
 if (!empty($pageid)) {
     $page = $helper->get_page($pageid);
 
@@ -125,7 +93,7 @@ $mt = new \mod_mootimeter\plugininfo\mootimetertool();
 
 $pages = $helper->get_pages($cm->instance);
 
-if(count($pages) == 1 && empty($pageid)){
+if(count($pages) == 1 && empty($pageid) && $action != 'addpage'){
     $page = array_pop($pages);
     redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]));
 }
@@ -147,9 +115,7 @@ $PAGE->set_context($modulecontext);
 $cmid = $PAGE->url->get_param('id');
 
 echo $OUTPUT->header();
-if ($deleteerror) {
-    echo html_writer::div(get_string('deleteerror', 'mod_mootimeter'), 'alert alert-danger alert-dismissible ');
-}
+
 $paramspages = $helper->get_pages_template($pages, $pageid);
 $params = [
     'containerclasses' => "border rounded",
@@ -160,40 +126,43 @@ $params = [
 ];
 
 if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($action) && $action == 'addpage') || !empty($pageid)) {
-    $enabledtools = $mt->get_enabled_plugins();
-    $tools = [];
-    foreach ($enabledtools as $key => $tool) {
-        $tooltemp = [];
-        $tooltemp['pix'] = "tools/" . $tool . "/pix/" . $tool . ".svg";
-        $tooltemp['name'] = get_string('pluginname', 'mootimetertool_' . $tool);
-        $tooltemp['tool'] = $tool;
-        if (!empty($page)) {
-            $tooltemp['selected'] = ($tool == $page->tool) ? "selected" : "";
-        }
-        $tools[] = $tooltemp;
-    }
-    $editformparams = [
-        'cmid' => $cmid,
-        'pageid' => $pageid,
-        'title' => $paramtitle,
-        'sortorder' => $paramorder,
-        'tool' => $tool,
-        'tools' => $tools,
-        'accordionwrapperid' => 'settingswrapper',
-    ];
 
-    if (!empty($pageid)) {
-        $editformparams['title'] = $page->title;
-        $editformparams['sortorder'] = $page->sortorder;
-        $editformparams['question'] = $page->question;
-        $editformparams['toolsettings'] = $helper->get_tool_settings($page);
-        $editformparams['instancename'] = $page->title;
-    }
+    // $enabledtools = $mt->get_enabled_plugins();
+    // $tools = [];
+    // foreach ($enabledtools as $key => $tool) {
+    //     $tooltemp = [];
+    //     $tooltemp['pix'] = "tools/" . $tool . "/pix/" . $tool . ".svg";
+    //     $tooltemp['name'] = get_string('pluginname', 'mootimetertool_' . $tool);
+    //     $tooltemp['tool'] = $tool;
+    //     if (!empty($page)) {
+    //         $tooltemp['selected'] = ($tool == $page->tool) ? "selected" : "";
+    //     }
+    //     $tools[] = $tooltemp;
+    // }
+    // $editformparams = [
+    //     'cmid' => $cmid,
+    //     'pageid' => $pageid,
+    //     'title' => $paramtitle,
+    //     'sortorder' => $paramorder,
+    //     'tool' => $tool,
+    //     'tools' => $tools,
+    //     'accordionwrapperid' => 'settingswrapper',
+    // ];
+
+    // if (!empty($pageid)) {
+    //     $editformparams['title'] = $page->title;
+    //     $editformparams['sortorder'] = $page->sortorder;
+    //     $editformparams['question'] = $page->question;
+    //     $editformparams['toolsettings'] = $helper->get_tool_settings($page);
+    //     $editformparams['instancename'] = $page->title;
+    // }
 
     // $params['settings'] = $OUTPUT->render_from_template("mod_mootimeter/form_edit_page", $editformparams);
 
     if (!empty($page)) {
         $params['snippet_content_menu'] = $helper->get_content_menu($page);
+        $params['toolname'] = get_string("pluginname", "mootimetertool_" . $page->tool);
+        $params['pageid'] = $page->id;
         $params['settings'] = $helper->get_col_settings($page);
 
         $page->isNewPage = 'isNotNewPage';
@@ -209,12 +178,13 @@ if (empty($pages) || (!empty($action) && $action == 'editpage') || (!empty($acti
     }
 
     $params['isediting'] = $PAGE->user_is_editing();
+    // $params['instance'] = $cm->instance;
 }
 
-if (empty($page)) {
+// Show Pagetype selector.
+if (empty($pageid)) {
     $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page();
 }
-
 
 // Hide Pages col if it is not needed at all.
 if ($PAGE->user_is_editing() || count($pages) > 1) {

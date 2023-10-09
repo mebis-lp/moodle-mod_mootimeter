@@ -135,13 +135,18 @@ class helper {
     /**
      * Get instance by pageid
      * @param mixed $pageid
-     * @return object
+     * @return int
      */
-    public static function get_instance_by_pageid($pageid): object {
+    public static function get_instance_by_pageid($pageid): int {
         global $DB;
-        return $DB->get_record_sql('SELECT DISTINCT `instance` FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
+        return $DB->get_field_sql('SELECT DISTINCT `instance` FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
     }
 
+    /**
+     * Get the course module object by mootimeter instance.
+     * @param int $instance
+     * @return object
+     */
     public static function get_cm_by_instance(int $instance): object {
         global $DB;
 
@@ -414,10 +419,16 @@ class helper {
 
     /**
      * Delete the page for the current subplugin.
-     * @param $page
+     * @param int|object $pageorid
      * @return bool
      */
-    public function delete_page($page) {
+    public function delete_page($pageorid) {
+        global $DB;
+
+        if(!is_object($pageorid)){
+            $page = $this->get_page($pageorid);
+        }
+
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {
@@ -428,6 +439,12 @@ class helper {
         if (!method_exists($toolhelper, 'delete_page')) {
             throw new \coding_exception("Method 'delete_page' is missing in tool helper class " . $page->tool);
         }
-        return $toolhelper->delete_page($page);
+        // Call tool specific deletion processes.
+        $toolhelper->delete_page($page);
+
+        // Call mootimeter-core deletion processes.
+        $DB->delete_records('mootimeter_pages', array('id' => $page->id));
+        $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
+
     }
 }

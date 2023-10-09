@@ -36,3 +36,5 @@ $string['showresultlive'] = 'live';
 $string['showresultteacherpermission'] = 'Show results on teacher permission';
 $string['show_results'] = 'Show result wordcloud';
 $string['hide_results'] = 'Hide result wordcloud';
+
+$string['answers_max_number'] = 'Maximum number of answers per participant';

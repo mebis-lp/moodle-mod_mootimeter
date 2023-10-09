@@ -10,7 +10,7 @@
         </li>
         {{/pages}}
         {{#isediting}}
-        <li id="mootimeter_addpage" class="d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{ cmid }}">
+        <li id="mootimeter_addpage" class="d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{ cmid }}" data-instance="{{instance}}">
           <i class="fa fa-plus p-1 mx-1 my-auto"></i>
         </li>
         {{/isediting}}
@@ -18,13 +18,22 @@
     </div>
     {{/showpagescol}}
     {{#isediting}}
+    {{#settings}}
     <div class="mootimetercol mootimetercoledit">
-      {{#settings}}
       <div class="mootimetersettings mootimeterfullwidth">
+        <div class="mootimeter-header-wrapper">
+          <h4>{{toolname}}</h4>
+          <div class="mootimeter-page-dropdown">
+            <i class="icon fa fa-gear fa-light mootimeter-page-dropbtn" aria-hidden="true"></i>
+            <div class="mootimeter-page-dropdown-content">
+              <div class="mootimeter-delete-page-btn" data-pageid="{{pageid}}">{{#str}} delete_page, mod_mootimeter {{/str}}</div>
+            </div>
+          </div>
+        </div>
         {{{settings}}}
       </div>
-      {{/settings}}
     </div>
+    {{/settings}}
     {{/isediting}}
     <div class="mootimetercol mootimetercolcontent">
       {{{snippet_content_menu}}}

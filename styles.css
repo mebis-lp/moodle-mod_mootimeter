@@ -253,8 +253,50 @@
 .dark .mootimetercoledit .mootimeter-colcontent-preview-notification p {
   color: #fff;
 }
-.dark .mootimetercoledit h4, .dark .mootimetercoledit h5, .dark .mootimetercoledit p, .dark .mootimetercoledit label, .dark .mootimetercoledit input {
+.dark .mootimetercoledit h4,
+.dark .mootimetercoledit h5,
+.dark .mootimetercoledit p,
+.dark .mootimetercoledit label,
+.dark .mootimetercoledit input {
   color: #00091e;
+}
+
+.mootimeter-header-wrapper h4 {
+  float: left;
+}
+.mootimeter-header-wrapper .icon {
+  float: right;
+  width: 20px;
+  height: 20px;
+  margin-right: 0;
+  font-size: 1.5rem;
+}
+.mootimeter-header-wrapper .mootimeter-page-dropbtn {
+  padding: 16px;
+}
+.mootimeter-header-wrapper .mootimeter-page-dropdown {
+  float: right;
+}
+.mootimeter-header-wrapper .mootimeter-page-dropdown-content {
+  display: none;
+  position: relative;
+  background-color: #e8e8ea;
+  width: 180px;
+  z-index: 1;
+  right: 0;
+  top: 2.6rem;
+}
+.mootimeter-header-wrapper .mootimeter-page-dropdown-content div {
+  color: #00091e;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.mootimeter-header-wrapper .mootimeter-page-dropdown-content div:hover {
+  background-color: #a4a5ac;
+}
+.mootimeter-header-wrapper .mootimeter-page-dropdown:hover .mootimeter-page-dropdown-content {
+  display: block;
 }
 
 .mootimetercontainer .mootimetercolcontent {

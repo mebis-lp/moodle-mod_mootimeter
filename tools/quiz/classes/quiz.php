@@ -197,6 +197,18 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Get the settings column.
+     *
+     * @param object $page
+     * @return mixed
+     */
+    public function get_col_settings(object $page) {
+
+        return "";
+    }
+
+
+    /**
      * Renders the result page of the quiz.
      *
      * @param object $page
