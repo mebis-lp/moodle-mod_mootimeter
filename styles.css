@@ -285,6 +285,7 @@
   z-index: 1;
   right: 0;
   top: 2.6rem;
+  border-radius: 7px;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown-content div {
   color: #00091e;
@@ -294,6 +295,7 @@
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown-content div:hover {
   background-color: #a4a5ac;
+  border-radius: 7px;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown:hover .mootimeter-page-dropdown-content {
   display: block;

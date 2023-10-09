@@ -124,6 +124,7 @@
     z-index: 1;
     right: 0;
     top: 2.6rem;
+    border-radius: 7px;
   }
 
   .mootimeter-page-dropdown-content div {
@@ -135,6 +136,7 @@
 
   .mootimeter-page-dropdown-content div:hover {
     background-color: $grey-200;
+    border-radius: 7px;
   }
 
   .mootimeter-page-dropdown:hover .mootimeter-page-dropdown-content {

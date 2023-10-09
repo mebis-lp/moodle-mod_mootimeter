@@ -309,3 +309,24 @@ function mootimeter_extend_settings_navigation($settingsnav, $mootimeternode = n
     // $mootimeternode->add($linktext, $url);
     // }
 }
+
+/**
+ * Trigger the course_module viewed event.
+ *
+ * @param int $moduleinstance
+ * @param object $ctx
+ * @param object $course
+ * @return void
+ * @throws coding_exception
+ */
+function mootimeter_trigger_event_course_module_viewed(object $moduleinstance, object $ctx, object $course) :void {
+    $event = \mod_mootimeter\event\course_module_viewed::create(
+        [
+            'objectid' => $moduleinstance->id,
+            'context' => $ctx
+        ]
+    );
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('mootimeter', $moduleinstance);
+    $event->trigger();
+}
