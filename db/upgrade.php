@@ -62,7 +62,7 @@ function xmldb_mootimeter_upgrade($oldversion) {
 
     if ($oldversion < 2023020912) {
 
-        // Define field question to be dropped from mootimeter_pages.
+        // Define field description to be dropped from mootimeter_pages.
         $table = new xmldb_table('mootimeter_pages');
         $field = new xmldb_field('description');
 
@@ -82,6 +82,22 @@ function xmldb_mootimeter_upgrade($oldversion) {
         // Mootimeter savepoint reached.
         upgrade_mod_savepoint(true, 2023020912, 'mootimeter');
     }
+
+    if ($oldversion < 2023101000) {
+
+        // Define field question to be dropped from mootimeter_pages.
+        $table = new xmldb_table('mootimeter_pages');
+        $field = new xmldb_field('question');
+
+        // Conditionally launch drop field title.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Mootimeter savepoint reached.
+        upgrade_mod_savepoint(true, 2023101000, 'mootimeter');
+    }
+
 
     return true;
 }

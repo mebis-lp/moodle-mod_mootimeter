@@ -41,30 +41,6 @@ function mootimetertool_wordcloud_create_tables() {
 
     $dbman = $DB->get_manager();
 
-    // Define table mtmt_wordcloud to be created.
-    $table = new xmldb_table('mtmt_wordcloud');
-
-    // Adding fields to table mtmt_wordcloud.
-    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-    $table->add_field('mtminstance', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-    $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, null, null, null);
-    $table->add_field('question', XMLDB_TYPE_TEXT, null, null, null, null, null);
-    $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-    $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-    $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-
-    // Adding keys to table mtmt_wordcloud.
-    $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-    $table->add_key('usermodified', XMLDB_KEY_FOREIGN, ['usermodified'], 'user', ['id']);
-
-    // Adding indexes to table mtmt_wordcloud.
-    $table->add_index('mtminstance', XMLDB_INDEX_NOTUNIQUE, ['mtminstance']);
-
-    // Conditionally launch create table for mtmt_wordcloud.
-    if (!$dbman->table_exists($table)) {
-        $dbman->create_table($table);
-    }
-
     // Define table mtmt_wordcloud_answers to be created.
     $table = new xmldb_table('mtmt_wordcloud_answers');
 

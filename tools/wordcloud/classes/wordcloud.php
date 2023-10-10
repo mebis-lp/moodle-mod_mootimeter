@@ -347,7 +347,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         global $DB;
         try {
             // Table not written yet
-            // $DB->delete_records('mtmt_wordcloud', array('pageid' => $page->id));
             $DB->delete_records('mtmt_wordcloud_answers', array('pageid' => $page->id));
         } catch (\Exception $e) {
             // Todo handling
