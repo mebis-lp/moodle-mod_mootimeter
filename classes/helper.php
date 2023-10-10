@@ -172,6 +172,7 @@ class helper {
                 'pageid' => $page->id,
                 'sortorder' => $page->sortorder,
                 'pagenumber' => $pagenumber,
+                'width' => "35px",
             ];
             $pagenumber++;
         }
