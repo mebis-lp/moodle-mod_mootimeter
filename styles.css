@@ -97,6 +97,7 @@
 }
 .mootimetercontainer .mootimetercolpages ul li.active {
   border-color: #dc6534;
+  background-color: #a4a5ac;
 }
 .mootimetercontainer .mootimetercolpages ul li .mootimeter_pages_count {
   position: absolute;
@@ -608,7 +609,8 @@
   border-radius: 3.125rem;
   border: 0.125rem solid #a4a5ac;
   -webkit-appearance: none;
-  appearance: none;
+  -moz-appearance: none;
+       appearance: none;
   outline: none;
   cursor: pointer;
   background-color: unset;

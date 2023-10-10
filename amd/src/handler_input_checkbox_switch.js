@@ -1,21 +1,11 @@
-import Ajax from 'core/ajax';
-import notification from 'core/notification';
+import { call as fetchMany } from 'core/ajax';
 
-export const init = () => {
-
-    // Get all up elements.
-    var switches = document.getElementsByClassName('mootimeter-checkbox-switch');
-    for (let i = 0; i < switches.length; i++) {
-        // Remove old listener if exists.
-        switches[i].removeEventListener("click", store);
-        // Finally add the new listener.
-        switches[i].addEventListener("click", store);
-    }
+export const init = (uniqueID) => {
+    var obj = document.getElementById(uniqueID);
+    obj.addEventListener("click", store);
 
     /**
      * Store the value.
-     * @param {*} obj
-     * @param {*} id
      */
     function store() {
         var id = this.id;
@@ -29,11 +19,46 @@ export const init = () => {
         if (document.getElementById(id).checked) {
             inputvalue = 1;
         }
-
-        Ajax.call([{
-            methodname: ajaxmethode,
-            args: { pageid: pageid, inputname: inputname, inputvalue: inputvalue, thisDataset },
-            fail: notification.exception,
-        }]);
+        window.console.log(thisDataset);
+        setCbState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     }
-}
+};
+
+/**
+ * Executes the call to store cb state.
+ * @param {string} ajaxmethode
+ * @param {int} pageid
+ * @param {string} inputname
+ * @param {string} inputvalue
+ * @param {string} thisDataset
+ * @returns
+ */
+const execSetCbState = (
+    ajaxmethode,
+    pageid,
+    inputname,
+    inputvalue,
+    thisDataset
+) => fetchMany([{
+    methodname: ajaxmethode,
+    args: {
+        pageid,
+        inputname,
+        inputvalue,
+        thisDataset
+    },
+}])[0];
+
+/**
+ * Store cb state.
+ * @param {int} pageid
+ * @param {string} inputname
+ * @param {string} inputvalue
+ * @param {string} thisDataset
+ */
+const setCbState = async (ajaxmethode, pageid, inputname, inputvalue, thisDataset) => {
+    const response = await execSetCbState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+    if (response.code != 200) {
+        window.console.log(response.string);
+    }
+};

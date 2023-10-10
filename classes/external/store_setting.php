@@ -67,11 +67,11 @@ class store_setting extends external_api {
      * @param string $inputname
      * @param string $inputvalue
      * @param string $datasetjson
-     * @return void
+     * @return array
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = json_encode([])): void {
+    public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = ""): array {
 
         [
             'pageid' => $pageid,
@@ -85,9 +85,19 @@ class store_setting extends external_api {
             'thisDataset' => $datasetjson,
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
-        $mtmhelper->set_tool_config($pageid, $inputname, $inputvalue);
-        return;
+        try {
+
+            $helper = new \mod_mootimeter\helper();
+            $helper->set_tool_config($pageid, $inputname, $inputvalue);
+            $return = ['code' => 200, 'string' => 'ok'];
+
+        } catch (\Exception $e) {
+
+            $return = ['code' => 500, 'string' => $e->getMessage()];
+
+        }
+
+        return $return;
     }
 
     /**
@@ -96,14 +106,12 @@ class store_setting extends external_api {
      * @return external_multiple_structure
      */
     public static function execute_returns() {
-        // return new external_multiple_structure(
-        // new external_single_structure(
-        // [
-        // 'cmid' => new external_value(PARAM_INT, 'ID'),
-        // 'numerrors' => new external_value(PARAM_INT, 'Number of errors.'),
-        // 'numchecks' => new external_value(PARAM_INT, 'Number of checks.'),
-        // ]
-        // )
-        // );
+        return new external_single_structure(
+            [
+                'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
+                'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+            ],
+            'Set Setting State.'
+        );
     }
 }

@@ -71,7 +71,7 @@ class store_page_details extends external_api {
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = json_encode([])): array {
+    public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = ""): array {
 
         [
             'pageid' => $pageid,

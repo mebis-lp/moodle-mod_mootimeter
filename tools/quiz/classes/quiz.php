@@ -326,6 +326,16 @@ class quiz extends \mod_mootimeter\toolhelper {
         ];
         $PAGE->requires->js_call_amd('mootimetertool_quiz/store_visualization', 'init');
 
+        $multipleanswerschecked = \mod_mootimeter\helper::get_tool_config($page, 'multipleanswers');
+        $params['multipleanswers'] = [
+            'cb_with_label_id' => 'multipleanswers',
+            'cb_with_label_text' => get_string('multiple_answers', 'mootimetertool_quiz'),
+            'pageid' => $page->id,
+            'cb_with_label_name' => 'multipleanswers',
+            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_checked' => ($multipleanswerschecked) ? "checked" : "",
+        ];
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_settings", $params);
     }
