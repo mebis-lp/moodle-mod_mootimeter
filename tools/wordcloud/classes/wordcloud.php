@@ -181,7 +181,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @param object $page
      * @return mixed
      */
-    public function get_col_settings(object $page) {
+    public function get_col_settings_tool(object $page) {
         global $OUTPUT;
 
         $params['question'] = [
@@ -343,7 +343,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @param object $page
      * @return bool
      */
-    public function delete_page(object $page) {
+    public function delete_page_tool(object $page) {
         global $DB;
         try {
             // Table not written yet
@@ -366,7 +366,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function get_content_menu(object $page) {
+    public function get_content_menu_tool(object $page) {
         global $OUTPUT, $PAGE;
         $params = [];
         $params['icon-eye'] = [

@@ -74,4 +74,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mootimetertool_quiz_store_visualizationtype' => [
+        'classname'     => 'mootimetertool_quiz\external\store_visualizationtype',
+        'methodname'    => 'execute',
+        'description'   => 'Store new answer option is correct state.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];

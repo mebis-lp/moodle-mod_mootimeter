@@ -59,7 +59,7 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      * @param mixed $answer
      * @return bool
      */
-    abstract public function delete_page(object $page);
+    abstract public function delete_page_tool(object $page);
 
     /**
      * Get all parameters that are necessary for rendering the tools view.
@@ -75,7 +75,7 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      * @param object $page
      * @return mixed
      */
-    abstract public function get_col_settings(object $page);
+    abstract public function get_col_settings_tool(object $page);
 
     /**
      * Get the settings definitions.

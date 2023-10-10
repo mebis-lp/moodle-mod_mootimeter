@@ -31,10 +31,12 @@ use stdClass;
 
 class quiz extends \mod_mootimeter\toolhelper {
 
-    const MTMT_IS_POLL = 1;
-    const MTMT_IS_QUIZ = 2;
-
     const ANSWER_COLUMN = "optionid";
+
+    const VISUALIZATION_ID_CHART_PILLAR = 1;
+    const VISUALIZATION_ID_CHART_BAR = 2;
+    const VISUALIZATION_ID_CHART_LINE = 3;
+    const VISUALIZATION_ID_CHART_PIE = 4;
 
     /**
      * Insert the answer.
@@ -176,7 +178,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             ];
         }
 
-        $params['question_text'] = self::get_tool_config($page)->name;
+        $params['question_text'] = self::get_tool_config($page)->question;
         return $params;
     }
 
@@ -196,6 +198,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      *
      * @param object $page
      * @return array
+     * @deprecated
      */
     public function get_tool_setting_definitions(object $page): array {
         $settings = [];
@@ -231,7 +234,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @param object $page
      * @return mixed
      */
-    public function get_col_settings(object $page) {
+    public function get_col_settings_tool(object $page) {
         global $OUTPUT, $PAGE;
 
         $params['question'] = [
@@ -277,35 +280,52 @@ class quiz extends \mod_mootimeter\toolhelper {
             'button_icon_only_transparent_dataset' => 'data-pageid="' . $page->id . '"',
         ];
 
+        $visualizationtype = \mod_mootimeter\helper::get_tool_config($page, 'visualizationtype');
+
         $params['visualization'] = [
             [
-                'img' => [
+                'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_PILLAR,
+                'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
+                'mtm-button-icon-img' => [
                     'path' => "tools/" . $page->tool . "/pix/chart-pillar.svg",
                     'width' => "24px",
                 ],
+                'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_PILLAR)? true : false,
+                'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' .self::VISUALIZATION_ID_CHART_PILLAR,
             ],
             [
-                'img' => [
+                'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_BAR,
+                'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
+                'mtm-button-icon-img' => [
                     'path' => "tools/" . $page->tool . "/pix/chart-bar.svg",
                     'width' => "24px",
                 ],
-                'active' => true,
+                'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_BAR) ? true : false,
+                'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_BAR,
             ],
             [
-                'img' => [
+                'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_LINE,
+                'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
+                'mtm-button-icon-img' => [
                     'path' => "tools/" . $page->tool . "/pix/chart-line.svg",
                     'width' => "24px",
                 ],
+                'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_LINE) ? true : false,
+                'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_LINE,
             ],
             [
-                'img' => [
+                'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_PIE,
+                'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
+                'mtm-button-icon-img' => [
                     'path' => "tools/" . $page->tool . "/pix/chart-pie.svg",
                     'width' => "24px",
                 ],
-            ]
-
-
+                'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_PIE) ? true : false,
+                'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_PIE,
+           ]
         ];
+        $PAGE->requires->js_call_amd('mootimetertool_quiz/store_visualization', 'init');
+
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_settings", $params);
     }
@@ -362,7 +382,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @param object $page
      * @return bool
      */
-    public function delete_page(object $page) {
+    public function delete_page_tool(object $page) {
         global $DB;
         try {
             $DB->delete_records('mtmt_quiz_options', array('pageid' => $page->id));

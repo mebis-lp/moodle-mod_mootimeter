@@ -265,10 +265,10 @@ class helper {
         }
 
         $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_content_menu')) {
-            return "Method 'get_content_menu' is missing in tool helper class " . $page->tool;
+        if (!method_exists($toolhelper, 'get_content_menu_tool')) {
+            return "Method 'get_content_menu_tool' is missing in tool helper class " . $page->tool;
         }
-        return $toolhelper->get_content_menu($page);
+        return $toolhelper->get_content_menu_tool($page);
     }
 
     /**
@@ -285,10 +285,10 @@ class helper {
         }
 
         $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_col_settings')) {
-            return "Method 'get_col_settings' is missing in tool helper class " . $page->tool;
+        if (!method_exists($toolhelper, 'get_col_settings_tool')) {
+            return "Method 'get_col_settings_tool' is missing in tool helper class " . $page->tool;
         }
-        return $toolhelper->get_col_settings($page);
+        return $toolhelper->get_col_settings_tool($page);
     }
 
     /**
@@ -432,11 +432,11 @@ class helper {
         }
 
         $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'delete_page')) {
-            throw new \coding_exception("Method 'delete_page' is missing in tool helper class " . $page->tool);
+        if (!method_exists($toolhelper, 'delete_page_tool')) {
+            throw new \coding_exception("Method 'delete_page_tool' is missing in tool helper class " . $page->tool);
         }
         // Call tool specific deletion processes.
-        $toolhelper->delete_page($page);
+        $toolhelper->delete_page_tool($page);
 
         // Call mootimeter-core deletion processes.
         $DB->delete_records('mootimeter_pages', array('id' => $page->id));

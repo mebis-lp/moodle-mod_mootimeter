@@ -1,13 +1,17 @@
 <button
-    class="mootimeter-btn mootimeter-btn-icon {{#active}} active {{/active}}"
+    class="mootimeter-btn mootimeter-btn-icon {{mtm-button-icon-additionalclass}} {{#mtm-button-icon-active}} active {{/mtm-button-icon-active}}"
     {{#mtm-button-icon-ajaxmethode}}data-ajaxmethode="{{mtm-button-icon-ajaxmethode}}"{{/mtm-button-icon-ajaxmethode}}
     {{#mtm-button-icon-id}}id="{{mtm-button-icon-id}}"{{/mtm-button-icon-id}}
-
+    {{{mtm-button-icon-dataset}}}
     >
-    {{#icon}}
+    {{#mtm-button-icon-icon}}
         <i class="icon fa fa-chart-simple fa-light checkbox-icon" aria-hidden="true"></i>
-    {{/icon}}
-    {{#img}}
-        <img src="{{{path}}}" {{#width}}width="{{width}}"{{/width}} class="m-1" />
-    {{/img}}
+    {{/mtm-button-icon-icon}}
+    {{#mtm-button-icon-img}}
+        <img
+            src="{{{path}}}"
+            {{#width}}width="{{width}}"{{/width}}
+            class="m-1"
+        />
+    {{/mtm-button-icon-img}}
 </button>
