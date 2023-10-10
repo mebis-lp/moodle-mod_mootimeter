@@ -116,14 +116,14 @@ class helper {
     }
 
     /**
-     * Get page object.
+     * Get mootimeter page object.
      *
      * @param int $pageid
      * @param int $instanceid
      * @return mixed
      * @throws dml_exception
      */
-    public function get_page(int $pageid, int $instanceid = 0) {
+    public function get_page(int $pageid) {
         global $DB;
         $params = ['id' => $pageid];
         if (!empty($instanceid)) {
@@ -133,13 +133,23 @@ class helper {
     }
 
     /**
-     * Get instance by pageid
+     * Get instance by mootimeter pageid
      * @param mixed $pageid
      * @return int
      */
     public static function get_instance_by_pageid($pageid): int {
         global $DB;
-        return $DB->get_field_sql('SELECT DISTINCT `instance` FROM {mootimeter_pages} WHERE id = :pageid', ['pageid' => $pageid]);
+        return $DB->get_field('mootimeter_pages', 'instance', ['id' => $pageid], IGNORE_MISSING);
+    }
+
+    /**
+     * Validate that the pageid is pertinent to this mootimeter instance.
+     * @param int $pageid the pageid we want to validate
+     * @param array $myinstancepages list of the page records of a mootimeter instance
+     * @return bool true if the page belongs to the instance
+     */
+    public static function validate_page_belongs_to_instance($pageid, $myinstancepages): bool {
+        return in_array($pageid, array_column($myinstancepages, "id")) === true;
     }
 
     /**
