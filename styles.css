@@ -302,7 +302,7 @@
 }
 
 .mootimetercontainer .mootimetercolcontent {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   background-color: #e8e8ea;
@@ -515,13 +515,13 @@
   margin: 0;
 }
 .mootimeter-checkbox label .checkbox-icon-wrapper {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   position: relative;
   border: 0.0938rem solid #d33f01;
   border-radius: 0.125rem;
-  width: 1.25rem;
+  width: 1.25rem !important;
   height: 1.25rem;
   margin-right: 0.625rem;
   padding: 0.125rem;
@@ -561,7 +561,7 @@
   margin: 0;
 }
 .mootimeter-radio-btn label .radio-btn-icon-wrapper {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -608,8 +608,7 @@
   border-radius: 3.125rem;
   border: 0.125rem solid #a4a5ac;
   -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   outline: none;
   cursor: pointer;
   background-color: unset;
@@ -795,7 +794,7 @@
 
 .mootimeter-btn {
   border-radius: 0.5rem;
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   height: 3.625rem;
@@ -841,7 +840,7 @@
 
 .mootimeter-btn-icon {
   border-radius: 0.25rem;
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   width: 3.875rem;
@@ -904,7 +903,7 @@
 }
 
 .mootimeter-btn-icon-only-transparent {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   padding: 0.625rem;
@@ -930,7 +929,7 @@
 }
 
 .mootimeter-btn-icon-only-rounded {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   padding: 0.625rem;
@@ -992,7 +991,7 @@
 }
 
 .button-icon-with-text {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;

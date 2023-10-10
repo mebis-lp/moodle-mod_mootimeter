@@ -28,7 +28,7 @@ $notification-warning: #ff00001a;
 }
 
 @mixin flex-center-all {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
 }
