@@ -53,7 +53,6 @@ class helper {
         if (!empty($record->id)) {
             $origrecord = $DB->get_record('mootimeter_pages', ['id' => $record->id]);
             $origrecord->title = $record->title;
-            $origrecord->question = $record->question;
             $origrecord->tool = $record->tool;
             $origrecord->timemodified = time();
             $origrecord->sortorder = $record->sortorder;
@@ -217,7 +216,8 @@ class helper {
             'pageid' => $page->id,
             'cmid' => $cm->id,
             'title' => s($page->title),
-            'question' => s($page->question),
+            //'question' => s($page->question),
+            'question' => $this->get_tool_config($page)->question,
             // 'isNewPage' => s($page->isNewPage),
             'isediting' => $PAGE->user_is_editing(),
         ];
