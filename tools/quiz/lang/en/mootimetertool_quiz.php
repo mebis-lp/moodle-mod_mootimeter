@@ -38,3 +38,4 @@ $string['nodata'] = "No data available yet";
 $string['answeroptions'] = "Answeroptions";
 $string['visualization'] = "Visualization";
 $string['tool_description_short'] = "Collect answers live";
+$string['add_question_option'] = "Add answer option";

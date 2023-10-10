@@ -1,16 +1,8 @@
 import { call as fetchMany } from 'core/ajax';
 
-export const init = () => {
-
-    // Get all up elements.
-    var inputs = document.getElementsByClassName('mootimeter-input mootimeterfullwidth mootimeter_settings_selector');
-
-    for (let i = 0; i < inputs.length; i++) {
-        // Remove old listener if exists.
-        inputs[i].removeEventListener("keyup", mootimeterStoreInput);
-        // Finally add the new listener.
-        inputs[i].addEventListener("keyup", mootimeterStoreInput);
-    }
+export const init = (uniqueID) => {
+    var obj = document.getElementById(uniqueID);
+    obj.addEventListener("keyup", mootimeterStoreInput);
 
     /**
      * Store the value.
@@ -21,7 +13,8 @@ export const init = () => {
         var ajaxmethode = this.dataset.ajaxmethode;
         var inputname = this.dataset.name;
         var inputvalue = document.getElementById(id).value;
-        execStoreInputValue(ajaxmethode, pageid, inputname, inputvalue);
+        var thisDataset = JSON.stringify(this.dataset);
+        execStoreInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     }
 };
 
@@ -31,19 +24,22 @@ export const init = () => {
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
+ * @param {string} thisDataset
  * @returns
  */
 const storeInputValue = (
     ajaxmethode,
     pageid,
     inputname,
-    inputvalue
+    inputvalue,
+    thisDataset
 ) => fetchMany([{
     methodname: ajaxmethode,
     args: {
         pageid,
         inputname,
-        inputvalue
+        inputvalue,
+        thisDataset
     },
 }])[0];
 
@@ -53,9 +49,10 @@ const storeInputValue = (
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
+ * @param {string} thisDataset
  */
-const execStoreInputValue = async (ajaxmethode, pageid, inputname, inputvalue) => {
-    const response = await storeInputValue(ajaxmethode, pageid, inputname, inputvalue);
+const execStoreInputValue = async (ajaxmethode, pageid, inputname, inputvalue, thisDataset) => {
+    const response = await storeInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     if (response.code != 200) {
         window.console.log(response.string);
     }

@@ -50,4 +50,28 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mootimetertool_quiz_store_answeroption_text' => [
+        'classname'     => 'mootimetertool_quiz\external\store_answeroption_text',
+        'methodname'    => 'execute',
+        'description'   => 'Store new answer option text.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
+    'mootimetertool_quiz_store_answeroption_is_correct' => [
+        'classname'     => 'mootimetertool_quiz\external\store_answeroption_is_correct',
+        'methodname'    => 'execute',
+        'description'   => 'Store new answer option is correct state.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
+    'mootimetertool_quiz_remove_answeroption' => [
+        'classname'     => 'mootimetertool_quiz\external\remove_answeroption',
+        'methodname'    => 'execute',
+        'description'   => 'Store new answer option is correct state.',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];

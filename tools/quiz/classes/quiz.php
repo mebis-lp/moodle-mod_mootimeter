@@ -104,10 +104,38 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Remove an answer option.
+     * @param int $pageid
+     * @param int $aoid
+     * @return array
+     */
+    public function remove_answer_option(int $pageid, int $aoid): array {
+        global $DB;
+
+        try {
+
+            $transaction = $DB->start_delegated_transaction();
+
+            $DB->delete_records('mtmt_quiz_options', ['pageid' => $pageid, 'id' => $aoid]);
+            $DB->delete_records('mtmt_quiz_answers', ['pageid' => $pageid, 'optionid' => $aoid]);
+
+            $transaction->allow_commit();
+
+            $return = ['code' => 200, 'string' => 'ok'];
+        } catch (\Exception $e) {
+
+            $transaction->rollback($e);
+            $return = ['code' => 500, 'string' => $e->getMessage()];
+        }
+        return $return;
+    }
+
+    /**
      * Get quiztype.
      *
      * @param int $pageid
      * @return string
+     * @deprecated
      */
     public function get_quiztype(int $pageid): string {
         if (!empty($this->get_tool_config($pageid, 'ispoll'))) {
@@ -131,6 +159,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      *
      * @param object $page
      * @return array
+     * @deprecated
      */
     public function get_renderer_params(object $page) {
 
@@ -202,7 +231,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return mixed
      */
     public function get_col_settings(object $page) {
-        global $OUTPUT;
+        global $OUTPUT, $PAGE;
 
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
@@ -217,19 +246,34 @@ class quiz extends \mod_mootimeter\toolhelper {
         $answeroptions = $this->get_answer_options($page->id);
         foreach ($answeroptions as $answeroption) {
             $params['answeroptions'][] = [
-                'mtm-input-name' => 'question1',
-                'additional_class' => 'mootimeter-answer-options',
-                'dataset' => 'data-pageid="' . $page->id . '" data-aoid="' . $answeroption->id . '"',
+                'mtm-ao-wrapper-id' => 'ao_wrapper_' . $answeroption->id,
+
+                'mtm-input-id' => 'ao_text_' . $answeroption->id,
+                'mtm-input-name' => 'ao_text',
                 'mtm-input-value' => $answeroption->optiontext,
-                'icon' => 'fa-close',
-                // 'mtm-cb-without-label-classes' => ($PAGE->theme->name == 'mebis') ? "ao-checkbox-hide" : "",
+                'ajaxmethode' => "mootimetertool_quiz_store_answeroption_text",
+                'additional_class' => 'mootimeter-answer-options mootimeter_settings_selector',
+                'dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,
+
+                'mtm-cb-without-label-id' => 'ao_iscorrect_' . $answeroption->id,
+                'mtm-cb-without-label-name' => 'ao_iscorrect',
+                'mtm-cb-without-label-ajaxmethode' => "mootimetertool_quiz_store_answeroption_is_correct",
+                'mtm-cb-without-label-checked' => ($answeroption->optioniscorrect) ? "checked" : "",
+
+                'button_icon_only_transparent_id' => 'ao_delete_' . $answeroption->id,
+                'button_icon_only_transparent_dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,
+                'button_icon_only_transparent_icon' => 'fa-close',
+                'button_icon_only_transparent_additionalclass' => 'mtmt-remove-answeroption',
+                'button_icon_only_transparent_ajaxmethode' => 'mootimetertool_quiz_remove_anseroption',
             ];
+            $PAGE->requires->js_call_amd('mootimetertool_quiz/remove_answer_option','init', ['ao_delete_' . $answeroption->id]);
         }
 
         $params['addoption'] = [
-            'icon' => 'fa-plus',
-            'button-text' => 'Frage hinzufügen',
-
+            'button_icon_only_transparent_icon' => 'fa-plus',
+            'button-text' => get_string('add_question_option', 'mootimetertool_quiz'),
+            'button_icon_only_transparent_id' => 'add_answer_option',
+            'button_icon_only_transparent_dataset' => 'data-pageid="' . $page->id . '"',
         ];
 
         $params['visualization'] = [
@@ -237,7 +281,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'img' => [
                     'path' => "tools/" . $page->tool . "/pix/chart-pillar.svg",
                     'width' => "24px",
-                ]
+                ],
             ],
             [
                 'img' => [
@@ -250,13 +294,13 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'img' => [
                     'path' => "tools/" . $page->tool . "/pix/chart-line.svg",
                     'width' => "24px",
-                ]
+                ],
             ],
             [
                 'img' => [
                     'path' => "tools/" . $page->tool . "/pix/chart-pie.svg",
                     'width' => "24px",
-                ]
+                ],
             ]
 
 

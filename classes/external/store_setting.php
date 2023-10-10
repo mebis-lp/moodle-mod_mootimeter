@@ -56,6 +56,7 @@ class store_setting extends external_api {
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'inputname' => new external_value(PARAM_RAW, 'The name of the input to store.', VALUE_REQUIRED),
             'inputvalue' => new external_value(PARAM_RAW, 'The value of the input to store.', VALUE_REQUIRED),
+            'thisDataset' => new external_value(PARAM_RAW, 'The value of the input to store.', VALUE_REQUIRED),
         ]);
     }
 
@@ -65,20 +66,23 @@ class store_setting extends external_api {
      * @param int $pageid
      * @param string $inputname
      * @param string $inputvalue
+     * @param string $datasetjson
      * @return void
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, string $inputname, string $inputvalue): void {
+    public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = json_encode([])): void {
 
         [
             'pageid' => $pageid,
             'inputname' => $inputname,
             'inputvalue' => $inputvalue,
+            'thisDataset' => $datasetjson,
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
             'inputname' => $inputname,
             'inputvalue' => $inputvalue,
+            'thisDataset' => $datasetjson,
         ]);
 
         $mtmhelper = new \mod_mootimeter\helper();

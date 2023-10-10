@@ -6,14 +6,17 @@
 
 <p class="text-bold">{{#str}} answeroptions , mootimetertool_quiz {{/str}}</p>
 
-<div class="input-with-checkbox-icon_wrapper">
+<div class="input-with-checkbox-icon_wrapper" id="mtmt-quiz-ao-wrapper">
     {{#answeroptions}}
     {{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
     {{/answeroptions}}
 </div>
 
 {{#addoption}}
-{{> mod_mootimeter/elements/snippet_button_icon_with_text}}
+    {{> mod_mootimeter/elements/snippet_button_icon_with_text}}
+    {{#js}}
+        require(['mootimetertool_quiz/add_new_answer_option'], (module) => module.init());
+    {{/js}}
 {{/addoption}}
 
 {{> mod_mootimeter/elements/snippet_divider}}
@@ -23,6 +26,9 @@
 <div class="mootimeter-visualization-options-wrapper">
     {{#visualization}}
     {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+    {{#js}}
+    {{! require(['mootimetertool_quiz/remove_answer_option'], (module) => module.init()); }}
+    {{/js}}
     {{/visualization}}
 </div>
 

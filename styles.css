@@ -500,6 +500,14 @@
   text-align: center;
 }
 
+.mootimeter-checkbox input[type=checkbox] {
+  display: none !important;
+}
+.mootimeter-checkbox label span {
+  margin-left: 0 !important;
+  margin-right: 10px !important;
+}
+
 .mootimeter-checkbox label {
   display: flex;
   align-items: center;

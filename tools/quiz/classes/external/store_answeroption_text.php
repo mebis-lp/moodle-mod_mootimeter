@@ -15,37 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to store a page detail.
+ * Web service to store a answer by the student.
  *
- * @package     mod_mootimeter
+ * @package     mootimetertool_quiz
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_mootimeter\external;
+namespace mootimetertool_quiz\external;
 
 use dml_exception;
 use external_api;
 use external_function_parameters;
-use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
-use tool_brickfield\manager;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
 /**
- * Web service to store setting.
+ * Web service to store an option.
  *
- * @package     mod_mootimeter
- * @copyright   2023, ISB Bayern
- * @author      Peter Mayer <peter.mayer@isb.bayern.de>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mootimetertool_quiz
  */
-class store_page_details extends external_api {
+class store_answeroption_text extends external_api {
     /**
      * Describes the parameters.
      *
@@ -62,7 +58,6 @@ class store_page_details extends external_api {
 
     /**
      * Execute the service.
-     *
      * @param int $pageid
      * @param string $inputname
      * @param string $inputvalue
@@ -71,7 +66,8 @@ class store_page_details extends external_api {
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = json_encode([])): array {
+    public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = ""): array {
+        global $DB;
 
         [
             'pageid' => $pageid,
@@ -85,19 +81,29 @@ class store_page_details extends external_api {
             'thisDataset' => $datasetjson,
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
         try {
-            $mtmhelper->store_page_detail($pageid, $inputname, $inputvalue);
-            return ['code' => 200, 'string' => get_string('ok')];
+
+            $quiz = new \mootimetertool_quiz\quiz();
+            $record = new stdClass();
+
+            $dataset = json_decode($datasetjson);
+
+            $record = $DB->get_record('mtmt_quiz_options', ['id' => $dataset->aoid, 'pageid' => $pageid]);
+            $record->optiontext = $inputvalue;
+            $quiz->store_answer_option($record);
+
+            $return = ['code' => 200, 'string' => 'ok'];
         } catch (\Exception $e) {
-            return ['code' => 500, 'string' => get_string('page_detail_could_not_be_store', 'mod_mootimeter')];
+
+            $return = ['code' => 500, 'string' => $e->getMessage()];
         }
+        return $return;
     }
 
     /**
      * Describes the return structure of the service..
      *
-     * @return external_multiple_structure
+     * @return external_single_structure
      */
     public static function execute_returns() {
         return new external_single_structure(
@@ -105,7 +111,7 @@ class store_page_details extends external_api {
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
                 'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
             ],
-            'Store status.'
+            'Response of storing the answer option details'
         );
     }
 }

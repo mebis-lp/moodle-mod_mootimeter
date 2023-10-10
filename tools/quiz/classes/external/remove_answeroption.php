@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to store a page detail.
+ * Web service to remove an answer option.
  *
- * @package     mod_mootimeter
+ * @package     mootimetertool_quiz
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_mootimeter\external;
+namespace mootimetertool_quiz\external;
 
 use dml_exception;
 use external_api;
@@ -32,20 +32,19 @@ use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
-use tool_brickfield\manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
 /**
- * Web service to store setting.
+ * Web service to remove an answer option.
  *
- * @package     mod_mootimeter
+ * @package     mootimetertool_quiz
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class store_page_details extends external_api {
+class remove_answeroption extends external_api {
     /**
      * Describes the parameters.
      *
@@ -54,58 +53,45 @@ class store_page_details extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'inputname' => new external_value(PARAM_TEXT, 'The name of the input to store.', VALUE_REQUIRED),
-            'inputvalue' => new external_value(PARAM_TEXT, 'The value of the input to store.', VALUE_REQUIRED),
-            'thisDataset' => new external_value(PARAM_RAW, 'The value of the input to store.', VALUE_REQUIRED),
+            'aoid' => new external_value(PARAM_INT, 'The id of the answer option.', VALUE_REQUIRED),
         ]);
     }
 
     /**
      * Execute the service.
-     *
      * @param int $pageid
-     * @param string $inputname
-     * @param string $inputvalue
-     * @param string $datasetjson
+     * @param int $aoid "answer option id"
      * @return array
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = json_encode([])): array {
+    public static function execute(int $pageid, int $aoid): array {
 
         [
             'pageid' => $pageid,
-            'inputname' => $inputname,
-            'inputvalue' => $inputvalue,
-            'thisDataset' => $datasetjson,
+            'aoid' => $aoid,
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
-            'inputname' => $inputname,
-            'inputvalue' => $inputvalue,
-            'thisDataset' => $datasetjson,
+            'aoid' => $aoid,
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
-        try {
-            $mtmhelper->store_page_detail($pageid, $inputname, $inputvalue);
-            return ['code' => 200, 'string' => get_string('ok')];
-        } catch (\Exception $e) {
-            return ['code' => 500, 'string' => get_string('page_detail_could_not_be_store', 'mod_mootimeter')];
-        }
+        $quiz = new \mootimetertool_quiz\quiz();
+        return $quiz->remove_answer_option($pageid, $aoid);
+
     }
 
     /**
      * Describes the return structure of the service..
      *
-     * @return external_multiple_structure
+     * @return external_single_structure
      */
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
-                'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+                'code' => new external_value(PARAM_INT, 'Return code of removal process.'),
+                'string' => new external_value(PARAM_TEXT, 'Return string of removal process.'),
             ],
-            'Store status.'
+            'Status of removal of an answer option'
         );
     }
 }

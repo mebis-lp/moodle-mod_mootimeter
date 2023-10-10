@@ -16,9 +16,17 @@
       text-align: center;
     }
   }
-
 }
 
-.checkbox-icon-wrapper {
+.mootimeter-checkbox {
+  input[type=checkbox] {
+    display: none !important;
+  }
 
+  label {
+    span {
+      margin-left: 0 !important;
+      margin-right: 10px !important;
+    }
+  }
 }
