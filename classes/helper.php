@@ -393,31 +393,24 @@ class helper {
     /**
      * Get the tools config.
      *
-     * @param mixed $page
-     * @return array|object
+     * @param int|object $page
+     * @return string|object
      */
-    public function get_tool_config($page, $name = "") {
+    public static function get_tool_config($pageorid, $name = "") {
         global $DB;
 
-        $conditions = [
-            'tool' => $page->tool,
-            'pageid' => $page->id,
-        ];
+        if (is_object($pageorid)) {
+            $pageorid = $pageorid->id;
+        }
+
+        $conditions = ['pageid' => $pageorid];
 
         if (!empty($name)) {
             $conditions['name'] = $name;
-            return $DB->get_record('mootimeter_tool_settings', $conditions);
+            return $DB->get_field('mootimeter_tool_settings', 'value', $conditions);
         }
 
-        $configs = $DB->get_records('mootimeter_tool_settings', $conditions);
-
-        $returnconfig = [];
-
-        foreach ($configs as $config) {
-            $returnconfig[$config['name']] = $config['value'];
-        }
-
-        return $returnconfig;
+        return (object) $DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, value');
     }
 
     /**

@@ -138,8 +138,8 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @deprecated
      */
     public function get_quiztype(int $pageid): string {
-        if (!empty($this->get_tool_config($pageid, 'ispoll'))) {
-            switch ($this->get_tool_config($pageid, 'ispoll')) {
+        if (!empty(self::get_tool_config($pageid, 'ispoll'))) {
+            switch (self::get_tool_config($pageid, 'ispoll')) {
                 case self::MTMT_IS_QUIZ:
                     $ispoll = "isquiz";
                     break;
@@ -175,7 +175,8 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'pageid' => $page->id,
             ];
         }
-        $params['question_text'] = $page->question;
+
+        $params['question_text'] = self::get_tool_config($page)->name;
         return $params;
     }
 
@@ -199,7 +200,7 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function get_tool_setting_definitions(object $page): array {
         $settings = [];
 
-        $config = $this->get_tool_config($page);
+        $config = self::get_tool_config($page);
 
         $settings['settingsarray'][] = [
             "select" => true,

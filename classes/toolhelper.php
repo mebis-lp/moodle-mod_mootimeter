@@ -41,7 +41,7 @@ use stdClass;
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  */
-abstract class toolhelper {
+abstract class toolhelper extends \mod_mootimeter\helper {
 
     /**
      * Insert the answer.
@@ -169,31 +169,6 @@ abstract class toolhelper {
             }
         }
         return $parameters;
-    }
-
-    /**
-     * Get the config of a pages tool.
-     *
-     * @param object|int $page
-     * @param string $name
-     * @return string|object
-     */
-    public function get_tool_config(object|int $pageorid, string $name = ""): string|object {
-        global $DB;
-
-        if (is_object($pageorid)) {
-            $pageorid = $pageorid->id;
-        }
-
-        $conditions = ['pageid' => $pageorid];
-
-        if (!empty($name)) {
-            $conditions['name'] = $name;
-
-            return $DB->get_field('mootimeter_tool_settings', 'value', $conditions);
-        }
-
-        return (object)$DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, value');
     }
 
     /**
