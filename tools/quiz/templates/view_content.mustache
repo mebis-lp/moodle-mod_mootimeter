@@ -40,9 +40,9 @@
 <input type="hidden" id="mootimeter_lastupdated" value="{{lastupdated}}">
 {{#isediting}}
 {{#js}}
+{{/js}}
 require(['mootimetertool_quiz/store_answeroptions'], (module) => module.init());
 require(['mootimetertool_quiz/new_answeroption'], (module) => module.init());
-{{/js}}
 {{/isediting}}
 {{^isediting}}
 {{#js}}

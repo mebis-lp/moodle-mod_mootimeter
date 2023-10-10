@@ -1,6 +1,9 @@
 import { call as fetchMany } from 'core/ajax';
+import ModalFactory from 'core/modal_factory';
+import ModalEvents from 'core/modal_events';
+import { get_string as getString } from 'core/str';
 
-export const init = () => {
+export const init = async () => {
     // Eventlistener to change page.
     var elements = document.getElementsByClassName("mootimeter_pages_li");
     if (elements) {
@@ -21,12 +24,23 @@ export const init = () => {
         });
     }
 
+    const modal = await ModalFactory.create({
+        type: ModalFactory.types.SAVE_CANCEL,
+        title: getString('delete', 'core'),
+        body: getString('areyousure'),
+        pageid: 5,
+    });
+
+    modal.getRoot().on(ModalEvents.save, function () {
+        var pageid = document.getElementById("btn-delete_page").dataset.pageid;
+        execDeletePage(pageid);
+    });
+
     var deletebtns = document.getElementsByClassName("mootimeter-delete-page-btn");
     if (deletebtns) {
         Array.from(deletebtns).forEach(function (element) {
             element.addEventListener('click', function () {
-                var pageid = this.dataset.pageid;
-                execDeletePage(pageid);
+                modal.show();
             });
         });
     }

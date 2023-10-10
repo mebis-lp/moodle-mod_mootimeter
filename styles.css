@@ -996,3 +996,10 @@
   margin: 0;
   text-align: center;
 }
+.button-icon-with-text p {
+  text-wrap: nowrap;
+  padding: 2px 0 2px 15px;
+}
+.button-icon-with-text:hover {
+  background-color: #a4a5ac;
+}

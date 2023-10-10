@@ -51,12 +51,13 @@ class helper_add_page extends \mod_mootimeter\helper {
 
         foreach ($enabledtools as $key => $tool) {
             $params['tools'][] = [
-                'pix' => "tools/" . $tool . "/pix/" . $tool . ".svg",
+                'id' => $tool,
                 'tool' => $tool,
                 'name' => get_string('pluginname', 'mootimetertool_' . $tool),
+                'description' => get_string('tool_description_short', 'mootimetertool_' . $tool),
+                'pix' => "tools/" . $tool . "/pix/" . $tool . ".svg",
                 'additional_class' => 'mtmt-tool-selector-list',
                 'dataset' => 'data-name="' . $tool . '" data-instance="' . $PAGE->cm->instance . '"',
-                'id' => $tool,
             ];
         }
 

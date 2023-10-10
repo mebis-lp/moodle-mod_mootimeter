@@ -49,7 +49,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         $record = new \stdClass();
         $record->pageid = $page->id;
         $record->usermodified = $USER->id;
-        if($USER->id < 5){
+        if ($USER->id < 5) {
             $record->usermodified = time();
         }
         $record->optionid = $aoid;
@@ -101,7 +101,6 @@ class quiz extends \mod_mootimeter\toolhelper {
         }
 
         return $DB->insert_record('mtmt_quiz_options', $record, true);
-
     }
 
     /**
@@ -203,8 +202,67 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return mixed
      */
     public function get_col_settings(object $page) {
+        global $OUTPUT;
 
-        return "";
+        $params['question'] = [
+            'mtm-input-id' => 'mtm_input_question',
+            'mtm-input-value' => $page->question,
+            'mtm-input-placeholder' => get_string('enter_question', 'mod_mootimeter'),
+            'mtm-input-name' => "question",
+            'additional_class' => 'mootimeter_settings_selector',
+            'pageid' => $page->id,
+            'ajaxmethode' => "mod_mootimeter_store_page_details",
+        ];
+
+        $answeroptions = $this->get_answer_options($page->id);
+        foreach ($answeroptions as $answeroption) {
+            $params['answeroptions'][] = [
+                'mtm-input-name' => 'question1',
+                'additional_class' => 'mootimeter-answer-options',
+                'dataset' => 'data-pageid="' . $page->id . '" data-aoid="' . $answeroption->id . '"',
+                'mtm-input-value' => $answeroption->optiontext,
+                'icon' => 'fa-close',
+                // 'mtm-cb-without-label-classes' => ($PAGE->theme->name == 'mebis') ? "ao-checkbox-hide" : "",
+            ];
+        }
+
+        $params['addoption'] = [
+            'icon' => 'fa-plus',
+            'button-text' => 'Frage hinzufügen',
+
+        ];
+
+        $params['visualization'] = [
+            [
+                'img' => [
+                    'path' => "tools/" . $page->tool . "/pix/chart-pillar.svg",
+                    'width' => "24px",
+                ]
+            ],
+            [
+                'img' => [
+                    'path' => "tools/" . $page->tool . "/pix/chart-bar.svg",
+                    'width' => "24px",
+                ],
+                'active' => true,
+            ],
+            [
+                'img' => [
+                    'path' => "tools/" . $page->tool . "/pix/chart-line.svg",
+                    'width' => "24px",
+                ]
+            ],
+            [
+                'img' => [
+                    'path' => "tools/" . $page->tool . "/pix/chart-pie.svg",
+                    'width' => "24px",
+                ]
+            ]
+
+
+        ];
+
+        return $OUTPUT->render_from_template("mootimetertool_quiz/view_settings", $params);
     }
 
 
@@ -216,21 +274,21 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @throws dml_exception
      * @throws coding_exception
      */
-    public function get_result_page(object $page):string {
+    public function get_result_page(object $page): string {
 
         global $OUTPUT, $DB;
         $chart = new \core\chart_bar();
         $labelsrecords = $DB->get_records('mtmt_quiz_options', ["pageid" => $page->id]);
 
         $labels = [];
-        foreach($labelsrecords as $record){
+        foreach ($labelsrecords as $record) {
             $labels[] = $record->optiontext;
         }
 
         $answersgrouped = $this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
         // var_dump($answersgrouped);
-        foreach($labelsrecords as $key => $label){
-            if(!key_exists($key, $answersgrouped)){
+        foreach ($labelsrecords as $key => $label) {
+            if (!key_exists($key, $answersgrouped)) {
                 $answersgrouped[$key] = ['optionid' => $label->id, 'cnt' => 0];
             }
         }
@@ -239,12 +297,13 @@ class quiz extends \mod_mootimeter\toolhelper {
         // var_dump($labelsrecords);die;
 
         $chart->set_labels($labels);
-        $values = array_map(function($obj){ return (!empty($obj->cnt)) ? $obj->cnt : 0;
+        $values = array_map(function ($obj) {
+            return (!empty($obj->cnt)) ? $obj->cnt : 0;
         }, (array)$answersgrouped);
         $series = new \core\chart_series($page->question, array_values(array_map("floatval", $values)));
         $chart->add_series($series);
 
-        if(empty($labels) || empty($values)){
+        if (empty($labels) || empty($values)) {
             $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];
         } else {
             $paramschart = ['charts' => $OUTPUT->render($chart)];

@@ -297,6 +297,7 @@ class helper {
      * @param object $page
      * @return string
      * @throws coding_exception
+     * @deprecated
      */
     public function get_tool_settings(object $page): string {
 
@@ -320,6 +321,7 @@ class helper {
      * @param object $page
      * @return array
      * @throws coding_exception
+     * @deprecated
      */
     public function get_tool_settings_parameters(object $page): array {
 
@@ -343,6 +345,7 @@ class helper {
      * @param object $page
      * @return void
      * @throws coding_exception
+     * @deprecated
      */
     public function store_tool_config(object $page): void {
         $parameters = $this->get_tool_settings_parameters($page);

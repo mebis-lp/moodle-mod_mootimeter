@@ -9,4 +9,13 @@
     margin: 0;
     text-align: center;
   }
+
+  p {
+    text-wrap: nowrap;
+    padding: 2px 0 2px 15px;
+  }
+
+  &:hover{
+    background-color: #a4a5ac;
+  }
 }

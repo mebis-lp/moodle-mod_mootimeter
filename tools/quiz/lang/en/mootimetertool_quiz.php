@@ -35,3 +35,6 @@ $string['poll'] = "Poll";
 $string['quiz'] = "Quiz";
 $string['show_results'] = "Show results";
 $string['nodata'] = "No data available yet";
+$string['answeroptions'] = "Answeroptions";
+$string['visualization'] = "Visualization";
+$string['tool_description_short'] = "Collect answers live";

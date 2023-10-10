@@ -1,3 +1,8 @@
-<button class="mootimeter-btn mootimeter-btn-icon">
-    <i class="icon fa fa-chart-simple fa-light checkbox-icon" aria-hidden="true"></i>
+<button class="mootimeter-btn mootimeter-btn-icon {{#active}} active {{/active}}">
+    {{#icon}}
+        <i class="icon fa fa-chart-simple fa-light checkbox-icon" aria-hidden="true"></i>
+    {{/icon}}
+    {{#img}}
+        <img src="{{{path}}}" {{#width}}width="{{width}}"{{/width}} class="m-1" />
+    {{/img}}
 </button>

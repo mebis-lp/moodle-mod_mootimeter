@@ -1,38 +1,34 @@
-<h4>Abstimmung</h4>
-
+{{#question}}
 {{> mod_mootimeter/elements/snippet_input}}
+{{/question}}
 
 {{> mod_mootimeter/elements/snippet_divider}}
 
-<p class="text-bold">Antworten</p>
-
-{{> mod_mootimeter/elements/snippet_notification}}
+<p class="text-bold">{{#str}} answeroptions , mootimetertool_quiz {{/str}}</p>
 
 <div class="input-with-checkbox-icon_wrapper">
-    {{> mod_mootimeter/elements/snippet_input_with_icon}}
-    {{> mod_mootimeter/elements/snippet_input_with_icon}}
-    {{> mod_mootimeter/elements/snippet_input_with_icon}}
-    {{> mod_mootimeter/elements/snippet_input_with_icon}}
+    {{#answeroptions}}
     {{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
-    {{> mod_mootimeter/elements/snippet_number_input}}
+    {{/answeroptions}}
 </div>
 
+{{#addoption}}
 {{> mod_mootimeter/elements/snippet_button_icon_with_text}}
+{{/addoption}}
 
 {{> mod_mootimeter/elements/snippet_divider}}
 
-<p class="text-bold">Visualisierung</p>
+<p class="text-bold">{{#str}} visualization , mootimetertool_quiz {{/str}}</p>
 
 <div class="mootimeter-visualization-options-wrapper">
+    {{#visualization}}
     {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
-    {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
-    {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
-    {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+    {{/visualization}}
 </div>
 
 {{> mod_mootimeter/elements/snippet_divider}}
 
-<p class="text-bold">Einstellungen</p>
+<p class="text-bold">{{#str}} settings {{/str}}</p>
 
 {{> mod_mootimeter/elements/snippet_checkbox_switch}}
 {{> mod_mootimeter/elements/snippet_checkbox_switch}}

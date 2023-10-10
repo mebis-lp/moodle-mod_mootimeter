@@ -82,7 +82,7 @@ class store_setting extends external_api {
         ]);
 
         $mtmhelper = new \mod_mootimeter\helper();
-        $mtmhelper->set_tool_config($pageid,  $inputname, $inputvalue);
+        $mtmhelper->set_tool_config($pageid, $inputname, $inputvalue);
         return;
     }
 
