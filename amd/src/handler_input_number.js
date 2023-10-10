@@ -56,10 +56,11 @@ export const init = () => {
         var ajaxmethode = obj.dataset.ajaxmethode;
         var inputname = obj.dataset.name;
         var inputvalue = document.getElementById(id).value;
+        var thisDataset = JSON.stringify(obj.dataset);
 
         Ajax.call([{
             methodname: ajaxmethode,
-            args: { pageid: pageid, inputname: inputname, inputvalue: inputvalue },
+            args: { pageid: pageid, inputname: inputname, inputvalue: inputvalue, thisDataset:thisDataset },
             fail: notification.exception,
         }]);
     }

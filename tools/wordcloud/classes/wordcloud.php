@@ -195,17 +195,14 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         ];
 
         $params['teacherpermission'] = [
-            'id' => 'teacherpermission',
+            'cb_with_label_id' => 'teacherpermission',
             'pageid' => $page->id,
-            'title' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
-            'name' => 'teacherpermission',
-            'additional_class' => 'mootimeter_settings_selector',
-            'ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
+            'cb_with_label_name' => 'teacherpermission',
+            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'teacherpermission') ? "checked" : ""),
         ];
-
-        if (self::get_tool_config($page->id, 'teacherpermission')) {
-            $params['teacherpermission']['checked'] = 'checked';
-        }
 
         $params['maxinputsperuser'] =[
             'title' => get_string('answers_max_number', 'mootimetertool_wordcloud'),
