@@ -45,7 +45,6 @@ const exectoggleteacherpermission = async (pageid, uniqueID) => {
         document.getElementById(uniqueID).classList.remove('fa-eye-slash');
 
         var element = document.getElementById(uniqueID);
-        window.console.log(element);
         if (response.newstate == 1) {
             element.classList.add('fa-eye');
         }
@@ -53,5 +52,9 @@ const exectoggleteacherpermission = async (pageid, uniqueID) => {
         if (response.newstate != 1) {
             element.classList.add('fa-eye-slash');
         }
+
+        let nodelastupdated = document.getElementById('wordcloudcanvas');
+        nodelastupdated.setAttribute('data-lastupdated', 0);
+
     }
 };

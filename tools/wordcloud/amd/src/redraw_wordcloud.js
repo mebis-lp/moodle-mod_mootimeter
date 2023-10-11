@@ -26,6 +26,7 @@ export const init = () => {
 
             // Redraw wordcloud.
             let mtmtcanvas = document.getElementById('wordcloudcanvas');
+            window.console.log(mtmtcanvas);
             mtmtcanvas.setAttribute('data-answers', JSON.stringify(results.answerlist));
             document.getElementById('wordcloudcanvas').dispatchEvent(new Event("redrawwordcloud"));
 
