@@ -375,25 +375,28 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         $params = [];
 
-        $params['icon-eye'] = [
-            'icon' => 'fa-eye',
-            'id' => 'toggleteacherpermission',
-            'iconid' => 'toggleteacherpermissionid',
-            'dataset' => 'data-pageid="' . $page->id . '" data-iconid="toggleteacherpermissionid"',
-            'tooltip' => "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen",
-        ];
-        if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-            // $params['icon-eye']['additional_class'] = " disabled";
-            $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
-        } else if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-            $params['icon-eye']['icon'] = "fa-eye-slash";
-        }
-        $PAGE->requires->js_call_amd('mootimetertool_wordcloud/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
+        if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
 
-        $params['icon-restart'] = [
-            'icon' => 'fa-rotate-left',
-            'id' => 'resetanswers',
-        ];
+            $params['icon-eye'] = [
+                'icon' => 'fa-eye',
+                'id' => 'toggleteacherpermission',
+                'iconid' => 'toggleteacherpermissionid',
+                'dataset' => 'data-pageid="' . $page->id . '" data-iconid="toggleteacherpermissionid"',
+                'tooltip' => "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen",
+            ];
+            if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+                // $params['icon-eye']['additional_class'] = " disabled";
+                $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
+            } else if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+                $params['icon-eye']['icon'] = "fa-eye-slash";
+            }
+            $PAGE->requires->js_call_amd('mootimetertool_wordcloud/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
+
+            // $params['icon-restart'] = [
+            //     'icon' => 'fa-rotate-left',
+            //     'id' => 'resetanswers',
+            // ];
+        }
 
         $params['icon-showresults'] = [
             'icon' => 'fa-bar-chart',
