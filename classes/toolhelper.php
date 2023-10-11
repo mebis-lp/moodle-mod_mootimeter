@@ -84,7 +84,7 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      * @return array
      * @deprecated since 28.09.2023
      */
-    abstract public function get_tool_setting_definitions(object $page);
+    // abstract public function get_tool_setting_definitions(object $page);
 
     /**
      * Will be executed after the page is created.
@@ -100,12 +100,12 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      * @return string
      * @deprecated since 28.09.2023
      */
-    public function get_tool_settings($page): string {
-        global $OUTPUT;
+    // public function get_tool_settings($page): string {
+    //     global $OUTPUT;
 
-        $settings = $this->get_tool_setting_definitions($page);
-        return $OUTPUT->render_from_template("mod_mootimeter/settings", $settings);
-    }
+    //     $settings = $this->get_tool_setting_definitions($page);
+    //     return $OUTPUT->render_from_template("mod_mootimeter/settings", $settings);
+    // }
 
     /**
      * Get all tool settings parameters.
@@ -115,61 +115,61 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      * @throws coding_exception
      * @deprecated since 28.09.2023
      */
-    public function get_tool_settings_parameters(object $page): array {
+    // public function get_tool_settings_parameters(object $page): array {
 
-        $settings = $this->get_tool_setting_definitions($page);
+    //     $settings = $this->get_tool_setting_definitions($page);
 
-        $parameters = [];
+    //     $parameters = [];
 
-        if (empty($settings['settingsarray'])) {
-            return $parameters;
-        }
+    //     if (empty($settings['settingsarray'])) {
+    //         return $parameters;
+    //     }
 
-        foreach ($settings['settingsarray'] as $setting) {
+    //     foreach ($settings['settingsarray'] as $setting) {
 
-            foreach ($setting as $key => $value) {
-                switch ($key) {
-                    case 'text':
-                        $parameters[$setting['name']] = [
-                            'tool' => $page->tool,
-                            'type' => $key,
-                            'pageid' => $page->id,
-                            'name' => $setting['name'],
-                            'value' => optional_param($setting['name'], "", PARAM_TEXT),
-                        ];
-                        break;
-                    case 'number':
-                        $parameters[$setting['name']] = [
-                            'tool' => $page->tool,
-                            'type' => $key,
-                            'pageid' => $page->id,
-                            'name' => $setting['name'],
-                            'value' => optional_param($setting['name'], "", PARAM_INT),
-                        ];
-                        break;
-                    case 'select':
-                        $parameters[$setting['name']] = [
-                            'tool' => $page->tool,
-                            'type' => $key,
-                            'pageid' => $page->id,
-                            'name' => $setting['name'],
-                            'value' => optional_param($setting['name'], "", PARAM_TEXT),
-                        ];
-                        break;
-                    case 'checkbox':
-                        $parameters[$setting['name']] = [
-                            'tool' => $page->tool,
-                            'type' => $key,
-                            'pageid' => $page->id,
-                            'name' => $setting['name'],
-                            'value' => optional_param($setting['name'], "", PARAM_INT),
-                        ];
-                        break;
-                }
-            }
-        }
-        return $parameters;
-    }
+    //         foreach ($setting as $key => $value) {
+    //             switch ($key) {
+    //                 case 'text':
+    //                     $parameters[$setting['name']] = [
+    //                         'tool' => $page->tool,
+    //                         'type' => $key,
+    //                         'pageid' => $page->id,
+    //                         'name' => $setting['name'],
+    //                         'value' => optional_param($setting['name'], "", PARAM_TEXT),
+    //                     ];
+    //                     break;
+    //                 case 'number':
+    //                     $parameters[$setting['name']] = [
+    //                         'tool' => $page->tool,
+    //                         'type' => $key,
+    //                         'pageid' => $page->id,
+    //                         'name' => $setting['name'],
+    //                         'value' => optional_param($setting['name'], "", PARAM_INT),
+    //                     ];
+    //                     break;
+    //                 case 'select':
+    //                     $parameters[$setting['name']] = [
+    //                         'tool' => $page->tool,
+    //                         'type' => $key,
+    //                         'pageid' => $page->id,
+    //                         'name' => $setting['name'],
+    //                         'value' => optional_param($setting['name'], "", PARAM_TEXT),
+    //                     ];
+    //                     break;
+    //                 case 'checkbox':
+    //                     $parameters[$setting['name']] = [
+    //                         'tool' => $page->tool,
+    //                         'type' => $key,
+    //                         'pageid' => $page->id,
+    //                         'name' => $setting['name'],
+    //                         'value' => optional_param($setting['name'], "", PARAM_INT),
+    //                     ];
+    //                     break;
+    //             }
+    //         }
+    //     }
+    //     return $parameters;
+    // }
 
     /**
      * Checks if a select option is selected.

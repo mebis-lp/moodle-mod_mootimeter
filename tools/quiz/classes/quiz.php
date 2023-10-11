@@ -165,21 +165,21 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_renderer_params(object $page) {
 
-        $ispoll = $this->get_quiztype($page->id);
-        $answeroptions = $this->get_answer_options($page->id);
+        // $ispoll = $this->get_quiztype($page->id);
+        // $answeroptions = $this->get_answer_options($page->id);
 
-        foreach ($answeroptions as $ao) {
-            $params['answer_options'][] = [
-                'aoid' => $ao->id,
-                'ao_text' => $ao->optiontext,
-                'ao_iscorrect' => $ao->optioniscorrect,
-                $ispoll => true,
-                'pageid' => $page->id,
-            ];
-        }
+        // foreach ($answeroptions as $ao) {
+        //     $params['answer_options'][] = [
+        //         'aoid' => $ao->id,
+        //         'ao_text' => $ao->optiontext,
+        //         'ao_iscorrect' => $ao->optioniscorrect,
+        //         $ispoll => true,
+        //         'pageid' => $page->id,
+        //     ];
+        // }
 
-        $params['question_text'] = self::get_tool_config($page)->question;
-        return $params;
+        // $params['question_text'] = self::get_tool_config($page)->question;
+        return [];
     }
 
     /**
@@ -194,41 +194,6 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get the settings definitions.
-     *
-     * @param object $page
-     * @return array
-     * @deprecated
-     */
-    public function get_tool_setting_definitions(object $page): array {
-        $settings = [];
-
-        $config = self::get_tool_config($page);
-
-        $settings['settingsarray'][] = [
-            "select" => true,
-            "id" => 'ispoll',
-            "name" => 'ispoll',
-            "label" => get_string('ispoll_label', 'mootimetertool_quiz'),
-            "helptitle" => get_string('ispoll_helptitle', 'mootimetertool_quiz'),
-            "help" => get_string('ispoll_help', 'mootimetertool_quiz'),
-            "options" => [
-                [
-                    'title' => get_string('poll', 'mootimetertool_quiz'),
-                    'value' => self::MTMT_IS_POLL,
-                    'selected' => $this->is_option_selected(self::MTMT_IS_POLL, $config, 'showresult'),
-                ],
-                [
-                    'title' => get_string('quiz', 'mootimetertool_quiz'),
-                    'value' => self::MTMT_IS_QUIZ,
-                    'selected' => $this->is_option_selected(self::MTMT_IS_QUIZ, $config, 'showresult'),
-                ],
-            ]
-        ];
-        return $settings;
-    }
-
-    /**
      * Get the settings column.
      *
      * @param object $page
@@ -239,12 +204,12 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
-            'mtm-input-value' => $page->question,
+            'mtm-input-value' => s(self::get_tool_config($page, 'question')),
             'mtm-input-placeholder' => get_string('enter_question', 'mod_mootimeter'),
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
             'pageid' => $page->id,
-            'ajaxmethode' => "mod_mootimeter_store_page_details",
+            'ajaxmethode' => "mod_mootimeter_store_setting",
         ];
 
         $answeroptions = $this->get_answer_options($page->id);
@@ -375,7 +340,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         $values = array_map(function ($obj) {
             return (!empty($obj->cnt)) ? $obj->cnt : 0;
         }, (array)$answersgrouped);
-        $series = new \core\chart_series($page->question, array_values(array_map("floatval", $values)));
+        $series = new \core\chart_series(self::get_tool_config($page->id, 'question'), array_values(array_map("floatval", $values)));
         $chart->add_series($series);
 
         if (empty($labels) || empty($values)) {

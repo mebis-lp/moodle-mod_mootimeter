@@ -32,6 +32,7 @@ $action = optional_param('a', "", PARAM_ALPHA);
 $paramtool = optional_param('tool', "", PARAM_ALPHA);
 $pageid = optional_param('pageid', 0, PARAM_INT);
 $isresultpage = optional_param('r', false, PARAM_BOOL);
+$helper = new \mod_mootimeter\helper();
 
 // Check if the provided pageid already exists / else throw error
 if (!empty($pageid)) {
@@ -41,6 +42,7 @@ if (!empty($pageid)) {
 // Set the pageid pageparam for $PAGE object.
 if ($pageid) {
     $pageparams['pageid'] = $pageid;
+    $page = $helper->get_page($pageid);
 }
 
 // Activity instance id.
@@ -63,22 +65,13 @@ $pageparams['id'] = $cm->id;
 require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 
-$helper = new \mod_mootimeter\helper();
-
-// Check if this page is in the recent mootimeter instance.
-if (!empty($pageid)) {
-    $page = $helper->get_page($pageid);
-
-    // Check if the accessed pageid is actually part of the Mootimeter instance:
-    $modulepages = $helper->get_pages($cm->instance);
-
-    if (array_search($pageid, array_column($modulepages, "id")) === false) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', get_string("pageaccessexception", "mootimeter"));
-    }
-}
-
 $mt = new \mod_mootimeter\plugininfo\mootimetertool();
 $pages = $helper->get_pages($cm->instance);
+
+// Check if this page is in the recent mootimeter instance.
+if (!empty($pageid) && !$helper::validate_page_belongs_to_instance($pageid, $pages)) {
+    throw new moodle_exception('generalexceptionmessage', 'error', '', get_string("pageaccessexception", "mootimeter"));
+}
 
 // If there is only one page. Redirect to this page if there is no pageid set.
 if(count($pages) == 1 && empty($pageid) && $action != 'addpage'){
