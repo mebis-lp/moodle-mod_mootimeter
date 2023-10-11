@@ -83,22 +83,21 @@ function mootimeter_update_instance($moduleinstance, $mform = null) {
 }
 
 /**
- * Removes an instance of the mod_mootimeter from the database.
+ * Deletes a mootimeter instance with all related pages and tool settings.
  *
- * @param int $id Id of the module instance.
- * @return bool True if successful, false on failure.
+ * @param int $id Id of the mootimeter instance.
+ * @return bool true if successful.
  */
 function mootimeter_delete_instance($id) {
     global $DB;
+    $pages = $DB->get_fieldset_sql('SELECT id FROM {mootimeter_pages} WHERE instance = :id', ['id' => $id]);
 
-    $exists = $DB->get_record('mootimeter', array('id' => $id));
-    if (!$exists) {
-        return false;
+    $helper = new \mod_mootimeter\helper();
+    foreach ($pages as $page) {
+        $helper->delete_page($page);
     }
 
-    $DB->delete_records('mootimeter', array('id' => $id));
-
-    return true;
+    return $DB->delete_records('mootimeter', ['id' => $id]);
 }
 
 /**
