@@ -19,7 +19,6 @@ export const init = (uniqueID) => {
         if (document.getElementById(id).checked) {
             inputvalue = 1;
         }
-        window.console.log(thisDataset);
         setCbState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     }
 };
