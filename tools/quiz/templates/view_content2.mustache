@@ -1,56 +1,39 @@
 <script src="tools/quiz/js/chart.umd.min.js"></script>
+<div class="mootimeter-colcontent-preview">
 
-<div class="mootimeter-colcontent-preview-header">
-  {{> mod_mootimeter/elements/snippet_pill}}
-  <h4>How much is the Fish?</h4>
-</div>
+  <div class="mootimeter-colcontent-preview-header">
 
-{{> mod_mootimeter/elements/snippet_notification}}
+    {{#toolname}}
+    {{> mod_mootimeter/elements/snippet_pill}}
+    {{/toolname}}
 
-<div class="mootimeter-colcontent-preview-options">
-  {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-  {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-  {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-  {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-  {{> mod_mootimeter/elements/snippet_radio_button}}
-  {{> mod_mootimeter/elements/snippet_input_with_inner_icon}}
-</div>
-<div class="mootimeter-colcontent-preview-send">
-  {{> mod_mootimeter/elements/snippet_button_full}}
-  <small>Du hast mehrere Antwortoptionen</small>
-</div>
+    <h4 id="mtm_question">{{{question}}}</h4>
 
+    {{#isediting}}
+    {{#js}}
+    require(['mootimetertool_wordcloud/reload_question'], (module) => module.init());
+    {{/js}}
+    {{/isediting}}
 
-<input type="hidden" id="mootimeter_lastupdated" value="{{lastupdated}}">
-{{#isediting}}
-{{#js}}
-{{/js}}
-require(['mootimetertool_quiz/store_answeroptions'], (module) => module.init());
-require(['mootimetertool_quiz/new_answeroption'], (module) => module.init());
-{{/isediting}}
-{{^isediting}}
-{{#js}}
-require(['mootimetertool_quiz/store_answer'], (module) => module.init());
-{{/js}}
-{{/isediting}}
-<script>
+  </div>
 
-  // redrawwordcloud()
+  <div class="mootimeter-colcontent-preview-options">
+    {{#answeroptions}}
+    {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+    {{/answeroptions}}
+  </div>
 
-  // const event = new Event("redrawwordcloud");
-  // let mtmtcanvas = document.getElementById('wordcloudcanvas');
-  // mtmtcanvas.addEventListener(
-  //   "redrawwordcloud",
-  //   (e) => {
-  //     window.console.log("Redraw");
-  //     redrawwordcloud();
-  //   },
-  //   false
-  // );
+  <div class="mootimeter-colcontent-preview-send">
+    {{#sendbutton}}
+    {{> mod_mootimeter/elements/snippet_button_full}}
+    {{/sendbutton}}
+    {{#sendbutton_context}}
+    <small>{{text}}</small>
+    {{/sendbutton_context}}
+  </div>
 
-  // function redrawwordcloud() {
-  //   let mtmtcanvas = document.getElementById('wordcloudcanvas');
-  //   let answers = JSON.parse(mtmtcanvas.dataset.answers);
-  //   WordCloud(mtmtcanvas, { list: answers });
-  // }
-</script>
+  {{^isediting}}
+  {{#js}}
+  require(['mootimetertool_quiz/store_answer'], (module) => module.init());
+  {{/js}}
+  {{/isediting}}

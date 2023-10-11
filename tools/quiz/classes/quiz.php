@@ -106,6 +106,51 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Get content menu bar.
+     *
+     * @param object $page
+     * @return mixed
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
+    public function get_content_menu_tool(object $page) {
+        global $OUTPUT, $PAGE;
+        $params = [];
+        $params['icon-eye'] = [
+            'icon' => 'fa-eye',
+            'id' => 'toggleteacherpermission',
+            'additional_class' => 'mtm_redirect_selector',
+            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1))
+        ];
+        $params['icon-restart'] = [
+            'icon' => 'fa-rotate-left',
+            'id' => 'resetanswers',
+        ];
+        if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
+            $params['icon-eye']['additional_class'] = " disabled";
+            $params['icon-eye']['href'] = "";
+            $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
+        } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
+            $params['icon-eye']['additional_class'] .= "";
+        }
+
+        if (
+            has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
+            // && self::get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+        ) {
+
+            if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
+                $params['icon-eye']['additional_class'] = " disabled";
+            } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
+                $params['icon-eye']['additional_class'] .= "";
+            }
+        }
+
+        return $OUTPUT->render_from_template("mootimetertool_wordcloud/snippet_content_menu", $params);
+    }
+
+    /**
      * Remove an answer option.
      * @param int $pageid
      * @param int $aoid
@@ -165,21 +210,64 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_renderer_params(object $page) {
 
-        // $ispoll = $this->get_quiztype($page->id);
-        // $answeroptions = $this->get_answer_options($page->id);
+        global $USER;
 
-        // foreach ($answeroptions as $ao) {
-        //     $params['answer_options'][] = [
-        //         'aoid' => $ao->id,
-        //         'ao_text' => $ao->optiontext,
-        //         'ao_iscorrect' => $ao->optioniscorrect,
-        //         $ispoll => true,
-        //         'pageid' => $page->id,
+        // Parameter for initial wordcloud rendering.
+        // $params['answerslist'] = json_encode($this->get_answerlist_wordcloud($page->id));
+        $params['pageid'] = $page->id;
+
+        // Parameter for initializing Badges.
+        $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
+
+        $answeroptions = $this->get_answer_options($page->id);
+        foreach ($answeroptions as $answeroption) {
+            $params['answeroptions'][] = [
+                'cb_with_label_id' => 'multipleanswers',
+                'cb_with_label_text' => $answeroption->optiontext,
+                'pageid' => $page->id,
+                'cb_with_label_name' => 'multipleanswers',
+                'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+            ];
+        }
+
+        $params['sendbutton'] = [
+            'mtm-button-text' => get_string('submit_answer', 'mootimetertool_quiz'),
+        ];
+
+
+        if(self::get_tool_config($page, 'multipleanswers')){
+            $sendbuttoncontext = get_string('sendbutton_context_more_answers_possible', 'mootimetertool_quiz');
+        }else{
+                $sendbuttoncontext = get_string('sendbutton_context_one_answers_possible', 'mootimetertool_quiz');
+        }
+        $params['sendbutton_context'] = [
+            'text' => $sendbuttoncontext,
+        ];
+
+        return $params;
+
+        // $params["answers"] = array_values(array_map(function ($element) {
+        //     return [
+        //         'pill' => $element->answer,
+        //         'additional_class' => 'mootimeter-pill-inline'
         //     ];
-        // }
+        // }, $this->get_user_answers($page->id, $USER->id)));
 
-        // $params['question_text'] = self::get_tool_config($page)->question;
-        return [];
+        $params['input_answer'] = [
+            'mtm-input-id' => 'mootimeter_type_answer',
+            'mtm-input-name' => 'answer',
+            'dataset' => 'data-pageid="' . $page->id . '"',
+        ];
+
+        $params['button_answer'] = [
+            'mtm-button-id' => 'mootimeter_enter_answer',
+            'mtm-button-text' => 'Senden',
+        ];
+
+        // Parameter for last updated.
+        // $params['lastupdated'] = $this->get_last_update_time($page->id);
+
+        return $params;
     }
 
     /**
@@ -235,7 +323,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'button_icon_only_transparent_additionalclass' => 'mtmt-remove-answeroption',
                 'button_icon_only_transparent_ajaxmethode' => 'mootimetertool_quiz_remove_anseroption',
             ];
-            $PAGE->requires->js_call_amd('mootimetertool_quiz/remove_answer_option','init', ['ao_delete_' . $answeroption->id]);
+            $PAGE->requires->js_call_amd('mootimetertool_quiz/remove_answer_option', 'init', ['ao_delete_' . $answeroption->id]);
         }
 
         $params['addoption'] = [
@@ -245,7 +333,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'button_icon_only_transparent_dataset' => 'data-pageid="' . $page->id . '"',
         ];
 
-        $visualizationtype = \mod_mootimeter\helper::get_tool_config($page, 'visualizationtype');
+        $visualizationtype = self::get_tool_config($page, 'visualizationtype');
 
         $params['visualization'] = [
             [
@@ -255,8 +343,8 @@ class quiz extends \mod_mootimeter\toolhelper {
                     'path' => "tools/" . $page->tool . "/pix/chart-pillar.svg",
                     'width' => "24px",
                 ],
-                'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_PILLAR)? true : false,
-                'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' .self::VISUALIZATION_ID_CHART_PILLAR,
+                'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_PILLAR) ? true : false,
+                'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_PILLAR,
             ],
             [
                 'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_BAR,
@@ -287,11 +375,11 @@ class quiz extends \mod_mootimeter\toolhelper {
                 ],
                 'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_PIE) ? true : false,
                 'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_PIE,
-           ]
+            ]
         ];
         $PAGE->requires->js_call_amd('mootimetertool_quiz/store_visualization', 'init');
 
-        $multipleanswerschecked = \mod_mootimeter\helper::get_tool_config($page, 'multipleanswers');
+        $multipleanswerschecked = self::get_tool_config($page, 'multipleanswers');
         $params['multipleanswers'] = [
             'cb_with_label_id' => 'multipleanswers',
             'cb_with_label_text' => get_string('multiple_answers', 'mootimetertool_quiz'),
@@ -300,6 +388,16 @@ class quiz extends \mod_mootimeter\toolhelper {
             'cb_with_label_additional_class' => 'mootimeter_settings_selector',
             'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
             'cb_with_label_checked' => ($multipleanswerschecked) ? "checked" : "",
+        ];
+
+        $params['teacherpermission'] = [
+            'cb_with_label_id' => 'teacherpermission',
+            'pageid' => $page->id,
+            'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_quiz'),
+            'cb_with_label_name' => 'teacherpermission',
+            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_checked' => (self::get_tool_config($page, 'teacherpermission') ? "checked" : ""),
         ];
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_settings", $params);

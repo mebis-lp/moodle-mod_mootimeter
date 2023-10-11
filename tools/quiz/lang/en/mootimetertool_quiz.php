@@ -40,3 +40,7 @@ $string['visualization'] = "Visualization";
 $string['tool_description_short'] = "Collect answers live";
 $string['add_question_option'] = "Add answer option";
 $string['multiple_answers'] = 'Multiple answers';
+$string['submit_answer'] = 'Submit answer';
+$string['sendbutton_context_more_answers_possible'] = 'You can choose more than one answer.';
+$string['sendbutton_context_one_answers_possible'] = 'You can choose one anser.';
+$string['showresultteacherpermission'] = 'Show results on teacher permission';

@@ -3,6 +3,7 @@
 	class="mootimeter-btn-icon-only-rounded {{{additional_class}}}"
 	{{#tooltip}} data-toggle="tooltip" data-placement="top" title="{{tooltip}}"{{/tooltip}}
 	{{#href}} data-href="{{{href}}}" {{/href}}
+	{{{dataset}}}
 >
-	<i class="icon fa {{icon}} fa-light" aria-hidden="true"></i>
+	<i {{#iconid}} id="{{iconid}}" {{/iconid}} class="icon fa {{icon}} fa-light" aria-hidden="true"></i>
 </button>

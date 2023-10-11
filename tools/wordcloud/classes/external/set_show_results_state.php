@@ -69,22 +69,20 @@ class set_show_results_state extends external_api {
             'pageid' => $pageid,
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
-        $page = $mtmhelper->get_page($pageid);
+        try {
+            $mtmhelper = new \mod_mootimeter\helper();
+            $page = $mtmhelper->get_page($pageid);
 
-        $wordcloud = new \mootimetertool_wordcloud\wordcloud();
-        $newstate = $wordcloud->toggle_show_results_state($page);
+            $wordcloud = new \mootimetertool_wordcloud\wordcloud();
+            $newstate = $wordcloud->toggle_show_results_state($page);
 
-        switch ($newstate) {
-            case 0:
-                return ['buttontext' => get_string('show_results', 'mootimetertool_wordcloud')];
-                break;
-            case 1:
-                return ['buttontext' => get_string('hide_results', 'mootimetertool_wordcloud')];
-                break;
+            $return = ['code' => 200, 'string' => 'ok', 'newstate' => $newstate];
+
+        } catch (\Exception $e) {
+
+            $return = ['code' => 500, 'string' => $e->getMessage(), 'newstate' => 0];
         }
-
-        return ['buttontext' => "ERROR"];
+        return $return;
     }
 
     /**
@@ -95,7 +93,9 @@ class set_show_results_state extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'buttontext' => new external_value(PARAM_TEXT, 'Text of teacher permission button')
+                'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
+                'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+                'newstate' => new external_value(PARAM_INT, 'The newly setted state'),
             ],
             'Information to toggle teacher permission button'
         );

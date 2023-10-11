@@ -3,7 +3,8 @@
     background-color: $grey-500;
     flex: 7.5rem 0 0;
     max-width: 100%;
-    max-height: 100vh;
+    max-height: 75vh;
+    height: 75vh;
     overflow-y: auto;
 
     &::-webkit-scrollbar {

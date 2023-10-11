@@ -17,7 +17,8 @@
     {{cb_with_label_text}}
   </label>
 </div>
-
+{{#cb_with_label_ajaxmethode}}
 {{#js}}
 require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{cb_with_label_id}}"));
 {{/js}}
+{{/cb_with_label_ajaxmethode}}

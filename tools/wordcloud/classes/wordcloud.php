@@ -28,6 +28,7 @@ namespace mootimetertool_wordcloud;
 use coding_exception;
 use dml_exception;
 use moodle_exception;
+use moodle_url;
 
 class wordcloud extends \mod_mootimeter\toolhelper {
 
@@ -88,16 +89,14 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
         if (
-            self::get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_LIVE
-            || (self::get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-                && !empty(self::get_tool_config($pageid, 'teacherpermission'))
-            )
+            empty(self::get_tool_config($pageid, 'teacherpermission'))
+            || (self::get_tool_config($pageid, 'teacherpermission') && self::get_tool_config($pageid, 'showonteacherpermission'))
         ) {
             $params = [
                 'pageid' => $pageid,
             ];
 
-            if(!empty($userid)){
+            if (!empty($userid)) {
                 $params['usermodified'] = $userid;
             }
 
@@ -152,11 +151,11 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
 
         $params["answers"] = array_values(array_map(function ($element) {
-                return [
-                    'pill' => $element->answer,
-                    'additional_class' => 'mootimeter-pill-inline'
-                ];
-            }, $this->get_user_answers($page->id, $USER->id)));
+            return [
+                'pill' => $element->answer,
+                'additional_class' => 'mootimeter-pill-inline'
+            ];
+        }, $this->get_user_answers($page->id, $USER->id)));
 
         $params['input_answer'] = [
             'mtm-input-id' => 'mootimeter_type_answer',
@@ -186,7 +185,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
-            'mtm-input-value'=> s(self::get_tool_config($page, 'question')),
+            'mtm-input-value' => s(self::get_tool_config($page, 'question')),
             'mtm-input-placeholder' => get_string('enter_question', 'mod_mootimeter'),
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
@@ -198,13 +197,13 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'cb_with_label_id' => 'teacherpermission',
             'pageid' => $page->id,
             'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
-            'cb_with_label_name' => 'teacherpermission',
+            'cb_with_label_name' => 'showonteacherpermission',
             'cb_with_label_additional_class' => 'mootimeter_settings_selector',
             'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
-            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'teacherpermission') ? "checked" : ""),
+            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showonteacherpermission') ? "checked" : ""),
         ];
 
-        $params['maxinputsperuser'] =[
+        $params['maxinputsperuser'] = [
             'title' => get_string('answers_max_number', 'mootimetertool_wordcloud'),
             'additional_class' => 'mootimeter_settings_selector',
             'id' => "maxinputsperuser",
@@ -213,6 +212,16 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'pageid' => $page->id,
             'ajaxmethode' => "mod_mootimeter_store_setting",
             'value' => self::get_tool_config($page->id, "maxinputsperuser"),
+        ];
+
+        $params['showresultlive'] = [
+            'cb_with_label_id' => 'showresultlive',
+            'pageid' => $page->id,
+            'cb_with_label_text' => get_string('showresultlive', 'mootimetertool_wordcloud'),
+            'cb_with_label_name' => 'showresultlive',
+            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showresultlive') ? "checked" : ""),
         ];
 
         return $OUTPUT->render_from_template("mootimetertool_wordcloud/view_settings", $params);
@@ -317,22 +326,21 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      *
      * @param object $page
      * @return int
-     * @deprecated
      */
     public function toggle_show_results_state(object $page): int {
 
-        $teacherpermission = self::get_tool_config($page->id, 'teacherpermission');
+        $showonteacherpermission = self::get_tool_config($page->id, 'showonteacherpermission');
 
         $helper = new \mod_mootimeter\helper();
 
-        if (empty($teacherpermission)) {
+        if (empty($showonteacherpermission)) {
             // The config is not set yet. Set the value to 1.
-            $helper->set_tool_config($page, 'teacherpermission', 1);
+            $helper->set_tool_config($page, 'showonteacherpermission', 1);
             return 1;
         }
 
         // The config was already set. Toggle it.
-        $helper->set_tool_config($page, 'teacherpermission', 0);
+        $helper->set_tool_config($page, 'showonteacherpermission', 0);
         return 0;
     }
     /**
@@ -364,23 +372,46 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      */
     public function get_content_menu_tool(object $page) {
         global $OUTPUT, $PAGE;
+
         $params = [];
+
         $params['icon-eye'] = [
             'icon' => 'fa-eye',
             'id' => 'toggleteacherpermission',
-            'additional_class' => 'mtm_redirect_selector',
-            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1))
+            'iconid' => 'toggleteacherpermissionid',
+            'dataset' => 'data-pageid="' . $page->id . '" data-iconid="toggleteacherpermissionid"',
+            'tooltip' => "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen",
         ];
+        if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+            // $params['icon-eye']['additional_class'] = " disabled";
+            $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
+        } else if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+            $params['icon-eye']['icon'] = "fa-eye-slash";
+        }
+        $PAGE->requires->js_call_amd('mootimetertool_wordcloud/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
+
         $params['icon-restart'] = [
             'icon' => 'fa-rotate-left',
             'id' => 'resetanswers',
         ];
+
+        $params['icon-showresults'] = [
+            'icon' => 'fa-bar-chart',
+            'id' => 'showresults',
+            'additional_class' => 'mtm_redirect_selector',
+            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1))
+        ];
+
+        if (optional_param('r', "", PARAM_INT)) {
+            $params['icon-showresults'] = [
+                'icon' => 'fa-pencil-square-o',
+                'id' => 'showresults',
+                'additional_class' => 'mtm_redirect_selector',
+                'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id))
+            ];
+        }
+
         if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-            $params['icon-eye']['additional_class'] = " disabled";
-            $params['icon-eye']['href'] = "";
-            $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
-        } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-            $params['icon-eye']['additional_class'] .= "";
         }
 
         if (
@@ -390,7 +421,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
             if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
                 $params['icon-eye']['additional_class'] = " disabled";
-             } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
+            } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
                 $params['icon-eye']['additional_class'] .= "";
             }
         }
@@ -412,5 +443,4 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $params = $this->get_renderer_params($page);
         return $OUTPUT->render_from_template("mootimetertool_wordcloud/view_results", $params);
     }
-
 }
