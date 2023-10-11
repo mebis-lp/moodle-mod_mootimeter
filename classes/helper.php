@@ -216,8 +216,7 @@ class helper {
             'pageid' => $page->id,
             'cmid' => $cm->id,
             'title' => s($page->title),
-            //'question' => s($page->question),
-            'question' => $this->get_tool_config($page)->question,
+            'question' => s(self::get_tool_config($page, 'question')),
             // 'isNewPage' => s($page->isNewPage),
             'isediting' => $PAGE->user_is_editing(),
         ];

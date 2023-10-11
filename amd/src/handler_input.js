@@ -56,4 +56,7 @@ const execStoreInputValue = async (ajaxmethode, pageid, inputname, inputvalue, t
     if (response.code != 200) {
         window.console.log(response.string);
     }
+    if (response.code == 200) {
+        window.console.log(response.string);
+    }
 };

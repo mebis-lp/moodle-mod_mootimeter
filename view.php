@@ -32,6 +32,7 @@ $action = optional_param('a', "", PARAM_ALPHA);
 $paramtool = optional_param('tool', "", PARAM_ALPHA);
 $pageid = optional_param('pageid', 0, PARAM_INT);
 $isresultpage = optional_param('r', false, PARAM_BOOL);
+$helper = new \mod_mootimeter\helper();
 
 // Check if the provided pageid already exists / else throw error
 if (!empty($pageid)) {
@@ -41,6 +42,7 @@ if (!empty($pageid)) {
 // Set the pageid pageparam for $PAGE object.
 if ($pageid) {
     $pageparams['pageid'] = $pageid;
+    $page = $helper->get_page($pageid);
 }
 
 // Activity instance id.
@@ -62,8 +64,6 @@ $pageparams['id'] = $cm->id;
 // Check if user is logged in.
 require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
-
-$helper = new \mod_mootimeter\helper();
 
 $mt = new \mod_mootimeter\plugininfo\mootimetertool();
 $pages = $helper->get_pages($cm->instance);

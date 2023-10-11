@@ -186,12 +186,12 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
-            'mtm-input-value'=>$page->question,
+            'mtm-input-value'=> s(self::get_tool_config($page, 'question')),
             'mtm-input-placeholder' => get_string('enter_question', 'mod_mootimeter'),
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
             'pageid' => $page->id,
-            'ajaxmethode' => "mod_mootimeter_store_page_details",
+            'ajaxmethode' => "mod_mootimeter_store_setting",
         ];
 
         $params['teacherpermission'] = [
@@ -254,66 +254,66 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @return array
      * @deprecated
      */
-    public function get_tool_setting_definitions(object $page): array {
-        $settings = [];
+    // public function get_tool_setting_definitions(object $page): array {
+    //     $settings = [];
 
-        $config = $this->get_tool_config($page);
+    //     $config = $this->get_tool_config($page);
 
-        $settings['settingsarray'][] = [
-            "select" => true,
-            "id" => 'showresult',
-            "name" => 'showresult',
-            "label" => get_string('showresult_label', 'mootimetertool_wordcloud'),
-            "helptitle" => get_string('showresult_helptitle', 'mootimetertool_wordcloud'),
-            "help" => get_string('showresult_help', 'mootimetertool_wordcloud'),
-            "options" => [
-                [
-                    'title' => get_string('showresultlive', 'mootimetertool_wordcloud'),
-                    'value' => self::MTMT_VIEW_RESULT_LIVE,
-                    'selected' => $this->is_option_selected(self::MTMT_VIEW_RESULT_LIVE, $config, 'showresult'),
-                ],
-                [
-                    'title' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
-                    'value' => self::MTMT_VIEW_RESULT_TEACHERPERMISSION,
-                    'selected' => $this->is_option_selected(self::MTMT_VIEW_RESULT_TEACHERPERMISSION, $config, 'showresult'),
-                ],
-            ]
-        ];
+    //     $settings['settingsarray'][] = [
+    //         "select" => true,
+    //         "id" => 'showresult',
+    //         "name" => 'showresult',
+    //         "label" => get_string('showresult_label', 'mootimetertool_wordcloud'),
+    //         "helptitle" => get_string('showresult_helptitle', 'mootimetertool_wordcloud'),
+    //         "help" => get_string('showresult_help', 'mootimetertool_wordcloud'),
+    //         "options" => [
+    //             [
+    //                 'title' => get_string('showresultlive', 'mootimetertool_wordcloud'),
+    //                 'value' => self::MTMT_VIEW_RESULT_LIVE,
+    //                 'selected' => $this->is_option_selected(self::MTMT_VIEW_RESULT_LIVE, $config, 'showresult'),
+    //             ],
+    //             [
+    //                 'title' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
+    //                 'value' => self::MTMT_VIEW_RESULT_TEACHERPERMISSION,
+    //                 'selected' => $this->is_option_selected(self::MTMT_VIEW_RESULT_TEACHERPERMISSION, $config, 'showresult'),
+    //             ],
+    //         ]
+    //     ];
 
-        // TODO: KEEPING THIS FOR DOCUMANTATION UNTIL A PROPPER DOC EXISTS.
+    //     // TODO: KEEPING THIS FOR DOCUMANTATION UNTIL A PROPPER DOC EXISTS.
 
-        // $settings['settingsarray'][] = [
-        // "checkbox" => true,
-        // "id" => 'labelid-2',
-        // "name" => 'name2',
-        // "label" => "This is the settings label of setting 2",
-        // "helptitle" => "This is the settings help title 2",
-        // "help" => "Test 2",
-        // "value" => 1,
-        // "checked" => true
-        // ];
+    //     // $settings['settingsarray'][] = [
+    //     // "checkbox" => true,
+    //     // "id" => 'labelid-2',
+    //     // "name" => 'name2',
+    //     // "label" => "This is the settings label of setting 2",
+    //     // "helptitle" => "This is the settings help title 2",
+    //     // "help" => "Test 2",
+    //     // "value" => 1,
+    //     // "checked" => true
+    //     // ];
 
-        // $settings['settingsarray'][] = [
-        // "number" => true,
-        // "id" => 'labelid-3',
-        // "name" => 'name3',
-        // "label" => "This is the settings label of setting 3",
-        // "helptitle" => "This is the settings help title 3",
-        // "help" => "Test 3",
-        // "value" => 122,
-        // ];
+    //     // $settings['settingsarray'][] = [
+    //     // "number" => true,
+    //     // "id" => 'labelid-3',
+    //     // "name" => 'name3',
+    //     // "label" => "This is the settings label of setting 3",
+    //     // "helptitle" => "This is the settings help title 3",
+    //     // "help" => "Test 3",
+    //     // "value" => 122,
+    //     // ];
 
-        // $settings['settingsarray'][] = [
-        // "text" => true,
-        // "id" => 'labelid-4',
-        // "name" => 'name4',
-        // "label" => "This is the settings label of setting 4",
-        // "helptitle" => "This is the settings help title 4",
-        // "help" => "Test 4",
-        // "value" => "Testtext",
-        // ];
-        return $settings;
-    }
+    //     // $settings['settingsarray'][] = [
+    //     // "text" => true,
+    //     // "id" => 'labelid-4',
+    //     // "name" => 'name4',
+    //     // "label" => "This is the settings label of setting 4",
+    //     // "helptitle" => "This is the settings help title 4",
+    //     // "help" => "Test 4",
+    //     // "value" => "Testtext",
+    //     // ];
+    //     return $settings;
+    // }
 
     /**
      * Toggle the show results teacher permission state.
