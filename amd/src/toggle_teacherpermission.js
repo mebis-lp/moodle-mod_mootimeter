@@ -28,7 +28,7 @@ export const init = (uniqueID) => {
 const storeInputValue = (
     pageid
 ) => fetchMany([{
-    methodname: 'mootimetertool_wordcloud_set_show_results_state',
+    methodname: 'mod_mootimeter_toggle_teacherpermission',
     args: {
         pageid
     },

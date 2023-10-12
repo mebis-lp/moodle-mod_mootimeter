@@ -453,4 +453,27 @@ class helper {
         $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
 
     }
+
+    /**
+     * Toggle the show results teacher permission state.
+     *
+     * @param object $page
+     * @return int
+     */
+    public function toggle_teacherpermission_state(object $page): int {
+
+        $showonteacherpermission = self::get_tool_config($page->id, 'showonteacherpermission');
+
+        $helper = new \mod_mootimeter\helper();
+
+        if (empty($showonteacherpermission)) {
+            // The config is not set yet. Set the value to 1.
+            $helper->set_tool_config($page, 'showonteacherpermission', 1);
+            return 1;
+        }
+
+        // The config was already set. Toggle it.
+        $helper->set_tool_config($page, 'showonteacherpermission', 0);
+        return 0;
+    }
 }

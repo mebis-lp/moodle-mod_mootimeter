@@ -17,20 +17,19 @@
 /**
  * Web service to get all answers.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mootimetertool_wordcloud\external;
+namespace mod_mootimeter\external;
 
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
 use external_value;
-use tool_brickfield\manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
@@ -38,12 +37,12 @@ require_once($CFG->libdir . '/externallib.php');
 /**
  * Web service to get all answers.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class set_show_results_state extends external_api {
+class toggle_teacherpermission extends external_api {
     /**
      * Describes the parameters.
      *
@@ -70,11 +69,10 @@ class set_show_results_state extends external_api {
         ]);
 
         try {
+
             $mtmhelper = new \mod_mootimeter\helper();
             $page = $mtmhelper->get_page($pageid);
-
-            $wordcloud = new \mootimetertool_wordcloud\wordcloud();
-            $newstate = $wordcloud->toggle_show_results_state($page);
+            $newstate = $mtmhelper->toggle_teacherpermission_state($page);
 
             $return = ['code' => 200, 'string' => 'ok', 'newstate' => $newstate];
 

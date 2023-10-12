@@ -82,4 +82,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:moderator',
     ],
+    'mod_mootimeter_toggle_teacherpermission' => [
+        'classname'     => 'mod_mootimeter\external\toggle_teacherpermission',
+        'methodname'    => 'execute',
+        'description'   => 'Set the state of show results..',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:moderator',
+    ],
 ];
