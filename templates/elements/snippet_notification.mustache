@@ -1,6 +1,15 @@
-<div class="mootimeter-colcontent-preview-notification notification-warning">
-          <i class="icon fa fa-info fa-light" aria-hidden="true"></i>
-          <p>
-            Dies ist eine Vorschau. Ihre Antworten werden nicht gespeichert.
-          </p>
-        </div>
+{{!
+
+  notification_id: any id
+  notification_type: warning | danger | info
+  notification_icon: fa-xxx
+  notification_text: Any text to be displayed.
+
+}}
+
+<div {{#notification_id}} id="{{notification_id}}" {{/notification_id}} class="mootimeter-colcontent-preview-notification notification-{{notification_type}}">
+  <i class="icon fa {{notification_icon}} fa-light" aria-hidden="true"></i>
+  <p>
+    {{notification_text}}
+  </p>
+</div>

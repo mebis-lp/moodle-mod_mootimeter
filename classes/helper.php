@@ -41,6 +41,11 @@ defined('MOODLE_INTERNAL') || die();
  */
 class helper {
 
+    const ERRORCODE_OK = 200;
+    const ERRORCODE_EMPTY_ANSWER = 1000;
+    const ERRORCODE_TO_MANY_ANSWERS = 1001;
+    const ERRORCODE_DUPLICATE_ANSWER = 1002;
+
     /**
      * Insert or update a page record.
      *

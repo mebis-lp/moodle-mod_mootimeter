@@ -1,32 +1,22 @@
-import Ajax from 'core/ajax';
-import notification from 'core/notification';
+import { call as fetchMany } from 'core/ajax';
 
-export const init = () => {
+export const init = (uniqueID) => {
 
-    // Get all up elements.
-    var ups = document.getElementsByClassName('mootimeter-number-input-btn-up');
+    var up = document.getElementById('up_' + uniqueID);
+    var down = document.getElementById('down_' + uniqueID);
 
-    for (let i = 0; i < ups.length; i++) {
-        // Remove old listener if exists.
-        ups[i].removeEventListener("click", count_up);
-        // Finally add the new listener.
-        ups[i].addEventListener("click", count_up);
+    if (up) {
+        up.addEventListener("click", countUp);
     }
 
-    // Get all down elements.
-    var downs = document.getElementsByClassName('mootimeter-number-input-btn-down');
-
-    for (let i = 0; i < downs.length; i++) {
-        // Remove old listener if exists.
-        downs[i].removeEventListener("click", count_down);
-        // Finally add the new listener.
-        downs[i].addEventListener("click", count_down);
+    if (down) {
+        down.addEventListener("click", countDown);
     }
 
     /**
      * Count num input up.
      */
-    function count_up() {
+    function countUp() {
         var id = this.dataset.id;
         if (Math.floor(document.getElementById(id).dataset.min) <= Math.floor(document.getElementById(id).value) + 1) {
             document.getElementById(id).value = Math.floor(document.getElementById(id).value) + 1;
@@ -37,7 +27,7 @@ export const init = () => {
     /**
      * Count num input down.
      */
-    function count_down() {
+    function countDown() {
         var id = this.dataset.id;
         if (Math.floor(document.getElementById(id).dataset.min) <= Math.floor(document.getElementById(id).value) - 1) {
             document.getElementById(id).value = Math.floor(document.getElementById(id).value) - 1;
@@ -57,11 +47,46 @@ export const init = () => {
         var inputname = obj.dataset.name;
         var inputvalue = document.getElementById(id).value;
         var thisDataset = JSON.stringify(obj.dataset);
+        setINState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+    }
+};
 
-        Ajax.call([{
-            methodname: ajaxmethode,
-            args: { pageid: pageid, inputname: inputname, inputvalue: inputvalue, thisDataset:thisDataset },
-            fail: notification.exception,
-        }]);
+/**
+ * Executes the call to store cb state.
+ * @param {string} ajaxmethode
+ * @param {int} pageid
+ * @param {string} inputname
+ * @param {string} inputvalue
+ * @param {string} thisDataset
+ * @returns
+ */
+const execSetINState = (
+    ajaxmethode,
+    pageid,
+    inputname,
+    inputvalue,
+    thisDataset
+) => fetchMany([{
+    methodname: ajaxmethode,
+    args: {
+        pageid,
+        inputname,
+        inputvalue,
+        thisDataset
+    },
+}])[0];
+
+/**
+ * Store cb state.
+ * @param {string} ajaxmethode
+ * @param {int} pageid
+ * @param {string} inputname
+ * @param {string} inputvalue
+ * @param {string} thisDataset
+ */
+const setINState = async (ajaxmethode, pageid, inputname, inputvalue, thisDataset) => {
+    const response = await execSetINState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+    if (response.code != 200) {
+        window.console.log(response.string);
     }
 };

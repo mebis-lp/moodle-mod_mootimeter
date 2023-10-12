@@ -7,11 +7,12 @@
 				{{#value}} value="{{value}}"{{/value}}
 				{{#name}} name="{{name}}"{{/name}}
 				class="{{additional_class}}"
-				{{#min}} data-min="{{min}}" {{/min}}
+				data-min="{{min}}"
 			>
 			<button
 				class="mootimeter-btn-icon-only-transparent mootimeter-number-input-btn-up"
 				aria-hidden="true"
+				{{#id}} id="up_{{id}}"{{/id}}
 				data-id="{{id}}"
 				{{#ajaxmethode}}data-ajaxmethode="{{ajaxmethode}}"{{/ajaxmethode}}
 				{{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
@@ -22,6 +23,7 @@
 			<button
 				class="mootimeter-btn-icon-only-transparent mootimeter-number-input-btn-down"
 				aria-hidden="true"
+				{{#id}} id="down_{{id}}"{{/id}}
 				data-id="{{id}}"
 				{{#ajaxmethode}}data-ajaxmethode="{{ajaxmethode}}"{{/ajaxmethode}}
 				{{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
@@ -35,6 +37,6 @@
 </div>
 {{#ajaxmethode}}
 {{#js}}
-require(['mod_mootimeter/handler_input_number'], (module) => module.init());
+require(['mod_mootimeter/handler_input_number'], (module) => module.init("{{id}}"));
 {{/js}}
 {{/ajaxmethode}}

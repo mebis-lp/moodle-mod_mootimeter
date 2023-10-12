@@ -135,6 +135,29 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Get a pure list of unique answers, without id etc.
+     *
+     * @param int $pageid
+     * @param int $userid
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_answer_list_array(int $pageid, int $userid = 0): array {
+        global $DB;
+
+        $params = [
+            'pageid' => $pageid,
+        ];
+
+        if (!empty($userid)) {
+            $params['usermodified'] = $userid;
+        }
+
+        return array_keys($DB->get_records_menu('mtmt_wordcloud_answers', $params, "", "answer"));
+
+    }
+
+    /**
      * Get all parameters that are necessary for rendering the tools view.
      *
      * @param object $page
@@ -196,10 +219,20 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'additional_class' => 'mootimeter_settings_selector',
             'id' => "maxinputsperuser",
             'name' => "maxinputsperuser",
-            'min' => 1,
+            'min' => 0,
             'pageid' => $page->id,
             'ajaxmethode' => "mod_mootimeter_store_setting",
-            'value' => (empty(self::get_tool_config($page->id, "maxinputsperuser"))) ? 1 : self::get_tool_config($page->id, "maxinputsperuser"),
+            'value' => (empty(self::get_tool_config($page->id, "maxinputsperuser"))) ? 0 : self::get_tool_config($page->id, "maxinputsperuser"),
+        ];
+
+        $params['settings']['allowduplicateanswers'] = [
+            'cb_with_label_id' => 'allowduplicateanswers',
+            'pageid' => $page->id,
+            'cb_with_label_text' => get_string('allowduplicateanswers', 'mootimetertool_wordcloud'),
+            'cb_with_label_name' => 'allowduplicateanswers',
+            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'allowduplicateanswers') ? "checked" : ""),
         ];
 
         // These settings may be obsolete.

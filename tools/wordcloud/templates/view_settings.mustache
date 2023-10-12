@@ -16,6 +16,10 @@
 
     <p class="text-bold">{{#str}} settings {{/str}}</p>
 
+    {{#allowduplicateanswers}}
+    {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+    {{/allowduplicateanswers}}
+
     {{#teacherpermission}}
     {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
     {{/teacherpermission}}

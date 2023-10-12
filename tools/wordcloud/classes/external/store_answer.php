@@ -27,10 +27,9 @@ namespace mootimetertool_wordcloud\external;
 
 use external_api;
 use external_function_parameters;
-use external_multiple_structure;
 use external_single_structure;
 use external_value;
-use tool_brickfield\manager;
+use \mod_mootimeter\helper;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
@@ -60,9 +59,10 @@ class store_answer extends external_api {
      * Execute the service.
      *
      * @param int $pageid
-     * @return void
+     * @return array
      */
-    public static function execute(int $pageid, string $answer): void {
+    public static function execute(int $pageid, string $answer): array {
+        global $USER;
 
         [
             'pageid' => $pageid,
@@ -72,20 +72,42 @@ class store_answer extends external_api {
             'answer' => $answer,
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
-        $page = $mtmhelper->get_page($pageid);
+        if (empty($answer) && strlen($answer) == 0) {
+            return ['code' => helper::ERRORCODE_EMPTY_ANSWER, 'string' => get_string('error_empty_answers', 'mootimetertool_wordcloud')];
+        }
 
+        $helper = new helper();
+        $page = $helper->get_page($pageid);
+
+        $maxnumberofanswers = helper::get_tool_config($page->id, "maxinputsperuser");
         $wordcloud = new \mootimetertool_wordcloud\wordcloud();
-        $wordcloud->insert_answer($page, $answer);
+        $submittedanswers = $wordcloud->get_user_answers($page->id, $USER->id);
 
-        return;
+        if (count($submittedanswers) >= $maxnumberofanswers) {
+            return ['code' => helper::ERRORCODE_TO_MANY_ANSWERS, 'string' => get_string('error_to_many_answers', 'mootimetertool_wordcloud')];
+        }
+
+        $submittedanswers = $wordcloud->get_answer_list_array($page->id, $USER->id);
+        if (!helper::get_tool_config($page->id, "allowduplicateanswers") && in_array($answer, $submittedanswers)) {
+            return ['code' => helper::ERRORCODE_DUPLICATE_ANSWER, 'string' => get_string('error_no_duplicate_answers', 'mootimetertool_wordcloud')];
+        }
+
+        $wordcloud->insert_answer($page, $answer);
+        return ['code' => helper::ERRORCODE_OK, 'string' => 'ok'];
     }
 
     /**
      * Describes the return structure of the service..
      *
-     * @return external_multiple_structure
+     * @return external_single_structure
      */
     public static function execute_returns() {
+        return new external_single_structure(
+            [
+                'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
+                'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+            ],
+            'Status of answer storing process'
+        );
     }
 }
