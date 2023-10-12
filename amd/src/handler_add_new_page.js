@@ -6,14 +6,12 @@ export const init = (uniqueID) => {
     if (!document.getElementById(uniqueID)) {
         return;
     }
-
-    obj.addEventListener("click", store);
+    obj.addEventListener("mouseup", store);
 
     /**
      * Create new page.
      */
     function store() {
-
         var tool = this.dataset.name;
         var instance = this.dataset.instance;
 
