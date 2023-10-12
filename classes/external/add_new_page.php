@@ -68,6 +68,7 @@ class add_new_page extends external_api {
      * @throws dml_exception
      */
     public static function execute(string $tool, int $instance): array {
+        global $PAGE, $USER;
 
         [
             'tool' => $tool,
@@ -90,6 +91,12 @@ class add_new_page extends external_api {
             'pageid' => $pageid,
             'cmid' => $cm->id,
         ];
+
+        // If the user is not in editing mode. Switch to editing mode.
+        // This is the case if the user enters an blank mootimeter instance with disabled editing mode.
+        if(!$PAGE->user_is_editing()){
+            $USER->editing = true;
+        }
 
         return $return;
     }
