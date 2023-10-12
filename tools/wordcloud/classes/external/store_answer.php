@@ -83,7 +83,7 @@ class store_answer extends external_api {
         $wordcloud = new \mootimetertool_wordcloud\wordcloud();
         $submittedanswers = $wordcloud->get_user_answers($page->id, $USER->id);
 
-        if (count($submittedanswers) >= $maxnumberofanswers) {
+        if (count($submittedanswers) >= $maxnumberofanswers && $maxnumberofanswers != 0) {
             return ['code' => helper::ERRORCODE_TO_MANY_ANSWERS, 'string' => get_string('error_to_many_answers', 'mootimetertool_wordcloud')];
         }
 

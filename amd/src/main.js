@@ -20,18 +20,18 @@ export const init = async () => {
     if (addnewpagebtn) {
         addnewpagebtn.addEventListener('click', function () {
             var cmid = this.dataset.cmid;
-            location.href = 'view.php?id=' + cmid + "&a=addpage";
+            location.href = 'view.php?id=' + cmid;
         });
     }
 
     const modal = await ModalFactory.create({
-        type: ModalFactory.types.SAVE_CANCEL,
+        type: ModalFactory.types.DELETE_CANCEL,
         title: getString('delete', 'core'),
         body: getString('areyousure'),
         pageid: 5,
     });
 
-    modal.getRoot().on(ModalEvents.save, function () {
+    modal.getRoot().on(ModalEvents.delete, function () {
         var pageid = document.getElementById("btn-delete_page").dataset.pageid;
         execDeletePage(pageid);
     });

@@ -6,10 +6,9 @@
     <div class="mootimeter-tool-select-wrapper">
         {{#tools}}
         {{> mod_mootimeter/elements/snippet_radio-card}}
+        {{#js}}
+        require(['mod_mootimeter/handler_add_new_page'], (module) => module.init("label_{{id}}"));
+        {{/js}}
         {{/tools}}
     </div>
 </div>
-
-{{#js}}
-require(['mod_mootimeter/handler_add_new_page'], (module) => module.init());
-{{/js}}

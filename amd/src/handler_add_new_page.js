@@ -1,16 +1,13 @@
 import { call as fetchMany } from 'core/ajax';
 
-export const init = () => {
+export const init = (uniqueID) => {
+    var obj = document.getElementById(uniqueID);
 
-    // Get all up elements.
-    var radios = document.getElementsByClassName('mtmt-tool-selector-list');
-
-    for (let i = 0; i < radios.length; i++) {
-        // Remove old listener if exists.
-        radios[i].removeEventListener("change", store);
-        // Finally add the new listener.
-        radios[i].addEventListener("change", store);
+    if (!document.getElementById(uniqueID)) {
+        return;
     }
+
+    obj.addEventListener("click", store);
 
     /**
      * Create new page.

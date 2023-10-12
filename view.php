@@ -74,7 +74,7 @@ if (!empty($pageid) && !$helper::validate_page_belongs_to_instance($pageid, $pag
 }
 
 // If there is only one page. Redirect to this page if there is no pageid set.
-if(count($pages) == 1 && empty($pageid) && $action != 'addpage'){
+if(count($pages) == 1 && empty($pageid)){
     $page = array_pop($pages);
     redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]));
 }
@@ -86,10 +86,6 @@ $PAGE->set_url('/mod/mootimeter/view.php', $pageparams);
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
-
-// START OUTPUT.
-
-echo $OUTPUT->header();
 
 $params = [
     'containerclasses' => "border rounded",
@@ -128,6 +124,7 @@ if ($PAGE->user_is_editing() || count($pages) > 1) {
     $params['showpagescol'] = true;
 }
 
+// START OUTPUT.
+echo $OUTPUT->header();
 echo $OUTPUT->render_from_template("mod_mootimeter/main_screen2", $params);
-
 echo $OUTPUT->footer();
