@@ -55,6 +55,7 @@ const execSetCbState = (
 
 /**
  * Store cb state.
+ * @param {string} ajaxmethode
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue

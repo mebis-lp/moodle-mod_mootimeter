@@ -32,13 +32,13 @@ export const init = () => {
 
     }, 1000);
 
-    redrawwordcloud()
+    redrawwordcloud();
 
-    const event = new Event("redrawwordcloud");
+    new Event("redrawwordcloud");
     let mtmtcanvas = document.getElementById('wordcloudcanvas');
     mtmtcanvas.addEventListener(
         "redrawwordcloud",
-        (e) => {
+        () => {
             redrawwordcloud();
         },
         false

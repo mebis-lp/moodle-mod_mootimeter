@@ -61,10 +61,7 @@ export const init = async () => {
 
     /**
      * Executes the call to store input value.
-     * @param {string} ajaxmethode
      * @param {int} pageid
-     * @param {string} inputname
-     * @param {string} inputvalue
      */
     const execDeletePage = async (pageid) => {
         const response = await deletePageCall(pageid);
