@@ -10,15 +10,18 @@
 {{> mod_mootimeter/elements/snippet_number_input}}
 {{/maxinputsperuser}}
 
+{{#settings}}
 
-{{> mod_mootimeter/elements/snippet_divider}}
+    {{> mod_mootimeter/elements/snippet_divider}}
 
-<p class="text-bold">{{#str}} settings {{/str}}</p>
+    <p class="text-bold">{{#str}} settings {{/str}}</p>
 
-{{#teacherpermission}}
-{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-{{/teacherpermission}}
+    {{#teacherpermission}}
+    {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+    {{/teacherpermission}}
 
-{{#showresultlive}}
-{{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-{{/showresultlive}}
+    {{#showresultlive}}
+    {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+    {{/showresultlive}}
+
+{{/settings}}

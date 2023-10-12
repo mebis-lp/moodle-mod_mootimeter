@@ -416,7 +416,11 @@ class helper {
 
         if (!empty($name)) {
             $conditions['name'] = $name;
-            return $DB->get_field('mootimeter_tool_settings', 'value', $conditions);
+            $field = $DB->get_field('mootimeter_tool_settings', 'value', $conditions);
+            if (empty($field)) {
+                return "";
+            }
+            return $field;
         }
 
         return (object) $DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, value');

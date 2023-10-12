@@ -191,16 +191,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'ajaxmethode' => "mod_mootimeter_store_setting",
         ];
 
-        $params['teacherpermission'] = [
-            'cb_with_label_id' => 'teacherpermission',
-            'pageid' => $page->id,
-            'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
-            'cb_with_label_name' => 'showonteacherpermission',
-            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
-            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showonteacherpermission') ? "checked" : ""),
-        ];
-
         $params['maxinputsperuser'] = [
             'title' => get_string('answers_max_number', 'mootimetertool_wordcloud'),
             'additional_class' => 'mootimeter_settings_selector',
@@ -209,18 +199,29 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'min' => 1,
             'pageid' => $page->id,
             'ajaxmethode' => "mod_mootimeter_store_setting",
-            'value' => self::get_tool_config($page->id, "maxinputsperuser"),
+            'value' => (empty(self::get_tool_config($page->id, "maxinputsperuser"))) ? 1 : self::get_tool_config($page->id, "maxinputsperuser"),
         ];
 
-        $params['showresultlive'] = [
-            'cb_with_label_id' => 'showresultlive',
-            'pageid' => $page->id,
-            'cb_with_label_text' => get_string('showresultlive', 'mootimetertool_wordcloud'),
-            'cb_with_label_name' => 'showresultlive',
-            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
-            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showresultlive') ? "checked" : ""),
-        ];
+        // These settings may be obsolete.
+        // $params['settings']['teacherpermission'] = [
+        //     'cb_with_label_id' => 'teacherpermission',
+        //     'pageid' => $page->id,
+        //     'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
+        //     'cb_with_label_name' => 'showonteacherpermission',
+        //     'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+        //     'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+        //     'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showonteacherpermission') ? "checked" : ""),
+        // ];
+
+        // $params['settings']['showresultlive'] = [
+        //     'cb_with_label_id' => 'showresultlive',
+        //     'pageid' => $page->id,
+        //     'cb_with_label_text' => get_string('showresultlive', 'mootimetertool_wordcloud'),
+        //     'cb_with_label_name' => 'showresultlive',
+        //     'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+        //     'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+        //     'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showresultlive') ? "checked" : ""),
+        // ];
 
         return $OUTPUT->render_from_template("mootimetertool_wordcloud/view_settings", $params);
     }
