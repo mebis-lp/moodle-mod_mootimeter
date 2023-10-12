@@ -117,37 +117,59 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function get_content_menu_tool(object $page) {
         global $OUTPUT, $PAGE;
         $params = [];
-        $params['icon-eye'] = [
-            'icon' => 'fa-eye',
-            'id' => 'toggleteacherpermission',
+
+        if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
+
+            $params['icon-eye'] = [
+                'icon' => 'fa-eye',
+                'id' => 'toggleteacherpermission',
+                'iconid' => 'toggleteacherpermissionid',
+                'dataset' => 'data-pageid="' . $page->id . '" data-iconid="toggleteacherpermissionid"',
+                'tooltip' => "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen",
+            ];
+            if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+                // $params['icon-eye']['additional_class'] = " disabled";
+                $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
+            } else if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+                $params['icon-eye']['icon'] = "fa-eye-slash";
+            }
+            $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
+
+            // $params['icon-restart'] = [
+            //     'icon' => 'fa-rotate-left',
+            //     'id' => 'resetanswers',
+            // ];
+        }
+
+
+        $params['icon-showresults'] = [
+            'icon' => 'fa-bar-chart',
+            'id' => 'showresults',
             'additional_class' => 'mtm_redirect_selector',
             'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1))
         ];
-        $params['icon-restart'] = [
-            'icon' => 'fa-rotate-left',
-            'id' => 'resetanswers',
-        ];
-        if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-            $params['icon-eye']['additional_class'] = " disabled";
-            $params['icon-eye']['href'] = "";
-            $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
-        } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-            $params['icon-eye']['additional_class'] .= "";
+        if (optional_param('r', "", PARAM_INT)) {
+            $params['icon-showresults'] = [
+                'icon' => 'fa-pencil-square-o',
+                'id' => 'showresults',
+                'additional_class' => 'mtm_redirect_selector',
+                'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id))
+            ];
         }
 
-        if (
-            has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
-            // && self::get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-        ) {
+        // if (
+        //     has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
+        //     // && self::get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+        // ) {
 
-            if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-                $params['icon-eye']['additional_class'] = " disabled";
-            } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-                $params['icon-eye']['additional_class'] .= "";
-            }
-        }
+        //     if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
+        //         $params['icon-eye']['additional_class'] = " disabled";
+        //     } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
+        //         $params['icon-eye']['additional_class'] .= "";
+        //     }
+        // }
 
-        return $OUTPUT->render_from_template("mootimetertool_wordcloud/snippet_content_menu", $params);
+        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params);
     }
 
     /**

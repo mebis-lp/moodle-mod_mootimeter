@@ -2,6 +2,11 @@ import { call as fetchMany } from 'core/ajax';
 
 export const init = (uniqueID) => {
     var obj = document.getElementById(uniqueID);
+
+    if (!document.getElementById(uniqueID)) {
+        return;
+    }
+
     obj.addEventListener("click", toggleteacherpermission);
 
     /**
@@ -53,7 +58,8 @@ const exectoggleteacherpermission = async (pageid, uniqueID) => {
             element.classList.add('fa-eye-slash');
         }
 
-        let nodelastupdated = document.getElementById('wordcloudcanvas');
+        // To force the webservice to pull all results.
+        let nodelastupdated = document.getElementById('mootimeterstate');
         nodelastupdated.setAttribute('data-lastupdated', 0);
 
     }

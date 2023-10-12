@@ -4,6 +4,11 @@ export const init = () => {
 
     // Get all up elements.
     var ao = document.getElementById('add_answer_option');
+
+    if (!ao) {
+        return;
+    }
+
     ao.addEventListener("click", store);
 
     /**

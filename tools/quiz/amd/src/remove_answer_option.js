@@ -4,6 +4,11 @@ export const init = (id) => {
 
     // Get all up elements.
     var ao = document.getElementById(id);
+
+    if (!ao) {
+        return;
+    }
+
     ao.addEventListener("click", remove);
 
     /**

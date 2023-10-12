@@ -8,6 +8,9 @@ export const init = () => {
     var pageid = document.getElementById('mtmt_question_section').dataset.pageid;
 
     Array.from(elements).forEach(function (element) {
+        if (!element) {
+            return;
+        }
         element.addEventListener('click', function () {
             var aoid = this.dataset.aoid;
 

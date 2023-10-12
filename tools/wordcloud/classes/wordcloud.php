@@ -144,7 +144,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         global $USER;
 
         // Parameter for initial wordcloud rendering.
-        $params['answerslist'] = json_encode($this->get_answerlist_wordcloud($page->id));
+        $params['answerslist'] = json_encode([]);
+
         $params['pageid'] = $page->id;
 
         // Parameter for initializing Badges.
@@ -167,9 +168,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'mtm-button-id' => 'mootimeter_enter_answer',
             'mtm-button-text' => 'Senden',
         ];
-
-        // Parameter for last updated.
-        $params['lastupdated'] = $this->get_last_update_time($page->id);
 
         return $params;
     }
@@ -390,7 +388,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             } else if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
                 $params['icon-eye']['icon'] = "fa-eye-slash";
             }
-            $PAGE->requires->js_call_amd('mootimetertool_wordcloud/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
+            $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 
             // $params['icon-restart'] = [
             //     'icon' => 'fa-rotate-left',
@@ -404,7 +402,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'additional_class' => 'mtm_redirect_selector',
             'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1))
         ];
-
         if (optional_param('r', "", PARAM_INT)) {
             $params['icon-showresults'] = [
                 'icon' => 'fa-pencil-square-o',
@@ -413,23 +410,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id))
             ];
         }
-
-        if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-        }
-
-        if (
-            has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
-            && self::get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-        ) {
-
-            if (empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-                $params['icon-eye']['additional_class'] = " disabled";
-            } else if (!empty(self::get_tool_config($page->id, 'teacherpermission'))) {
-                $params['icon-eye']['additional_class'] .= "";
-            }
-        }
-
-        return $OUTPUT->render_from_template("mootimetertool_wordcloud/snippet_content_menu", $params);
+        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params);
     }
 
     /**

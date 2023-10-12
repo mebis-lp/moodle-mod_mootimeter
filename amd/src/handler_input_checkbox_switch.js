@@ -2,6 +2,11 @@ import { call as fetchMany } from 'core/ajax';
 
 export const init = (uniqueID) => {
     var obj = document.getElementById(uniqueID);
+
+    if (!document.getElementById(uniqueID)) {
+        return;
+    }
+
     obj.addEventListener("click", store);
 
     /**
