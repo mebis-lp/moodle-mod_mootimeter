@@ -515,6 +515,10 @@
   margin-right: 10px !important;
 }
 
+.mootimeter-radio-btn input[type=radio] {
+  display: none !important;
+}
+
 .mootimeter-checkbox label {
   display: flex;
   align-items: center;

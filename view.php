@@ -74,7 +74,7 @@ if (!empty($pageid) && !$helper::validate_page_belongs_to_instance($pageid, $pag
 }
 
 // If there is only one page. Redirect to this page if there is no pageid set.
-if(count($pages) == 1 && empty($pageid)){
+if(count($pages) == 1 && empty($pageid) && $action != "addpage"){
     $page = array_pop($pages);
     redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]));
 }

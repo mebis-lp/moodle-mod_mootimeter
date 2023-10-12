@@ -30,3 +30,9 @@
     }
   }
 }
+
+.mootimeter-radio-btn {
+  input[type=radio] {
+    display: none !important;
+  }
+}

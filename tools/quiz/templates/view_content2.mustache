@@ -18,9 +18,14 @@
   </div>
 
   <div class="mootimeter-colcontent-preview-options">
-    {{#answeroptions}}
-    {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-    {{/answeroptions}}
+      {{#answeroptions}}
+      {{#cb}}
+        {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+        {{/cb}}
+        {{#rb}}
+                {{> mod_mootimeter/elements/snippet_radio_button}}
+{{/rb}}
+      {{/answeroptions}}
   </div>
 
   <div class="mootimeter-colcontent-preview-send">

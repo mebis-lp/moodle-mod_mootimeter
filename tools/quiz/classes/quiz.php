@@ -246,16 +246,22 @@ class quiz extends \mod_mootimeter\toolhelper {
         $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
 
         $answeroptions = $this->get_answer_options($page->id);
-        foreach ($answeroptions as $answeroption) {
-            $params['answeroptions'][] = [
-                'wrapper_cb_with_label_id' => "wrapper_ao_" . $answeroption->id,
 
-                'cb_with_label_id' => "ao_" . $answeroption->id,
-                'cb_with_label_text' => $answeroption->optiontext,
+        $inputtype = 'rb';
+        if(self::get_tool_config($page, 'multipleanswers')){
+            $inputtype = 'cb';
+        }
+
+        foreach ($answeroptions as $answeroption) {
+            $params['answeroptions'][$inputtype][] = [
+                'wrapper_'.$inputtype.'_with_label_id' => "wrapper_ao_" . $answeroption->id,
+
+                $inputtype . '_with_label_id' => "ao_" . $answeroption->id,
+                $inputtype . '_with_label_text' => $answeroption->optiontext,
                 'pageid' => $page->id,
-                'cb_with_label_name' => 'multipleanswers[]',
-                'cb_with_label_value' => $answeroption->id,
-                'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+                $inputtype . '_with_label_name' => 'multipleanswers[]',
+                $inputtype . '_with_label_value' => $answeroption->id,
+                $inputtype . '_with_label_additional_class' => 'mootimeter_settings_selector',
             ];
         }
 
@@ -265,7 +271,6 @@ class quiz extends \mod_mootimeter\toolhelper {
             'mtm-button-dataset' => 'data-pageid="' . $page->id . '"',
         ];
 
-
         if (self::get_tool_config($page, 'multipleanswers')) {
             $sendbuttoncontext = get_string('sendbutton_context_more_answers_possible', 'mootimetertool_quiz');
         } else {
@@ -274,29 +279,6 @@ class quiz extends \mod_mootimeter\toolhelper {
         $params['sendbutton_context'] = [
             'text' => $sendbuttoncontext,
         ];
-
-        return $params;
-
-        // $params["answers"] = array_values(array_map(function ($element) {
-        //     return [
-        //         'pill' => $element->answer,
-        //         'additional_class' => 'mootimeter-pill-inline'
-        //     ];
-        // }, $this->get_user_answers($page->id, $USER->id)));
-
-        $params['input_answer'] = [
-            'mtm-input-id' => 'mootimeter_type_answer',
-            'mtm-input-name' => 'answer',
-            'dataset' => 'data-pageid="' . $page->id . '"',
-        ];
-
-        $params['button_answer'] = [
-            'mtm-button-id' => 'mootimeter_enter_answer',
-            'mtm-button-text' => 'Senden',
-        ];
-
-        // Parameter for last updated.
-        // $params['lastupdated'] = $this->get_last_update_time($page->id);
 
         return $params;
     }
@@ -412,7 +394,6 @@ class quiz extends \mod_mootimeter\toolhelper {
         ];
         $PAGE->requires->js_call_amd('mootimetertool_quiz/store_visualization', 'init');
 
-        $multipleanswerschecked = self::get_tool_config($page, 'multipleanswers');
         $params['multipleanswers'] = [
             'cb_with_label_id' => 'multipleanswers',
             'cb_with_label_text' => get_string('multiple_answers', 'mootimetertool_quiz'),
@@ -420,8 +401,9 @@ class quiz extends \mod_mootimeter\toolhelper {
             'cb_with_label_name' => 'multipleanswers',
             'cb_with_label_additional_class' => 'mootimeter_settings_selector',
             'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
-            'cb_with_label_checked' => ($multipleanswerschecked) ? "checked" : "",
+            'cb_with_label_checked' => (self::get_tool_config($page, 'multipleanswers')) ? "checked" : "",
         ];
+        $PAGE->requires->js_call_amd('mod_mootimeter/trigger_reload', 'init',['multipleanswers']);
 
         $params['teacherpermission'] = [
             'cb_with_label_id' => 'teacherpermission',

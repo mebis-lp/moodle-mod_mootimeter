@@ -20,7 +20,7 @@ export const init = async () => {
     if (addnewpagebtn) {
         addnewpagebtn.addEventListener('click', function () {
             var cmid = this.dataset.cmid;
-            location.href = 'view.php?id=' + cmid;
+            location.href = 'view.php?id=' + cmid + "&a=addpage";
         });
     }
 

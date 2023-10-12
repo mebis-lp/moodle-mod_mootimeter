@@ -216,14 +216,6 @@ abstract class toolhelper extends \mod_mootimeter\helper {
     public function store_answer(string $table, object $record, bool $updateexisting = false, string $answercolumn = 'answer'): int {
         global $DB;
 
-        // In case of anwsers by the guest user change usermodified to something random  so multiple users can anwser (non permanent workaround)
-        if ($record->usermodified == 1) {
-            $record->usermodified = time() + random_int(1, 10000);
-
-            $answerid = $DB->insert_record($table, $record);
-            return $answerid;
-        }
-
         // Store the answer to db or update it.
         if ($updateexisting) {
             $params = ['pageid' => $record->pageid, 'usermodified' => $record->usermodified];

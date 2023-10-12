@@ -1,9 +1,30 @@
-<div class="mootimeter-radio-btn">
+<div class="mootimeter-radio-btn" {{#wrapper_rb_with_label_id}} id="{{wrapper_rb_with_label_id}}" {{/wrapper_rb_with_label_id}}>
   <label>
-    <input type="radio" />
+    <input type="radio"
+      id="{{rb_with_label_id}}"
+      id="{{rb_with_label_id}}"
+      class="mootimeter-radio-btn {{rb_with_label_additional_class}}"
+      {{rb_with_label_checked}}
+      {{rb_with_label_dataset}}
+      {{#rb_with_label_value}} value="{{rb_with_label_value}}" {{/rb_with_label_value}}
+      {{#rb_with_label_name}}name="{{rb_with_label_name}}"{{/rb_with_label_name}}
+
+      {{#rb_with_label_ajaxmethode}}data-ajaxmethode="{{rb_with_label_ajaxmethode}}"{{/rb_with_label_ajaxmethode}}
+      {{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
+      {{#rb_with_label_name}}data-name="{{rb_with_label_name}}"{{/rb_with_label_name}}
+
+
+    />
     <span class="radio-btn-icon-wrapper">
       <i class="icon fa fa-check fa-light radio-btn-icon" aria-hidden="true"></i>
     </span>
-    Antwortoption
+        <span id="text_{{rb_with_label_id}}">
+          {{rb_with_label_text}}
+        </span>
   </label>
 </div>
+{{#rb_with_label_ajaxmethode}}
+{{#js}}
+require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{rb_with_label_id}}"));
+{{/js}}
+{{/rb_with_label_ajaxmethode}}
