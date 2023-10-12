@@ -1,5 +1,3 @@
-<script src="tools/wordcloud/node_modules/wordcloud/src/wordcloud2.js"></script>
-
 <div
   class="mootimeterfullwidth"
   id="wordcloudcanvas"
@@ -11,5 +9,5 @@
 </div>
 
 {{#js}}
-require(['mootimetertool_wordcloud/redraw_wordcloud'], (module) => module.init());
+    require(['mootimetertool_wordcloud/redraw_wordcloud'], (module) => module.init());
 {{/js}}

@@ -1,5 +1,6 @@
 import Ajax from 'core/ajax';
 import notification from 'core/notification';
+import WordCloud from 'mootimetertool_wordcloud/wordcloud2';
 
 export const init = () => {
     setInterval(function () {
