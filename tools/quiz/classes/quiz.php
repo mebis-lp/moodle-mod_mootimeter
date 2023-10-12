@@ -238,8 +238,6 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_renderer_params(object $page) {
 
-        global $USER;
-
         // Parameter for initial wordcloud rendering.
         // $params['answerslist'] = json_encode($this->get_answerlist_wordcloud($page->id));
         $params['pageid'] = $page->id;
@@ -250,7 +248,9 @@ class quiz extends \mod_mootimeter\toolhelper {
         $answeroptions = $this->get_answer_options($page->id);
         foreach ($answeroptions as $answeroption) {
             $params['answeroptions'][] = [
-                'cb_with_label_id' => 'multipleanswers',
+                'wrapper_cb_with_label_id' => "wrapper_ao_" . $answeroption->id,
+
+                'cb_with_label_id' => "ao_" . $answeroption->id,
                 'cb_with_label_text' => $answeroption->optiontext,
                 'pageid' => $page->id,
                 'cb_with_label_name' => 'multipleanswers[]',
@@ -355,6 +355,8 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'button_icon_only_transparent_ajaxmethode' => 'mootimetertool_quiz_remove_anseroption',
             ];
             $PAGE->requires->js_call_amd('mootimetertool_quiz/remove_answer_option', 'init', ['ao_delete_' . $answeroption->id]);
+            $PAGE->requires->js_call_amd('mootimetertool_quiz/reload_answeroption', 'init', [$answeroption->id]);
+
         }
 
         $params['addoption'] = [

@@ -5,7 +5,7 @@ import Templates from 'core/templates';
 export const init = () => {
 
     // Get all up elements.
-    var ao = document.getElementById('add_answer_option');
+    var ao = document.getElementById('wrapper_add_answer_option');
 
     if (!ao) {
         return;
@@ -17,7 +17,8 @@ export const init = () => {
      * Create new page.
      */
     function store() {
-        var pageid = this.dataset.pageid;
+        window.console.log("HUHU");
+        var pageid = document.getElementById('add_answer_option').dataset.pageid;
         storeNewAnswerOption(pageid);
     }
 };
@@ -42,6 +43,11 @@ const execStoreNewAnswerOption = (
  */
 const storeNewAnswerOption = async (pageid) => {
     const response = await execStoreNewAnswerOption(pageid);
+
+    // ===== JUST FOR TEMPORARILY USE: - START
+    document.location.reload(true);
+    return;
+    // ===== JUST FOR TEMPORARILY USE: - ENDE
 
     const context = {
         'mtm-input-id': 'ao_text_' + response.aoid,

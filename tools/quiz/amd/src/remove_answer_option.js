@@ -51,5 +51,6 @@ const removeAnswerOption = async (pageid, aoid) => {
 
     if (response.code == 200) {
         document.getElementById('ao_wrapper_' + aoid).remove();
+        document.getElementById('wrapper_ao_' + aoid).remove();
     }
 };

@@ -65,8 +65,8 @@
   background-color: #00091e;
   flex: 7.5rem 0 0;
   max-width: 100%;
-  max-height: 75vh;
-  height: 75vh;
+  /*    max-height: 75vh;
+      height: 75vh;*/
   overflow-y: auto;
 }
 .mootimetercontainer .mootimetercolpages::-webkit-scrollbar {
