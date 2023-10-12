@@ -56,3 +56,4 @@ $string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
 $string['title'] = 'Page Title';
 $string['toolsettings'] = 'Tool settings';
 $string['delete_page'] = 'Delete Page';
+$string['no_pages_header'] = 'Recently there are no questions to answer.';

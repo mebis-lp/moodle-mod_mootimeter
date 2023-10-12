@@ -494,8 +494,6 @@ class quiz extends \mod_mootimeter\toolhelper {
             $DB->delete_records('mtmt_quiz_options', array('pageid' => $page->id));
             $DB->delete_records('mtmt_quiz_answers', array('pageid' => $page->id));
         } catch (\Exception $e) {
-            // Todo handling
-            echo 'Something went wrong';
             return false;
         }
         return true;

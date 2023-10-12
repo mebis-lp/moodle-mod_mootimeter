@@ -116,7 +116,11 @@ if (!empty($page)) {
 
 // Show Pagetype selector.
 if (empty($pageid)) {
-    $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page();
+    if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
+        $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page();
+    } else {
+        $params['pagecontent'] = $helper->get_view_content_no_pages();
+    }
 }
 
 // Hide Pages col if it is not needed at all.

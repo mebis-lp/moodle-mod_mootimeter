@@ -47,7 +47,7 @@ class helper {
      * @param object $record
      * @return int pageid
      */
-    public function store_page(object $record) :int {
+    public function store_page(object $record): int {
         global $DB;
 
         if (!empty($record->id)) {
@@ -89,7 +89,7 @@ class helper {
      */
     public function store_page_detail(object|int $pageorid, string $column, string $value) {
 
-        if(is_object($pageorid)){
+        if (is_object($pageorid)) {
             $pageid = $pageorid->id;
         } else {
             $pageid = $pageorid;
@@ -99,7 +99,6 @@ class helper {
         $dataobject->{$column} = $value;
 
         $this->store_page($dataobject);
-
     }
 
     /**
@@ -431,7 +430,7 @@ class helper {
     public function delete_page($pageorid) {
         global $DB;
 
-        if(!is_object($pageorid)){
+        if (!is_object($pageorid)) {
             $page = $this->get_page($pageorid);
         }
 
@@ -451,7 +450,6 @@ class helper {
         // Call mootimeter-core deletion processes.
         $DB->delete_records('mootimeter_pages', array('id' => $page->id));
         $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
-
     }
 
     /**
@@ -475,5 +473,15 @@ class helper {
         // The config was already set. Toggle it.
         $helper->set_tool_config($page, 'showonteacherpermission', 0);
         return 0;
+    }
+
+    /**
+     * Get the content block for the case that there are no pages specified.
+     * @return string
+     */
+    public function get_view_content_no_pages(): string {
+        global $OUTPUT;
+
+        return $OUTPUT->render_from_template("mod_mootimeter/view_no_pages", []);
     }
 }
