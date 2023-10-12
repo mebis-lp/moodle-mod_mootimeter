@@ -1,6 +1,8 @@
 <button
-    class="mootimeter-btn mootimeter-btn-full {{{additional_class}}}"
+    {{#mtm-button-id}} id="{{mtm-button-id}}" {{/mtm-button-id}}
+    class="mootimeter-btn mootimeter-btn-full {{{mtm-button-additional_class}}}"
     id="{{mtm-button-id}}"
+    {{{mtm-button-dataset}}}
 >
 {{mtm-button-text}}
 </button>

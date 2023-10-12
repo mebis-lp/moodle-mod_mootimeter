@@ -51,13 +51,6 @@
 
 {{> mod_mootimeter/elements/snippet_mootimeter_state}}
 
-
-{{#isediting}}
-{{#js}}
-require(['mod_mootimeter/edit'], (module) => module.init());
-{{/js}}
-{{/isediting}}
-
 {{#js}}
 require(['mod_mootimeter/main'], (module) => module.init());
 {{/js}}

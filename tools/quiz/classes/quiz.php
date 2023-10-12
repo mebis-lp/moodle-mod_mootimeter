@@ -42,22 +42,28 @@ class quiz extends \mod_mootimeter\toolhelper {
      * Insert the answer.
      *
      * @param object $page
-     * @param mixed $answer
+     * @param mixed $aoids
      * @return void
      */
-    public function insert_answer($page, $aoid) {
-        global $USER;
+    public function insert_answer(object $page, mixed $aoids) {
+        global $DB, $USER;
 
-        $record = new \stdClass();
-        $record->pageid = $page->id;
-        $record->usermodified = $USER->id;
-        if ($USER->id < 5) {
-            $record->usermodified = time();
+        foreach($aoids as $aoid){
+
+            // First check if the selected answer is part of the page.
+            if(!$DB->record_exists('mtmt_quiz_options', ['id' => $aoid])){
+                continue;
+            }
+
+            $record = new \stdClass();
+            $record->pageid = $page->id;
+            $record->usermodified = $USER->id;
+
+            $record->optionid = $aoid;
+            $record->timecreated = time();
+
+            $this->store_answer('mtmt_quiz_answers', $record, true, self::ANSWER_COLUMN);
         }
-        $record->optionid = $aoid;
-        $record->timecreated = time();
-
-        $this->store_answer('mtmt_quiz_answers', $record, true, self::ANSWER_COLUMN);
     }
 
     /**
@@ -247,20 +253,23 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'cb_with_label_id' => 'multipleanswers',
                 'cb_with_label_text' => $answeroption->optiontext,
                 'pageid' => $page->id,
-                'cb_with_label_name' => 'multipleanswers',
+                'cb_with_label_name' => 'multipleanswers[]',
+                'cb_with_label_value' => $answeroption->id,
                 'cb_with_label_additional_class' => 'mootimeter_settings_selector',
             ];
         }
 
         $params['sendbutton'] = [
+            'mtm-button-id' => 'mtmt_store_answer',
             'mtm-button-text' => get_string('submit_answer', 'mootimetertool_quiz'),
+            'mtm-button-dataset' => 'data-pageid="' . $page->id . '"',
         ];
 
 
-        if(self::get_tool_config($page, 'multipleanswers')){
+        if (self::get_tool_config($page, 'multipleanswers')) {
             $sendbuttoncontext = get_string('sendbutton_context_more_answers_possible', 'mootimetertool_quiz');
-        }else{
-                $sendbuttoncontext = get_string('sendbutton_context_one_answers_possible', 'mootimetertool_quiz');
+        } else {
+            $sendbuttoncontext = get_string('sendbutton_context_one_answers_possible', 'mootimetertool_quiz');
         }
         $params['sendbutton_context'] = [
             'text' => $sendbuttoncontext,
@@ -457,9 +466,11 @@ class quiz extends \mod_mootimeter\toolhelper {
         // var_dump($labelsrecords);die;
 
         $chart->set_labels($labels);
+
         $values = array_map(function ($obj) {
-            return (!empty($obj->cnt)) ? $obj->cnt : 0;
+            return (!empty($obj['cnt'])) ? (int)($obj['cnt']) : 0;
         }, (array)$answersgrouped);
+
         $series = new \core\chart_series(self::get_tool_config($page->id, 'question'), array_values(array_map("floatval", $values)));
         $chart->add_series($series);
 
@@ -482,8 +493,6 @@ class quiz extends \mod_mootimeter\toolhelper {
         try {
             $DB->delete_records('mtmt_quiz_options', array('pageid' => $page->id));
             $DB->delete_records('mtmt_quiz_answers', array('pageid' => $page->id));
-            $DB->delete_records('mootimeter_pages', array('id' => $page->id));
-            $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
         } catch (\Exception $e) {
             // Todo handling
             echo 'Something went wrong';

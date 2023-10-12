@@ -50,38 +50,45 @@ class store_answer extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'aoid' => new external_value(PARAM_INT, 'The id of the selected answer option.', VALUE_REQUIRED),
+            'aoids' => new external_value(PARAM_TEXT, 'The ids of the selected answer options in json format.', VALUE_REQUIRED),
         ]);
     }
 
     /**
      * Execute the service.
      * @param int $pageid
-     * @param int $aoid answer option id selected by the student
+     * @param string $aoids answer option ids selected by the student
      * @return array
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, int $aoid): array {
+    public static function execute(int $pageid, string $aoids): array {
 
         [
             'pageid' => $pageid,
-            'aoid' => $aoid,
+            'aoids' => $aoids,
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
-            'aoid' => $aoid,
+            'aoids' => $aoids,
         ]);
 
-        $helper = new \mod_mootimeter\helper();
-        $page = $helper->get_page($pageid);
+        try {
 
-        $quiz = new \mootimetertool_quiz\quiz();
-        $quiz->insert_answer($page, $aoid);
+            $aoids = json_decode($aoids);
 
-        $return = [
-            'finished' => 1,
-            'redirecturl' => 'view.php?m=3&pageid=' . $pageid . '&results=1',
-        ];
+            $helper = new \mod_mootimeter\helper();
+            $page = $helper->get_page($pageid);
+
+            $quiz = new \mootimetertool_quiz\quiz();
+            $quiz->insert_answer($page, $aoids);
+
+
+            $return = ['code' => 200, 'string' => 'ok'];
+        } catch (\Exception $e) {
+
+            $return = ['code' => 500, 'string' => $e->getMessage()];
+        }
+        return $return;
         return $return;
     }
 
@@ -93,8 +100,8 @@ class store_answer extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'finished' => new external_value(PARAM_INT, 'ID of new Answer Option'),
-                'redirecturl' => new external_value(PARAM_URL, 'URL to redirect to.'),
+                'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
+                'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
             ],
             'What to do after selecting an answer option'
         );
