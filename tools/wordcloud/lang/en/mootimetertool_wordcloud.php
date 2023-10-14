@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Wordcloud';
 $string['type_answer'] = 'Insert a word or statement and hit Enter.';
-$string['heading_answer'] = "Answers";
+$string['heading_answer'] = 'Answers';
 $string['showresultlive'] = 'Show results live';
 $string['showresultteacherpermission'] = 'Show results on teacher permission';
 $string['show_results'] = 'Show result wordcloud';
