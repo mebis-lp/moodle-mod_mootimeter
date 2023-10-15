@@ -56,7 +56,6 @@ const execStoreAnswer = (
  */
 const storeAnswer = async (pageid, selectedanswerids) => {
     selectedanswerids = JSON.stringify(selectedanswerids);
-    window.console.log(['selectedanswers', selectedanswerids]);
 
     const SuccessString = await getString('notification_success_store_answer', 'mod_mootimeter');
     const response = await execStoreAnswer(pageid, selectedanswerids);

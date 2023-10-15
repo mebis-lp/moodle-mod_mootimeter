@@ -324,13 +324,12 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'id' => 'toggleteacherpermission',
                 'iconid' => 'toggleteacherpermissionid',
                 'dataset' => 'data-pageid="' . $page->id . '" data-iconid="toggleteacherpermissionid"',
-                'tooltip' => "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen",
             ];
             if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-                // $params['icon-eye']['additional_class'] = " disabled";
-                $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
+                $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission_disabled', 'mod_mootimeter');
             } else if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
                 $params['icon-eye']['icon'] = "fa-eye-slash";
+                $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission', 'mod_mootimeter');
             }
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 

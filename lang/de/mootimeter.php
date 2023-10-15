@@ -59,3 +59,5 @@ $string['delete_page'] = 'Seite löschen';
 $string['no_pages_header'] = 'Aktuell gibt es keine Fragen zum Beantworten.';
 $string['notification_success_store_answer'] = 'Antwort gespeichert.';
 $string['notification_warning_store_answer'] = 'Antwort nicht gespeichert.';
+$string['tooltip_content_menu_teacherpermission'] = 'Klicken um den Schülern zu erlauben, die Ergebnisse einzusehen.';
+$string['tooltip_content_menu_teacherpermission_disabled'] = 'Klicken um die Ergebnisse zu verbergen.';

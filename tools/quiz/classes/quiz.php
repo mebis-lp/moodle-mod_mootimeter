@@ -205,13 +205,12 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'id' => 'toggleteacherpermission',
                 'iconid' => 'toggleteacherpermissionid',
                 'dataset' => 'data-pageid="' . $page->id . '" data-iconid="toggleteacherpermissionid"',
-                'tooltip' => "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen",
             ];
             if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-                // $params['icon-eye']['additional_class'] = " disabled";
-                $params['icon-eye']['tooltip'] = "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen";
+                $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission_disabled', 'mod_mootimeter');
             } else if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
                 $params['icon-eye']['icon'] = "fa-eye-slash";
+                $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission', 'mod_mootimeter');
             }
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 
@@ -219,6 +218,10 @@ class quiz extends \mod_mootimeter\toolhelper {
             //     'icon' => 'fa-rotate-left',
             //     'id' => 'resetanswers',
             // ];
+
+            $params['icon-check'] = [
+                'icon' => 'fa-check-square-o',
+            ];
         }
 
 
@@ -226,7 +229,8 @@ class quiz extends \mod_mootimeter\toolhelper {
             'icon' => 'fa-bar-chart',
             'id' => 'showresults',
             'additional_class' => 'mtm_redirect_selector',
-            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1))
+            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1)),
+            'tooltip' => "Die Lehrkraft muss die Freigabe zur Ansicht der Ergebnisseite erteilen",
         ];
         if (optional_param('r', "", PARAM_INT)) {
             $params['icon-showresults'] = [
