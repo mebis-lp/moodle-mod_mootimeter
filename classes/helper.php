@@ -485,6 +485,29 @@ class helper {
     }
 
     /**
+     * Toggle a state.
+     *
+     * @param object $page
+     * @param string $statename
+     * @return int
+     * @throws dml_exception
+     */
+    public function toggle_state(object $page, string $statename): int {
+        $togglestate = self::get_tool_config($page->id, $statename);
+
+        $helper = new \mod_mootimeter\helper();
+        if (empty($togglestate)) {
+            // The config is not set yet. Set the value to 1.
+            $helper->set_tool_config($page, $statename, 1);
+            return 1;
+        }
+
+        // The config was already set. Toggle it.
+        $helper->set_tool_config($page, $statename, 0);
+        return 0;
+    }
+
+    /**
      * Get the content block for the case that there are no pages specified.
      * @return string
      */

@@ -219,11 +219,30 @@ class quiz extends \mod_mootimeter\toolhelper {
             //     'id' => 'resetanswers',
             // ];
 
-            $params['icon-check'] = [
-                'icon' => 'fa-check-square-o',
+            $dataseticoncheck = [
+                'data-togglename = "showanswercorrection"',
+                'data-pageid = ' . $page->id,
+                'data-iconid = "toggleshowanswercorrectioniconid"',
+                // To configure the response handling.
+                'data-iconenabled = "fa-check-square-o"',
+                'data-icondisabled = "fa-square-o"',
+                'data-tooltipenabled = "' . get_string('tooltip_content_menu_answercorrection', 'mootimetertool_quiz') . '"',
+                'data-tooltipdisabled = "' . get_string('tooltip_content_menu_answercorrection_disabled', 'mootimetertool_quiz') . '"',
             ];
+            $params['icon-check'] = [
+                'id' => 'toggleshowanswercorrectionid',
+                'iconid' => 'toggleshowanswercorrectioniconid',
+                'dataset' => join(" ", $dataseticoncheck),
+            ];
+            if (!empty(self::get_tool_config($page->id, 'showanswercorrection'))) {
+                $params['icon-check']['icon'] = "fa-check-square-o";
+                $params['icon-check']['tooltip'] = get_string('tooltip_content_menu_answercorrection_disabled', 'mootimetertool_quiz');
+            } else if (empty(self::get_tool_config($page->id, 'showanswercorrection'))) {
+                $params['icon-check']['icon'] = "fa-square-o";
+                $params['icon-check']['tooltip'] = get_string('tooltip_content_menu_answercorrection', 'mootimetertool_quiz');
+            }
+            $PAGE->requires->js_call_amd('mod_mootimeter/toggle_state', 'init', [$params['icon-check']['id']]);
         }
-
 
         $params['icon-showresults'] = [
             'icon' => 'fa-bar-chart',
