@@ -334,7 +334,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @deprecated
      */
     public function get_renderer_params(object $page) {
-        global $USER;
+        global $USER, $PAGE;
 
         // Parameter for initial wordcloud rendering.
         $params['pageid'] = $page->id;

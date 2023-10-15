@@ -66,18 +66,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get all answers of an user of a page.
-     *
-     * @param int $userid
-     * @param int $pageid
-     * @return mixed
-     */
-    public function get_user_answers(int $pageid, int $userid) {
-        global $DB;
-        return $DB->get_records('mtmt_wordcloud_answers', ['usermodified' => $userid, 'pageid' => $pageid]);
-    }
-
-    /**
      * Get all grouped and counted answers of a page.
      *
      * @param int $pageid
@@ -179,7 +167,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'pill' => $element->answer,
                 'additional_class' => 'mootimeter-pill-inline'
             ];
-        }, $this->get_user_answers($page->id, $USER->id)));
+        }, $this->get_user_answers('mtmt_wordcloud_answers' , $page->id, 'answer', $USER->id)));
 
         $params['input_answer'] = [
             'mtm-input-id' => 'mootimeter_type_answer',

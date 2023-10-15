@@ -1,4 +1,3 @@
-<script src="tools/quiz/js/chart.umd.min.js"></script>
 <div class="mootimeter-colcontent-preview">
 
   <div class="mootimeter-colcontent-preview-header" id="mtmt_tool-colct-header">
@@ -42,3 +41,7 @@
   require(['mootimetertool_quiz/store_answer'], (module) => module.init());
   {{/js}}
   {{/showanswercorrection}}
+
+  {{#js}}
+    require(['mod_mootimeter/reload_on_state_change'], (module) => module.init("showanswercorrection"));
+  {{/js}}

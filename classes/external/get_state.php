@@ -15,34 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to store a answer.
+ * Web service to get all answers.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mootimetertool_wordcloud\external;
+namespace mod_mootimeter\external;
 
 use external_api;
 use external_function_parameters;
+use external_multiple_structure;
 use external_single_structure;
 use external_value;
-use \mod_mootimeter\helper;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
 /**
- * Web service to store a answer.
+ * Web service to get a state.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class store_answer extends external_api {
+class get_state extends external_api {
     /**
      * Describes the parameters.
      *
@@ -51,7 +51,7 @@ class store_answer extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'answer' => new external_value(PARAM_RAW, 'The answer the user entered.', VALUE_REQUIRED),
+            'statename' => new external_value(PARAM_TEXT, 'The name of the state to be toggled', VALUE_REQUIRED),
         ]);
     }
 
@@ -59,55 +59,45 @@ class store_answer extends external_api {
      * Execute the service.
      *
      * @param int $pageid
+     * @param string $statename
      * @return array
      */
-    public static function execute(int $pageid, string $answer): array {
-        global $USER;
+    public static function execute(int $pageid, string $statename): array {
 
         [
             'pageid' => $pageid,
-            'answer' => $answer,
+            'statename' => $statename,
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
-            'answer' => $answer,
+            'statename' => $statename,
         ]);
 
-        if (empty($answer) && strlen($answer) == 0) {
-            return ['code' => helper::ERRORCODE_EMPTY_ANSWER, 'string' => get_string('error_empty_answers', 'mootimetertool_wordcloud')];
+        try {
+
+            $mtmhelper = new \mod_mootimeter\helper();
+            $state = $mtmhelper->get_tool_config($pageid, $statename);
+
+            $return = ['code' => 200, 'string' => 'ok', 'state' => (int)$state];
+        } catch (\Exception $e) {
+
+            $return = ['code' => 500, 'string' => $e->getMessage(), 'state' => 0];
         }
-
-        $helper = new helper();
-        $page = $helper->get_page($pageid);
-
-        $maxnumberofanswers = helper::get_tool_config($page->id, "maxinputsperuser");
-        $wordcloud = new \mootimetertool_wordcloud\wordcloud();
-        $submittedanswers = $wordcloud->get_user_answers('mtmt_wordcloud_answers', $page->id, 'answer', $USER->id);
-
-        if (count($submittedanswers) >= $maxnumberofanswers && $maxnumberofanswers != 0) {
-            return ['code' => helper::ERRORCODE_TO_MANY_ANSWERS, 'string' => get_string('error_to_many_answers', 'mootimetertool_wordcloud')];
-        }
-
-        $submittedanswers = $wordcloud->get_answer_list_array($page->id, $USER->id);
-        if (!helper::get_tool_config($page->id, "allowduplicateanswers") && in_array($answer, $submittedanswers)) {
-            return ['code' => helper::ERRORCODE_DUPLICATE_ANSWER, 'string' => get_string('error_no_duplicate_answers', 'mootimetertool_wordcloud')];
-        }
-
-        $wordcloud->insert_answer($page, $answer);
-        return ['code' => helper::ERRORCODE_OK, 'string' => 'ok'];
+        return $return;
     }
 
     /**
      * Describes the return structure of the service..
      *
-     * @return external_single_structure
+     * @return external_multiple_structure
      */
     public static function execute_returns() {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
                 'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+                'state' => new external_value(PARAM_INT, 'The state value'),
             ],
-            'Status of answer storing process'
+            'Information about state toggle process'
         );
     }
 }

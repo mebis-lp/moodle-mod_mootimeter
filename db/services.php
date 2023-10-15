@@ -98,4 +98,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:moderator',
     ],
+    'mod_mootimeter_get_state' => [
+        'classname'     => 'mod_mootimeter\external\get_state',
+        'methodname'    => 'execute',
+        'description'   => 'Toggle the state of a defined statename',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:moderator',
+    ],
 ];
