@@ -114,7 +114,7 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function insert_answer(object $page, mixed $aoids) {
         global $DB, $USER;
 
-        $records=[];
+        $records = [];
         foreach ($aoids as $aoid) {
 
             // First check if the selected answer is part of the page.
@@ -130,7 +130,14 @@ class quiz extends \mod_mootimeter\toolhelper {
             $record->timecreated = time();
             $records[] = $record;
         }
-        $this->store_answer('mtmt_quiz_answers', $records, true, self::ANSWER_COLUMN, (bool)self::get_tool_config($page, 'multipleanswers'), true);
+
+        $this->store_answer(
+            'mtmt_quiz_answers',
+            $records,
+            true,
+            self::ANSWER_COLUMN,
+            (bool)self::get_tool_config($page, 'multipleanswers')
+        );
     }
 
     /**
@@ -492,6 +499,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_quiz_results_chartjs(object $page): array {
         $answersgrouped = (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
+
         $answeroptions = $this->get_answer_options($page->id);
 
         $labels = [];
@@ -525,7 +533,10 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         list($labels, $values) = $this->get_quiz_results_chartjs($page);
 
-        $chartsettings = $this->get_visualization_settings_charjs(self::get_tool_config($page->id, 'visualizationtype'), $page->id);
+        $visualizationtype = (self::get_tool_config($page->id, 'visualizationtype'))
+            ? self::get_tool_config($page->id, 'visualizationtype')
+            : self::VISUALIZATION_ID_CHART_BAR;
+        $chartsettings = $this->get_visualization_settings_charjs($visualizationtype, $page->id);
 
         $params = [
             'chartsettings' => json_encode($chartsettings),

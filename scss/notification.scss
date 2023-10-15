@@ -17,6 +17,11 @@
     color: $grey-400;
   }
 
+  &.notification-success {
+    background-color: var(--success);
+    color: $grey-400;
+  }
+
   &.notification-warning {
     background-color: $notification-warning;
     color: $feedback-error;

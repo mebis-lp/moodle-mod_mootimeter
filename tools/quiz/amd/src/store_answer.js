@@ -1,4 +1,6 @@
 import { call as fetchMany } from 'core/ajax';
+import Templates from 'core/templates';
+import { get_string as getString } from 'core/str';
 
 export const init = () => {
 
@@ -54,12 +56,37 @@ const execStoreAnswer = (
  */
 const storeAnswer = async (pageid, selectedanswerids) => {
     selectedanswerids = JSON.stringify(selectedanswerids);
-    window.console.log(selectedanswerids);
+    window.console.log(['selectedanswers', selectedanswerids]);
+
+    const SuccessString = await getString('notification_success_store_answer', 'mod_mootimeter');
     const response = await execStoreAnswer(pageid, selectedanswerids);
     if (response.code != 200) {
         window.console.log(response.string);
     }
     if (response.code == 200) {
-        window.console.log(response.string);
+        renderInfoBox('success', SuccessString, '');
     }
 };
+
+/**
+ * Generate an info box.
+ * @param {string} notificationType
+ * @param {string} notificationString
+ * @param {string} icon
+ */
+function renderInfoBox(notificationType, notificationString, icon) {
+
+    const context = {
+        "notification_id": "mtmt_answer_warning",
+        "notification_type": notificationType,
+        "notification_icon": icon,
+        "notification_text": notificationString
+    };
+
+    Templates.renderForPromise('mod_mootimeter/elements/snippet_notification', context)
+        .then(({ html, js }) => {
+            Templates.appendNodeContents('#mtmt_tool-colct-header', html, js);
+            return true;
+        })
+        .catch((error) => displayException(error));
+}

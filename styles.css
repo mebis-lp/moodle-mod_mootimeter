@@ -438,6 +438,10 @@
   background-color: #e8e8ea;
   color: #303142;
 }
+.mootimeter-colcontent-preview-notification.notification-success {
+  background-color: var(--success);
+  color: #303142;
+}
 .mootimeter-colcontent-preview-notification.notification-warning {
   background-color: rgba(255, 0, 0, 0.1019607843);
   color: #ff0000;

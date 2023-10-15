@@ -57,3 +57,5 @@ $string['title'] = 'Seitentitel';
 $string['toolsettings'] = 'Einstellungen für Werkzeuge';
 $string['delete_page'] = 'Seite löschen';
 $string['no_pages_header'] = 'Aktuell gibt es keine Fragen zum Beantworten.';
+$string['notification_success_store_answer'] = 'Antwort gespeichert.';
+$string['notification_warning_store_answer'] = 'Antwort nicht gespeichert.';

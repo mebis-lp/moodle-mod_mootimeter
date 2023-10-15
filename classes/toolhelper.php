@@ -209,48 +209,85 @@ abstract class toolhelper extends \mod_mootimeter\helper {
     /**
      * Store the answer.
      *
+     * This methode handels all answer storage processes. $updateexisting = true only makes sense with $record is an object.
+     * In combination with $allowmultipleanswers = true means that existing answers will be deleted. This is because we do not know
+     * how many answers has to be updated. It can be more or less than the original answer. Therefore it is more easy to delete
+     * all ansers and store the new ones.
+     *
      * @param string $table
-     * @param object $record
+     * @param object|array $record
      * @param bool $updateexisting
      * @param string $answercolumn
      * @param bool $allowmultipleanswers
-     * @return int
+     * @return array
      * @throws dml_exception
      * @throws coding_exception
      * @throws cache_exception
      */
-    public function store_answer(string $table, object|array $record, bool $updateexisting = false, string $answercolumn = 'answer', bool $allowmultipleanswers =  false): int {
+    public function store_answer(
+        string $table,
+        object|array $record,
+        bool $updateexisting = false,
+        string $answercolumn = 'answer',
+        bool $allowmultipleanswers =  false
+    ): array {
         global $DB;
 
-        // Store the answer to db or update it.
-        if ($updateexisting && !$allowmultipleanswers) {
-            $params = ['pageid' => $record->pageid, 'usermodified' => $record->usermodified];
-            $origrecord = $DB->get_record($table, $params);
+        $answerids = [];
+
+        if ($allowmultipleanswers) {
+
+            // Temporarily get one record to retrieve user and page information.
+            if (is_array($record)) {
+                $recordtemp = $record[0];
+            }
+
+            if ($updateexisting) {
+                $params = ['pageid' => $recordtemp->pageid, 'usermodified' => $recordtemp->usermodified];
+                $DB->delete_records($table, $params);
+            }
+
+            foreach ($record as $dataobject) {
+                $answerids[] = $DB->insert_record($table, $dataobject);
+                $pageid = $dataobject->pageid;
+            }
         }
 
-        if($updateexisting && $allowmultipleanswers){
-            $params = ['pageid' => $record->pageid, 'usermodified' => $record->usermodified];
-            $DB->delete_records($table, $params);
-        }
+        if (!$allowmultipleanswers) {
 
-        if (!empty($origrecord)) {
-            $origrecord->optionid = $record->optionid;
-            $origrecord->timemodified = time();
+            // If it's an array with only one record in it. We can update the existing answer.
+            if (is_array($record)) {
+                $dataobject = array_pop($record);
+            } else {
+                $dataobject = $record;
+            }
 
-            $DB->update_record($table, $origrecord);
-            $answerid = $origrecord->id;
-        }
+            // Store the answer to db or update it.
+            if ($updateexisting) {
+                $params = ['pageid' => $dataobject->pageid, 'usermodified' => $dataobject->usermodified];
+                $origrecord = $DB->get_record($table, $params);
+            }
 
-        if (empty($origrecord)) {
-            $answerid = $DB->insert_record($table, $record);
+            if (!empty($origrecord)) {
+                $origrecord->optionid = $dataobject->optionid;
+                $origrecord->timemodified = time();
+
+                $DB->update_record($table, $origrecord);
+                $answerids[] = $origrecord->id;
+            }
+
+            if (empty($origrecord)) {
+                $answerids[] = $DB->insert_record($table, $dataobject);
+            }
+            $pageid = $dataobject->pageid;
         }
 
         // Recreate the cache.
-        $this->clear_caches($record->pageid);
-        $this->get_answers($table, $record->pageid, $answercolumn);
-        $this->get_answers_grouped($table, ['pageid' => $record->pageid], $answercolumn);
+        $this->clear_caches($pageid);
+        $this->get_answers($table, $pageid, $answercolumn);
+        $this->get_answers_grouped($table, ['pageid' => $pageid], $answercolumn);
 
-        return $answerid;
+        return $answerids;
     }
 
     /**

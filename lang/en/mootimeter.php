@@ -57,3 +57,5 @@ $string['title'] = 'Page Title';
 $string['toolsettings'] = 'Tool settings';
 $string['delete_page'] = 'Delete Page';
 $string['no_pages_header'] = 'Recently there are no questions to answer.';
+$string['notification_success_store_answer'] = 'Answer stored successfully';
+$string['notification_warning_store_answer'] = 'Answer NOT stored.';
