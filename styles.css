@@ -1022,3 +1022,15 @@
 .button-icon-with-text:hover {
   background-color: #a4a5ac;
 }
+
+.mootimeter-highlighter {
+  padding: 20px;
+}
+.mootimeter-highlighter.mootimeter-success {
+  border: 2px solid green;
+  background-color: lightgreen;
+}
+.mootimeter-highlighter.mootimeter-danger {
+  border: 2px solid red;
+  background-color: lightcoral;
+}

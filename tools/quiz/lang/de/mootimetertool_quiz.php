@@ -44,3 +44,5 @@ $string['submit_answer'] = 'Antwort absenden';
 $string['sendbutton_context_more_answers_possible'] = 'Sie können mehr als eine Antwort auswählen.';
 $string['sendbutton_context_one_answers_possible'] = 'Sie können eine Antwort auswählen.';
 $string['showresultteacherpermission'] = 'Ergebnisse bei Freigabe durch Lehrer anzeigen';
+$string['tooltip_content_menu_answercorrection'] = 'Klicken um Schülern zu zeigen, ob die Antwort richtig ist.';
+$string['tooltip_content_menu_answercorrection_disabled'] = 'Klicken um die Korrektur der Antworten zu verbergen';

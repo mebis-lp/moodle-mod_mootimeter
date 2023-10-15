@@ -44,3 +44,5 @@ $string['submit_answer'] = 'Submit answer';
 $string['sendbutton_context_more_answers_possible'] = 'You can choose more than one answer.';
 $string['sendbutton_context_one_answers_possible'] = 'You can choose one answer.';
 $string['showresultteacherpermission'] = 'Show results on teacher permission';
+$string['tooltip_content_menu_answercorrection'] = 'Click to show students if answer is correct';
+$string['tooltip_content_menu_answercorrection_disabled'] = 'Click to do not show students if answer is correct';

@@ -1,0 +1,13 @@
+.mootimeter-highlighter {
+    padding: 20px;
+
+    &.mootimeter-success {
+        border: 2px solid green;
+        background-color: lightgreen;
+    }
+
+    &.mootimeter-danger {
+        border: 2px solid red;
+        background-color: lightcoral;
+    }
+}
