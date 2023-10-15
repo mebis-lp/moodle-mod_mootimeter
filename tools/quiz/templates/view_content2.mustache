@@ -18,14 +18,14 @@
   </div>
 
   <div class="mootimeter-colcontent-preview-options">
-      {{#answeroptions}}
-      {{#cb}}
-        {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-        {{/cb}}
-        {{#rb}}
-                {{> mod_mootimeter/elements/snippet_radio_button}}
-{{/rb}}
-      {{/answeroptions}}
+    {{#answeroptions}}
+    {{#cb}}
+    {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+    {{/cb}}
+    {{#rb}}
+    {{> mod_mootimeter/elements/snippet_radio_button}}
+    {{/rb}}
+    {{/answeroptions}}
   </div>
 
   <div class="mootimeter-colcontent-preview-send">
@@ -37,6 +37,8 @@
     {{/sendbutton_context}}
   </div>
 
+  {{^showanswercorrection}}
   {{#js}}
   require(['mootimetertool_quiz/store_answer'], (module) => module.init());
   {{/js}}
+  {{/showanswercorrection}}

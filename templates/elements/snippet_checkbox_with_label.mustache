@@ -1,9 +1,10 @@
-<div class="mootimeter-checkbox" {{#wrapper_cb_with_label_id}} id="{{wrapper_cb_with_label_id}}" {{/wrapper_cb_with_label_id}}>
+<div class="mootimeter-checkbox {{wrapper_cb_with_label_additional_class}}" {{#wrapper_cb_with_label_id}} id="{{wrapper_cb_with_label_id}}" {{/wrapper_cb_with_label_id}}>
   <label>
     <input type="checkbox"
       id="{{cb_with_label_id}}"
       class="mootimeter-checkbox-switch {{cb_with_label_additional_class}}"
       {{cb_with_label_checked}}
+      {{cb_with_label_additional_attribut}}
       {{cb_with_label_dataset}}
       {{#cb_with_label_value}} value="{{cb_with_label_value}}" {{/cb_with_label_value}}
       {{#cb_with_label_name}}name="{{cb_with_label_name}}"{{/cb_with_label_name}}

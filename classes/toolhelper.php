@@ -291,6 +291,30 @@ abstract class toolhelper extends \mod_mootimeter\helper {
     }
 
     /**
+     * Get all pgae answers of a specific user. Using get_answers method to use the cache.
+     *
+     * @param string $table
+     * @param int $pageid
+     * @param string $answercolumn
+     * @param int $userid
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_user_answers(string $table, int $pageid, string $answercolumn = 'answer', int $userid = 0): array {
+        $pageanswers = $this->get_answers($table, $pageid, $answercolumn);
+
+        $useranswers = [];
+
+        foreach ($pageanswers as $pageanswer) {
+            if ($userid > 0 && $pageanswer->usermodified == $userid) {
+                $useranswers[$pageanswer->{$answercolumn}] = $pageanswer;
+            }
+        }
+
+        return $useranswers;
+    }
+
+    /**
      * Get all answers of a page.
      *
      * @param string $table

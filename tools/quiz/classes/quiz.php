@@ -334,10 +334,14 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @deprecated
      */
     public function get_renderer_params(object $page) {
+        global $USER;
 
         // Parameter for initial wordcloud rendering.
-        // $params['answerslist'] = json_encode($this->get_answerlist_wordcloud($page->id));
         $params['pageid'] = $page->id;
+
+        if (self::get_tool_config($page->id, 'showanswercorrection')) {
+            $params['showanswercorrection'] = true;
+        }
 
         // Parameter for initializing Badges.
         $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
@@ -349,33 +353,43 @@ class quiz extends \mod_mootimeter\toolhelper {
             $inputtype = 'cb';
         }
 
+        $useransweroptionsid = array_keys($this->get_user_answers('mtmt_quiz_answers', $page->id, 'optionid', $USER->id));
+
         foreach ($answeroptions as $answeroption) {
+            $wrapperadditionalclass = (self::get_tool_config($page->id, 'showanswercorrection')) ? "mootimeter-highlighter" : "";
+            $wrapperadditionalclass .= ($answeroption->optioniscorrect) ? " mootimeter-success" : "";
+
             $params['answeroptions'][$inputtype][] = [
                 'wrapper_' . $inputtype . '_with_label_id' => "wrapper_ao_" . $answeroption->id,
+                'wrapper_' . $inputtype . '_with_label_additional_class' => $wrapperadditionalclass,
 
                 $inputtype . '_with_label_id' => "ao_" . $answeroption->id,
                 $inputtype . '_with_label_text' => $answeroption->optiontext,
                 'pageid' => $page->id,
                 $inputtype . '_with_label_name' => 'multipleanswers[]',
                 $inputtype . '_with_label_value' => $answeroption->id,
-                $inputtype . '_with_label_additional_class' => 'mootimeter_settings_selector',
+                $inputtype . '_with_label_additional_class' => 'mootimeter_settings_selector mootimeter-highlighter mootimeter-success',
+                $inputtype . '_with_label_checked' => (in_array($answeroption->id, $useransweroptionsid)) ? "checked" : "",
+                $inputtype . '_with_label_additional_attribut' => (self::get_tool_config($page->id, 'showanswercorrection')) ? "disabled" : "",
             ];
         }
 
-        $params['sendbutton'] = [
-            'mtm-button-id' => 'mtmt_store_answer',
-            'mtm-button-text' => get_string('submit_answer', 'mootimetertool_quiz'),
-            'mtm-button-dataset' => 'data-pageid="' . $page->id . '"',
-        ];
+        if (empty(self::get_tool_config($page->id, 'showanswercorrection'))) {
+            $params['sendbutton'] = [
+                'mtm-button-id' => 'mtmt_store_answer',
+                'mtm-button-text' => get_string('submit_answer', 'mootimetertool_quiz'),
+                'mtm-button-dataset' => 'data-pageid="' . $page->id . '"',
+            ];
 
-        if (self::get_tool_config($page, 'multipleanswers')) {
-            $sendbuttoncontext = get_string('sendbutton_context_more_answers_possible', 'mootimetertool_quiz');
-        } else {
-            $sendbuttoncontext = get_string('sendbutton_context_one_answers_possible', 'mootimetertool_quiz');
+            if (self::get_tool_config($page, 'multipleanswers')) {
+                $sendbuttoncontext = get_string('sendbutton_context_more_answers_possible', 'mootimetertool_quiz');
+            } else {
+                $sendbuttoncontext = get_string('sendbutton_context_one_answers_possible', 'mootimetertool_quiz');
+            }
+            $params['sendbutton_context'] = [
+                'text' => $sendbuttoncontext,
+            ];
         }
-        $params['sendbutton_context'] = [
-            'text' => $sendbuttoncontext,
-        ];
 
         return $params;
     }
