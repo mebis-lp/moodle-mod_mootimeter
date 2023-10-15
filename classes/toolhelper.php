@@ -211,15 +211,26 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      *
      * @param string $table
      * @param object $record
+     * @param bool $updateexisting
+     * @param string $answercolumn
+     * @param bool $allowmultipleanswers
      * @return int
+     * @throws dml_exception
+     * @throws coding_exception
+     * @throws cache_exception
      */
-    public function store_answer(string $table, object $record, bool $updateexisting = false, string $answercolumn = 'answer'): int {
+    public function store_answer(string $table, object|array $record, bool $updateexisting = false, string $answercolumn = 'answer', bool $allowmultipleanswers =  false): int {
         global $DB;
 
         // Store the answer to db or update it.
-        if ($updateexisting) {
+        if ($updateexisting && !$allowmultipleanswers) {
             $params = ['pageid' => $record->pageid, 'usermodified' => $record->usermodified];
             $origrecord = $DB->get_record($table, $params);
+        }
+
+        if($updateexisting && $allowmultipleanswers){
+            $params = ['pageid' => $record->pageid, 'usermodified' => $record->usermodified];
+            $DB->delete_records($table, $params);
         }
 
         if (!empty($origrecord)) {

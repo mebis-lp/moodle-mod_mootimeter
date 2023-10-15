@@ -1,4 +1,14 @@
-<div class="mootimeterfullwidth" id="quiz">
-    {{{charts}}}
+<div class="mootimeterfullwidth" id="mtmt_quiz_results_wrapper">
+    <canvas
+        id="mtmt_quiz_canvas"
+        data-charttype = {{charttype}}
+        data-chartsettings="{{chartsettings}}"
+        data-labels="{{labels}}"
+        data-values="{{{values}}}"
+        data-pageid="{{pageid}}"
+    ></canvas>
 </div>
 
+{{#js}}
+require(['mootimetertool_quiz/chart_draw'], (module) => module.init());
+{{/js}}

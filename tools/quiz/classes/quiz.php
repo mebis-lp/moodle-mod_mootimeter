@@ -38,6 +38,72 @@ class quiz extends \mod_mootimeter\toolhelper {
     const VISUALIZATION_ID_CHART_LINE = 3;
     const VISUALIZATION_ID_CHART_PIE = 4;
 
+    const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
+
+    public function get_visualization_settings_charjs(int $visualizationtypeid, $pageid) {
+        switch ($visualizationtypeid) {
+            case self::VISUALIZATION_ID_CHART_BAR:
+                return [
+                    'charttype' => "bar",
+                    'options' => [
+                        'indexAxis' => 'y',
+                        'scales' => [
+                            'x' => [
+                                'ticks' => [
+                                    'stepSize' => 1
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+            case self::VISUALIZATION_ID_CHART_LINE:
+                return [
+                    'charttype' => "line",
+                    'options' => [
+                        'indexAxis' => 'x',
+                        'scales' => [
+                            'x' => [
+                                'min' => 0,
+                                'ticks' => [
+                                    'stepSize' => 1
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+            case self::VISUALIZATION_ID_CHART_PILLAR:
+                return [
+                    'charttype' => "bar",
+                    'options' => [
+                        'indexAxis' => 'x',
+                        'scales' => [
+                            'x' => [
+                                'ticks' => [
+                                    'stepSize' => 1,
+                                ]
+                            ],
+                            'y' => [
+                                'ticks' => [
+                                    'stepSize' => 1,
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+            case self::VISUALIZATION_ID_CHART_PIE:
+                return [
+                    'charttype' => "pie",
+                    'options' => [
+                        'responsive' => true,
+                        'title' => [
+                            'display' => true,
+                            'text' => self::get_tool_config($pageid, 'question'),
+                        ]
+                    ]
+                ];
+        }
+    }
+
     /**
      * Insert the answer.
      *
@@ -48,10 +114,11 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function insert_answer(object $page, mixed $aoids) {
         global $DB, $USER;
 
-        foreach($aoids as $aoid){
+        $records=[];
+        foreach ($aoids as $aoid) {
 
             // First check if the selected answer is part of the page.
-            if(!$DB->record_exists('mtmt_quiz_options', ['id' => $aoid])){
+            if (!$DB->record_exists('mtmt_quiz_options', ['id' => $aoid])) {
                 continue;
             }
 
@@ -61,9 +128,9 @@ class quiz extends \mod_mootimeter\toolhelper {
 
             $record->optionid = $aoid;
             $record->timecreated = time();
-
-            $this->store_answer('mtmt_quiz_answers', $record, true, self::ANSWER_COLUMN);
+            $records[] = $record;
         }
+        $this->store_answer('mtmt_quiz_answers', $records, true, self::ANSWER_COLUMN, (bool)self::get_tool_config($page, 'multipleanswers'), true);
     }
 
     /**
@@ -248,13 +315,13 @@ class quiz extends \mod_mootimeter\toolhelper {
         $answeroptions = $this->get_answer_options($page->id);
 
         $inputtype = 'rb';
-        if(self::get_tool_config($page, 'multipleanswers')){
+        if (self::get_tool_config($page, 'multipleanswers')) {
             $inputtype = 'cb';
         }
 
         foreach ($answeroptions as $answeroption) {
             $params['answeroptions'][$inputtype][] = [
-                'wrapper_'.$inputtype.'_with_label_id' => "wrapper_ao_" . $answeroption->id,
+                'wrapper_' . $inputtype . '_with_label_id' => "wrapper_ao_" . $answeroption->id,
 
                 $inputtype . '_with_label_id' => "ao_" . $answeroption->id,
                 $inputtype . '_with_label_text' => $answeroption->optiontext,
@@ -338,7 +405,6 @@ class quiz extends \mod_mootimeter\toolhelper {
             ];
             $PAGE->requires->js_call_amd('mootimetertool_quiz/remove_answer_option', 'init', ['ao_delete_' . $answeroption->id]);
             $PAGE->requires->js_call_amd('mootimetertool_quiz/reload_answeroption', 'init', [$answeroption->id]);
-
         }
 
         $params['addoption'] = [
@@ -403,7 +469,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
             'cb_with_label_checked' => (self::get_tool_config($page, 'multipleanswers')) ? "checked" : "",
         ];
-        $PAGE->requires->js_call_amd('mod_mootimeter/trigger_reload', 'init',['multipleanswers']);
+        $PAGE->requires->js_call_amd('mod_mootimeter/trigger_reload', 'init', ['multipleanswers']);
 
         $params['teacherpermission'] = [
             'cb_with_label_id' => 'teacherpermission',
@@ -418,6 +484,59 @@ class quiz extends \mod_mootimeter\toolhelper {
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_settings", $params);
     }
 
+    /**
+     * Get the quiz results in chartjs style.
+     * @param object $page
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_quiz_results_chartjs(object $page): array {
+        $answersgrouped = (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
+        $answeroptions = $this->get_answer_options($page->id);
+
+        $labels = [];
+        $values = [];
+
+        foreach ($answeroptions as $answeroption) {
+            $labels[] = $answeroption->optiontext;
+            if (empty($answersgrouped[$answeroption->id])) {
+                $values[] = 0;
+            } else {
+                $values[] = (int)$answersgrouped[$answeroption->id]['cnt'];
+            }
+        }
+
+        return [$labels, $values];
+    }
+
+    /**
+     * Get the result params for chartjs (webservice and first page load.)
+     * @param int|object $pageorid
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_result_params_chartjs(int|object $pageorid): array {
+
+        if (!is_object($pageorid)) {
+            $page = $this->get_page($pageorid);
+        } else {
+            $page = $pageorid;
+        }
+
+        list($labels, $values) = $this->get_quiz_results_chartjs($page);
+
+        $chartsettings = $this->get_visualization_settings_charjs(self::get_tool_config($page->id, 'visualizationtype'), $page->id);
+
+        $params = [
+            'chartsettings' => json_encode($chartsettings),
+            'labels' => json_encode($labels),
+            'values' => json_encode($values),
+            'question' => self::get_tool_config($page, 'question'),
+            'lastupdated' => $this->get_last_update_time($page->id, "quiz"),
+        ];
+
+        return $params;
+    }
 
     /**
      * Renders the result page of the quiz.
@@ -429,40 +548,10 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_result_page(object $page): string {
 
-        global $OUTPUT, $DB;
-        $chart = new \core\chart_bar();
-        $labelsrecords = $DB->get_records('mtmt_quiz_options', ["pageid" => $page->id]);
+        global $OUTPUT;
 
-        $labels = [];
-        foreach ($labelsrecords as $record) {
-            $labels[] = $record->optiontext;
-        }
-
-        $answersgrouped = $this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
-        // var_dump($answersgrouped);
-        foreach ($labelsrecords as $key => $label) {
-            if (!key_exists($key, $answersgrouped)) {
-                $answersgrouped[$key] = ['optionid' => $label->id, 'cnt' => 0];
-            }
-        }
-        // var_dump($answersgrouped);
-
-        // var_dump($labelsrecords);die;
-
-        $chart->set_labels($labels);
-
-        $values = array_map(function ($obj) {
-            return (!empty($obj['cnt'])) ? (int)($obj['cnt']) : 0;
-        }, (array)$answersgrouped);
-
-        $series = new \core\chart_series(self::get_tool_config($page->id, 'question'), array_values(array_map("floatval", $values)));
-        $chart->add_series($series);
-
-        if (empty($labels) || empty($values)) {
-            $paramschart = ['charts' => get_string("nodata", "mootimetertool_quiz")];
-        } else {
-            $paramschart = ['charts' => $OUTPUT->render($chart)];
-        }
+        $paramschart = $this->get_result_params_chartjs($page);
+        $paramschart['pageid'] = $page->id;
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
     }
@@ -481,5 +570,45 @@ class quiz extends \mod_mootimeter\toolhelper {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get the lastupdated timestamp.
+     *
+     * @param int $pageid
+     * @return int
+     */
+    public function get_last_update_time(int $pageid): int {
+        global $DB;
+
+        // We only want to deliver results if showresults is true or the teacher allowed to view it.
+        if (
+            $this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+            && empty($this->get_tool_config($pageid, 'teacherpermission'))
+        ) {
+            return 0;
+        }
+
+        $records = $DB->get_records('mtmt_quiz_answers', ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
+
+        if (empty($records)) {
+            return 0;
+        }
+
+        $record = array_shift($records);
+        return $record->timecreated;
+    }
+
+    /**
+     * Get array of counted values for each answer/ option.
+     * @param int $pageid
+     * @return array
+     * @throws \dml_exception
+     */
+    public function get_counted_answers(int $pageid) {
+        $values = array_map(function ($obj) {
+            return $obj['cnt'];
+        }, (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $pageid], 'optionid'));
+        return array_values($values);
     }
 }
