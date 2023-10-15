@@ -498,8 +498,11 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @throws dml_exception
      */
     public function get_quiz_results_chartjs(object $page): array {
-        $answersgrouped = (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
-
+        if (self::get_tool_config($page, 'showonteacherpermission')) {
+            $answersgrouped = (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
+        } else {
+            $answersgrouped = [];
+        }
         $answeroptions = $this->get_answer_options($page->id);
 
         $labels = [];
