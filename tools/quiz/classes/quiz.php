@@ -32,6 +32,8 @@ use stdClass;
 class quiz extends \mod_mootimeter\toolhelper {
 
     const ANSWER_COLUMN = "optionid";
+    const CHARTJS_DEFAULT_COLOR = "#d33f01";
+    const CHARTJS_DEFAULT_COLOR_SUCCESS = "#00C431";
 
     const VISUALIZATION_ID_CHART_PILLAR = 1;
     const VISUALIZATION_ID_CHART_BAR = 2;
@@ -55,8 +57,8 @@ class quiz extends \mod_mootimeter\toolhelper {
                             ]
                         ]
                     ],
-                    'backgroundColor' => "#d33f01",
-                    'borderRadius' => 5,
+                    'backgroundColor' => $this->get_chartjs_background_color($pageid),
+                    'borderRadius' => 20,
                 ];
             case self::VISUALIZATION_ID_CHART_LINE:
                 return [
@@ -72,7 +74,10 @@ class quiz extends \mod_mootimeter\toolhelper {
                             ]
                         ]
                     ],
-                    'backgroundColor' => "#d33f01",
+                    'backgroundColor' =>  $this->get_chartjs_background_color($pageid),
+                    'pointStyle' => 'circle',
+                    'pointRadius' => 10,
+                    'pointHoverRadius' => 15,
                 ];
             case self::VISUALIZATION_ID_CHART_PILLAR:
                 return [
@@ -92,8 +97,8 @@ class quiz extends \mod_mootimeter\toolhelper {
                             ]
                         ]
                     ],
-                    'backgroundColor' => "#d33f01",
-                    'borderRadius' => 5,
+                    'backgroundColor' => $this->get_chartjs_background_color($pageid),
+                    'borderRadius' => 20,
                 ];
             case self::VISUALIZATION_ID_CHART_PIE:
                 return [
@@ -537,6 +542,34 @@ class quiz extends \mod_mootimeter\toolhelper {
         ];
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_settings", $params);
+    }
+
+    /**
+     * Get the bar/pillar background color.
+     *
+     * @param int $pageid
+     * @return string|array
+     * @throws dml_exception
+     */
+    public function get_chartjs_background_color(int $pageid): string|array {
+
+        if (!self::get_tool_config($pageid, 'showanswercorrection')) {
+            return self::CHARTJS_DEFAULT_COLOR;
+        }
+
+        $answeroptions = $this->get_answer_options($pageid);
+
+        $backgroundcolors = [];
+
+        foreach ($answeroptions as $answeroption) {
+            if ($answeroption->optioniscorrect) {
+                $backgroundcolors[] = self::CHARTJS_DEFAULT_COLOR_SUCCESS;
+                continue;
+            }
+            $backgroundcolors[] = self::CHARTJS_DEFAULT_COLOR;
+        }
+
+        return $backgroundcolors;
     }
 
     /**

@@ -78,6 +78,9 @@ const getAnswers = async (pageid, lastposttimestamp) => {
                 data: JSON.parse(response.values),
                 backgroundColor: JSON.parse(response.chartsettings).backgroundColor,
                 borderRadius: JSON.parse(response.chartsettings).borderRadius,
+                pointStyle: JSON.parse(response.chartsettings).pointStyle,
+                pointRadius: JSON.parse(response.chartsettings).pointRadius,
+                pointHoverRadius: JSON.parse(response.chartsettings).pointHoverRadius,
             }]
         },
         options: JSON.parse(response.chartsettings).options
