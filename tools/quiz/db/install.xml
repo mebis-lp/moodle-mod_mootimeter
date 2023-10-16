@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/mootimeter/tools/quiz/db" VERSION="20230606" COMMENT="XMLDB file for Moodle mod/mootimeter/tools/quiz"
+<XMLDB PATH="mod/mootimeter/tools/quiz/db" VERSION="20231016" COMMENT="XMLDB file for Moodle mod/mootimeter/tools/quiz"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
 >
@@ -8,7 +8,6 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="pageid" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="optiontext" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="optioniscorrect" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>

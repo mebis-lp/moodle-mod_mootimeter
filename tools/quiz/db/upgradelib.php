@@ -46,7 +46,6 @@ function mootimetertool_quiz_create_tables() {
     // Adding fields to table mtmt_quiz_options.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('pageid', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-    $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
     $table->add_field('optiontext', XMLDB_TYPE_TEXT, null, null, null, null, null);
     $table->add_field('optioniscorrect', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
     $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, null, null, null);

@@ -35,6 +35,9 @@ require_once(__DIR__ . '/upgradelib.php');
  * @return bool
  */
 function xmldb_mootimetertool_quiz_upgrade($oldversion) {
+    global $DB;
+
+    $dbman = $DB->get_manager();
 
     // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
     //
@@ -54,6 +57,21 @@ function xmldb_mootimetertool_quiz_upgrade($oldversion) {
 
         // Quiz savepoint reached.
         upgrade_plugin_savepoint(true, 2023061400, 'mootimetertool', 'quiz');
+    }
+
+    if ($oldversion < 2023101600) {
+
+        // Define field usermodified to be dropped from mtmt_quiz_options.
+        $table = new xmldb_table('mtmt_quiz_options');
+        $field = new xmldb_field('usermodified');
+
+        // Conditionally launch drop field usermodified.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Quiz savepoint reached.
+        upgrade_plugin_savepoint(true, 2023101600, 'mootimetertool', 'quiz');
     }
 
     return true;

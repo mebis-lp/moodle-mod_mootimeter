@@ -217,7 +217,6 @@ class quiz extends \mod_mootimeter\toolhelper {
         if (!empty($record->id)) {
             $origrecord = $DB->get_record('mtmt_quiz_options', ['id' => $record->id]);
             $origrecord->pageid = $record->pageid;
-            $origrecord->usermodified = $USER->id;
             $origrecord->optiontext = $record->optiontext;
             $origrecord->optioniscorrect = $record->optioniscorrect;
             $origrecord->timemodified = time();
