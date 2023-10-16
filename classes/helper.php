@@ -59,7 +59,7 @@ class helper {
         global $DB;
 
         $instance = $record->instance;
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        $cm = self::get_cm_by_instance($instance);
 
         if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
             return 0;
@@ -110,8 +110,8 @@ class helper {
             $pageid = $pageorid;
         }
 
-        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        $instance = self::get_instance_by_pageid($pageid);
+        $cm = self::get_cm_by_instance($instance);
 
         if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
             return;
@@ -462,8 +462,8 @@ class helper {
             $page = $this->get_page($pageorid);
         }
 
-        $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
 
         if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
             return false;
@@ -495,8 +495,8 @@ class helper {
      */
     public function toggle_teacherpermission_state(object $page): int {
 
-        $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
 
         if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
             return -1;
@@ -527,8 +527,8 @@ class helper {
      */
     public function toggle_state(object $page, string $statename): int {
 
-        $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
 
         if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
             return -1;

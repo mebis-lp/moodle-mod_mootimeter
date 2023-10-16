@@ -250,13 +250,13 @@ abstract class toolhelper extends \mod_mootimeter\helper {
 
     /**
      * Get all grouped and counted answers of a page.
-      * @param string $table
-      * @param array $params
-      * @param string $answercolumn
-      * @return array
-      * @throws coding_exception
-      * @throws dml_exception
-      */
+     * @param string $table
+     * @param array $params
+     * @param string $answercolumn
+     * @return array
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public function get_answers_grouped(string $table, array $params, string $answercolumn = 'answer'): array {
         global $DB;
 

@@ -48,15 +48,15 @@ class backup_mootimeter_activity_structure_step extends backup_activity_structur
         $this->add_subplugin_structure('mootimetertool', $page, false);
         $page->set_source_table('mootimeter_pages', ['instance' => backup::VAR_PARENTID]);
 
-        $tool_settings = new backup_nested_element('tool_settings');
-        $tool_setting = new backup_nested_element(
+        $toolsettings = new backup_nested_element('tool_settings');
+        $toolsetting = new backup_nested_element(
             'tool_setting',
             ['id'],
             ['tool', 'pageid', 'name', 'value']
         );
-        $page->add_child($tool_settings);
-        $tool_settings->add_child($tool_setting);
-        $tool_setting->set_source_table('mootimeter_tool_settings', ['pageid' => backup::VAR_PARENTID]);
+        $page->add_child($toolsettings);
+        $toolsettings->add_child($toolsetting);
+        $toolsetting->set_source_table('mootimeter_tool_settings', ['pageid' => backup::VAR_PARENTID]);
 
         return $this->prepare_activity_structure($mootimeter);
     }
