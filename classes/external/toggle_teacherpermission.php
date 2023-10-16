@@ -74,6 +74,10 @@ class toggle_teacherpermission extends external_api {
             $page = $mtmhelper->get_page($pageid);
             $newstate = $mtmhelper->toggle_teacherpermission_state($page);
 
+            if($newstate == -1) {
+                return ['code' => 403, 'string' => 'Forbidden'];
+            }
+
             $return = ['code' => 200, 'string' => 'ok', 'newstate' => $newstate];
 
         } catch (\Exception $e) {

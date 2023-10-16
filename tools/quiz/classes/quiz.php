@@ -212,7 +212,13 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return int
      */
     public function store_answer_option(object $record): int {
-        global $DB, $USER;
+        global $DB;
+
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($record->pageid);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            return 0;
+        }
 
         if (!empty($record->id)) {
             $origrecord = $DB->get_record('mtmt_quiz_options', ['id' => $record->id]);
@@ -318,7 +324,11 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return array
      */
     public function remove_answer_option(int $pageid, int $aoid): array {
-        global $DB;
+        global $DB, $PAGE;
+
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
+            return ['code' => 403, 'string' => 'Forbidden'];
+        }
 
         try {
 

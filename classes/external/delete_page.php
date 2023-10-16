@@ -66,7 +66,7 @@ class delete_page extends external_api {
      * @throws dml_exception
      */
     public static function execute(int $pageid): array {
-        global $DB;
+        global $DB, $USER;
         [
             'pageid' => $pageid
         ] = self::validate_parameters(self::execute_parameters(), [
@@ -81,17 +81,19 @@ class delete_page extends external_api {
             $transaction = $DB->start_delegated_transaction();
 
             $mtmhelper = new \mod_mootimeter\helper();
-            $mtmhelper->delete_page($pageid);
+            $success = $mtmhelper->delete_page($pageid);
+
+            if (!$success) {
+                return ['code' => 403, 'string' => 'Forbidden'];
+            }
 
             $transaction->allow_commit();
 
             $return = ['code' => 200, 'string' => 'ok', 'cmid' => $cm->id];
-
         } catch (\Exception $e) {
 
             $transaction->rollback($e);
-            $return = ['code' => 500, 'string' => $e->getMessage(), 'cmid' => $cm->id ];
-
+            $return = ['code' => 500, 'string' => $e->getMessage(), 'cmid' => $cm->id];
         }
         return $return;
     }

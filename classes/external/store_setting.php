@@ -85,6 +85,13 @@ class store_setting extends external_api {
             'thisDataset' => $datasetjson,
         ]);
 
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            return ['code' => 403, 'string' => 'Forbidden'];
+        }
+
         try {
 
             $helper = new \mod_mootimeter\helper();

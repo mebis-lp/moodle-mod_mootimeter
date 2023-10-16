@@ -55,8 +55,15 @@ class helper {
      * @param object $record
      * @return int pageid
      */
-    public function store_page(object $record): int {
+    public function store_page(object $record): int|string {
         global $DB;
+
+        $instance = $record->instance;
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            return 0;
+        }
 
         if (!empty($record->id)) {
             $origrecord = $DB->get_record('mootimeter_pages', ['id' => $record->id]);
@@ -103,6 +110,13 @@ class helper {
             $pageid = $pageorid;
         }
 
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            return;
+        }
+
         $dataobject = $this->get_page($pageid);
         $dataobject->{$column} = $value;
 
@@ -117,7 +131,7 @@ class helper {
      */
     public function get_pages(int $instanceid) {
         global $DB;
-        return $DB->get_records('mootimeter_pages', ['instance' => $instanceid], 'sortorder');
+        return $DB->get_records('mootimeter_pages', ['instance' => $instanceid], 'id ASC');
     }
 
     /**
@@ -448,6 +462,13 @@ class helper {
             $page = $this->get_page($pageorid);
         }
 
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            return false;
+        }
+
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {
@@ -474,6 +495,13 @@ class helper {
      */
     public function toggle_teacherpermission_state(object $page): int {
 
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            return -1;
+        }
+
         $showonteacherpermission = self::get_tool_config($page->id, 'showonteacherpermission');
 
         $helper = new \mod_mootimeter\helper();
@@ -498,6 +526,14 @@ class helper {
      * @throws dml_exception
      */
     public function toggle_state(object $page, string $statename): int {
+
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            return -1;
+        }
+
         $togglestate = self::get_tool_config($page->id, $statename);
 
         $helper = new \mod_mootimeter\helper();

@@ -72,6 +72,12 @@ class store_visualizationtype extends external_api {
             'visuid' => $visuid,
         ]);
 
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            return ['code' => 403, 'string' => 'Forbidden'];
+        }
+
         try {
 
             $helper = new \mod_mootimeter\helper();
@@ -79,9 +85,11 @@ class store_visualizationtype extends external_api {
             $helper->set_tool_config($pageid, 'visualizationtype', $visuid);
 
             $return = ['code' => 200, 'string' => 'ok'];
+
         } catch (\Exception $e) {
 
             $return = ['code' => 500, 'string' => $e->getMessage()];
+
         }
         return $return;
     }
