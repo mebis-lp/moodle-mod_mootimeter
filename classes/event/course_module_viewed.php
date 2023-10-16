@@ -24,7 +24,6 @@
  */
 
 namespace mod_mootimeter\event;
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_mootimeter course module viewed event class.

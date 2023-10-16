@@ -25,12 +25,6 @@
 
 namespace mod_mootimeter;
 
-use coding_exception;
-use dml_exception;
-use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_mootimeter helper class to add new page.
  *

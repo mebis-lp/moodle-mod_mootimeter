@@ -90,14 +90,6 @@ class get_answers extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                // 'values' =>  new external_multiple_structure(
-                // new external_value(PARAM_INT, 'Answer options count'),
-                // "Answervalues"
-                // ),
-                // 'labels'=>new external_multiple_structure(
-                // new external_value(PARAM_TEXT, 'Answer options text'),
-                // "Answerlabels"
-                // ),
                 'values' => new external_value(PARAM_TEXT, 'Answer options count'),
                 'labels' => new external_value(PARAM_TEXT, 'Answer options text'),
                 'chartsettings' => new external_value(PARAM_TEXT, 'chartsettings'),

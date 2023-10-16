@@ -71,7 +71,7 @@ function xmldb_mootimeter_upgrade($oldversion) {
             $dbman->drop_field($table, $field);
         }
 
-        // Create new field question
+        // Create new field question.
         $field = new xmldb_field('question', XMLDB_TYPE_TEXT, null, null, null, null, null, 'title');
 
         // Conditionally launch add field question.

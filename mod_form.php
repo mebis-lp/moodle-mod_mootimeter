@@ -64,14 +64,6 @@ class mod_mootimeter_mod_form extends moodleform_mod {
         // Adding the standard "intro" and "introformat" fields.
         $this->standard_intro_elements();
 
-        // Adding the rest of mod_mootimeter settings, spreading all them into this fieldset
-        // ... or adding more fieldsets ('header' elements) if needed for better logic.
-        // $mform->addElement('static', 'label1', 'mootimetersettings', get_string('mootimetersettings', 'mod_mootimeter'));
-        // $mform->addElement('header', 'mootimeterfieldset', get_string('mootimeterfieldset', 'mod_mootimeter'));
-
-        // Add standard grading elements.
-        // $this->standard_grading_coursemodule_elements();
-
         // Add standard elements.
         $this->standard_coursemodule_elements();
 

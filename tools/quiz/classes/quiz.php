@@ -242,7 +242,8 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'data-iconenabled = "fa-check-square-o"',
                 'data-icondisabled = "fa-square-o"',
                 'data-tooltipenabled = "' . get_string('tooltip_content_menu_answercorrection', 'mootimetertool_quiz') . '"',
-                'data-tooltipdisabled = "' . get_string('tooltip_content_menu_answercorrection_disabled', 'mootimetertool_quiz') . '"',
+                'data-tooltipdisabled = "' .
+                    get_string('tooltip_content_menu_answercorrection_disabled', 'mootimetertool_quiz') . '"',
             ];
             $params['icon-check'] = [
                 'id' => 'toggleshowanswercorrectionid',
@@ -251,7 +252,10 @@ class quiz extends \mod_mootimeter\toolhelper {
             ];
             if (!empty(self::get_tool_config($page->id, 'showanswercorrection'))) {
                 $params['icon-check']['icon'] = "fa-check-square-o";
-                $params['icon-check']['tooltip'] = get_string('tooltip_content_menu_answercorrection_disabled', 'mootimetertool_quiz');
+                $params['icon-check']['tooltip'] = get_string(
+                    'tooltip_content_menu_answercorrection_disabled',
+                    'mootimetertool_quiz'
+                );
             } else if (empty(self::get_tool_config($page->id, 'showanswercorrection'))) {
                 $params['icon-check']['icon'] = "fa-square-o";
                 $params['icon-check']['tooltip'] = get_string('tooltip_content_menu_answercorrection', 'mootimetertool_quiz');
@@ -275,18 +279,6 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
             ];
         }
-
-        // if (
-        // has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
-        // && self::get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-        // ) {
-
-        // if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-        // $params['icon-eye']['additional_class'] = " disabled";
-        // } else if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-        // $params['icon-eye']['additional_class'] .= "";
-        // }
-        // }
 
         return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params);
     }
@@ -319,30 +311,6 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get quiztype.
-     *
-     * @param int $pageid
-     * @return string
-     * @deprecated
-     */
-    public function get_quiztype(int $pageid): string {
-        if (!empty(self::get_tool_config($pageid, 'ispoll'))) {
-            switch (self::get_tool_config($pageid, 'ispoll')) {
-                case self::MTMT_IS_QUIZ:
-                    $ispoll = "isquiz";
-                    break;
-                default:
-                    $ispoll = "ispoll";
-                    break;
-            }
-        } else {
-            $ispoll = "ispoll";
-        }
-
-        return $ispoll;
-    }
-
-    /**
      * Get all parameters that are necessary for rendering the tools view.
      *
      * @param object $page
@@ -350,7 +318,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @deprecated
      */
     public function get_renderer_params(object $page) {
-        global $USER, $PAGE;
+        global $USER;
 
         // Parameter for initial wordcloud rendering.
         $params['pageid'] = $page->id;
@@ -384,9 +352,11 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'pageid' => $page->id,
                 $inputtype . '_with_label_name' => 'multipleanswers[]',
                 $inputtype . '_with_label_value' => $answeroption->id,
-                $inputtype . '_with_label_additional_class' => 'mootimeter_settings_selector mootimeter-highlighter mootimeter-success',
+                $inputtype . '_with_label_additional_class' => 'mootimeter_settings_selector ' .
+                    'mootimeter-highlighter mootimeter-success',
                 $inputtype . '_with_label_checked' => (in_array($answeroption->id, $useransweroptionsid)) ? "checked" : "",
-                $inputtype . '_with_label_additional_attribut' => (self::get_tool_config($page->id, 'showanswercorrection')) ? "disabled" : "",
+                $inputtype . '_with_label_additional_attribut' => (self::get_tool_config($page->id, 'showanswercorrection')) ?
+                    "disabled" : "",
             ];
         }
 

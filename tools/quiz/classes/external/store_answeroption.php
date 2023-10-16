@@ -100,19 +100,10 @@ class store_answeroption extends external_api {
     }
 
     /**
-     * Describes the return structure of the service..
+     * Describes the return structure of the service.
      *
      * @return external_multiple_structure
      */
     public static function execute_returns() {
-        // return new external_multiple_structure(
-        // new external_single_structure(
-        // [
-        // 'cmid' => new external_value(PARAM_INT, 'ID'),
-        // 'numerrors' => new external_value(PARAM_INT, 'Number of errors.'),
-        // 'numchecks' => new external_value(PARAM_INT, 'Number of checks.'),
-        // ]
-        // )
-        // );
     }
 }

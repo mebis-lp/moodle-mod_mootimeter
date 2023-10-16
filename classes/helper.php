@@ -27,9 +27,6 @@ namespace mod_mootimeter;
 
 use coding_exception;
 use dml_exception;
-use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_mootimeter helper class.
@@ -221,7 +218,6 @@ class helper {
             'cmid' => $cm->id,
             'title' => s($page->title),
             'question' => s(self::get_tool_config($page, 'question')),
-            // 'isNewPage' => s($page->isNewPage),
             'isediting' => $PAGE->user_is_editing(),
         ];
         $params = array_merge($params, $toolhelper->get_renderer_params($page));

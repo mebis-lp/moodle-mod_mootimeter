@@ -34,7 +34,7 @@ $pageid = optional_param('pageid', 0, PARAM_INT);
 $isresultpage = optional_param('r', false, PARAM_BOOL);
 $helper = new \mod_mootimeter\helper();
 
-// Check if the provided pageid already exists / else throw error
+// Check if the provided pageid already exists / else throw error.
 if (!empty($pageid)) {
     $DB->get_record('mootimeter_pages', ['id' => $pageid], '*', MUST_EXIST);
 }
@@ -74,7 +74,7 @@ if (!empty($pageid) && !$helper::validate_page_belongs_to_instance($pageid, $pag
 }
 
 // If there is only one page. Redirect to this page if there is no pageid set.
-if(count($pages) == 1 && empty($pageid) && $action != "addpage"){
+if (count($pages) == 1 && empty($pageid) && $action != "addpage") {
     $page = array_pop($pages);
     redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]));
 }
