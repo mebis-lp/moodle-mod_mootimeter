@@ -328,14 +328,16 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'icon' => 'fa-bar-chart',
             'id' => 'showresults',
             'additional_class' => 'mtm_redirect_selector',
-            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1))
+            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1)),
+            'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
         ];
         if (optional_param('r', "", PARAM_INT)) {
             $params['icon-showresults'] = [
                 'icon' => 'fa-pencil-square-o',
                 'id' => 'showresults',
                 'additional_class' => 'mtm_redirect_selector',
-                'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id))
+                'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id)),
+                'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
             ];
         }
         return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params);

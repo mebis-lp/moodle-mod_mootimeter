@@ -61,3 +61,5 @@ $string['notification_success_store_answer'] = 'Answer stored successfully';
 $string['notification_warning_store_answer'] = 'Answer NOT stored.';
 $string['tooltip_content_menu_teacherpermission'] = 'Click to allow students to view the results.';
 $string['tooltip_content_menu_teacherpermission_disabled'] = 'Click to hide the results.';
+$string['tooltip_show_results_page'] = 'Show results page.';
+$string['tooltip_show_question_page'] = 'Show question page.';
