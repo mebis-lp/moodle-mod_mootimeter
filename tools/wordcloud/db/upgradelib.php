@@ -36,6 +36,13 @@ function mod_mootimeter_helper_function() {
     // For more information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
 }
 
+/**
+ * Create wordcloud tabels
+ * @return void
+ * @throws coding_exception
+ * @throws ddl_exception
+ * @throws ddl_change_structure_exception
+ */
 function mootimetertool_wordcloud_create_tables() {
     global $DB;
 

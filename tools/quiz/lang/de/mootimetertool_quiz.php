@@ -17,7 +17,7 @@
 /**
  * Plugin strings are defined here.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mootimetertool_quiz
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Christian Kupfer <christian.kupfer@isb.bayern.de>
@@ -26,23 +26,22 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Quiz';
-
-$string['ispoll_label'] = "Quiz-Typ";
-$string['ispoll_helptitle'] = "Um welche Art von Quiz handelt es sich?";
+$string['add_question_option'] = "Antwortmöglichkeit hinzufügen";
+$string['answeroptions'] = "Antwortmöglichkeiten";
 $string['ispoll_help'] = "Sie können zwischen Umfrage und Quiz wählen. Quizze haben richtige und falsche Antworten.";
+$string['ispoll_helptitle'] = "Um welche Art von Quiz handelt es sich?";
+$string['ispoll_label'] = "Quiz-Typ";
+$string['multiple_answers'] = 'Mehrere Antworten';
+$string['nodata'] = "Noch keine Daten verfügbar";
+$string['pluginname'] = 'Quiz';
 $string['poll'] = "Umfrage";
 $string['quiz'] = "Quiz";
-$string['show_results'] = "Ergebnisse anzeigen";
-$string['nodata'] = "Noch keine Daten verfügbar";
-$string['answeroptions'] = "Antwortmöglichkeiten";
-$string['visualization'] = "Visualisierung";
-$string['tool_description_short'] = "Antworten live einsammeln";
-$string['add_question_option'] = "Antwortmöglichkeit hinzufügen";
-$string['multiple_answers'] = 'Mehrere Antworten';
-$string['submit_answer'] = 'Antwort absenden';
 $string['sendbutton_context_more_answers_possible'] = 'Sie können mehr als eine Antwort auswählen.';
 $string['sendbutton_context_one_answers_possible'] = 'Sie können eine Antwort auswählen.';
+$string['show_results'] = "Ergebnisse anzeigen";
 $string['showresultteacherpermission'] = 'Ergebnisse bei Freigabe durch Lehrer anzeigen';
+$string['submit_answer'] = 'Antwort absenden';
+$string['tool_description_short'] = "Antworten live einsammeln";
 $string['tooltip_content_menu_answercorrection'] = 'Klicken um Schülern zu zeigen, ob die Antwort richtig ist.';
 $string['tooltip_content_menu_answercorrection_disabled'] = 'Klicken um die Korrektur der Antworten zu verbergen';
+$string['visualization'] = "Visualisierung";

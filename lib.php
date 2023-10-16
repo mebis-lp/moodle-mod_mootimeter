@@ -303,13 +303,14 @@ function mootimeter_extend_settings_navigation($settingsnav, $mootimeternode = n
 /**
  * Trigger the course_module viewed event.
  *
- * @param int $moduleinstance
+ * @param object $moduleinstance
  * @param object $ctx
  * @param object $course
  * @return void
  * @throws coding_exception
+ * @throws ddl_exception
  */
-function mootimeter_trigger_event_course_module_viewed(object $moduleinstance, object $ctx, object $course) :void {
+function mootimeter_trigger_event_course_module_viewed(object $moduleinstance, object $ctx, object $course): void {
     $event = \mod_mootimeter\event\course_module_viewed::create(
         [
             'objectid' => $moduleinstance->id,

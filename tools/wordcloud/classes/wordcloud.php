@@ -30,6 +30,14 @@ use dml_exception;
 use moodle_exception;
 use moodle_url;
 
+/**
+ * Pluginlib
+ *
+ * @package     mootimetertool_wordcloud
+ * @copyright   2023, ISB Bayern
+ * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class wordcloud extends \mod_mootimeter\toolhelper {
 
     /** Show Results live */
@@ -110,6 +118,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * [{"answer":"Answer word 1","cnt":"3"},{"answer":"Answer word 2","cnt":"1"}, ...]
      *
      * @param int $pageid
+     * @param int $userid
      * @return array
      * @throws dml_exception
      */

@@ -21,6 +21,7 @@
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_mootimeter\event;
@@ -32,6 +33,7 @@ namespace mod_mootimeter\event;
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_viewed extends \core\event\course_module_viewed {
 
@@ -44,6 +46,10 @@ class course_module_viewed extends \core\event\course_module_viewed {
         $this->data['objecttable'] = 'page';
     }
 
+    /**
+     * Get objectid mapping
+     * @return string
+     */
     public static function get_objectid_mapping() {
         return ['db' => 'page', 'restore' => 'page'];
     }

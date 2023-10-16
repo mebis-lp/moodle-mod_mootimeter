@@ -17,7 +17,7 @@
 /**
  * Plugin strings are defined here.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mootimetertool_quiz
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
@@ -26,23 +26,22 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Quiz';
-
-$string['ispoll_label'] = "Quiz type";
-$string['ispoll_helptitle'] = "What kind of quiz is it?";
+$string['add_question_option'] = "Add answer option";
+$string['answeroptions'] = "Answer options";
 $string['ispoll_help'] = "You can choose between poll and quiz. Quizzes have wrong and right answers";
+$string['ispoll_helptitle'] = "What kind of quiz is it?";
+$string['ispoll_label'] = "Quiz type";
+$string['multiple_answers'] = 'Multiple answers';
+$string['nodata'] = "No data available yet";
+$string['pluginname'] = 'Quiz';
 $string['poll'] = "Poll";
 $string['quiz'] = "Quiz";
-$string['show_results'] = "Show results";
-$string['nodata'] = "No data available yet";
-$string['answeroptions'] = "Answer options";
-$string['visualization'] = "Visualization";
-$string['tool_description_short'] = "Collect answers live";
-$string['add_question_option'] = "Add answer option";
-$string['multiple_answers'] = 'Multiple answers';
-$string['submit_answer'] = 'Submit answer';
 $string['sendbutton_context_more_answers_possible'] = 'You can choose more than one answer.';
 $string['sendbutton_context_one_answers_possible'] = 'You can choose one answer.';
+$string['show_results'] = "Show results";
 $string['showresultteacherpermission'] = 'Show results on teacher permission';
+$string['submit_answer'] = 'Submit answer';
+$string['tool_description_short'] = "Collect answers live";
 $string['tooltip_content_menu_answercorrection'] = 'Click to show students if answer is correct';
 $string['tooltip_content_menu_answercorrection_disabled'] = 'Click to do not show students if answer is correct';
+$string['visualization'] = "Visualization";

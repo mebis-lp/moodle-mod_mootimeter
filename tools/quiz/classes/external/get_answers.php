@@ -17,7 +17,7 @@
 /**
  * Web service to get all answers.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mootimetertool_quiz
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -38,7 +38,7 @@ require_once($CFG->libdir . '/externallib.php');
 /**
  * Web service to get all answers.
  *
- * @package     mootimetertool_wordcloud
+ * @package     mootimetertool_quiz
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -59,7 +59,6 @@ class get_answers extends external_api {
      * Execute the service.
      *
      * @param int $pageid
-     * @param int $lastupdated
      * @return array
      */
     public static function execute(int $pageid): array {

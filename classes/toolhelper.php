@@ -21,6 +21,7 @@
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_mootimeter;
@@ -36,6 +37,7 @@ use dml_exception;
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class toolhelper extends \mod_mootimeter\helper {
 
@@ -52,7 +54,6 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      * Delete Page
      *
      * @param object $page
-     * @param mixed $answer
      * @return bool
      */
     abstract public function delete_page_tool(object $page);
@@ -249,11 +250,13 @@ abstract class toolhelper extends \mod_mootimeter\helper {
 
     /**
      * Get all grouped and counted answers of a page.
-     *
-     * @param array $params
-     * @return array
-     * @throws dml_exception
-     */
+      * @param string $table
+      * @param array $params
+      * @param string $answercolumn
+      * @return array
+      * @throws coding_exception
+      * @throws dml_exception
+      */
     public function get_answers_grouped(string $table, array $params, string $answercolumn = 'answer'): array {
         global $DB;
 

@@ -21,6 +21,7 @@
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_mootimeter;
@@ -35,12 +36,17 @@ use dml_exception;
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class helper {
 
+    /** @var Webservice returning error code - OK */
     const ERRORCODE_OK = 200;
+    /** @var Webservice returning error code - Empty Answer */
     const ERRORCODE_EMPTY_ANSWER = 1000;
+    /** @var Webservice returning error code - To Many Answers */
     const ERRORCODE_TO_MANY_ANSWERS = 1001;
+    /** @var Webservice returning error code - Duplicate Answers */
     const ERRORCODE_DUPLICATE_ANSWER = 1002;
 
     /**
@@ -107,7 +113,6 @@ class helper {
      * Get all pages of an instance.
      *
      * @param int $instanceid
-     * @param bool $asarray
      * @return mixed
      */
     public function get_pages(int $instanceid) {
@@ -119,16 +124,12 @@ class helper {
      * Get mootimeter page object.
      *
      * @param int $pageid
-     * @param int $instanceid
      * @return mixed
      * @throws dml_exception
      */
     public function get_page(int $pageid) {
         global $DB;
         $params = ['id' => $pageid];
-        if (!empty($instanceid)) {
-            $params['instance'] = $instanceid;
-        }
         return $DB->get_record('mootimeter_pages', $params);
     }
 
@@ -168,10 +169,11 @@ class helper {
     /**
      * Get pages array for renderer.
      *
-     * @param mixed $pages
+     * @param array $pages
+     * @param int $pageid
      * @return array
      */
-    public function get_pages_template($pages, $pageid) {
+    public function get_pages_template(array $pages, int $pageid) {
         $temppages = [];
         $pagenumber = 1;
         foreach ($pages as $page) {
@@ -228,6 +230,11 @@ class helper {
         return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content2", $params);
     }
 
+    /**
+     * Get the rendered page results
+     * @param object $page
+     * @return string
+     */
     public function get_rendered_page_result(object $page): string {
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
@@ -403,8 +410,10 @@ class helper {
     /**
      * Get the tools config.
      *
-     * @param int|object $page
-     * @return string|object
+     * @param int|object $pageorid
+     * @param string $name
+     * @return mixed
+     * @throws dml_exception
      */
     public static function get_tool_config($pageorid, $name = "") {
         global $DB;

@@ -21,9 +21,13 @@
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_mootimeter;
+
+use coding_exception;
+use dml_exception;
 
 /**
  * The mod_mootimeter helper class to add new page.
@@ -32,9 +36,16 @@ namespace mod_mootimeter;
  * @category    string
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class helper_add_page extends \mod_mootimeter\helper {
 
+    /**
+     * Get the view_content snippet for new_page.
+     * @return mixed
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public static function get_view_content_new_page() {
         global $OUTPUT, $PAGE;
 

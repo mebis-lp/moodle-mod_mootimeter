@@ -28,6 +28,13 @@
  * Helper function used by the upgrade.php file.
  */
 
+/**
+ * Create the necessary tables.
+ * @return void
+ * @throws coding_exception
+ * @throws ddl_exception
+ * @throws ddl_change_structure_exception
+ */
 function mootimetertool_quiz_create_tables() {
     global $DB;
 
@@ -80,6 +87,15 @@ function mootimetertool_quiz_create_tables() {
     }
 }
 
+/**
+ * Add field optioniscorrect
+ * @return void
+ * @throws ddl_table_missing_exception
+ * @throws ddl_exception
+ * @throws dml_exception
+ * @throws coding_exception
+ * @throws ddl_change_structure_exception
+ */
 function mootimeter_quiz_add_field_optioniscorrect() {
     global $DB;
 

@@ -59,6 +59,7 @@ class store_answer extends external_api {
      * Execute the service.
      *
      * @param int $pageid
+     * @param string $answer
      * @return array
      */
     public static function execute(int $pageid, string $answer): array {

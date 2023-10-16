@@ -29,19 +29,48 @@ use dml_exception;
 use coding_exception;
 use stdClass;
 
+/**
+ * Pluginlib
+ *
+ * @package     mootimetertool_quiz
+ * @copyright   2023, ISB Bayern
+ * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class quiz extends \mod_mootimeter\toolhelper {
 
+    /**
+     * @var Answer cloum
+     */
     const ANSWER_COLUMN = "optionid";
+    /** @var ChartJS default color
+     * TODO: Make it an admin setting.
+     */
     const CHARTJS_DEFAULT_COLOR = "#d33f01";
+    /** @var Answer cloum
+     * TODO: Make it an admin setting.
+     */
     const CHARTJS_DEFAULT_COLOR_SUCCESS = "#00C431";
 
+    /** @var Visualization id for pillar chart */
     const VISUALIZATION_ID_CHART_PILLAR = 1;
+    /** @var Visualization id for bar chart */
     const VISUALIZATION_ID_CHART_BAR = 2;
+    /** @var Visualization id for line chart */
     const VISUALIZATION_ID_CHART_LINE = 3;
+    /** @var Visualization id for pie chart */
     const VISUALIZATION_ID_CHART_PIE = 4;
 
+    /** @var Answer cloum */
     const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
 
+    /**
+     * Get chartjs visualization settings.
+     * @param int $visualizationtypeid
+     * @param mixed $pageid
+     * @return array|void
+     * @throws dml_exception
+     */
     public function get_visualization_settings_charjs(int $visualizationtypeid, $pageid) {
         switch ($visualizationtypeid) {
             case self::VISUALIZATION_ID_CHART_BAR:

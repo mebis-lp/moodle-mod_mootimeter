@@ -63,8 +63,8 @@ class store_answeroption extends external_api {
      * Execute the service.
      * @param int $pageid
      * @param int $aoid "answer option id"
-     * @param string $inputvalue
-     * @param string $inputid
+     * @param string $value
+     * @param string $id
      * @return void
      * @throws invalid_parameter_exception
      * @throws dml_exception

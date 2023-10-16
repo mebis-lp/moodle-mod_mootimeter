@@ -28,6 +28,13 @@
  * Helper functions used by the upgrade.php file.
  */
 
+/**
+ * Helper funciton to create tool settings table.
+ * @return void
+ * @throws coding_exception
+ * @throws ddl_exception
+ * @throws ddl_change_structure_exception
+ */
 function mod_mootimeter_create_mootimeter_tool_settings_table() {
     global $DB;
 
