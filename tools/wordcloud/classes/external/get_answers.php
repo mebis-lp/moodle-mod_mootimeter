@@ -91,7 +91,7 @@ class get_answers extends external_api {
                     ),
                     'The answerslist.',
                 ),
-                'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated')
+                'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated'),
 
             ],
             'Information to redraw wordcloud'

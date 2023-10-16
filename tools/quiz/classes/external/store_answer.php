@@ -82,7 +82,6 @@ class store_answer extends external_api {
             $quiz = new \mootimetertool_quiz\quiz();
             $quiz->insert_answer($page, $aoids);
 
-
             $return = ['code' => 200, 'string' => 'ok'];
         } catch (\Exception $e) {
 

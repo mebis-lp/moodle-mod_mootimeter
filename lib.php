@@ -113,7 +113,7 @@ function mootimeter_delete_instance($id) {
 function mootimeter_scale_used($moduleinstanceid, $scaleid) {
     global $DB;
 
-    if ($scaleid && $DB->record_exists('mootimeter', array('id' => $moduleinstanceid, 'grade' => -$scaleid))) {
+    if ($scaleid && $DB->record_exists('mootimeter', ['id' => $moduleinstanceid, 'grade' => -$scaleid])) {
         return true;
     } else {
         return false;
@@ -131,7 +131,7 @@ function mootimeter_scale_used($moduleinstanceid, $scaleid) {
 function mootimeter_scale_used_anywhere($scaleid) {
     global $DB;
 
-    if ($scaleid && $DB->record_exists('mootimeter', array('grade' => -$scaleid))) {
+    if ($scaleid && $DB->record_exists('mootimeter', ['grade' => -$scaleid])) {
         return true;
     } else {
         return false;
@@ -151,7 +151,7 @@ function mootimeter_grade_item_update($moduleinstance, $reset = false) {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
 
-    $item = array();
+    $item = [];
     $item['itemname'] = clean_param($moduleinstance->name, PARAM_NOTAGS);
     $item['gradetype'] = GRADE_TYPE_VALUE;
 
@@ -190,7 +190,7 @@ function mootimeter_grade_item_delete($moduleinstance) {
         $moduleinstance->id,
         0,
         null,
-        array('deleted' => 1)
+        ['deleted' => 1]
     );
 }
 
@@ -207,7 +207,7 @@ function mootimeter_update_grades($moduleinstance, $userid = 0) {
     require_once($CFG->libdir . '/gradelib.php');
 
     // Populate array of grade objects indexed by userid.
-    $grades = array();
+    $grades = [];
     grade_update('/mod/mootimeter', $moduleinstance->course, 'mod', 'mod_mootimeter', $moduleinstance->id, 0, $grades);
 }
 
@@ -226,7 +226,7 @@ function mootimeter_update_grades($moduleinstance, $userid = 0) {
  * @return string[].
  */
 function mootimeter_get_file_areas($course, $cm, $context) {
-    return array();
+    return [];
 }
 
 /**
@@ -264,7 +264,7 @@ function mootimeter_get_file_info($browser, $areas, $course, $cm, $context, $fil
  * @param bool $forcedownload Whether or not force download.
  * @param array $options Additional options affecting the file serving.
  */
-function mootimeter_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
+function mootimeter_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = []) {
     global $DB, $CFG;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -322,7 +322,7 @@ function mootimeter_trigger_event_course_module_viewed(object $moduleinstance, o
     $event = \mod_mootimeter\event\course_module_viewed::create(
         [
             'objectid' => $moduleinstance->id,
-            'context' => $ctx
+            'context' => $ctx,
         ]
     );
     $event->add_record_snapshot('course', $course);

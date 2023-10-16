@@ -70,7 +70,7 @@ class delete_page extends external_api {
         [
             'pageid' => $pageid
         ] = self::validate_parameters(self::execute_parameters(), [
-            'pageid' => $pageid
+            'pageid' => $pageid,
         ]);
 
         $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);

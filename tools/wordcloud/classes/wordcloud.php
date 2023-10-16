@@ -162,7 +162,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $params["answers"] = array_values(array_map(function ($element) {
             return [
                 'pill' => $element->answer,
-                'additional_class' => 'mootimeter-pill-inline'
+                'additional_class' => 'mootimeter-pill-inline',
             ];
         }, $this->get_user_answers('mtmt_wordcloud_answers' , $page->id, 'answer', $USER->id)));
 
@@ -222,23 +222,23 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         // These settings may be obsolete.
         // $params['settings']['showonteacherpermission'] = [
-        //     'cb_with_label_id' => 'showonteacherpermission',
-        //     'pageid' => $page->id,
-        //     'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
-        //     'cb_with_label_name' => 'showonteacherpermission',
-        //     'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-        //     'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
-        //     'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showonteacherpermission') ? "checked" : ""),
+        // 'cb_with_label_id' => 'showonteacherpermission',
+        // 'pageid' => $page->id,
+        // 'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
+        // 'cb_with_label_name' => 'showonteacherpermission',
+        // 'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+        // 'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+        // 'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showonteacherpermission') ? "checked" : ""),
         // ];
 
         // $params['settings']['showresultlive'] = [
-        //     'cb_with_label_id' => 'showresultlive',
-        //     'pageid' => $page->id,
-        //     'cb_with_label_text' => get_string('showresultlive', 'mootimetertool_wordcloud'),
-        //     'cb_with_label_name' => 'showresultlive',
-        //     'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-        //     'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
-        //     'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showresultlive') ? "checked" : ""),
+        // 'cb_with_label_id' => 'showresultlive',
+        // 'pageid' => $page->id,
+        // 'cb_with_label_text' => get_string('showresultlive', 'mootimetertool_wordcloud'),
+        // 'cb_with_label_name' => 'showresultlive',
+        // 'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+        // 'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+        // 'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'showresultlive') ? "checked" : ""),
         // ];
 
         return $OUTPUT->render_from_template("mootimetertool_wordcloud/view_settings", $params);
@@ -279,7 +279,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         global $DB;
         try {
             // Table not written yet
-            $DB->delete_records('mtmt_wordcloud_answers', array('pageid' => $page->id));
+            $DB->delete_records('mtmt_wordcloud_answers', ['pageid' => $page->id]);
         } catch (\Exception $e) {
             // Todo handling
             echo 'Something went wrong';
@@ -319,8 +319,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 
             // $params['icon-restart'] = [
-            //     'icon' => 'fa-rotate-left',
-            //     'id' => 'resetanswers',
+            // 'icon' => 'fa-rotate-left',
+            // 'id' => 'resetanswers',
             // ];
         }
 
@@ -328,7 +328,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'icon' => 'fa-bar-chart',
             'id' => 'showresults',
             'additional_class' => 'mtm_redirect_selector',
-            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1)),
+            'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1]),
             'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
         ];
         if (optional_param('r', "", PARAM_INT)) {
@@ -336,7 +336,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'icon' => 'fa-pencil-square-o',
                 'id' => 'showresults',
                 'additional_class' => 'mtm_redirect_selector',
-                'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id)),
+                'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id]),
                 'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
             ];
         }

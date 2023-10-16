@@ -30,8 +30,8 @@ require(__DIR__.'/../../config.php');
 $id = required_param('id', PARAM_INT);
 
 $cm = get_coursemodule_from_id('mootimeter', $id, 0, false, MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$moduleinstance = $DB->get_record('mootimeter', array('id' => $cm->instance), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+$moduleinstance = $DB->get_record('mootimeter', ['id' => $cm->instance], '*', MUST_EXIST);
 
 require_login($course, true, $cm);
 

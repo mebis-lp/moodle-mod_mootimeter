@@ -34,9 +34,9 @@ $capabilities = [
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+        'clonepermissionsfrom' => 'moodle/course:manageactivities',
     ],
 
     'mod/mootimeter:moderator' => [
@@ -55,7 +55,7 @@ $capabilities = [
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
             'user' => CAP_ALLOW,
-            'guest' => CAP_ALLOW
+            'guest' => CAP_ALLOW,
         ],
     ],
 ];

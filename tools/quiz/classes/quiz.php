@@ -52,10 +52,10 @@ class quiz extends \mod_mootimeter\toolhelper {
                         'scales' => [
                             'x' => [
                                 'ticks' => [
-                                    'stepSize' => 1
-                                ]
-                            ]
-                        ]
+                                    'stepSize' => 1,
+                                ],
+                            ],
+                        ],
                     ],
                     'backgroundColor' => $this->get_chartjs_background_color($pageid),
                     'borderRadius' => 20,
@@ -69,12 +69,12 @@ class quiz extends \mod_mootimeter\toolhelper {
                             'x' => [
                                 'min' => 0,
                                 'ticks' => [
-                                    'stepSize' => 1
-                                ]
-                            ]
-                        ]
+                                    'stepSize' => 1,
+                                ],
+                            ],
+                        ],
                     ],
-                    'backgroundColor' =>  $this->get_chartjs_background_color($pageid),
+                    'backgroundColor' => $this->get_chartjs_background_color($pageid),
                     'pointStyle' => 'circle',
                     'pointRadius' => 10,
                     'pointHoverRadius' => 15,
@@ -88,14 +88,14 @@ class quiz extends \mod_mootimeter\toolhelper {
                             'x' => [
                                 'ticks' => [
                                     'stepSize' => 1,
-                                ]
+                                ],
                             ],
                             'y' => [
                                 'ticks' => [
                                     'stepSize' => 1,
-                                ]
-                            ]
-                        ]
+                                ],
+                            ],
+                        ],
                     ],
                     'backgroundColor' => $this->get_chartjs_background_color($pageid),
                     'borderRadius' => 20,
@@ -113,7 +113,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                             'legend' => [
                                 'position' => 'right',
                             ],
-                        ]
+                        ],
                     ],
                 ];
         }
@@ -230,8 +230,8 @@ class quiz extends \mod_mootimeter\toolhelper {
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 
             // $params['icon-restart'] = [
-            //     'icon' => 'fa-rotate-left',
-            //     'id' => 'resetanswers',
+            // 'icon' => 'fa-rotate-left',
+            // 'id' => 'resetanswers',
             // ];
 
             $dataseticoncheck = [
@@ -263,7 +263,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'icon' => 'fa-bar-chart',
             'id' => 'showresults',
             'additional_class' => 'mtm_redirect_selector',
-            'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1)),
+            'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1]),
             'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
         ];
         if (optional_param('r', "", PARAM_INT)) {
@@ -271,21 +271,21 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'icon' => 'fa-pencil-square-o',
                 'id' => 'showresults',
                 'additional_class' => 'mtm_redirect_selector',
-                'href' => new \moodle_url('/mod/mootimeter/view.php', array('id' => $PAGE->cm->id, 'pageid' => $page->id)),
+                'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id]),
                 'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
             ];
         }
 
         // if (
-        //     has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
-        //     // && self::get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
+        // has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))
+        // && self::get_tool_config($page->id, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
         // ) {
 
-        //     if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-        //         $params['icon-eye']['additional_class'] = " disabled";
-        //     } else if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-        //         $params['icon-eye']['additional_class'] .= "";
-        //     }
+        // if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+        // $params['icon-eye']['additional_class'] = " disabled";
+        // } else if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+        // $params['icon-eye']['additional_class'] .= "";
+        // }
         // }
 
         return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params);
@@ -516,7 +516,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 ],
                 'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_PIE) ? true : false,
                 'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_PIE,
-            ]
+            ],
         ];
         $PAGE->requires->js_call_amd('mootimetertool_quiz/store_visualization', 'init');
 
@@ -659,8 +659,8 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function delete_page_tool(object $page) {
         global $DB;
         try {
-            $DB->delete_records('mtmt_quiz_options', array('pageid' => $page->id));
-            $DB->delete_records('mtmt_quiz_answers', array('pageid' => $page->id));
+            $DB->delete_records('mtmt_quiz_options', ['pageid' => $page->id]);
+            $DB->delete_records('mtmt_quiz_answers', ['pageid' => $page->id]);
         } catch (\Exception $e) {
             return false;
         }

@@ -390,7 +390,7 @@ class helper {
         $conditions = [
             'tool' => $page->tool,
             'pageid' => $page->id,
-            'name' => $name
+            'name' => $name,
         ];
 
         if (empty($record = $DB->get_record('mootimeter_tool_settings', $conditions))) {
@@ -457,8 +457,8 @@ class helper {
         $toolhelper->delete_page_tool($page);
 
         // Call mootimeter-core deletion processes.
-        $DB->delete_records('mootimeter_pages', array('id' => $page->id));
-        $DB->delete_records('mootimeter_tool_settings', array('pageid' => $page->id));
+        $DB->delete_records('mootimeter_pages', ['id' => $page->id]);
+        $DB->delete_records('mootimeter_tool_settings', ['pageid' => $page->id]);
     }
 
     /**

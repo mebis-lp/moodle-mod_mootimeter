@@ -50,9 +50,9 @@ class mootimetertool extends base {
 
         $plugins = core_plugin_manager::instance()->get_installed_plugins('mootimetertool');
         if (!$plugins) {
-            return array();
+            return [];
         }
-        $installed = array();
+        $installed = [];
         foreach ($plugins as $plugin => $version) {
             $installed[] = 'mootimetertool_' . $plugin;
         }
@@ -67,7 +67,7 @@ class mootimetertool extends base {
             unset($plugins[$name]);
         }
 
-        $enabled = array();
+        $enabled = [];
         foreach ($plugins as $plugin => $version) {
             $enabled[$plugin] = $plugin;
         }
