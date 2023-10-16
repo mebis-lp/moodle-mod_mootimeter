@@ -35,10 +35,12 @@ function mootimeter_supports($feature) {
             return false;
         case FEATURE_MOD_INTRO:
             return true;
-        default:
-            return null;
         case FEATURE_MOD_PURPOSE:
             return MOD_PURPOSE_COLLABORATION;
+        case FEATURE_BACKUP_MOODLE2:
+            return true;
+        default:
+            return null;
     }
 }
 
