@@ -76,10 +76,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     protected function get_answers_list(int $pageid, int $userid = 0) {
 
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
-        if (
-            empty(self::get_tool_config($pageid, 'teacherpermission'))
-            || (self::get_tool_config($pageid, 'teacherpermission') && self::get_tool_config($pageid, 'showonteacherpermission'))
-        ) {
+        if (!empty(self::get_tool_config($pageid, 'showonteacherpermission'))) {
             $params = [
                 'pageid' => $pageid,
             ];
@@ -224,8 +221,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         ];
 
         // These settings may be obsolete.
-        // $params['settings']['teacherpermission'] = [
-        //     'cb_with_label_id' => 'teacherpermission',
+        // $params['settings']['showonteacherpermission'] = [
+        //     'cb_with_label_id' => 'showonteacherpermission',
         //     'pageid' => $page->id,
         //     'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_wordcloud'),
         //     'cb_with_label_name' => 'showonteacherpermission',
@@ -259,7 +256,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
         if (
             $this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-            && empty($this->get_tool_config($pageid, 'teacherpermission'))
+            && empty($this->get_tool_config($pageid, 'showonteacherpermission'))
         ) {
             return 0;
         }
