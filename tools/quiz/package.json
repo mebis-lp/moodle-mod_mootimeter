@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "chart.js": "^4.4.0"
+    "chart.js": "^4.4.0",
+    "chartjs": "^0.3.24"
+  },
+  "scripts": {
+    "deploy-chartjs": "npm i chartjs && cp node_modules/chart.js/dist/chart.umd.js amd/src/ && grunt amd"
   }
 }

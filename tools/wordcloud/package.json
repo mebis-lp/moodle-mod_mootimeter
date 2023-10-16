@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "wordcloud": "^1.2.2"
+  },
+  "scripts": {
+    "deploy-wordcloud": "npm i wordcloud && cp node_modules/wordcloud/src/wordcloud2.js amd/src/ && grunt amd"
   }
 }

@@ -1,7 +1,6 @@
 import { call as fetchMany } from 'core/ajax';
 import { exception as displayException } from 'core/notification';
 import Templates from 'core/templates';
-import { get_string as getString } from 'core/str';
 
 export const init = () => {
 
