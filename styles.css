@@ -336,6 +336,9 @@
   display: block;
   width: 100%;
 }
+.mootimetercontainer .mootimetercolcontent .mootimeter-content-wrapper div {
+  max-height: 75vH;
+}
 .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview {
   border-radius: 0.5rem;
   background-color: #fff;

@@ -54,7 +54,9 @@ class quiz extends \mod_mootimeter\toolhelper {
                                 ]
                             ]
                         ]
-                    ]
+                    ],
+                    'backgroundColor' => "#d33f01",
+                    'borderRadius' => 5,
                 ];
             case self::VISUALIZATION_ID_CHART_LINE:
                 return [
@@ -69,7 +71,8 @@ class quiz extends \mod_mootimeter\toolhelper {
                                 ]
                             ]
                         ]
-                    ]
+                    ],
+                    'backgroundColor' => "#d33f01",
                 ];
             case self::VISUALIZATION_ID_CHART_PILLAR:
                 return [
@@ -88,7 +91,9 @@ class quiz extends \mod_mootimeter\toolhelper {
                                 ]
                             ]
                         ]
-                    ]
+                    ],
+                    'backgroundColor' => "#d33f01",
+                    'borderRadius' => 5,
                 ];
             case self::VISUALIZATION_ID_CHART_PIE:
                 return [
@@ -98,8 +103,13 @@ class quiz extends \mod_mootimeter\toolhelper {
                         'title' => [
                             'display' => true,
                             'text' => self::get_tool_config($pageid, 'question'),
+                        ],
+                        'plugins' => [
+                            'legend' => [
+                                'position' => 'right',
+                            ],
                         ]
-                    ]
+                    ],
                 ];
         }
     }

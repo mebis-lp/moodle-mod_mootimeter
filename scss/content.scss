@@ -26,6 +26,11 @@
     .mootimeter-content-wrapper {
       display: block;
       width: 100%;
+
+      div {
+        max-height: 75vH;
+      }
+
     }
 
     .mootimeter-colcontent-preview {

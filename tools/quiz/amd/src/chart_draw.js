@@ -75,7 +75,9 @@ const getAnswers = async (pageid, lastposttimestamp) => {
             labels: JSON.parse(response.labels),
             datasets: [{
                 label: response.question,
-                data: JSON.parse(response.values)
+                data: JSON.parse(response.values),
+                backgroundColor: JSON.parse(response.chartsettings).backgroundColor,
+                borderRadius: JSON.parse(response.chartsettings).borderRadius,
             }]
         },
         options: JSON.parse(response.chartsettings).options
