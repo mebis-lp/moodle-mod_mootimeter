@@ -319,10 +319,14 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return array
      */
     public function remove_answer_option(int $pageid, int $aoid): array {
-        global $DB, $PAGE;
+        global $DB;
 
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
-            return ['code' => 403, 'string' => 'Forbidden'];
+        $instance = self::get_instance_by_pageid($pageid);
+        $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
+
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
         try {
