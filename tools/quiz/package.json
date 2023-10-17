@@ -1,5 +1,5 @@
 {
-  "dependencies": {
+  "devDependencies": {
     "chart.js": "^4.4.0",
     "chartjs": "^0.3.24"
   },

@@ -34,6 +34,7 @@ $string['deleteerror'] = 'Beim Löschen der Seite ist ein Fehler aufgetreten. Bi
 $string['enter_question'] = 'Bitte geben Sie eine Frage ein.';
 $string['modulename'] = 'Mootimeter';
 $string['modulenameplural'] = 'Mootimeter';
+$string['mootimeter:addinstance'] = 'Add mootimeter activity';
 $string['mootimeterfieldset'] = "Weitere Mootimeter-Einstellungen";
 $string['mootimetername'] = "Name";
 $string['mootimetername_help'] = "Titel der Aktivität";

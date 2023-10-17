@@ -34,6 +34,7 @@ $string['deleteerror'] = 'Something went wrong while deleting the page. Please c
 $string['enter_question'] = 'Please enter a question.';
 $string['modulename'] = 'Mootimeter';
 $string['modulenameplural'] = 'Mootimeter';
+$string['mootimeter:addinstance'] = 'Mootimeter-Activität hinzufügen';
 $string['mootimeterfieldset'] = "More Mootimeter Settings";
 $string['mootimetername'] = "Name";
 $string['mootimetername_help'] = "Title of the Activity";
