@@ -487,27 +487,7 @@ class helper {
      * @return int
      */
     public function toggle_teacherpermission_state(object $page): int {
-
-        $instance = self::get_instance_by_pageid($page->id);
-        $cm = self::get_cm_by_instance($instance);
-
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
-            return -1;
-        }
-
-        $showonteacherpermission = self::get_tool_config($page->id, 'showonteacherpermission');
-
-        $helper = new \mod_mootimeter\helper();
-
-        if (empty($showonteacherpermission)) {
-            // The config is not set yet. Set the value to 1.
-            $helper->set_tool_config($page, 'showonteacherpermission', 1);
-            return 1;
-        }
-
-        // The config was already set. Toggle it.
-        $helper->set_tool_config($page, 'showonteacherpermission', 0);
-        return 0;
+        return $this->toggle_state($page, 'showonteacherpermission');
     }
 
     /**
@@ -522,9 +502,10 @@ class helper {
 
         $instance = self::get_instance_by_pageid($page->id);
         $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
 
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
-            return -1;
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
         $togglestate = self::get_tool_config($page->id, $statename);

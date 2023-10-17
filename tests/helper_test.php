@@ -199,4 +199,41 @@ class helper_test extends advanced_testcase {
         $helper->set_tool_config($page->id, 'question', self::TEST_QUESTION_TITLE . "2");
         $this->assertEquals(self::TEST_QUESTION_TITLE . "2", \mod_mootimeter\helper::get_tool_config($page->id, 'question'));
     }
+
+    /**
+     * Toggle state test.
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     * @covers \mod_mootimeter\helper->toggle_state
+     * @covers \mod_mootimeter\helper->toggle_teacherpermission_state
+     */
+    public function test_toggle_state() {
+        $this->resetAfterTest();
+
+        $helper = new \mod_mootimeter\helper();
+        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id]);
+
+        $this->setUser($this->users['teacher']);
+        $helper->toggle_state($page, 'teststate');
+        $this->assertTrue((bool) \mod_mootimeter\helper::get_tool_config($page, 'teststate'));
+        $helper->toggle_state($page, 'teststate');
+        $this->assertFalse((bool) \mod_mootimeter\helper::get_tool_config($page, 'teststate'));
+
+        $this->setUser($this->users['student']);
+        $this->expectException(\required_capability_exception::class);
+        $helper->toggle_state($page, 'teststate');
+        $this->assertFalse((bool) \mod_mootimeter\helper::get_tool_config($page, 'teststate'));
+
+        $this->expectException(\required_capability_exception::class);
+        $helper->toggle_teacherpermission_state($page);
+        $this->assertFalse((bool) \mod_mootimeter\helper::get_tool_config($page, 'teststate'));
+
+        $this->setUser($this->users['teacher']);
+        $helper->toggle_state($page, 'teststate');
+        $this->assertTrue((bool) \mod_mootimeter\helper::get_tool_config($page, 'teststate'));
+    }
 }
