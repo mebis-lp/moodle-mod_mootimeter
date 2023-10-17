@@ -460,6 +460,8 @@ class helper {
 
         if (!is_object($pageorid)) {
             $page = $this->get_page($pageorid);
+        } else {
+            $page = $pageorid;
         }
 
         $instance = self::get_instance_by_pageid($page->id);
@@ -485,6 +487,7 @@ class helper {
         // Call mootimeter-core deletion processes.
         $DB->delete_records('mootimeter_pages', ['id' => $page->id]);
         $DB->delete_records('mootimeter_tool_settings', ['pageid' => $page->id]);
+        return true;
     }
 
     /**

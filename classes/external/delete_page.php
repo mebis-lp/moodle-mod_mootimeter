@@ -84,7 +84,7 @@ class delete_page extends external_api {
             $success = $mtmhelper->delete_page($pageid);
 
             if (!$success) {
-                return ['code' => 403, 'string' => 'Forbidden'];
+                return ['code' => 403, 'string' => 'Forbidden', 'cmid' => $cm->id];
             }
 
             $transaction->allow_commit();
