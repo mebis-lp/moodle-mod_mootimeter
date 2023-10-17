@@ -1,9 +1,10 @@
 import {call as fetchMany} from 'core/ajax';
+import Log from 'core/log';
 
 export const init = () => {
 
     // Get all up elements.
-    var ao = document.getElementById('add_answer_option');
+    const ao = document.getElementById('add_answer_option');
 
     if (!ao) {
         return;
@@ -15,8 +16,8 @@ export const init = () => {
      * Create new page.
      */
     function store() {
-        var pageid = this.dataset.pageid;
-        storeNewAnswerOption(pageid);
+        const pageid = this.dataset.pageid;
+        return storeNewAnswerOption(pageid);
     }
 };
 
@@ -38,9 +39,9 @@ const execStoreNewAnswerOption = (
  * Executes the call to create a new page.
  * @param {int} pageid
  */
-const storeNewAnswerOption = async (pageid) => {
+const storeNewAnswerOption = async(pageid) => {
     const response = await execStoreNewAnswerOption(pageid);
     if (response.code != 200) {
-        window.console.log(response.string);
+        Log.error(response.string);
     }
 };

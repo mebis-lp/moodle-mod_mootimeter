@@ -1,4 +1,5 @@
 import {call as fetchMany} from 'core/ajax';
+import Log from 'core/log';
 
 export const init = () => {
 
@@ -44,10 +45,10 @@ const execStoreVisualizationType = (
  * @param {int} pageid
  * @param {int} visuid
  */
-const storeVisualizationType = async (pageid, visuid) => {
+const storeVisualizationType = async(pageid, visuid) => {
     const response = await execStoreVisualizationType(pageid, visuid);
     if (response.code != 200) {
-        window.console.log(response.string);
+        Log.error(response.string);
     }
     if (response.code == 200) {
 

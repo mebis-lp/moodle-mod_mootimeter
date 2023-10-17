@@ -1,14 +1,15 @@
 import {call as fetchMany} from 'core/ajax';
+import Log from 'core/log';
 import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
 import {get_string as getString} from 'core/str';
 
-export const init = async () => {
+export const init = async() => {
     // Eventlistener to change page.
     var elements = document.getElementsByClassName("mootimeter_pages_li");
     if (elements) {
-        Array.from(elements).forEach(function (element) {
-            element.addEventListener('click', function () {
+        Array.from(elements).forEach((element) => {
+            element.addEventListener('click', () => {
                 var pageid = this.dataset.pageid;
                 var cmid = this.dataset.cmid;
                 location.href = 'view.php?id=' + cmid + '&pageid=' + pageid;
@@ -18,8 +19,8 @@ export const init = async () => {
 
     var addnewpagebtn = document.getElementById("mootimeter_addpage");
     if (addnewpagebtn) {
-        addnewpagebtn.addEventListener('click', function () {
-            var cmid = this.dataset.cmid;
+        addnewpagebtn.addEventListener('click', () => {
+            const cmid = this.dataset.cmid;
             location.href = 'view.php?id=' + cmid + "&a=addpage";
         });
     }
@@ -31,15 +32,15 @@ export const init = async () => {
         pageid: 5,
     });
 
-    modal.getRoot().on(ModalEvents.delete, function () {
+    modal.getRoot().on(ModalEvents.delete, function() {
         var pageid = document.getElementById("btn-delete_page").dataset.pageid;
         execDeletePage(pageid);
     });
 
     var deletebtns = document.getElementsByClassName("mootimeter-delete-page-btn");
     if (deletebtns) {
-        Array.from(deletebtns).forEach(function (element) {
-            element.addEventListener('click', function () {
+        Array.from(deletebtns).forEach((element) => {
+            element.addEventListener('click', () => {
                 modal.show();
             });
         });
@@ -63,10 +64,10 @@ export const init = async () => {
      * Executes the call to store input value.
      * @param {int} pageid
      */
-    const execDeletePage = async (pageid) => {
+    const execDeletePage = async(pageid) => {
         const response = await deletePageCall(pageid);
         if (response.code != 200) {
-            window.console.log(response.string);
+            Log.error(response.string);
             return;
         }
 

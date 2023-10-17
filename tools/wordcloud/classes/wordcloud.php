@@ -204,7 +204,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
             'pageid' => $page->id,
-            'ajaxmethode' => "mod_mootimeter_store_setting",
+            'ajaxmethod' => "mod_mootimeter_store_setting",
         ];
 
         $params['maxinputsperuser'] = [
@@ -214,7 +214,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'name' => "maxinputsperuser",
             'min' => 0,
             'pageid' => $page->id,
-            'ajaxmethode' => "mod_mootimeter_store_setting",
+            'ajaxmethod' => "mod_mootimeter_store_setting",
             'value' => (empty(self::get_tool_config($page->id, "maxinputsperuser"))) ? 0 : self::get_tool_config(
                 $page->id,
                 "maxinputsperuser"
@@ -227,7 +227,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'cb_with_label_text' => get_string('allowduplicateanswers', 'mootimetertool_wordcloud'),
             'cb_with_label_name' => 'allowduplicateanswers',
             'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_ajaxmethod' => "mod_mootimeter_store_setting",
             'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'allowduplicateanswers') ? "checked" : ""),
         ];
 
@@ -307,11 +307,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission', 'mod_mootimeter');
             }
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
-
-            // $params['icon-restart'] = [
-            // 'icon' => 'fa-rotate-left',
-            // 'id' => 'resetanswers',
-            // ];
         }
 
         $params['icon-showresults'] = [

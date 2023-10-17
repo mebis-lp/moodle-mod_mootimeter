@@ -1,4 +1,5 @@
 import {call as fetchMany} from 'core/ajax';
+import Log from 'core/log';
 
 export const init = (uniqueID) => {
     var obj = document.getElementById(uniqueID);
@@ -42,12 +43,12 @@ const storeInputValue = (
  * @param {int} pageid
  * @param {string} uniqueID
  */
-const exectoggleState = async (pageid, uniqueID) => {
+const exectoggleState = async(pageid, uniqueID) => {
     var statename = document.getElementById(uniqueID).dataset.togglename;
     const response = await storeInputValue(pageid, statename);
 
     if (response.code != 200) {
-        window.console.log(response.string);
+        Log.error(response.string);
     }
 
     if (response.code == 200) {

@@ -263,11 +263,6 @@ class quiz extends \mod_mootimeter\toolhelper {
             }
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 
-            // $params['icon-restart'] = [
-            // 'icon' => 'fa-rotate-left',
-            // 'id' => 'resetanswers',
-            // ];
-
             $dataseticoncheck = [
                 'data-togglename = "showanswercorrection"',
                 'data-pageid = ' . $page->id,
@@ -445,7 +440,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
             'pageid' => $page->id,
-            'ajaxmethode' => "mod_mootimeter_store_setting",
+            'ajaxmethod' => "mod_mootimeter_store_setting",
         ];
 
         $answeroptions = $this->get_answer_options($page->id);
@@ -456,20 +451,20 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-input-id' => 'ao_text_' . $answeroption->id,
                 'mtm-input-name' => 'ao_text',
                 'mtm-input-value' => $answeroption->optiontext,
-                'ajaxmethode' => "mootimetertool_quiz_store_answeroption_text",
+                'ajaxmethod' => "mootimetertool_quiz_store_answeroption_text",
                 'additional_class' => 'mootimeter-answer-options mootimeter_settings_selector',
                 'dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,
 
                 'mtm-cb-without-label-id' => 'ao_iscorrect_' . $answeroption->id,
                 'mtm-cb-without-label-name' => 'ao_iscorrect',
-                'mtm-cb-without-label-ajaxmethode' => "mootimetertool_quiz_store_answeroption_is_correct",
+                'mtm-cb-without-label-ajaxmethod' => "mootimetertool_quiz_store_answeroption_is_correct",
                 'mtm-cb-without-label-checked' => ($answeroption->optioniscorrect) ? "checked" : "",
 
                 'button_icon_only_transparent_id' => 'ao_delete_' . $answeroption->id,
                 'button_icon_only_transparent_dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,
                 'button_icon_only_transparent_icon' => 'fa-close',
                 'button_icon_only_transparent_additionalclass' => 'mtmt-remove-answeroption',
-                'button_icon_only_transparent_ajaxmethode' => 'mootimetertool_quiz_remove_anseroption',
+                'button_icon_only_transparent_ajaxmethod' => 'mootimetertool_quiz_remove_anseroption',
             ];
             $PAGE->requires->js_call_amd('mootimetertool_quiz/remove_answer_option', 'init', ['ao_delete_' . $answeroption->id]);
             $PAGE->requires->js_call_amd('mootimetertool_quiz/reload_answeroption', 'init', [$answeroption->id]);
@@ -534,7 +529,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'pageid' => $page->id,
             'cb_with_label_name' => 'multipleanswers',
             'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_ajaxmethod' => "mod_mootimeter_store_setting",
             'cb_with_label_checked' => (self::get_tool_config($page, 'multipleanswers')) ? "checked" : "",
         ];
         $PAGE->requires->js_call_amd('mod_mootimeter/trigger_reload', 'init', ['multipleanswers']);
@@ -545,7 +540,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_quiz'),
             'cb_with_label_name' => 'showonteacherpermission',
             'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-            'cb_with_label_ajaxmethode' => "mod_mootimeter_store_setting",
+            'cb_with_label_ajaxmethod' => "mod_mootimeter_store_setting",
             'cb_with_label_checked' => (self::get_tool_config($page, 'showonteacherpermission') ? "checked" : ""),
         ];
 

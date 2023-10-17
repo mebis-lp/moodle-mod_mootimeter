@@ -3,6 +3,7 @@
  */
 
 import {call as fetchMany} from 'core/ajax';
+import Log from 'core/log';
 
 
 export const init = (statename) => {
@@ -22,7 +23,7 @@ export const init = (statename) => {
         window.console.log('Statename not set in methods argument');
         return;
     }
-    setInterval(function () {
+    setInterval(function() {
         getState(obj.dataset.pageid, statename);
     }, 1000);
 };
@@ -49,11 +50,11 @@ const execGetState = (
  * @param {int} pageid
  * @param {string} statename
  */
-const getState = async (pageid, statename) => {
+const getState = async(pageid, statename) => {
     const response = await execGetState(pageid, statename);
 
     if (response.code != 200) {
-        window.console.log(response.string);
+        Log.error(response.string);
     }
 
     if (response.code == 200) {

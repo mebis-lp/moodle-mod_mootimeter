@@ -3,7 +3,7 @@ import notification from 'core/notification';
 import WordCloud from 'mootimetertool_wordcloud/wordcloud2';
 
 export const init = () => {
-    setInterval(function () {
+    setInterval(function() {
         var pageid = document.getElementById('wordcloudcanvas').dataset.pageid;
         var lastposttimestamp = document.getElementById('mootimeterstate').dataset.lastupdated;
         const promise = Ajax.call([{
@@ -15,7 +15,7 @@ export const init = () => {
             fail: notification.exception,
         }]);
 
-        promise[0].then(function (results) {
+        promise[0].then(function(results) {
             if (results.lastupdated == lastposttimestamp) {
                 return;
             }

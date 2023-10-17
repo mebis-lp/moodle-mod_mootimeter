@@ -17,8 +17,7 @@ export const init = () => {
      * Create new page.
      */
     function store() {
-        window.console.log("HUHU");
-        var pageid = document.getElementById('add_answer_option').dataset.pageid;
+        const pageid = document.getElementById('add_answer_option').dataset.pageid;
         storeNewAnswerOption(pageid);
     }
 };
@@ -41,24 +40,26 @@ const execStoreNewAnswerOption = (
  * Executes the call to create a new page.
  * @param {int} pageid
  */
-const storeNewAnswerOption = async (pageid) => {
-    const response = await execStoreNewAnswerOption(pageid);
+const storeNewAnswerOption = async(pageid) => {
 
     // ===== JUST FOR TEMPORARILY USE: - START
     document.location.reload(true);
     return;
     // ===== JUST FOR TEMPORARILY USE: - ENDE
 
+    // TODO Implement this.
+    // eslint-disable-next-line no-unreachable
+    const response = await execStoreNewAnswerOption(pageid);
     const context = {
         'mtm-input-id': 'ao_text_' + response.aoid,
         'mtm-input-name': 'ao_text',
-        'ajaxmethode': "mootimetertool_quiz_store_answeroption_text",
+        'ajaxmethod': "mootimetertool_quiz_store_answeroption_text",
         'additional_class': 'mootimeter-answer-options mootimeter_settings_selector',
         'dataset': 'data-pageid=' + pageid + ' data-aoid=' + response.aoid,
 
         'mtm-cb-without-label-id': 'ao_iscorrect_' + response.aoid,
         'mtm-cb-without-label-name': 'ao_iscorrect',
-        'mtm-cb-without-label-ajaxmethode': "mootimetertool_quiz_store_answeroption_is_correct",
+        'mtm-cb-without-label-ajaxmethod': "mootimetertool_quiz_store_answeroption_is_correct",
 
         'button_icon_only_transparent_additionalclass': 'mootimeter-answer-options',
         'button_icon_only_transparent_dataset': 'data-pageid="' + pageid + '" data-aoid="' + response.aoid + '"',
@@ -73,6 +74,4 @@ const storeNewAnswerOption = async (pageid) => {
             return true;
         })
         .catch((error) => displayException(error));
-
-    return;
 };

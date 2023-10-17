@@ -1,21 +1,21 @@
 export const init = (id) => {
 
     // Get all up elements.
-    var ao = document.getElementById(id);
+    const ao = document.getElementById(id);
 
     if (!ao) {
         return;
     }
 
     ao.addEventListener("click", reload);
+};
 
-    /**
-     * Create new page.
-     */
-    function reload() {
-        // Not realy nice but it take sure that the reload takes place after the ws communication of other events is finished.
-        setTimeout(function () {
-            document.location.reload(true);
-        }, 200);
-    }
+/**
+ * Create new page.
+ */
+const reload = () => {
+    // Not really nice but it makes sure that the reload takes place after the ws communication of other events is finished.
+    setTimeout(() => {
+        document.location.reload(true);
+    }, 200);
 };

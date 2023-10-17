@@ -5,9 +5,9 @@ import Templates from 'core/templates';
 export const init = () => {
 
     // Register event to input box.
-    var ao = document.getElementById('mootimeter_type_answer');
+    const ao = document.getElementById('mootimeter_type_answer');
     if (ao) {
-        ao.addEventListener("keyup", function (event) {
+        ao.addEventListener("keyup", function(event) {
             if (event.code === 'Enter' || event.code === 'NumpadEnter') {
                 store();
             }
@@ -15,9 +15,9 @@ export const init = () => {
     }
 
     // Register event to submit button.
-    var ae = document.getElementById('mootimeter_enter_answer');
+    const ae = document.getElementById('mootimeter_enter_answer');
     if (ae) {
-        ae.addEventListener("click", function () {
+        ae.addEventListener("click", function() {
             store();
         });
     }
@@ -54,7 +54,7 @@ const execStoreAnswer = (
  * @param {int} pageid
  * @param {string} answer
  */
-const storeAnswer = async (pageid, answer) => {
+const storeAnswer = async(pageid, answer) => {
     const response = await execStoreAnswer(pageid, answer);
 
     removeInfoBox();
@@ -66,8 +66,8 @@ const storeAnswer = async (pageid, answer) => {
     if (response.code == 200) {
 
         const context = {
-            pill: answer,
-            additional_class: ' mootimeter-pill-inline '
+            'pill': answer,
+            'additional_class': ' mootimeter-pill-inline '
         };
 
         // Add the answer to the Badges list.

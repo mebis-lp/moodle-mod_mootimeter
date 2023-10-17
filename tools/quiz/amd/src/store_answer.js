@@ -2,6 +2,7 @@ import {call as fetchMany} from 'core/ajax';
 import {exception as displayException} from 'core/notification';
 import {get_string as getString} from 'core/str';
 import Templates from 'core/templates';
+import Log from 'core/log';
 
 export const init = () => {
 
@@ -21,8 +22,6 @@ export const init = () => {
         const selectedanswerids = [];
         const pageid = this.dataset.pageid;
         const checkboxes = document.getElementsByName('multipleanswers[]');
-        window.console.log(pageid);
-        window.console.log(checkboxes);
         for (const checkbox of checkboxes) {
             if (checkbox.checked) {
                 selectedanswerids.push(checkbox.value);
@@ -59,13 +58,13 @@ const execStoreAnswer = (
 const storeAnswer = async(pageid, selectedanswerids) => {
     selectedanswerids = JSON.stringify(selectedanswerids);
 
-    const SuccessString = await getString('notification_success_store_answer', 'mod_mootimeter');
+    const successString = await getString('notification_success_store_answer', 'mod_mootimeter');
     const response = await execStoreAnswer(pageid, selectedanswerids);
     if (response.code != 200) {
-        window.console.log(response.string);
+        Log.error(response.string);
     }
     if (response.code == 200) {
-        renderInfoBox('success', SuccessString, '');
+        renderInfoBox('success', successString, '');
     }
 };
 

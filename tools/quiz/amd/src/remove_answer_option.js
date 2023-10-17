@@ -1,9 +1,10 @@
 import {call as fetchMany} from 'core/ajax';
+import Log from 'core/log';
 
 export const init = (id) => {
 
     // Get all up elements.
-    var ao = document.getElementById(id);
+    const ao = document.getElementById(id);
 
     if (!ao) {
         return;
@@ -15,9 +16,9 @@ export const init = (id) => {
      * Create new page.
      */
     function remove() {
-        var pageid = this.dataset.pageid;
-        var aoid = this.dataset.aoid;
-        removeAnswerOption(pageid, aoid);
+        const pageid = this.dataset.pageid;
+        const aoid = this.dataset.aoid;
+        return removeAnswerOption(pageid, aoid);
     }
 };
 
@@ -43,10 +44,10 @@ const execRemoveAnswerOption = (
  * @param {int} pageid
  * @param {int} aoid
  */
-const removeAnswerOption = async (pageid, aoid) => {
+const removeAnswerOption = async(pageid, aoid) => {
     const response = await execRemoveAnswerOption(pageid, aoid);
     if (response.code != 200) {
-        window.console.log(response.string);
+        Log.error(response.string);
     }
 
     if (response.code == 200) {

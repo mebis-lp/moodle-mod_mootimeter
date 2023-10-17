@@ -1,36 +1,37 @@
 import {call as fetchMany} from 'core/ajax';
+import Log from 'core/log';
 
 export const init = (uniqueID) => {
-    var obj = document.getElementById(uniqueID);
+    const obj = document.getElementById(uniqueID);
 
     if (!document.getElementById(uniqueID)) {
         return;
     }
 
-    obj.addEventListener("click", store);
+    obj.addEventListener('click', store);
 
     /**
      * Store the value.
      */
     function store() {
-        var id = this.id;
+        const id = this.id;
 
-        var pageid = this.dataset.pageid;
-        var ajaxmethode = this.dataset.ajaxmethode;
-        var inputname = this.dataset.name;
-        var inputvalue = 0;
-        var thisDataset = JSON.stringify(this.dataset);
+        const pageid = this.dataset.pageid;
+        const ajaxmethod = this.dataset.ajaxmethod;
+        const inputname = this.dataset.name;
+        let inputvalue = 0;
+        const thisDataset = JSON.stringify(this.dataset);
 
         if (document.getElementById(id).checked) {
             inputvalue = 1;
         }
-        setCbState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+        return setCbState(ajaxmethod, pageid, inputname, inputvalue, thisDataset);
     }
 };
 
 /**
  * Executes the call to store cb state.
- * @param {string} ajaxmethode
+ * @param {string} ajaxmethod
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
@@ -38,13 +39,13 @@ export const init = (uniqueID) => {
  * @returns
  */
 const execSetCbState = (
-    ajaxmethode,
+    ajaxmethod,
     pageid,
     inputname,
     inputvalue,
     thisDataset
 ) => fetchMany([{
-    methodname: ajaxmethode,
+    methodname: ajaxmethod,
     args: {
         pageid,
         inputname,
@@ -55,15 +56,15 @@ const execSetCbState = (
 
 /**
  * Store cb state.
- * @param {string} ajaxmethode
+ * @param {string} ajaxmethod
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
  * @param {string} thisDataset
  */
-const setCbState = async (ajaxmethode, pageid, inputname, inputvalue, thisDataset) => {
-    const response = await execSetCbState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+const setCbState = async(ajaxmethod, pageid, inputname, inputvalue, thisDataset) => {
+    const response = await execSetCbState(ajaxmethod, pageid, inputname, inputvalue, thisDataset);
     if (response.code != 200) {
-        window.console.log(response.string);
+        Log.error(response.string);
     }
 };

@@ -1,4 +1,5 @@
 import {call as fetchMany} from 'core/ajax';
+import Log from 'core/log';
 
 export const init = (uniqueID) => {
 
@@ -43,17 +44,17 @@ export const init = (uniqueID) => {
     function store(obj, id) {
 
         var pageid = obj.dataset.pageid;
-        var ajaxmethode = obj.dataset.ajaxmethode;
+        var ajaxmethod = obj.dataset.ajaxmethod;
         var inputname = obj.dataset.name;
         var inputvalue = document.getElementById(id).value;
         var thisDataset = JSON.stringify(obj.dataset);
-        setINState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+        setINState(ajaxmethod, pageid, inputname, inputvalue, thisDataset);
     }
 };
 
 /**
  * Executes the call to store cb state.
- * @param {string} ajaxmethode
+ * @param {string} ajaxmethod
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
@@ -61,13 +62,13 @@ export const init = (uniqueID) => {
  * @returns
  */
 const execSetINState = (
-    ajaxmethode,
+    ajaxmethod,
     pageid,
     inputname,
     inputvalue,
     thisDataset
 ) => fetchMany([{
-    methodname: ajaxmethode,
+    methodname: ajaxmethod,
     args: {
         pageid,
         inputname,
@@ -78,15 +79,15 @@ const execSetINState = (
 
 /**
  * Store cb state.
- * @param {string} ajaxmethode
+ * @param {string} ajaxmethod
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
  * @param {string} thisDataset
  */
-const setINState = async (ajaxmethode, pageid, inputname, inputvalue, thisDataset) => {
-    const response = await execSetINState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+const setINState = async(ajaxmethod, pageid, inputname, inputvalue, thisDataset) => {
+    const response = await execSetINState(ajaxmethod, pageid, inputname, inputvalue, thisDataset);
     if (response.code != 200) {
-        window.console.log(response.string);
+        Log.error(response.string);
     }
 };

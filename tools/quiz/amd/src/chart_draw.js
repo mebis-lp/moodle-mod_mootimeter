@@ -3,15 +3,10 @@ import {call as fetchMany} from 'core/ajax';
 
 export const init = () => {
 
-    // var labels = document.getElementById('mtmt_quiz_canvas').dataset.labels;
-    // var values = document.getElementById('mtmt_quiz_canvas').dataset.values;
-    // var charttype = document.getElementById('mtmt_quiz_canvas').dataset.charttype;
+    const pageid = document.getElementById('mtmt_quiz_canvas').dataset.pageid;
 
-    var pageid = document.getElementById('mtmt_quiz_canvas').dataset.pageid;
-
-
-    setInterval(function () {
-        var lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
+    setInterval(() => {
+        const lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
         getAnswers(pageid, lastposttimestamp);
     }, 1000);
 };
@@ -37,7 +32,7 @@ const execGetAnswers = (
  * @param {int} lastposttimestamp
  * @returns
  */
-const getAnswers = async (pageid, lastposttimestamp) => {
+const getAnswers = async(pageid, lastposttimestamp) => {
     const response = await execGetAnswers(pageid);
 
     // We do not want to do anything if nothing has changed.
@@ -53,9 +48,6 @@ const getAnswers = async (pageid, lastposttimestamp) => {
         return;
     }
 
-    window.console.log(document.getElementById('mtmt_quiz_canvas').dataset.values);
-    window.console.log(response.values);
-
     // Write the new data to the canvas data attributes.
     let nodelastupdated = document.getElementById('mootimeterstate');
     nodelastupdated.setAttribute('data-lastupdated', response.lastupdated);
@@ -64,8 +56,6 @@ const getAnswers = async (pageid, lastposttimestamp) => {
     nodecanvas.setAttribute('data-labels', response.labels);
     nodecanvas.setAttribute('data-values', response.values);
     nodecanvas.setAttribute('data-chartsettings', response.chartsettings);
-
-    window.console.log(response);
 
     // (Re-)Draw the chart.
     var config = {
