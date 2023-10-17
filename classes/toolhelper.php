@@ -143,14 +143,25 @@ abstract class toolhelper extends \mod_mootimeter\helper {
     ): array {
         global $DB;
 
+        // Temporarily get one record to retrieve user and page information.
+        $recordtemp = $record;
+        if (is_array($record)) {
+            $recordtemp = $record[0];
+        }
+
+        if(empty($recordtemp->pageid)){
+            throw new moodle_exception('pageidmissing', 'error');
+        }
+        $instance = $this->get_instance_by_pageid($recordtemp->pageid);
+        $cm = self::get_cm_by_instance($instance);
+
+        if (!is_enrolled(\context_course($cm->course), $recordtemp->usermodified)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
+        }
+
         $answerids = [];
 
         if ($allowmultipleanswers) {
-
-            // Temporarily get one record to retrieve user and page information.
-            if (is_array($record)) {
-                $recordtemp = $record[0];
-            }
 
             if ($updateexisting) {
                 $params = ['pageid' => $recordtemp->pageid, 'usermodified' => $recordtemp->usermodified];
