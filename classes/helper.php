@@ -60,9 +60,10 @@ class helper {
 
         $instance = $record->instance;
         $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
 
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
-            return 0;
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
         if (!empty($record->id)) {
@@ -112,9 +113,10 @@ class helper {
 
         $instance = self::get_instance_by_pageid($pageid);
         $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
 
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
-            return;
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
         $dataobject = $this->get_page($pageid);
@@ -203,6 +205,27 @@ class helper {
             $pagenumber++;
         }
         return $temppages;
+    }
+
+    /**
+     * Get next page sortorder
+     * @param int $instanceid
+     * @return int
+     * @throws dml_exception
+     */
+    public function get_page_next_sortorder(int $instanceid): int {
+        global $DB;
+
+        $records = $DB->get_records('mootimeter_pages', ['instance' => $instanceid], 'sortorder DESC', '*', 0, 1);
+
+        $lastrecord = array_shift($records);
+
+        $sortorder = 0;
+        if (!empty($lastrecord->sortorder)) {
+            $sortorder = $lastrecord->sortorder;
+        }
+
+        return $sortorder + 1;
     }
 
     /**
@@ -466,9 +489,10 @@ class helper {
 
         $instance = self::get_instance_by_pageid($page->id);
         $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
 
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
-            return false;
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
