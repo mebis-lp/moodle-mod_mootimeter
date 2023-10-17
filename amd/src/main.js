@@ -9,7 +9,7 @@ export const init = async() => {
     var elements = document.getElementsByClassName("mootimeter_pages_li");
     if (elements) {
         Array.from(elements).forEach((element) => {
-            element.addEventListener('click', () => {
+            element.addEventListener('click', function() {
                 var pageid = this.dataset.pageid;
                 var cmid = this.dataset.cmid;
                 location.href = 'view.php?id=' + cmid + '&pageid=' + pageid;
@@ -19,7 +19,7 @@ export const init = async() => {
 
     var addnewpagebtn = document.getElementById("mootimeter_addpage");
     if (addnewpagebtn) {
-        addnewpagebtn.addEventListener('click', () => {
+        addnewpagebtn.addEventListener('click', function() {
             const cmid = this.dataset.cmid;
             location.href = 'view.php?id=' + cmid + "&a=addpage";
         });
