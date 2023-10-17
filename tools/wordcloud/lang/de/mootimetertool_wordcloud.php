@@ -37,5 +37,5 @@ $string['tool_description_short'] = 'Wörter oder Aussagen live einsammeln';
 $string['answers_max_number'] = 'Maximale Anzahl von Antworten pro Teilnehmenden (0: unbegrenzt)';
 $string['allowduplicateanswers'] = 'Erlauben Sie den Schülerinnen und Schülern, dieselbe Antwort mehrmals einzureichen';
 $string['error_empty_answers'] = 'Leere Antworten sind nicht erlaubt';
-$string['error_to_many_answers'] = 'Zu viele Antworten';
+$string['error_to_many_answers'] = 'Die maximale Anzahl an Antworten ist erreicht';
 $string['error_no_duplicate_answers'] = 'Doppelte Antworten sind nicht erlaubt';

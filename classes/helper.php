@@ -40,13 +40,13 @@ use dml_exception;
  */
 class helper {
 
-    /** @var Webservice returning error code - OK */
+    /** @var int Webservice returning error code - OK */
     const ERRORCODE_OK = 200;
-    /** @var Webservice returning error code - Empty Answer */
+    /** @var int Webservice returning error code - Empty Answer */
     const ERRORCODE_EMPTY_ANSWER = 1000;
-    /** @var Webservice returning error code - To Many Answers */
+    /** @var int Webservice returning error code - Too Many Answers */
     const ERRORCODE_TO_MANY_ANSWERS = 1001;
-    /** @var Webservice returning error code - Duplicate Answers */
+    /** @var int Webservice returning error code - Duplicate Answers */
     const ERRORCODE_DUPLICATE_ANSWER = 1002;
 
     /**

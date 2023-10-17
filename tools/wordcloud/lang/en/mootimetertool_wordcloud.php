@@ -37,5 +37,5 @@ $string['tool_description_short'] = "Collect words or statements live";
 $string['answers_max_number'] = 'Maximum number of answers per participant (0: unlimited)';
 $string['allowduplicateanswers'] = 'Allow students to submit the same answer multiple times';
 $string['error_empty_answers'] = 'Empty answers are not allowed';
-$string['error_to_many_answers'] = 'To many answers';
+$string['error_to_many_answers'] = 'You reached the maximum amount of answers';
 $string['error_no_duplicate_answers'] = 'Duplicate answers are not allowed';
