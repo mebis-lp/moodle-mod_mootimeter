@@ -26,7 +26,11 @@
 namespace mod_mootimeter;
 
 use advanced_testcase;
+use coding_exception;
+use dml_exception;
 use mod_mootyper_generator;
+use SebastianBergmann\RecursionContext\InvalidArgumentException;
+use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * mod_mootimeter helper test
@@ -46,6 +50,8 @@ class helper_test extends advanced_testcase {
     private $users;
     /** @var array The roles defined for testing */
     private $roles;
+    /** @var object $generator The generator instance */
+    private $generator;
 
     /** @var string test question */
     const TEST_QUESTION_TITLE = 'Is this a test question?';
@@ -59,18 +65,18 @@ class helper_test extends advanced_testcase {
     public function setup(): void {
         global $DB;
 
-        $generator = $this->getDataGenerator();
-        $this->course = $generator->create_course();
-        $this->mootimeter = $generator->create_module('mootimeter', ['course' => $this->course]);
+        $this->generator = $this->getDataGenerator();
+        $this->course = $this->generator->create_course();
+        $this->mootimeter = $this->generator->create_module('mootimeter', ['course' => $this->course]);
 
         $this->roles['student'] = $DB->get_record('role', ['shortname' => 'student'], '*', MUST_EXIST);
         $this->roles['teacher'] = $DB->get_record('role', ['shortname' => 'teacher'], '*', MUST_EXIST);
 
-        $this->users['teacher'] = $generator->create_user();
-        $this->users['student'] = $generator->create_user();
+        $this->users['teacher'] = $this->generator->create_user();
+        $this->users['student'] = $this->generator->create_user();
 
-        $generator->role_assign('teacher', $this->users['teacher']->id, \context_module::instance($this->mootimeter->cmid));
-        $generator->role_assign('student', $this->users['student']->id, \context_module::instance($this->mootimeter->cmid));
+        $this->generator->role_assign('teacher', $this->users['teacher']->id, \context_module::instance($this->mootimeter->cmid));
+        $this->generator->role_assign('student', $this->users['student']->id, \context_module::instance($this->mootimeter->cmid));
 
         assign_capability(
             'mod/mootimeter:moderator',
@@ -90,7 +96,6 @@ class helper_test extends advanced_testcase {
     public function test_create_delete_page() {
         $this->resetAfterTest();
 
-        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $helper = new \mod_mootimeter\helper();
 
         $this->assertCount(0, $helper->get_pages($this->mootimeter->id));
@@ -100,22 +105,22 @@ class helper_test extends advanced_testcase {
             'instance' => $this->mootimeter->id,
             'tool' => 'wordcloud',
         ];
-        $page = $mtmgenerator->create_page($record);
+        $pageid = $helper->store_page((object)$record);
         $this->assertCount(1, $helper->get_pages($this->mootimeter->id));
 
         // Now check that a student gets an Exception, when creating a page.
         $this->setUser($this->users['student']);
         $this->expectException(\required_capability_exception::class);
-        $mtmgenerator->create_page($record);
+        $helper->store_page((object)$record);
 
         // Now delete the page.
         // First use student.
         $this->expectException(\required_capability_exception::class);
-        $helper->delete_page($page->id);
+        $helper->delete_page($pageid);
 
         // Second use teacher.
         $this->setUser($this->users['teacher']);
-        $helper->delete_page($page->id);
+        $helper->delete_page($pageid);
         $this->assertEmpty($helper->get_pages($this->mootimeter->id));
     }
 
@@ -130,14 +135,42 @@ class helper_test extends advanced_testcase {
         $helper = new \mod_mootimeter\helper();
 
         $this->setUser($this->users['teacher']);
-        $record = [
-            'instance' => $this->mootimeter->id,
-            'tool' => 'wordcloud',
-        ];
-        $page = $mtmgenerator->create_page($record);
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id]);
 
         $helper->store_page_detail($page->id, 'tool', self::TOOLNAME_QUIZ);
         $pagenew = $helper->get_page($page->id);
         $this->assertEquals(self::TOOLNAME_QUIZ, $pagenew->tool);
+    }
+
+    /**
+     * Validate that a page belongs to an instance.
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     * @covers \mod_mootimeter\helper->validate_page_belongs_to_instance
+     */
+    public function test_validate_page_belongs_to_instance() {
+        $this->resetAfterTest();
+
+        $helper = new \mod_mootimeter\helper();
+
+        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+        $helper = new \mod_mootimeter\helper();
+
+        // Create a second instance.
+        $mootimeter2 = $this->generator->create_module('mootimeter', ['course' => $this->course]);
+
+        // Create a page in each instance.
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id]);
+        $page2 = $mtmgenerator->create_page($this, ['instance' => $mootimeter2->id]);
+
+        // Get all pages of instance 1.
+        $myinstancepages = $helper->get_pages($this->mootimeter->id);
+
+        // Check if the page is / is not present in instance 1 / 2.
+        $this->assertTrue($helper->validate_page_belongs_to_instance($page->id, $myinstancepages));
+        $this->assertFalse($helper->validate_page_belongs_to_instance($page2->id, $myinstancepages));
     }
 }

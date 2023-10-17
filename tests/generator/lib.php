@@ -51,7 +51,7 @@ class mod_mootimeter_generator extends testing_module_generator {
      * @param array|null $options
      * @return stdClass mootimeter instance
      */
-    public function create_page($record = null): stdClass {
+    public function create_page(advanced_testcase $atc, $record = []): stdClass {
 
         $record = (array) $record;
 
@@ -69,6 +69,8 @@ class mod_mootimeter_generator extends testing_module_generator {
             'timemodified' => time(),
             'sortorder' => $mtmhelper->get_page_next_sortorder($record['instance']),
         ];
+
+        $atc->setAdminUser();
 
         $pageid = $mtmhelper->store_page((object)$record);
 
