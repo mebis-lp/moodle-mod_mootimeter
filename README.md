@@ -30,11 +30,11 @@ to complete the installation from the command line.
 
 ## Changes to styles.scss and files in scss/* ##
 
-If you want to change styles, you need to compile the scss files into css first.
-For doing so, just run `npm install` once after cloning the repository.
+If you want to change styles, you need to compile the scss files into css after you made your changes,
+so they will be picked up. For doing so, just run `npm install` once after cloning the repository.
 
-Whenever you apply changes to `styles.scss` or any file in `scss/` directory, you need
-to run `npm run compile-css` in the plugin root directory. This creates the minified `styles.css`
+Whenever you have applied changes to `styles.scss` or any file in `scss/` directory, you need
+to run `npm run compile-sass` in the plugin root directory. This creates the `styles.css`
 file which is being read and used by moodle.
 
 

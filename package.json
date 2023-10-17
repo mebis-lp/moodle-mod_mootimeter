@@ -1,13 +1,10 @@
 {
   "name": "moodle-mod_mootimeter",
   "devDependencies": {
-    "csso-cli": "^4.0.2",
     "node-sass": "^9.0.0"
   },
   "scripts": {
-    "compile-sass": "node-sass styles.scss styles.unminified.css",
-    "minify-css": "csso -i styles.unminified.css -o styles.css",
-    "compile-css": "npm run compile-sass && npm run minify-css && rm styles.unminified.css"
+    "compile-sass": "node-sass styles.scss styles.css"
   },
   "stylelint": {
       "ignoreFiles": ["styles.css"]
