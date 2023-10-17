@@ -101,8 +101,6 @@ if (!empty($page)) {
     $params['pageid'] = $page->id;
     $params['settings'] = $helper->get_col_settings($page);
 
-    $params['has_result'] = $helper->has_result_page($page);
-
     if ($isresultpage) {
         $params['pagecontent'] = $helper->get_rendered_page_result($page);
     } else {

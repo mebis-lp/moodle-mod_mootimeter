@@ -173,4 +173,6 @@ class helper_test extends advanced_testcase {
         $this->assertTrue($helper->validate_page_belongs_to_instance($page->id, $myinstancepages));
         $this->assertFalse($helper->validate_page_belongs_to_instance($page2->id, $myinstancepages));
     }
+
+
 }

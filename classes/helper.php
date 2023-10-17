@@ -288,24 +288,6 @@ class helper {
     }
 
     /**
-     * Checks if the toll has a result page.
-     *
-     * @param object $page
-     * @return bool
-     * @deprecated
-     */
-    public function has_result_page(object $page) {
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-        if (!class_exists($classname)) {
-            return false;
-        }
-
-        $toolhelper = new $classname();
-        return method_exists($toolhelper, 'get_result_page');
-    }
-
-    /**
      * Calls tool method if exists.
      *
      * @param object $page
@@ -391,22 +373,6 @@ class helper {
         }
 
         return $toolhelper->get_tool_settings_parameters($page);
-    }
-
-    /**
-     * Store all tool page config settings during a form submit.
-     *
-     * @param object $page
-     * @return void
-     * @throws coding_exception
-     * @deprecated
-     */
-    public function store_tool_config(object $page): void {
-        $parameters = $this->get_tool_settings_parameters($page);
-
-        foreach ($parameters as $parameter) {
-            $this->set_tool_config($page,  $parameter['name'], $parameter['value']);
-        }
     }
 
     /**
