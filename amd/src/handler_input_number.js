@@ -1,4 +1,4 @@
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 
 export const init = (uniqueID) => {
 

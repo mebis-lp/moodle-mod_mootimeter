@@ -1,5 +1,5 @@
-import { call as fetchMany } from 'core/ajax';
-import { exception as displayException } from 'core/notification';
+import {call as fetchMany} from 'core/ajax';
+import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 
 export const init = () => {
@@ -67,7 +67,7 @@ const storeNewAnswerOption = async (pageid) => {
 
     // Add the answer to the Badges list.
     Templates.renderForPromise('mod_mootimeter/elements/snippet_input_with_checkbox-icon', context)
-        .then(({ html, js }) => {
+        .then(({html, js}) => {
             Templates.appendNodeContents('#mtmt-quiz-ao-wrapper', html, js);
             Templates.runTemplateJS(js);
             return true;

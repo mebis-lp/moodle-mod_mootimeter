@@ -1,7 +1,7 @@
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
-import { get_string as getString } from 'core/str';
+import {get_string as getString} from 'core/str';
 
 export const init = async () => {
     // Eventlistener to change page.
@@ -46,10 +46,10 @@ export const init = async () => {
     }
 
     /**
-    * Call to store input value
-    * @param {int} pageid
-    * @returns
-    */
+     * Call to store input value
+     * @param {int} pageid
+     * @returns
+     */
     const deletePageCall = (
         pageid,
     ) => fetchMany([{

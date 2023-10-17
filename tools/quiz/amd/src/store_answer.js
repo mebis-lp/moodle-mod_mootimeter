@@ -1,11 +1,12 @@
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
+import {exception as displayException} from 'core/notification';
+import {get_string as getString} from 'core/str';
 import Templates from 'core/templates';
-import { get_string as getString } from 'core/str';
 
 export const init = () => {
 
     // Get all up elements.
-    var submitbtn = document.getElementById('mtmt_store_answer');
+    const submitbtn = document.getElementById('mtmt_store_answer');
 
     if (!submitbtn) {
         return;
@@ -18,24 +19,25 @@ export const init = () => {
      */
     function store() {
         const selectedanswerids = [];
-        var pageid = this.dataset.pageid;
-        var checkboxes = document.getElementsByName('multipleanswers[]');
+        const pageid = this.dataset.pageid;
+        const checkboxes = document.getElementsByName('multipleanswers[]');
         window.console.log(pageid);
         window.console.log(checkboxes);
-        for (var checkbox of checkboxes) {
+        for (const checkbox of checkboxes) {
             if (checkbox.checked) {
                 selectedanswerids.push(checkbox.value);
             }
         }
-        storeAnswer(pageid, selectedanswerids);
+        return storeAnswer(pageid, selectedanswerids);
     }
 
 };
 
 /**
  * Call to create a new instance
+ *
  * @param {int} pageid
- * @param {string} selectedanswerids
+ * @param {[]} aoids
  * @returns
  */
 const execStoreAnswer = (
@@ -54,7 +56,7 @@ const execStoreAnswer = (
  * @param {int} pageid
  * @param {array} selectedanswerids
  */
-const storeAnswer = async (pageid, selectedanswerids) => {
+const storeAnswer = async(pageid, selectedanswerids) => {
     selectedanswerids = JSON.stringify(selectedanswerids);
 
     const SuccessString = await getString('notification_success_store_answer', 'mod_mootimeter');
@@ -83,7 +85,7 @@ function renderInfoBox(notificationType, notificationString, icon) {
     };
 
     Templates.renderForPromise('mod_mootimeter/elements/snippet_notification', context)
-        .then(({ html, js }) => {
+        .then(({html, js}) => {
             Templates.appendNodeContents('#mtmt_tool-colct-header', html, js);
             return true;
         })

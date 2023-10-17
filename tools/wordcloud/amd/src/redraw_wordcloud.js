@@ -51,6 +51,6 @@ export const init = () => {
     function redrawwordcloud() {
         let mtmtcanvas = document.getElementById('wordcloudcanvas');
         let answers = JSON.parse(mtmtcanvas.dataset.answers);
-        WordCloud(mtmtcanvas, { list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans' });
+        WordCloud(mtmtcanvas, {list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans'});
     }
 };

@@ -1,5 +1,5 @@
-import { call as fetchMany } from 'core/ajax';
-import { get_string as getString } from 'core/str';
+import {call as fetchMany} from 'core/ajax';
+import {get_string as getString} from 'core/str';
 
 export const init = (uniqueID) => {
     var obj = document.getElementById(uniqueID);

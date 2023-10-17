@@ -1,5 +1,5 @@
 import ChartJS from 'mootimetertool_quiz/chart.umd';
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 
 export const init = () => {
 
@@ -8,7 +8,6 @@ export const init = () => {
     // var charttype = document.getElementById('mtmt_quiz_canvas').dataset.charttype;
 
     var pageid = document.getElementById('mtmt_quiz_canvas').dataset.pageid;
-
 
 
     setInterval(function () {

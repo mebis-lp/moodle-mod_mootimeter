@@ -1,7 +1,7 @@
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 
 export const init = (uniqueID) => {
-    var obj = document.getElementById(uniqueID);
+    const obj = document.getElementById(uniqueID);
 
     if (!document.getElementById(uniqueID)) {
         return;
@@ -19,7 +19,7 @@ export const init = (uniqueID) => {
         var inputname = this.dataset.name;
         var inputvalue = document.getElementById(id).value;
         var thisDataset = JSON.stringify(this.dataset);
-        execStoreInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+        return execStoreInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     }
 };
 

@@ -1,5 +1,5 @@
-import { call as fetchMany } from 'core/ajax';
-import { exception as displayException } from 'core/notification';
+import {call as fetchMany} from 'core/ajax';
+import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 
 export const init = () => {
@@ -72,7 +72,7 @@ const storeAnswer = async (pageid, answer) => {
 
         // Add the answer to the Badges list.
         Templates.renderForPromise('mod_mootimeter/elements/snippet_pill', context)
-            .then(({ html, js }) => {
+            .then(({html, js}) => {
                 Templates.appendNodeContents('#mtmt_wordcloud_pills', html, js);
                 return true;
             })
@@ -98,7 +98,7 @@ function renderInfoBox(notificationType, notificationString) {
     };
 
     Templates.renderForPromise('mod_mootimeter/elements/snippet_notification', context)
-        .then(({ html, js }) => {
+        .then(({html, js}) => {
             Templates.appendNodeContents('#mtmt_tool-colct-header', html, js);
             return true;
         })

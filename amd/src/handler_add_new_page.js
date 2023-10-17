@@ -1,7 +1,7 @@
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 
 export const init = (uniqueID) => {
-    var obj = document.getElementById(uniqueID);
+    const obj = document.getElementById(uniqueID);
 
     if (!document.getElementById(uniqueID)) {
         return;
@@ -12,10 +12,10 @@ export const init = (uniqueID) => {
      * Create new page.
      */
     function store() {
-        var tool = this.dataset.name;
-        var instance = this.dataset.instance;
+        const tool = this.dataset.name;
+        const instance = this.dataset.instance;
 
-        storeNewPage(tool, instance);
+        return storeNewPage(tool, instance);
     }
 };
 
@@ -41,7 +41,7 @@ const createNewPage = (
  * @param {string} tool
  * @param {int} instance
  */
-const storeNewPage = async (tool, instance) => {
+const storeNewPage = async(tool, instance) => {
     const response = await createNewPage(tool, instance);
     window.location.href = window.location.origin
         + window.location.pathname + "?id=" + response.cmid + "&pageid=" + response.pageid;

@@ -2,7 +2,7 @@
  * Listen to a state change. If changed, reload the page.
  */
 
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 
 
 export const init = (statename) => {

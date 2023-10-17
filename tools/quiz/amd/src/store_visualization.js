@@ -1,4 +1,4 @@
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 
 export const init = () => {
 
@@ -11,6 +11,7 @@ export const init = () => {
         // Finally add the new listener.
         visualizationElements[i].addEventListener("click", store);
     }
+
     /**
      * Create new page.
      */
