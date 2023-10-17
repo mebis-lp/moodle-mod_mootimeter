@@ -155,8 +155,8 @@ class helper_test extends advanced_testcase {
         $this->resetAfterTest();
 
         $helper = new \mod_mootimeter\helper();
-
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+
         $helper = new \mod_mootimeter\helper();
 
         // Create a second instance.
@@ -174,5 +174,29 @@ class helper_test extends advanced_testcase {
         $this->assertFalse($helper->validate_page_belongs_to_instance($page2->id, $myinstancepages));
     }
 
+    /**
+     * Test set / get tool config.
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     * @covers \mod_mootimeter\helper->set_tool_config
+     * @covers \mod_mootimeter\helper->get_tool_config
+     */
+    public function test_set_get_tool_config() {
+        $this->resetAfterTest();
 
+        $helper = new \mod_mootimeter\helper();
+        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id]);
+
+        $helper->set_tool_config($page, 'question', self::TEST_QUESTION_TITLE);
+
+        $this->assertEquals(self::TEST_QUESTION_TITLE, \mod_mootimeter\helper::get_tool_config($page, 'question'));
+
+        $helper->set_tool_config($page->id, 'question', self::TEST_QUESTION_TITLE . "2");
+        $this->assertEquals(self::TEST_QUESTION_TITLE . "2", \mod_mootimeter\helper::get_tool_config($page->id, 'question'));
+    }
 }
