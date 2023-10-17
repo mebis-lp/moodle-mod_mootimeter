@@ -8,5 +8,8 @@
     "compile-sass": "node-sass styles.scss styles.unminified.css",
     "minify-css": "csso -i styles.unminified.css -o styles.css",
     "compile-css": "npm run compile-sass && npm run minify-css && rm styles.unminified.css"
+  },
+  "stylelint": {
+      "ignoreFiles": ["styles.css"]
   }
 }
