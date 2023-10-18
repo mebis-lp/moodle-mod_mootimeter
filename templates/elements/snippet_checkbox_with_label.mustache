@@ -9,7 +9,7 @@
       {{#cb_with_label_value}} value="{{cb_with_label_value}}" {{/cb_with_label_value}}
       {{#cb_with_label_name}}name="{{cb_with_label_name}}"{{/cb_with_label_name}}
 
-      {{#cb_with_label_ajaxmethode}}data-ajaxmethode="{{cb_with_label_ajaxmethode}}"{{/cb_with_label_ajaxmethode}}
+      {{#cb_with_label_ajaxmethod}}data-ajaxmethod="{{cb_with_label_ajaxmethod}}"{{/cb_with_label_ajaxmethod}}
       {{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
       {{#cb_with_label_name}}data-name="{{cb_with_label_name}}"{{/cb_with_label_name}}
     />
@@ -23,8 +23,8 @@
     </span>
   </label>
 </div>
-{{#cb_with_label_ajaxmethode}}
+{{#cb_with_label_ajaxmethod}}
 {{#js}}
 require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{cb_with_label_id}}"));
 {{/js}}
-{{/cb_with_label_ajaxmethode}}
+{{/cb_with_label_ajaxmethod}}

@@ -13,7 +13,7 @@
       {{#rb_with_label_value}} value="{{rb_with_label_value}}" {{/rb_with_label_value}}
       {{#rb_with_label_name}}name="{{rb_with_label_name}}"{{/rb_with_label_name}}
 
-      {{#rb_with_label_ajaxmethode}}data-ajaxmethode="{{rb_with_label_ajaxmethode}}"{{/rb_with_label_ajaxmethode}}
+      {{#rb_with_label_ajaxmethod}}data-ajaxmethod="{{rb_with_label_ajaxmethod}}"{{/rb_with_label_ajaxmethod}}
       {{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
       {{#rb_with_label_name}}data-name="{{rb_with_label_name}}"{{/rb_with_label_name}}
 
@@ -27,8 +27,8 @@
         </span>
   </label>
 </div>
-{{#rb_with_label_ajaxmethode}}
+{{#rb_with_label_ajaxmethod}}
 {{#js}}
 require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{rb_with_label_id}}"));
 {{/js}}
-{{/rb_with_label_ajaxmethode}}
+{{/rb_with_label_ajaxmethod}}

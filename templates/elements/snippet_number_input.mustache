@@ -14,7 +14,7 @@
 				aria-hidden="true"
 				{{#id}} id="up_{{id}}"{{/id}}
 				data-id="{{id}}"
-				{{#ajaxmethode}}data-ajaxmethode="{{ajaxmethode}}"{{/ajaxmethode}}
+				{{#ajaxmethod}}data-ajaxmethod="{{ajaxmethod}}"{{/ajaxmethod}}
 				{{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
 				{{#name}}data-name="{{name}}"{{/name}}
 			>
@@ -25,7 +25,7 @@
 				aria-hidden="true"
 				{{#id}} id="down_{{id}}"{{/id}}
 				data-id="{{id}}"
-				{{#ajaxmethode}}data-ajaxmethode="{{ajaxmethode}}"{{/ajaxmethode}}
+				{{#ajaxmethod}}data-ajaxmethod="{{ajaxmethod}}"{{/ajaxmethod}}
 				{{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
 				{{#name}}data-name="{{name}}"{{/name}}
 			>
@@ -35,8 +35,8 @@
 		{{title}}
 	</label>
 </div>
-{{#ajaxmethode}}
+{{#ajaxmethod}}
 {{#js}}
 require(['mod_mootimeter/handler_input_number'], (module) => module.init("{{id}}"));
 {{/js}}
-{{/ajaxmethode}}
+{{/ajaxmethod}}

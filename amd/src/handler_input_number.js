@@ -2,8 +2,9 @@ import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
 
 export const init = (uniqueID) => {
-
+console.log('bla')
     var up = document.getElementById('up_' + uniqueID);
+    console.log(up)
     var down = document.getElementById('down_' + uniqueID);
 
     if (up) {
@@ -18,6 +19,7 @@ export const init = (uniqueID) => {
      * Count num input up.
      */
     function countUp() {
+        console.log("bla")
         var id = this.dataset.id;
         if (Math.floor(document.getElementById(id).dataset.min) <= Math.floor(document.getElementById(id).value) + 1) {
             document.getElementById(id).value = Math.floor(document.getElementById(id).value) + 1;
@@ -42,7 +44,7 @@ export const init = (uniqueID) => {
      * @param {*} id
      */
     function store(obj, id) {
-
+console.log(obj)
         var pageid = obj.dataset.pageid;
         var ajaxmethod = obj.dataset.ajaxmethod;
         var inputname = obj.dataset.name;
