@@ -18,6 +18,10 @@
     margin: 0;
   }
 
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
   label {
     display: flex;
     width: 100%;
@@ -56,6 +60,12 @@
 
   .icon {
     color: $grey-300;
+  }
+
+  &:hover {
+    .icon {
+      color: $white-standard;
+    }
   }
 }
 

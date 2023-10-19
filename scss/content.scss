@@ -23,14 +23,21 @@
       background: $grey-100;
     }
 
+    @media screen and (max-width: 469px) {
+      padding: 0;
+    }
+
     .mootimeter-content-wrapper {
       display: block;
       width: 100%;
 
-      div {
-        max-height: 75vH;
+      @media screen and (max-width: 469px) {
+        padding: 5.75rem 0.625rem 0.625rem 0.625rem;
       }
 
+      div {
+        max-height: 75vh;
+      }
     }
 
     .mootimeter-colcontent-preview {
@@ -42,6 +49,10 @@
       flex-direction: column;
       gap: 2.5rem;
       margin: 0 auto;
+
+      @media screen and (max-width: 469px) {
+        padding: 1rem;
+      }
     }
 
     .mootimeter-colcontent-preview-header {
@@ -89,21 +100,25 @@
   .mootimetercolcontent {
     background-color: $grey-300;
 
-		.mootimeter-content-menu {
-    background-color: $white-standard;
-		}
+    .mootimeter-content-menu {
+      background-color: $white-standard;
+    }
 
-		.mootimeter-colcontent-preview {
-			background-color: $grey-400;
+    .mootimeter-colcontent-preview {
+      background-color: $grey-400;
 
+      .mootimeter-btn-icon-only-transparent {
+        color: $white-standard;
+      }
 
-			.mootimeter-btn-icon-only-transparent {
-				color: $white-standard;
-			}
-
-			h3, h4, p, small, input, label {
-				color: $white-standard;
-			}
-		}
+      h3,
+      h4,
+      p,
+      small,
+      input,
+      label {
+        color: $white-standard;
+      }
+    }
   }
 }
