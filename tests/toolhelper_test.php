@@ -40,7 +40,7 @@ use PHPUnit\Framework\ExpectationFailedException;
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class helper_test extends advanced_testcase {
+class toolhelper_test extends advanced_testcase {
 
     /** @var \stdClass The course used for testing */
     private $course;
@@ -94,6 +94,8 @@ class helper_test extends advanced_testcase {
      * @covers \mod_mootimeter\helper->delete_page method
      */
     public function test_store_answer() {
+
+        $toolhelper = new \mod_mootimeter\toolhelper();
 
 
     }

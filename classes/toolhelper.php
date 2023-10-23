@@ -155,7 +155,7 @@ abstract class toolhelper extends \mod_mootimeter\helper {
         $instance = $this->get_instance_by_pageid($recordtemp->pageid);
         $cm = self::get_cm_by_instance($instance);
 
-        if (!is_enrolled(\context_course($cm->course), $recordtemp->usermodified)) {
+        if (!is_enrolled(\context_course::instance($cm->course), $recordtemp->usermodified)) {
             throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
