@@ -43,13 +43,13 @@ const execStoreNewAnswerOption = (
 const storeNewAnswerOption = async(pageid) => {
 
     // ===== JUST FOR TEMPORARILY USE: - START
+    const response = await execStoreNewAnswerOption(pageid);
     document.location.reload(true);
     return;
     // ===== JUST FOR TEMPORARILY USE: - ENDE
 
     // TODO Implement this.
     // eslint-disable-next-line no-unreachable
-    const response = await execStoreNewAnswerOption(pageid);
     const context = {
         'mtm-input-id': 'ao_text_' + response.aoid,
         'mtm-input-name': 'ao_text',

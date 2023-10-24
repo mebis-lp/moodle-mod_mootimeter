@@ -64,3 +64,4 @@ $string['toolsettings'] = 'Tool settings';
 $string['tooltip_content_menu_teacherpermission'] = 'Click to allow students to view the results.';
 $string['tooltip_content_menu_teacherpermission_disabled'] = 'Click to hide the results.';
 $string['tooltip_show_results_page'] = 'Show results page.';
+$string['tooltip_show_question_page'] = 'Show question page.';
