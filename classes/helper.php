@@ -327,53 +327,53 @@ class helper {
         return $toolhelper->get_col_settings_tool($page);
     }
 
-    /**
-     * Get all setting definitions of a page.
-     *
-     * @param object $page
-     * @return string
-     * @throws coding_exception
-     * @deprecated
-     */
-    public function get_tool_settings(object $page): string {
+    // /**
+    //  * Get all setting definitions of a page.
+    //  *
+    //  * @param object $page
+    //  * @return string
+    //  * @throws coding_exception
+    //  * @deprecated
+    //  */
+    // public function get_tool_settings(object $page): string {
 
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+    //     $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
-        if (!class_exists($classname)) {
-            throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
-        }
+    //     if (!class_exists($classname)) {
+    //         throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
+    //     }
 
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_tool_settings')) {
-            throw new \coding_exception("Method 'get_tool_settings' is missing in tool helper class " . $page->tool);
-        }
+    //     $toolhelper = new $classname();
+    //     if (!method_exists($toolhelper, 'get_tool_settings')) {
+    //         throw new \coding_exception("Method 'get_tool_settings' is missing in tool helper class " . $page->tool);
+    //     }
 
-        return $toolhelper->get_tool_settings($page);
-    }
+    //     return $toolhelper->get_tool_settings($page);
+    // }
 
-    /**
-     * Get all tool settings parameters.
-     *
-     * @param object $page
-     * @return array
-     * @throws coding_exception
-     * @deprecated
-     */
-    public function get_tool_settings_parameters(object $page): array {
+    // /**
+    //  * Get all tool settings parameters.
+    //  *
+    //  * @param object $page
+    //  * @return array
+    //  * @throws coding_exception
+    //  * @deprecated
+    //  */
+    // public function get_tool_settings_parameters(object $page): array {
 
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+    //     $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
-        if (!class_exists($classname)) {
-            throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
-        }
+    //     if (!class_exists($classname)) {
+    //         throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
+    //     }
 
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_tool_settings_parameters')) {
-            throw new \coding_exception("Method 'get_tool_settings_parameters' is missing in tool helper class " . $page->tool);
-        }
+    //     $toolhelper = new $classname();
+    //     if (!method_exists($toolhelper, 'get_tool_settings_parameters')) {
+    //         throw new \coding_exception("Method 'get_tool_settings_parameters' is missing in tool helper class " . $page->tool);
+    //     }
 
-        return $toolhelper->get_tool_settings_parameters($page);
-    }
+    //     return $toolhelper->get_tool_settings_parameters($page);
+    // }
 
     /**
      * Set a single config value.
@@ -530,5 +530,189 @@ class helper {
         global $OUTPUT;
 
         return $OUTPUT->render_from_template("mod_mootimeter/view_no_pages", []);
+    }
+
+    /**
+     * Store the answer.
+     *
+     * This methode handels all answer storage processes. $updateexisting = true only makes sense with $record is an object.
+     * In combination with $allowmultipleanswers = true means that existing answers will be deleted. This is because we do not know
+     * how many answers has to be updated. It can be more or less than the original answer. Therefore it is more easy to delete
+     * all ansers and store the new ones.
+     *
+     * @param string $table
+     * @param object|array $record
+     * @param bool $updateexisting
+     * @param string $answercolumn
+     * @param bool $allowmultipleanswers
+     * @return array
+     * @throws dml_exception
+     * @throws coding_exception
+     * @throws cache_exception
+     */
+    public function store_answer(
+        string $table,
+        object|array $record,
+        bool $updateexisting = false,
+        string $answercolumn = 'answer',
+        bool $allowmultipleanswers =  false
+    ): array {
+        global $DB;
+
+        // Temporarily get one record to retrieve user and page information.
+        $recordtemp = $record;
+        if (is_array($record)) {
+            $recordtemp = $record[0];
+        }
+
+        if(empty($recordtemp->pageid)){
+            throw new \moodle_exception('pageidmissing', 'error');
+        }
+
+        $instanceid = $this->get_instance_by_pageid($recordtemp->pageid);
+        $cm = self::get_cm_by_instance($instanceid);
+        $context = \context_course::instance($cm->course);
+
+        if (!is_enrolled($context, $recordtemp->usermodified)) {
+            throw new \moodle_exception('notenrolledtocourse', 'error');
+        }
+
+        $answerids = [];
+
+        if ($allowmultipleanswers) {
+
+            if ($updateexisting) {
+                $params = ['pageid' => $recordtemp->pageid, 'usermodified' => $recordtemp->usermodified];
+                $DB->delete_records($table, $params);
+            }
+
+            foreach ($record as $dataobject) {
+                $answerids[] = $DB->insert_record($table, $dataobject);
+                $pageid = $dataobject->pageid;
+            }
+        }
+
+        if (!$allowmultipleanswers) {
+
+            // If it's an array with only one record in it. We can update the existing answer.
+            if (is_array($record)) {
+                $dataobject = array_pop($record);
+            } else {
+                $dataobject = $record;
+            }
+
+            // Store the answer to db or update it.
+            if ($updateexisting) {
+                $params = ['pageid' => $dataobject->pageid, 'usermodified' => $dataobject->usermodified];
+                $origrecord = $DB->get_record($table, $params);
+            }
+
+            if (!empty($origrecord)) {
+                $origrecord->{$answercolumn} = $dataobject->{$answercolumn};
+                $origrecord->timemodified = time();
+
+                $DB->update_record($table, $origrecord);
+                $answerids[] = $origrecord->id;
+            }
+
+            if (empty($origrecord)) {
+                $answerids[] = $DB->insert_record($table, $dataobject);
+            }
+            $pageid = $dataobject->pageid;
+        }
+
+        // Recreate the cache.
+        $this->clear_caches($pageid);
+        $this->get_answers($table, $pageid, $answercolumn);
+        $this->get_answers_grouped($table, ['pageid' => $pageid], $answercolumn);
+
+        return $answerids;
+    }
+
+    /**
+     * Get all pgae answers of a specific user. Using get_answers method to use the cache.
+     *
+     * @param string $table
+     * @param int $pageid
+     * @param string $answercolumn
+     * @param int $userid
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_user_answers(string $table, int $pageid, string $answercolumn = 'answer', int $userid = 0): array {
+        $pageanswers = $this->get_answers($table, $pageid, $answercolumn);
+
+        $useranswers = [];
+
+        foreach ($pageanswers as $pageanswer) {
+            if ($userid > 0 && $pageanswer->usermodified == $userid) {
+                $useranswers[$pageanswer->{$answercolumn}] = $pageanswer;
+            }
+        }
+
+        return $useranswers;
+    }
+
+    /**
+     * Get all answers of a page.
+     *
+     * @param string $table
+     * @param int $pageid
+     * @param string $answercolumn
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_answers(string $table, int $pageid, string $answercolumn = 'answer') {
+        global $DB;
+
+        $cache = \cache::make('mod_mootimeter', 'answers');
+        $cachekey = 'answers_' . $pageid;
+        $records = json_decode($cache->get($cachekey));
+
+        if (empty($records)) {
+            $records = $DB->get_records($table, ['pageid' => $pageid]);
+            $cache->set($cachekey, json_encode($records));
+        }
+
+        return $records;
+    }
+
+    /**
+     * Get all grouped and counted answers of a page.
+     * @param string $table
+     * @param array $params
+     * @param string $answercolumn
+     * @return array
+     * @throws coding_exception
+     * @throws dml_exception
+     */
+    public function get_answers_grouped(string $table, array $params, string $answercolumn = 'answer'): array {
+        global $DB;
+
+        $cache = \cache::make('mod_mootimeter', 'answers');
+        $cachekey = 'cnt_' . $params['pageid'];
+        $records = json_decode($cache->get($cachekey), true);
+
+        if (empty($records)) {
+            $sql = "SELECT $answercolumn, count(*) as cnt FROM {" . $table . "} WHERE pageid = :pageid GROUP BY $answercolumn";
+            $records = $DB->get_records_sql($sql, $params);
+            $cache->set($cachekey, json_encode($records));
+        }
+
+        return $records;
+    }
+
+    /**
+     * Clear all caches.
+     *
+     * @param int $pageid
+     * @return void
+     * @throws coding_exception
+     * @throws cache_exception
+     */
+    public function clear_caches(int $pageid): void {
+        $cache = \cache::make('mod_mootimeter', 'answers');
+        $cache->delete('answers_' . $pageid);
+        $cache->delete('cnt_' . $pageid);
     }
 }

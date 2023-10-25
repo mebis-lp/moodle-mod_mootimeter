@@ -59,6 +59,9 @@ class helper_test extends advanced_testcase {
     /** @var string toolname: quiz */
     const TOOLNAME_QUIZ = 'quiz';
 
+    /** @var string answer column wordcloud */
+    const ANSWER_COLUMN_WORDCLOD = "answer";
+
     /**
      * Setup the test cases.
      */
@@ -74,9 +77,13 @@ class helper_test extends advanced_testcase {
 
         $this->users['teacher'] = $this->generator->create_user();
         $this->users['student'] = $this->generator->create_user();
+        $this->users['student_not_in_course'] = $this->generator->create_user();
 
         $this->generator->role_assign('teacher', $this->users['teacher']->id, \context_module::instance($this->mootimeter->cmid));
         $this->generator->role_assign('student', $this->users['student']->id, \context_module::instance($this->mootimeter->cmid));
+
+        $this->generator->enrol_user($this->users['teacher']->id, $this->course->id, 'teacher');
+        $this->generator->enrol_user($this->users['student']->id, $this->course->id, 'student');
 
         assign_capability(
             'mod/mootimeter:moderator',
@@ -235,5 +242,224 @@ class helper_test extends advanced_testcase {
         $this->setUser($this->users['teacher']);
         $helper->toggle_state($page, 'teststate');
         $this->assertTrue((bool) \mod_mootimeter\helper::get_tool_config($page, 'teststate'));
+    }
+
+    /**
+     * Test to check if store_answer throws missing_pageid exception
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     * @covers \mod_mootimeter\helper->store_answer
+     */
+    public function test_store_answer_exception_missing_pageid() {
+        $this->resetAfterTest();
+
+        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
+
+        // $this->setUser($this->users['teacher']);
+
+        $helper = new \mod_mootimeter\helper();
+
+        $record = new \stdClass();
+        $record->usermodified = $this->users['student']->id;
+        $record->answer = "Test";
+        $record->timecreated = time();
+        $records[] = $record;
+
+        // Firstcheck if the $records object has all necessary attributes.
+        $this->expectException(\moodle_exception::class);
+        $this->expectExceptionMessage('pageidmissing');
+        $helper->store_answer(
+            'mtmt_wordcloud_answers',
+            $records,
+            false,
+            self::ANSWER_COLUMN_WORDCLOD,
+            (bool)$helper::get_tool_config($page, 'multipleanswers')
+        );
+    }
+
+    /**
+     * Test to check if store_answer throws not_enroled_to_course exception
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     * @covers \mod_mootimeter\helper->store_answer
+     */
+    public function test_store_answer_exception_not_enroled_to_course() {
+        $this->resetAfterTest();
+
+        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
+
+        $helper = new \mod_mootimeter\helper();
+
+        $record = new \stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $this->users['student_not_in_course']->id;
+        $record->answer = "Test";
+        $record->timecreated = time();
+        $records[] = $record;
+
+        $this->expectException(\moodle_exception::class);
+        $this->expectExceptionMessage('notenrolledtocourse');
+        $helper->store_answer(
+            'mtmt_wordcloud_answers',
+            $records,
+            true,
+            self::ANSWER_COLUMN_WORDCLOD,
+            (bool)$helper::get_tool_config($page, 'multipleanswers')
+        );
+    }
+
+    /**
+     * Test to check if store_answer accepts updateexisting and multipleanswers parameter.
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     * @covers \mod_mootimeter\helper->store_answer
+     */
+    public function test_store_answer_update_existing_and_multiple_answers() {
+        $this->resetAfterTest();
+
+        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
+
+        $helper = new \mod_mootimeter\helper();
+
+        $helper->set_tool_config($page, 'multipleanswers', 0);
+
+        $record = new \stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $this->users['student']->id;
+        $record->answer = "Test";
+        $record->timecreated = time();
+        $records[] = $record;
+
+        $helper->store_answer(
+            'mtmt_wordcloud_answers',
+            $records,
+            true,
+            self::ANSWER_COLUMN_WORDCLOD,
+            (bool)$helper::get_tool_config($page, 'multipleanswers') // False.
+        );
+
+        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $this->assertCount(1, (array)$answers);
+
+        $answer1 = (array) $answers;
+
+        $record = new \stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $this->users['student']->id;
+        $record->answer = "Test2";
+        $record->timecreated = time();
+        $records[] = $record;
+
+        $helper->store_answer(
+            'mtmt_wordcloud_answers',
+            $records,
+            true,
+            self::ANSWER_COLUMN_WORDCLOD,
+            (bool)$helper::get_tool_config($page, 'multipleanswers') // False.
+        );
+
+        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $this->assertCount(1, (array)$answers);
+        $answer2 = (array) $answers;
+
+        $this->assertNotEquals(array_pop($answer1)->answer, array_pop($answer2)->answer);
+    }
+
+
+    /**
+     * Test to check if store_answer accepts updateexisting and multipleanswers parameter.
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     * @covers \mod_mootimeter\helper->store_answer
+     */
+    public function test_store_answer_multiple_answers() {
+        $this->resetAfterTest();
+
+        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
+
+        $helper = new \mod_mootimeter\helper();
+        $helper->set_tool_config($page, 'multipleanswers', 1);
+
+        $record = new \stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $this->users['student']->id;
+        $record->answer = "Test";
+        $record->timecreated = time();
+        $records[] = $record;
+
+        $helper->store_answer(
+            'mtmt_wordcloud_answers',
+            $records,
+            false,
+            self::ANSWER_COLUMN_WORDCLOD,
+            (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
+        );
+
+        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $this->assertCount(1, (array)$answers);
+
+        // Reset records array.
+        $records = [];
+
+        $record = new \stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $this->users['student']->id;
+        $record->answer = "Test2";
+        $record->timecreated = time();
+        $records[] = $record;
+
+        $helper->store_answer(
+            'mtmt_wordcloud_answers',
+            $records,
+            false,
+            self::ANSWER_COLUMN_WORDCLOD,
+            (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
+        );
+
+        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $this->assertCount(2, (array)$answers);
+
+        // Now try to store a doubled answer and update the existing answers.
+        // Reset records array.
+        $records = [];
+
+        $record = new \stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $this->users['student']->id;
+        $record->answer = "Test3";
+        $record->timecreated = time();
+        $records[] = $record;
+
+        $record = new \stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = $this->users['student']->id;
+        $record->answer = "Test4";
+        $record->timecreated = time();
+        $records[] = $record;
+
+        $helper->store_answer(
+            'mtmt_wordcloud_answers',
+            $records,
+            true,
+            self::ANSWER_COLUMN_WORDCLOD,
+            (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
+        );
+
+        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $this->assertCount(2, (array)$answers);
+
+        $answervalues = array_map(function ($tempanswer) {
+            return $tempanswer->answer;
+        }, (array) $answers);
+
+        $this->assertEquals(array_values($answervalues), ['Test3', 'Test4']);
     }
 }
