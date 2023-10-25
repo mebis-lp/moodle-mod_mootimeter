@@ -7,14 +7,14 @@
         {{dataset}}
         {{#name}}name="{{name}}"{{/name}}
 
-		{{#ajaxmethod}}data-ajaxmethod="{{ajaxmethod}}"{{/ajaxmethod}}
+		{{#ajaxmethode}}data-ajaxmethode="{{ajaxmethode}}"{{/ajaxmethode}}
 		{{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
 		{{#name}}data-name="{{name}}"{{/name}}
     >
     {{title}}
 </label>
-{{#ajaxmethod}}
+{{#ajaxmethode}}
 {{#js}}
 require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{id}}"));
 {{/js}}
-{{/ajaxmethod}}
+{{/ajaxmethode}}

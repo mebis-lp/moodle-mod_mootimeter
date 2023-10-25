@@ -8,7 +8,7 @@
       {{#mtm-cb-without-label-name}}name="{{mtm-cb-without-label-name}}"{{/mtm-cb-without-label-name}}
 
       {{#pageid}}data-pageid="{{pageid}}"{{/pageid}}
-      {{#mtm-cb-without-label-ajaxmethod}}data-ajaxmethod="{{mtm-cb-without-label-ajaxmethod}}"{{/mtm-cb-without-label-ajaxmethod}}
+      {{#mtm-cb-without-label-ajaxmethode}}data-ajaxmethode="{{mtm-cb-without-label-ajaxmethode}}"{{/mtm-cb-without-label-ajaxmethode}}
       {{#mtm-cb-without-label-name}}data-name="{{mtm-cb-without-label-name}}"{{/mtm-cb-without-label-name}}
       {{dataset}}
     />
@@ -17,8 +17,8 @@
     </span>
   </label>
 </div>
-{{#mtm-cb-without-label-ajaxmethod}}
+{{#mtm-cb-without-label-ajaxmethode}}
 {{#js}}
 require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{mtm-cb-without-label-id}}"));
 {{/js}}
-{{/mtm-cb-without-label-ajaxmethod}}
+{{/mtm-cb-without-label-ajaxmethode}}

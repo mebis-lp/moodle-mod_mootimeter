@@ -204,7 +204,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
             'pageid' => $page->id,
-            'ajaxmethod' => "mod_mootimeter_store_setting",
+            'ajaxmethode' => "mod_mootimeter_store_setting",
         ];
 
         $params['maxinputsperuser'] = [
@@ -214,7 +214,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'name' => "maxinputsperuser",
             'min' => 0,
             'pageid' => $page->id,
-            'ajaxmethod' => "mod_mootimeter_store_setting",
+            'ajaxmethode' => "mod_mootimeter_store_setting",
             'value' => (empty(self::get_tool_config($page->id, "maxinputsperuser"))) ? 0 : self::get_tool_config(
                 $page->id,
                 "maxinputsperuser"

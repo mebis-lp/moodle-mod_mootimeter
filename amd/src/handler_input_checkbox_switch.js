@@ -17,7 +17,7 @@ export const init = (uniqueID) => {
         const id = this.id;
 
         const pageid = this.dataset.pageid;
-        const ajaxmethod = this.dataset.ajaxmethod;
+        const ajaxmethode = this.dataset.ajaxmethode;
         const inputname = this.dataset.name;
         let inputvalue = 0;
         const thisDataset = JSON.stringify(this.dataset);
@@ -25,13 +25,13 @@ export const init = (uniqueID) => {
         if (document.getElementById(id).checked) {
             inputvalue = 1;
         }
-        return setCbState(ajaxmethod, pageid, inputname, inputvalue, thisDataset);
+        return setCbState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     }
 };
 
 /**
  * Executes the call to store cb state.
- * @param {string} ajaxmethod
+ * @param {string} ajaxmethode
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
@@ -39,13 +39,13 @@ export const init = (uniqueID) => {
  * @returns
  */
 const execSetCbState = (
-    ajaxmethod,
+    ajaxmethode,
     pageid,
     inputname,
     inputvalue,
     thisDataset
 ) => fetchMany([{
-    methodname: ajaxmethod,
+    methodname: ajaxmethode,
     args: {
         pageid,
         inputname,
@@ -56,14 +56,14 @@ const execSetCbState = (
 
 /**
  * Store cb state.
- * @param {string} ajaxmethod
+ * @param {string} ajaxmethode
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
  * @param {string} thisDataset
  */
-const setCbState = async(ajaxmethod, pageid, inputname, inputvalue, thisDataset) => {
-    const response = await execSetCbState(ajaxmethod, pageid, inputname, inputvalue, thisDataset);
+const setCbState = async(ajaxmethode, pageid, inputname, inputvalue, thisDataset) => {
+    const response = await execSetCbState(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     if (response.code != 200) {
         Log.error(response.string);
     }

@@ -451,7 +451,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
             'pageid' => $page->id,
-            'ajaxmethod' => "mod_mootimeter_store_setting",
+            'ajaxmethode' => "mod_mootimeter_store_setting",
         ];
 
         $answeroptions = $this->get_answer_options($page->id);
@@ -462,13 +462,13 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-input-id' => 'ao_text_' . $answeroption->id,
                 'mtm-input-name' => 'ao_text',
                 'mtm-input-value' => $answeroption->optiontext,
-                'ajaxmethod' => "mootimetertool_quiz_store_answeroption_text",
+                'ajaxmethode' => "mootimetertool_quiz_store_answeroption_text",
                 'additional_class' => 'mootimeter-answer-options mootimeter_settings_selector',
                 'dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,
 
                 'mtm-cb-without-label-id' => 'ao_iscorrect_' . $answeroption->id,
                 'mtm-cb-without-label-name' => 'ao_iscorrect',
-                'mtm-cb-without-label-ajaxmethod' => "mootimetertool_quiz_store_answeroption_is_correct",
+                'mtm-cb-without-label-ajaxmethode' => "mootimetertool_quiz_store_answeroption_is_correct",
                 'mtm-cb-without-label-checked' => ($answeroption->optioniscorrect) ? "checked" : "",
 
                 'button_icon_only_transparent_id' => 'ao_delete_' . $answeroption->id,

@@ -53,13 +53,13 @@ const storeNewAnswerOption = async(pageid) => {
     const context = {
         'mtm-input-id': 'ao_text_' + response.aoid,
         'mtm-input-name': 'ao_text',
-        'ajaxmethod': "mootimetertool_quiz_store_answeroption_text",
+        'ajaxmethode': "mootimetertool_quiz_store_answeroption_text",
         'additional_class': 'mootimeter-answer-options mootimeter_settings_selector',
         'dataset': 'data-pageid=' + pageid + ' data-aoid=' + response.aoid,
 
         'mtm-cb-without-label-id': 'ao_iscorrect_' + response.aoid,
         'mtm-cb-without-label-name': 'ao_iscorrect',
-        'mtm-cb-without-label-ajaxmethod': "mootimetertool_quiz_store_answeroption_is_correct",
+        'mtm-cb-without-label-ajaxmethode': "mootimetertool_quiz_store_answeroption_is_correct",
 
         'button_icon_only_transparent_additionalclass': 'mootimeter-answer-options',
         'button_icon_only_transparent_dataset': 'data-pageid="' + pageid + '" data-aoid="' + response.aoid + '"',
