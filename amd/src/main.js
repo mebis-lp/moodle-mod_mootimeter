@@ -5,18 +5,6 @@ import ModalEvents from 'core/modal_events';
 import {get_string as getString} from 'core/str';
 
 export const init = async() => {
-    // Eventlistener to change page.
-    var elements = document.getElementsByClassName("mootimeter_pages_li");
-    if (elements) {
-        Array.from(elements).forEach((element) => {
-            element.addEventListener('click', function() {
-                var pageid = this.dataset.pageid;
-                var cmid = this.dataset.cmid;
-                location.href = 'view.php?id=' + cmid + '&pageid=' + pageid;
-            });
-        });
-    }
-
     var addnewpagebtn = document.getElementById("mootimeter_addpage");
     if (addnewpagebtn) {
         addnewpagebtn.addEventListener('click', function() {

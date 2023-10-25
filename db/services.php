@@ -106,4 +106,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:moderator',
     ],
+    'mod_mootimeter_get_pages_list' => [
+        'classname'     => 'mod_mootimeter\external\reload_pagelist',
+        'methodname'    => 'execute',
+        'description'   => 'Get the recent pagelist',
+        'type'          => 'read',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];

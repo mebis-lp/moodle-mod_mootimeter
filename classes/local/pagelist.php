@@ -38,7 +38,8 @@ namespace mod_mootimeter\local;
 class pagelist {
 
     public function get_pagelist_html(object|int $pageorid) {
-        global $OUTPUT;
+        global $OUTPUT, $USER, $PAGE;
+
 
         $helper = new \mod_mootimeter\helper();
 
@@ -50,6 +51,16 @@ class pagelist {
 
         $instance = $helper::get_instance_by_pageid($page->id);
         $cm = $helper::get_cm_by_instance($instance);
+        $modulecontext = \context_module::instance($cm->id);
+        $PAGE->set_context($modulecontext);
+
+        // Check if the user is enrolled to the course to wich the instance belong to.
+        // If not, the user is not allowed to view the page list.
+        $context = \context_course::instance($cm->course);
+        if (!is_enrolled($context, $USER->id)) {
+            throw new \moodle_exception('notenrolledtocourse', 'error');
+        }
+
         $pages = $helper->get_pages($cm->instance);
 
         $temppages = [];
@@ -64,6 +75,7 @@ class pagelist {
                 'pagenumber' => $pagenumber,
                 'width' => "35px",
                 'cmid' => $cm->id,
+                'id' => uniqid('mtmt_page_'),
             ];
             $pagenumber++;
         }
