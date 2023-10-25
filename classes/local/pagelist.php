@@ -66,6 +66,7 @@ class pagelist {
         $temppages = [];
         $pagenumber = 1;
         foreach ($pages as $pagerow) {
+            $uniqid = uniqid('mtmt_page_');
             $temppages['pageslist'][] = [
                 'title' => $pagerow->title,
                 'pix' => "tools/" . $pagerow->tool . "/pix/" . $pagerow->tool . ".svg",
@@ -75,8 +76,10 @@ class pagelist {
                 'pagenumber' => $pagenumber,
                 'width' => "35px",
                 'cmid' => $cm->id,
-                'id' => uniqid('mtmt_page_'),
+                'id' => $uniqid,
             ];
+            $PAGE->requires->js_call_amd('mod_mootimeter/change_page', 'init', [$uniqid]);
+
             $pagenumber++;
         }
 

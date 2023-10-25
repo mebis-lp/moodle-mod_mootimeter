@@ -8,7 +8,7 @@ export const init = () => {
         return;
     }
 
-    setTimeout(() => {
+    setInterval(() => {
         getPagelist();
     }, 5000);
 

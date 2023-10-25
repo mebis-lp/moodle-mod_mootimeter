@@ -32,7 +32,7 @@ export const init = (statename) => {
  * Call to create a new instance
  * @param {int} pageid
  * @param {string} statename
- * @returns
+ * @returns {string}
  */
 const execGetState = (
     pageid,

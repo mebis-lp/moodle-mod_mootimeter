@@ -263,6 +263,13 @@ class quiz extends \mod_mootimeter\toolhelper {
             }
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 
+            $params['icon-restart'] = [
+                'icon' => 'fa-arrow-rotate-left',
+                'id' => 'mtmt_restart',
+                'iconid' => 'mtmt_restart_iconid',
+                'dataset' => 'data-pageid="' . $page->id . '"',
+            ];
+
             $dataseticoncheck = [
                 'data-togglename = "showanswercorrection"',
                 'data-pageid = ' . $page->id,

@@ -16,17 +16,17 @@ export const init = (uniqueID) => {
     function mootimeterStoreInput() {
         const id = this.id;
         const pageid = this.dataset.pageid;
-        const ajaxmethod = this.dataset.ajaxmethod;
+        const ajaxmethode = this.dataset.ajaxmethode;
         const inputname = this.dataset.name;
         const inputvalue = document.getElementById(id).value;
         const thisDataset = JSON.stringify(this.dataset);
-        return execStoreInputValue(ajaxmethod, pageid, inputname, inputvalue, thisDataset);
+        return execStoreInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     }
 };
 
 /**
  * Call to store input value
- * @param {string} ajaxmethod
+ * @param {string} ajaxmethode
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
@@ -34,13 +34,13 @@ export const init = (uniqueID) => {
  * @returns
  */
 const storeInputValue = (
-    ajaxmethod,
+    ajaxmethode,
     pageid,
     inputname,
     inputvalue,
     thisDataset
 ) => fetchMany([{
-    methodname: ajaxmethod,
+    methodname: ajaxmethode,
     args: {
         pageid,
         inputname,
@@ -51,14 +51,14 @@ const storeInputValue = (
 
 /**
  * Executes the call to store input value.
- * @param {string} ajaxmethod
+ * @param {string} ajaxmethode
  * @param {int} pageid
  * @param {string} inputname
  * @param {string} inputvalue
  * @param {string} thisDataset
  */
-const execStoreInputValue = async(ajaxmethod, pageid, inputname, inputvalue, thisDataset) => {
-    const response = await storeInputValue(ajaxmethod, pageid, inputname, inputvalue, thisDataset);
+const execStoreInputValue = async(ajaxmethode, pageid, inputname, inputvalue, thisDataset) => {
+    const response = await storeInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     if (response.code != 200) {
         Log.error(response.string);
     }
