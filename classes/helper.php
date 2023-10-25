@@ -50,6 +50,40 @@ class helper {
     const ERRORCODE_DUPLICATE_ANSWER = 1002;
 
     /**
+     * Get a tools answer column.
+     * @param object $page
+     * @return string
+     */
+    public function get_tool_answer_column(object $page): string {
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+        if (!class_exists($classname)) {
+            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        }
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'hook_after_new_page_created')) {
+            return "Method 'get_answer_column' is missing in tool helper class " . $page->tool;
+        }
+        return $toolhelper->get_answer_column();
+    }
+
+    /**
+     * Get a tools answer table.
+     * @param object $page
+     * @return string
+     */
+    public function get_tool_answer_table(object $page): string {
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+        if (!class_exists($classname)) {
+            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        }
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'hook_after_new_page_created')) {
+            return "Method 'get_answer_table' is missing in tool helper class " . $page->tool;
+        }
+        return $toolhelper->get_answer_table();
+    }
+
+    /**
      * Insert or update a page record.
      *
      * @param object $record
@@ -565,7 +599,7 @@ class helper {
             $recordtemp = $record[0];
         }
 
-        if(empty($recordtemp->pageid)){
+        if (empty($recordtemp->pageid)) {
             throw new \moodle_exception('pageidmissing', 'error');
         }
 
@@ -627,6 +661,30 @@ class helper {
         $this->get_answers_grouped($table, ['pageid' => $pageid], $answercolumn);
 
         return $answerids;
+    }
+
+    /**
+     * Deete all answers of a page.
+     * @param string $table
+     * @param int $pageid
+     * @return bool
+     * @throws dml_exception
+     */
+    public function delete_all_answers(string $table, int $pageid): bool {
+        global $DB;
+
+        $instance = self::get_instance_by_pageid($pageid);
+        $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
+
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
+        }
+
+        $params = ['pageid' => $pageid];
+        $return = $DB->delete_records($table, $params);
+        $this->clear_caches($pageid);
+        return $return;
     }
 
     /**

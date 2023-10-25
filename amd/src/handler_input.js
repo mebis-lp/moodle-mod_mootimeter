@@ -31,7 +31,7 @@ export const init = (uniqueID) => {
  * @param {string} inputname
  * @param {string} inputvalue
  * @param {string} thisDataset
- * @returns
+ * @returns {mixed}
  */
 const storeInputValue = (
     ajaxmethode,

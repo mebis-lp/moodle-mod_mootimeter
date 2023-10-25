@@ -40,29 +40,50 @@ use stdClass;
 class quiz extends \mod_mootimeter\toolhelper {
 
     /**
-     * @var Answer cloum
+     * @var string Answer cloum
      */
     const ANSWER_COLUMN = "optionid";
-    /** @var ChartJS default color
+    /**
+     * @var string Answer table
+     */
+    const ANSWER_TABLE = "mtmt_quiz_answers";
+
+    /** @var string ChartJS default color
      * TODO: Make it an admin setting.
      */
     const CHARTJS_DEFAULT_COLOR = "#d33f01";
-    /** @var Answer cloum
+    /** @var string Answer cloum
      * TODO: Make it an admin setting.
      */
     const CHARTJS_DEFAULT_COLOR_SUCCESS = "#00C431";
 
-    /** @var Visualization id for pillar chart */
+    /** @var int Visualization id for pillar chart */
     const VISUALIZATION_ID_CHART_PILLAR = 1;
-    /** @var Visualization id for bar chart */
+    /** @var int Visualization id for bar chart */
     const VISUALIZATION_ID_CHART_BAR = 2;
-    /** @var Visualization id for line chart */
+    /** @var int Visualization id for line chart */
     const VISUALIZATION_ID_CHART_LINE = 3;
-    /** @var Visualization id for pie chart */
+    /** @var int Visualization id for pie chart */
     const VISUALIZATION_ID_CHART_PIE = 4;
 
     /** @var Answer cloum */
     const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
+
+    /**
+     * Get the tools answer column.
+     * @return string
+     */
+    public function get_answer_column() {
+        return self::ANSWER_COLUMN;
+    }
+
+    /**
+     * Get the tools answer table.
+     * @return string
+     */
+    public function get_answer_table() {
+        return self::ANSWER_TABLE;
+    }
 
     /**
      * Get chartjs visualization settings.
@@ -176,7 +197,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         }
 
         $this->store_answer(
-            'mtmt_quiz_answers',
+            self::ANSWER_TABLE,
             $records,
             true,
             self::ANSWER_COLUMN,
@@ -263,12 +284,18 @@ class quiz extends \mod_mootimeter\toolhelper {
             }
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 
+            // Reset Question.
+            $dataseticonrestart = [
+                'data-ajaxmethode = "mod_mootimeter_delete_all_answers"',
+                'data-pageid="' . $page->id . '"',
+            ];
             $params['icon-restart'] = [
                 'icon' => 'fa-arrow-rotate-left',
                 'id' => 'mtmt_restart',
                 'iconid' => 'mtmt_restart_iconid',
-                'dataset' => 'data-pageid="' . $page->id . '"',
+                'dataset' => join(" ", $dataseticonrestart),
             ];
+            $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$params['icon-restart']['id']]);
 
             $dataseticoncheck = [
                 'data-togglename = "showanswercorrection"',
@@ -341,7 +368,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             $transaction = $DB->start_delegated_transaction();
 
             $DB->delete_records('mtmt_quiz_options', ['pageid' => $pageid, 'id' => $aoid]);
-            $DB->delete_records('mtmt_quiz_answers', ['pageid' => $pageid, 'optionid' => $aoid]);
+            $DB->delete_records(self::ANSWER_TABLE, ['pageid' => $pageid, 'optionid' => $aoid]);
 
             $transaction->allow_commit();
 
@@ -381,7 +408,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             $inputtype = 'cb';
         }
 
-        $useransweroptionsid = array_keys($this->get_user_answers('mtmt_quiz_answers', $page->id, 'optionid', $USER->id));
+        $useransweroptionsid = array_keys($this->get_user_answers(self::ANSWER_TABLE, $page->id, 'optionid', $USER->id));
 
         foreach ($answeroptions as $answeroption) {
             $wrapperadditionalclass = (self::get_tool_config($page->id, 'showanswercorrection')) ? "mootimeter-highlighter" : "";
@@ -594,7 +621,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_quiz_results_chartjs(object $page): array {
         if (self::get_tool_config($page, 'showonteacherpermission')) {
-            $answersgrouped = (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $page->id], 'optionid');
+            $answersgrouped = (array)$this->get_answers_grouped(self::ANSWER_TABLE, ["pageid" => $page->id], 'optionid');
         } else {
             $answersgrouped = [];
         }
@@ -674,7 +701,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         global $DB;
         try {
             $DB->delete_records('mtmt_quiz_options', ['pageid' => $page->id]);
-            $DB->delete_records('mtmt_quiz_answers', ['pageid' => $page->id]);
+            $DB->delete_records(self::ANSWER_TABLE, ['pageid' => $page->id]);
         } catch (\Exception $e) {
             return false;
         }
@@ -698,7 +725,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             return 0;
         }
 
-        $records = $DB->get_records('mtmt_quiz_answers', ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
+        $records = $DB->get_records(self::ANSWER_TABLE, ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
 
         if (empty($records)) {
             return 0;
@@ -717,7 +744,7 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function get_counted_answers(int $pageid) {
         $values = array_map(function ($obj) {
             return $obj['cnt'];
-        }, (array)$this->get_answers_grouped("mtmt_quiz_answers", ["pageid" => $pageid], 'optionid'));
+        }, (array)$this->get_answers_grouped(self::ANSWER_TABLE, ["pageid" => $pageid], 'optionid'));
         return array_values($values);
     }
 }

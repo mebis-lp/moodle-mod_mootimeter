@@ -42,6 +42,18 @@ use dml_exception;
 abstract class toolhelper extends \mod_mootimeter\helper {
 
     /**
+     * Get the tools answer column.
+     * @return string
+     */
+    abstract public function get_answer_column();
+
+    /**
+     * Get the tools answer table.
+     * @return string
+     */
+    abstract public function get_answer_table();
+
+    /**
      * Insert the answer.
      *
      * @param object $page

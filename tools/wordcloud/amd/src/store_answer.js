@@ -113,5 +113,4 @@ function removeInfoBox() {
     if (infobox) {
         infobox.remove();
     }
-
 }

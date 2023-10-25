@@ -55,7 +55,9 @@ const execStoreAnswer = (
  * @param {int} pageid
  * @param {array} selectedanswerids
  */
-const storeAnswer = async(pageid, selectedanswerids) => {
+const storeAnswer = async (pageid, selectedanswerids) => {
+    removeInfoBox();
+
     selectedanswerids = JSON.stringify(selectedanswerids);
 
     const successString = await getString('notification_success_store_answer', 'mod_mootimeter');
@@ -89,4 +91,14 @@ function renderInfoBox(notificationType, notificationString, icon) {
             return true;
         })
         .catch((error) => displayException(error));
+}
+
+/**
+ * Remove the info box.
+ */
+function removeInfoBox() {
+    var infobox = document.getElementById("mtmt_answer_warning");
+    if (infobox) {
+        infobox.remove();
+    }
 }

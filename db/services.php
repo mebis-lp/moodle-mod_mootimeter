@@ -114,4 +114,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mod_mootimeter_delete_all_answers' => [
+        'classname'     => 'mod_mootimeter\external\delete_all_answers',
+        'methodname'    => 'execute',
+        'description'   => 'Delete all answers of a page',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];

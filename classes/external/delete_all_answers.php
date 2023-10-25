@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to delete a page.
+ * Web service to delete_all_answers.
  *
  * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
@@ -38,14 +38,14 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
 /**
- * Web service to delete a page.
+ * Web service to delete_all_answers.
  *
  * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class delete_page extends external_api {
+class delete_all_answers extends external_api {
     /**
      * Describes the parameters.
      *
@@ -54,6 +54,7 @@ class delete_page extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The new pageid.', VALUE_REQUIRED),
+            'thisDataset' => new external_value(PARAM_RAW, 'The dataset of the button.', VALUE_REQUIRED),
         ]);
     }
 
@@ -65,36 +66,37 @@ class delete_page extends external_api {
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid): array {
+    public static function execute(int $pageid, $thisdataset): array {
         global $DB, $USER;
         [
-            'pageid' => $pageid
+            'pageid' => $pageid,
+            'thisDataset' => $thisdataset
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
+            'thisDataset' => $thisdataset
         ]);
-
-        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
 
         try {
 
             $transaction = $DB->start_delegated_transaction();
-
             $mtmhelper = new \mod_mootimeter\helper();
-            $success = $mtmhelper->delete_page($pageid);
+
+            $page = $mtmhelper->get_page($pageid);
+            $answertable = $mtmhelper->get_tool_answer_table($page);
+            $success = $mtmhelper->delete_all_answers($answertable, $pageid);
 
             if (!$success) {
                 $transaction->dispose();
-                return ['code' => 403, 'string' => 'Forbidden', 'cmid' => $cm->id];
+                return ['code' => 403, 'string' => 'Forbidden'];
             }
 
             $transaction->allow_commit();
 
-            $return = ['code' => 200, 'string' => 'ok', 'cmid' => $cm->id];
+            $return = ['code' => 200, 'string' => $answertable];
         } catch (\Exception $e) {
 
             $transaction->rollback($e);
-            $return = ['code' => 500, 'string' => $e->getMessage(), 'cmid' => $cm->id];
+            $return = ['code' => 500, 'string' => $e->getMessage()];
         }
         return $return;
     }
@@ -109,7 +111,6 @@ class delete_page extends external_api {
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
                 'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
-                'cmid' => new external_value(PARAM_INT, 'cmid of mootimeter instance'),
             ],
             'Delete page status.'
         );

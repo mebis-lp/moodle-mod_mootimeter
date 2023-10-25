@@ -49,7 +49,7 @@ export const init = async() => {
     /**
      * Call to store input value
      * @param {int} pageid
-     * @returns
+     * @returns {mixed}
      */
     const deletePageCall = (
         pageid,

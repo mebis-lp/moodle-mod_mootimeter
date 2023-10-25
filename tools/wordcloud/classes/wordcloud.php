@@ -40,10 +40,35 @@ use moodle_url;
  */
 class wordcloud extends \mod_mootimeter\toolhelper {
 
+    /**
+     * @var string Answer cloum
+     */
+    const ANSWER_COLUMN = "answer";
+    /**
+     * @var string Answer table
+     */
+    const ANSWER_TABLE = "mtmt_wordcloud_answers";
+
     /** Show Results live */
     const MTMT_VIEW_RESULT_LIVE = 1;
     /** Show Results after teacher permission */
     const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
+
+    /**
+     * Get the tools answer column.
+     * @return string
+     */
+    public function get_answer_column() {
+        return self::ANSWER_COLUMN;
+    }
+
+    /**
+     * Get the tools answer table.
+     * @return string
+     */
+    public function get_answer_table() {
+        return self::ANSWER_TABLE;
+    }
 
     /**
      * Will be executed after the page is created.
@@ -70,7 +95,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $record->answer = $answer;
         $record->timecreated = time();
 
-        $this->store_answer('mtmt_wordcloud_answers', $record);
+        $this->store_answer(self::ANSWER_TABLE, $record);
     }
 
     /**
@@ -93,7 +118,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 $params['usermodified'] = $userid;
             }
 
-            return (array)$this->get_answers_grouped('mtmt_wordcloud_answers', $params);
+            return (array)$this->get_answers_grouped(self::ANSWER_TABLE, $params);
         }
 
         return [];
@@ -147,7 +172,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             $params['usermodified'] = $userid;
         }
 
-        return array_keys($DB->get_records_menu('mtmt_wordcloud_answers', $params, "", "answer"));
+        return array_keys($DB->get_records_menu(self::ANSWER_TABLE, $params, "", "answer"));
     }
 
     /**
@@ -172,7 +197,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'pill' => $element->answer,
                 'additional_class' => 'mootimeter-pill-inline',
             ];
-        }, $this->get_user_answers('mtmt_wordcloud_answers', $page->id, 'answer', $USER->id)));
+        }, $this->get_user_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN, $USER->id)));
 
         $params['input_answer'] = [
             'mtm-input-id' => 'mootimeter_type_answer',
@@ -251,7 +276,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             return 0;
         }
 
-        $records = $DB->get_records('mtmt_wordcloud_answers', ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
+        $records = $DB->get_records(self::ANSWER_TABLE, ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
 
         if (empty($records)) {
             return 0;
@@ -269,7 +294,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         global $DB;
         try {
             // Table not written yet.
-            $DB->delete_records('mtmt_wordcloud_answers', ['pageid' => $page->id]);
+            $DB->delete_records(self::ANSWER_TABLE, ['pageid' => $page->id]);
         } catch (\Exception $e) {
             // Todo handling.
             echo 'Something went wrong';
@@ -307,6 +332,20 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission', 'mod_mootimeter');
             }
             $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
+
+            // Reset Question.
+            $dataseticonrestart = [
+                'data-ajaxmethode = "mod_mootimeter_delete_all_answers"',
+                'data-pageid="' . $page->id . '"',
+            ];
+            $params['icon-restart'] = [
+                'icon' => 'fa-arrow-rotate-left',
+                'id' => 'mtmt_restart',
+                'iconid' => 'mtmt_restart_iconid',
+                'dataset' => join(" ", $dataseticonrestart),
+            ];
+            $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$params['icon-restart']['id']]);
+
         }
 
         $params['icon-showresults'] = [
