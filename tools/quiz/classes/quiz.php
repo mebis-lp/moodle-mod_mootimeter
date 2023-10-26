@@ -572,14 +572,18 @@ class quiz extends \mod_mootimeter\toolhelper {
         ];
         $PAGE->requires->js_call_amd('mod_mootimeter/trigger_reload', 'init', ['multipleanswers']);
 
-        $params['showonteacherpermission'] = [
-            'cb_with_label_id' => 'showonteacherpermission',
+        $params['maxanswers'] = [
+            'title' => get_string('answers_max_number', 'mootimetertool_quiz'),
+            'additional_class' => 'mootimeter_settings_selector',
+            'id' => "maxanswersperuser",
+            'name' => "maxanswersperuser",
+            'min' => 0,
             'pageid' => $page->id,
-            'cb_with_label_text' => get_string('showresultteacherpermission', 'mootimetertool_quiz'),
-            'cb_with_label_name' => 'showonteacherpermission',
-            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-            'cb_with_label_ajaxmethod' => "mod_mootimeter_store_setting",
-            'cb_with_label_checked' => (self::get_tool_config($page, 'showonteacherpermission') ? "checked" : ""),
+            'ajaxmethode' => "mod_mootimeter_store_setting",
+            'value' => (empty(self::get_tool_config($page->id, "maxanswersperuser"))) ? 0 : self::get_tool_config(
+                $page->id,
+                "maxanswersperuser"
+            ),
         ];
 
         return $OUTPUT->render_from_template("mootimetertool_quiz/view_settings", $params);

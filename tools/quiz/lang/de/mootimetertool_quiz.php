@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['add_question_option'] = "Antwortmöglichkeit hinzufügen";
 $string['answeroptions'] = "Antwortmöglichkeiten";
+$string['answers_max_number'] = 'Maximale Anzahl von Antworten die pro Teilnehmenden  ausgewählt werden können (0: unbegrenzt)';
+$string['error_to_many_answers'] = 'Sie haben zu viele Antworten ausgewählt. Sie können nur {$a} Optionen auswählen.';
 $string['ispoll_help'] = "Sie können zwischen Umfrage und Quiz wählen. Quizze haben richtige und falsche Antworten.";
 $string['ispoll_helptitle'] = "Um welche Art von Quiz handelt es sich?";
 $string['ispoll_label'] = "Quiz-Typ";
@@ -44,4 +46,4 @@ $string['submit_answer'] = 'Antwort absenden';
 $string['tool_description_short'] = "Antworten live einsammeln";
 $string['tooltip_content_menu_answercorrection'] = 'Klicken um Schülern zu zeigen, ob die Antwort richtig ist.';
 $string['tooltip_content_menu_answercorrection_disabled'] = 'Klicken um die Korrektur der Antworten zu verbergen';
-$string['visualization'] = "Visualisierung";
+$string['visualization'] = 'Visualisierung';

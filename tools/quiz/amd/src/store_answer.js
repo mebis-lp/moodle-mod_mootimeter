@@ -37,7 +37,7 @@ export const init = () => {
  *
  * @param {int} pageid
  * @param {[]} aoids
- * @returns
+ * @returns {mixed}
  */
 const execStoreAnswer = (
     pageid,
@@ -55,16 +55,18 @@ const execStoreAnswer = (
  * @param {int} pageid
  * @param {array} selectedanswerids
  */
-const storeAnswer = async (pageid, selectedanswerids) => {
+const storeAnswer = async(pageid, selectedanswerids) => {
     removeInfoBox();
 
     selectedanswerids = JSON.stringify(selectedanswerids);
 
     const successString = await getString('notification_success_store_answer', 'mod_mootimeter');
     const response = await execStoreAnswer(pageid, selectedanswerids);
-    if (response.code != 200) {
-        Log.error(response.string);
+
+    if (response.code == 1000 || response.code == 1001 || response.code == 1002) {
+        renderInfoBox("warning", response.string, "fa-exclamation");
     }
+
     if (response.code == 200) {
         renderInfoBox('success', successString, '');
     }

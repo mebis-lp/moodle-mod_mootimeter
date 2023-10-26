@@ -28,10 +28,10 @@ namespace mootimetertool_quiz\external;
 use dml_exception;
 use external_api;
 use external_function_parameters;
-use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
@@ -78,6 +78,16 @@ class store_answer extends external_api {
 
             $helper = new \mod_mootimeter\helper();
             $page = $helper->get_page($pageid);
+
+            $multipleanswers = helper::get_tool_config($page->id, "multipleanswers");
+            $maxanswersperuser = helper::get_tool_config($page->id, "maxanswersperuser");
+            if (count($aoids) > $maxanswersperuser && !empty($maxanswersperuser) && $multipleanswers == 1) {
+                return ['code' => helper::ERRORCODE_TO_MANY_ANSWERS, 'string' => get_string(
+                    'error_to_many_answers',
+                    'mootimetertool_quiz',
+                    $maxanswersperuser
+                ), ];
+            }
 
             $quiz = new \mootimetertool_quiz\quiz();
             $quiz->insert_answer($page, $aoids);

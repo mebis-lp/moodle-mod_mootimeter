@@ -590,6 +590,13 @@ class helper {
             // Store the answer to db or update it.
             if ($updateexisting) {
                 $params = ['pageid' => $dataobject->pageid, 'usermodified' => $dataobject->usermodified];
+
+                // This is necessary, because if one user changes the setting, there could be more than one answer already stored.
+                // In this cases we want to delete all previous answers and start from scratch.
+                if ($DB->count_records($table, $params) > 1) {
+                    $DB->delete_records($table, $params);
+                }
+
                 $origrecord = $DB->get_record($table, $params);
             }
 
