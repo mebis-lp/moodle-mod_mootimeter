@@ -29,8 +29,10 @@ use advanced_testcase;
 use coding_exception;
 use dml_exception;
 use mod_mootyper_generator;
+use PHPUnit\Framework\Exception;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
+use required_capability_exception;
 
 /**
  * mod_mootimeter helper test
@@ -99,8 +101,16 @@ class helper_test extends advanced_testcase {
      * Create page
      * @covers \mod_mootimeter\helper->store_page method
      * @covers \mod_mootimeter\helper->delete_page method
+     *
+     * @return void
+     * @throws dml_exception
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @throws ExpectationFailedException
+     * @throws coding_exception
+     * @throws required_capability_exception
      */
-    public function test_create_delete_page() {
+    public function test_create_delete_page(): void {
         $this->resetAfterTest();
 
         $helper = new \mod_mootimeter\helper();
@@ -135,7 +145,7 @@ class helper_test extends advanced_testcase {
      * Store page details
      * @covers \mod_mootimeter\helper->store_page_detail
      */
-    public function test_store_page_detail() {
+    public function test_store_page_detail(): void {
         $this->resetAfterTest();
 
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
@@ -158,7 +168,7 @@ class helper_test extends advanced_testcase {
      * @throws ExpectationFailedException
      * @covers \mod_mootimeter\helper->validate_page_belongs_to_instance
      */
-    public function test_validate_page_belongs_to_instance() {
+    public function test_validate_page_belongs_to_instance(): void {
         $this->resetAfterTest();
 
         $helper = new \mod_mootimeter\helper();
@@ -191,7 +201,7 @@ class helper_test extends advanced_testcase {
      * @covers \mod_mootimeter\helper->set_tool_config
      * @covers \mod_mootimeter\helper->get_tool_config
      */
-    public function test_set_get_tool_config() {
+    public function test_set_get_tool_config(): void {
         $this->resetAfterTest();
 
         $helper = new \mod_mootimeter\helper();
@@ -217,7 +227,7 @@ class helper_test extends advanced_testcase {
      * @covers \mod_mootimeter\helper->toggle_state
      * @covers \mod_mootimeter\helper->toggle_teacherpermission_state
      */
-    public function test_toggle_state() {
+    public function test_toggle_state(): void {
         $this->resetAfterTest();
 
         $helper = new \mod_mootimeter\helper();
@@ -251,7 +261,7 @@ class helper_test extends advanced_testcase {
      * @throws dml_exception
      * @covers \mod_mootimeter\helper->store_answer
      */
-    public function test_store_answer_exception_missing_pageid() {
+    public function test_store_answer_exception_missing_pageid(): void {
         $this->resetAfterTest();
 
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
@@ -284,7 +294,7 @@ class helper_test extends advanced_testcase {
      * @throws dml_exception
      * @covers \mod_mootimeter\helper->store_answer
      */
-    public function test_store_answer_exception_not_enroled_to_course() {
+    public function test_store_answer_exception_not_enroled_to_course(): void {
         $this->resetAfterTest();
 
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
@@ -317,7 +327,7 @@ class helper_test extends advanced_testcase {
      * @throws dml_exception
      * @covers \mod_mootimeter\helper->store_answer
      */
-    public function test_store_answer_update_existing_and_multiple_answers() {
+    public function test_store_answer_update_existing_and_multiple_answers(): void {
         $this->resetAfterTest();
 
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
@@ -377,7 +387,7 @@ class helper_test extends advanced_testcase {
      * @throws dml_exception
      * @covers \mod_mootimeter\helper->store_answer
      */
-    public function test_store_answer_multiple_answers() {
+    public function test_store_answer_multiple_answers(): void {
         $this->resetAfterTest();
 
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');

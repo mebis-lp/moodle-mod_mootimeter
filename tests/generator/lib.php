@@ -47,9 +47,12 @@ class mod_mootimeter_generator extends testing_module_generator {
     /**
      * Creates a mootimetertool_{tool} page.
      *
+     * @param advanced_testcase $atc
      * @param array $record
-     * @param array|null $options
-     * @return stdClass mootimeter instance
+     * @return stdClass
+     * @throws dml_exception
+     * @throws coding_exception
+     * @throws required_capability_exception
      */
     public function create_page(advanced_testcase $atc, $record = []): stdClass {
 

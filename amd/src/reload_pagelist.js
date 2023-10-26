@@ -25,11 +25,11 @@ export const init = () => {
 };
 
 /**
-  * Call to store input value
-  * @param {int} pageid
-  * @param {int} cmid
-  * @returns {array}
-  */
+ * Call to store input value
+ * @param {int} pageid
+ * @param {int} cmid
+ * @returns {array}
+ */
 const reloadPagelist = (
     pageid,
     cmid
@@ -46,7 +46,7 @@ const reloadPagelist = (
  * @param {int} pageid
  * @param {int} cmid
  */
-const execReloadPagelist = async (pageid, cmid) => {
+const execReloadPagelist = async(pageid, cmid) => {
     const response = await reloadPagelist(pageid, cmid);
     window.console.log(response);
     if (response.code != 200) {
