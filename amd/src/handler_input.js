@@ -12,6 +12,7 @@ export const init = (uniqueID) => {
 
     /**
      * Store the value.
+     * @returns {mixed}
      */
     function mootimeterStoreInput() {
         const id = this.id;

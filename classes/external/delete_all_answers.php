@@ -26,12 +26,14 @@
 namespace mod_mootimeter\external;
 
 use dml_exception;
+use dml_transaction_exception;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use invalid_parameter_exception;
+use Throwable;
 use tool_brickfield\manager;
 
 defined('MOODLE_INTERNAL') || die();
@@ -62,18 +64,19 @@ class delete_all_answers extends external_api {
      * Execute the service.
      *
      * @param int $pageid
+     * @param mixed $thisdataset
      * @return array
-     * @throws invalid_parameter_exception
-     * @throws dml_exception
+     * @throws dml_transaction_exception
+     * @throws Throwable
      */
     public static function execute(int $pageid, $thisdataset): array {
-        global $DB, $USER;
+        global $DB;
         [
             'pageid' => $pageid,
             'thisDataset' => $thisdataset
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
-            'thisDataset' => $thisdataset
+            'thisDataset' => $thisdataset,
         ]);
 
         try {

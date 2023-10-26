@@ -25,7 +25,7 @@ export const init = (uniqueID) => {
  * Call to store input value
  * @param {int} pageid
  * @param {string} statename
- * @returns
+ * @returns {mixed}
  */
 const storeInputValue = (
     pageid,

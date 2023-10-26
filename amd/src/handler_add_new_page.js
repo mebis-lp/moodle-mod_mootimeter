@@ -10,6 +10,7 @@ export const init = (uniqueID) => {
 
     /**
      * Create new page.
+     * @returns {mixed}
      */
     function store() {
         const tool = this.dataset.name;
@@ -23,7 +24,7 @@ export const init = (uniqueID) => {
  * Call to create a new instance
  * @param {string} tool
  * @param {int} instance
- * @returns
+ * @returns {mixed}
  */
 const createNewPage = (
     tool,

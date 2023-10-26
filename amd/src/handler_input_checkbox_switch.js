@@ -12,6 +12,8 @@ export const init = (uniqueID) => {
 
     /**
      * Store the value.
+     *
+     * @returns {mixed}
      */
     function store() {
         const id = this.id;
@@ -36,7 +38,7 @@ export const init = (uniqueID) => {
  * @param {string} inputname
  * @param {string} inputvalue
  * @param {string} thisDataset
- * @returns
+ * @returns {mixed}
  */
 const execSetCbState = (
     ajaxmethode,

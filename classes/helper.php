@@ -361,54 +361,6 @@ class helper {
         return $toolhelper->get_col_settings_tool($page);
     }
 
-    // /**
-    //  * Get all setting definitions of a page.
-    //  *
-    //  * @param object $page
-    //  * @return string
-    //  * @throws coding_exception
-    //  * @deprecated
-    //  */
-    // public function get_tool_settings(object $page): string {
-
-    //     $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-    //     if (!class_exists($classname)) {
-    //         throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
-    //     }
-
-    //     $toolhelper = new $classname();
-    //     if (!method_exists($toolhelper, 'get_tool_settings')) {
-    //         throw new \coding_exception("Method 'get_tool_settings' is missing in tool helper class " . $page->tool);
-    //     }
-
-    //     return $toolhelper->get_tool_settings($page);
-    // }
-
-    // /**
-    //  * Get all tool settings parameters.
-    //  *
-    //  * @param object $page
-    //  * @return array
-    //  * @throws coding_exception
-    //  * @deprecated
-    //  */
-    // public function get_tool_settings_parameters(object $page): array {
-
-    //     $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-
-    //     if (!class_exists($classname)) {
-    //         throw new \coding_exception("Class '" . $page->tool . "' is missing in tool " . $page->tool);
-    //     }
-
-    //     $toolhelper = new $classname();
-    //     if (!method_exists($toolhelper, 'get_tool_settings_parameters')) {
-    //         throw new \coding_exception("Method 'get_tool_settings_parameters' is missing in tool helper class " . $page->tool);
-    //     }
-
-    //     return $toolhelper->get_tool_settings_parameters($page);
-    // }
-
     /**
      * Set a single config value.
      *

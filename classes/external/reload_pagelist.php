@@ -61,12 +61,8 @@ class reload_pagelist extends external_api {
      * Execute the service.
      *
      * @param int $pageid
-     * @param string $inputname
-     * @param string $inputvalue
-     * @param string $datasetjson
+     * @param int $cmid
      * @return array
-     * @throws invalid_parameter_exception
-     * @throws dml_exception
      */
     public static function execute(int $pageid, int $cmid): array {
 

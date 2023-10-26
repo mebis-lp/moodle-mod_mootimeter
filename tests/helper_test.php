@@ -257,8 +257,6 @@ class helper_test extends advanced_testcase {
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
 
-        // $this->setUser($this->users['teacher']);
-
         $helper = new \mod_mootimeter\helper();
 
         $record = new \stdClass();

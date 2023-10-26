@@ -26,6 +26,10 @@
 
 namespace mod_mootimeter\local;
 
+use dml_exception;
+use coding_exception;
+use moodle_exception;
+
 /**
  * The mod_mootimeter helper class for pagelist.
  *
@@ -37,9 +41,17 @@ namespace mod_mootimeter\local;
  */
 class pagelist {
 
-    public function get_pagelist_html(object|int $pageorid) {
+    /**
+     * Get the pagelist html output.
+     *
+     * @param object|int $pageorid
+     * @return string
+     * @throws dml_exception
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
+    public function get_pagelist_html(object|int $pageorid):string {
         global $OUTPUT, $USER, $PAGE;
-
 
         $helper = new \mod_mootimeter\helper();
 

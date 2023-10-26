@@ -30,7 +30,7 @@ export const init = () => {
   * @param {int} cmid
   * @returns {array}
   */
-const ReloadPagelist = (
+const reloadPagelist = (
     pageid,
     cmid
 ) => fetchMany([{
@@ -47,36 +47,13 @@ const ReloadPagelist = (
  * @param {int} cmid
  */
 const execReloadPagelist = async (pageid, cmid) => {
-    const response = await ReloadPagelist(pageid, cmid);
+    const response = await reloadPagelist(pageid, cmid);
     window.console.log(response);
     if (response.code != 200) {
         Log.error(response.string);
     }
 
     if (response.code == 200) {
-        // document.getElementById('mootimeter-pages-list').innerHTML = response.pagelist;
-
-
-        // var element = document.getElementById(uniqueID);
-        // var dataset = element.dataset;
-        // var iconid = dataset.iconid;
-
-        // document.getElementById(iconid).classList.remove(dataset.iconenabled);
-        // document.getElementById(iconid).classList.remove(dataset.icondisabled);
-
-        // if (response.newstate == 1) {
-        //     document.getElementById(iconid).classList.add(dataset.iconenabled);
-        //     document.getElementById(uniqueID).setAttribute('data-original-title', dataset.tooltipdisabled);
-        // }
-
-        // if (response.newstate != 1) {
-        //     document.getElementById(iconid).classList.add(dataset.icondisabled);
-        //     document.getElementById(uniqueID).setAttribute('data-original-title', dataset.tooltipenabled);
-        // }
-
-        // // To force the webservice to pull all results.
-        // let nodelastupdated = document.getElementById('mootimeterstate');
-        // nodelastupdated.setAttribute('data-lastupdated', 0);
-
+        Log.error(response.string);
     }
 };
