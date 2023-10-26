@@ -403,13 +403,9 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         $answeroptions = $this->get_answer_options($page->id);
 
-        $inputtype = 'rb';
-        if (self::get_tool_config($page, 'multipleanswers')) {
-            $inputtype = 'cb';
-        }
-
         $useransweroptionsid = array_keys($this->get_user_answers(self::ANSWER_TABLE, $page->id, 'optionid', $USER->id));
 
+        $inputtype = 'cb';
         foreach ($answeroptions as $answeroption) {
             $wrapperadditionalclass = (self::get_tool_config($page->id, 'showanswercorrection')) ? "mootimeter-highlighter" : "";
             $wrapperadditionalclass .= ($answeroption->optioniscorrect) ? " mootimeter-success" : "";
@@ -438,10 +434,10 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-button-dataset' => 'data-pageid="' . $page->id . '"',
             ];
 
-            if (self::get_tool_config($page, 'multipleanswers')) {
-                $sendbuttoncontext = get_string('sendbutton_context_more_answers_possible', 'mootimetertool_quiz');
-            } else {
+            if (self::get_tool_config($page, 'maxanswersperuser') == 1) {
                 $sendbuttoncontext = get_string('sendbutton_context_one_answers_possible', 'mootimetertool_quiz');
+            } else {
+                $sendbuttoncontext = get_string('sendbutton_context_more_answers_possible', 'mootimetertool_quiz');
             }
             $params['sendbutton_context'] = [
                 'text' => $sendbuttoncontext,
@@ -560,17 +556,6 @@ class quiz extends \mod_mootimeter\toolhelper {
             ],
         ];
         $PAGE->requires->js_call_amd('mootimetertool_quiz/store_visualization', 'init');
-
-        $params['multipleanswers'] = [
-            'cb_with_label_id' => 'multipleanswers',
-            'cb_with_label_text' => get_string('multiple_answers', 'mootimetertool_quiz'),
-            'pageid' => $page->id,
-            'cb_with_label_name' => 'multipleanswers',
-            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
-            'cb_with_label_ajaxmethod' => "mod_mootimeter_store_setting",
-            'cb_with_label_checked' => (self::get_tool_config($page, 'multipleanswers')) ? "checked" : "",
-        ];
-        $PAGE->requires->js_call_amd('mod_mootimeter/trigger_reload', 'init', ['multipleanswers']);
 
         $params['maxanswers'] = [
             'title' => get_string('answers_max_number', 'mootimetertool_quiz'),
