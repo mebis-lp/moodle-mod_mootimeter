@@ -87,11 +87,9 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @return void
      */
     public function insert_answer(object $page, $answer): void {
-        global $USER;
 
         $record = new \stdClass();
         $record->pageid = $page->id;
-        $record->usermodified = $USER->id;
         $record->answer = $answer;
         $record->timecreated = time();
 

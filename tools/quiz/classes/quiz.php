@@ -177,7 +177,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return void
      */
     public function insert_answer(object $page, mixed $aoids) {
-        global $DB, $USER;
+        global $DB;
 
         $records = [];
         foreach ($aoids as $aoid) {
@@ -189,7 +189,6 @@ class quiz extends \mod_mootimeter\toolhelper {
 
             $record = new \stdClass();
             $record->pageid = $page->id;
-            $record->usermodified = $USER->id;
 
             $record->optionid = $aoid;
             $record->timecreated = time();

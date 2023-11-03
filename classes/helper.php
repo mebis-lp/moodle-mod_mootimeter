@@ -543,7 +543,7 @@ class helper {
         string $answercolumn = 'answer',
         bool $allowmultipleanswers =  false
     ): array {
-        global $DB;
+        global $DB, $USER;
 
         // Temporarily get one record to retrieve user and page information.
         $recordtemp = $record;
@@ -573,8 +573,13 @@ class helper {
             }
 
             foreach ($record as $dataobject) {
+
+                // Add usermodified to dataobject.
+                $dataobject->usermodified = $USER->id;
+
                 $answerids[] = $DB->insert_record($table, $dataobject);
                 $pageid = $dataobject->pageid;
+
             }
         }
 
@@ -586,6 +591,9 @@ class helper {
             } else {
                 $dataobject = $record;
             }
+
+            // Add usermodified to dataobject.
+            $dataobject->usermodified = $USER->id;
 
             // Store the answer to db or update it.
             if ($updateexisting) {
