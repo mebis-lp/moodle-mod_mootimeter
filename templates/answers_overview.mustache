@@ -1,0 +1,33 @@
+<div class="mootimetercontainer {{{containerclasses}}}">
+    <div class="mootimeterfullwidth">
+
+        <h2>Antwortübersicht</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{{#str}} name {{/str}}</th>
+                    <th scope="col">{{#str}} answer {{/str}}</th>
+                    <th scope="col">{{#str}} date {{/str}}/{{#str}} time {{/str}}</th>
+                    <th scope="col">{{#str}} options {{/str}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#answers}}
+                <tr>
+                    <th scope="row">{{nbr}}</th>
+                    <td>{{user}}</td>
+                    <td>{{{answer}}}</td>
+                    <td>{{date}}</td>
+                    <td>{{#pix}} i/delete, core {{/pix}}</td>
+                </tr>
+                {{/answers}}
+            </tbody>
+        </table>
+
+    </div>
+    {{#js}}
+    require(['core/inplace_editable']);
+    {{/js}}
+</div>

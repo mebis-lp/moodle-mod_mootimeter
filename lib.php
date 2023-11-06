@@ -323,3 +323,41 @@ function mootimeter_trigger_event_course_module_viewed(object $moduleinstance, o
     $event->add_record_snapshot('mootimeter', $moduleinstance);
     $event->trigger();
 }
+
+function mootimeter_inplace_editable($itemtype, $itemid, $newvalue) {
+    global $DB, $PAGE;
+
+    // Edit the answer in answer overview.
+    if ($itemtype == 'editanswer') {
+        $newvalue = clean_param($newvalue, PARAM_TEXT);
+
+        $helper = new \mod_mootimeter\helper();
+
+        list($pageid, $answerid) = explode("_", $itemid);
+
+        $answertable = $helper->get_tool_answer_table($pageid);
+        $answercol = $helper->get_tool_answer_column($pageid);
+
+        // First update the existing value.
+        $answerrecord = $DB->get_record($answertable, ['id' => $answerid]);
+        $answerrecord->{$answercol} = $newvalue;
+        $DB->update_record($answertable, $answerrecord);
+
+        // Now clear the answers cache.
+        $helper->clear_caches($pageid);
+
+        $instance = $helper::get_instance_by_pageid($pageid);
+        $cm = $helper::get_cm_by_instance($instance);
+        $modulecontext = \context_module::instance($cm->id);
+        $PAGE->set_context($modulecontext);
+
+        return new \core\output\inplace_editable(
+            'mootimeter',
+            'editanswer',
+            $pageid . "_" . $answerid,
+            has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)),
+            format_string($answerrecord->{$answercol}),
+            $answerrecord->{$answercol}
+        );
+    }
+}

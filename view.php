@@ -32,6 +32,7 @@ $action = optional_param('a', "", PARAM_ALPHA);
 $paramtool = optional_param('tool', "", PARAM_ALPHA);
 $pageid = optional_param('pageid', 0, PARAM_INT);
 $isresultpage = optional_param('r', false, PARAM_BOOL);
+$isansweroverview = optional_param('o', false, PARAM_BOOL);
 $helper = new \mod_mootimeter\helper();
 
 // Check if the provided pageid already exists / else throw error.
@@ -103,6 +104,8 @@ if (!empty($page)) {
 
     if ($isresultpage) {
         $params['pagecontent'] = $helper->get_rendered_page_result($page);
+    } else if ($isansweroverview) {
+        $params['pagecontent'] = $helper->get_rendered_answer_overview($page);
     } else {
         $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
     }

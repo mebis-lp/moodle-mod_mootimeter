@@ -26,16 +26,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Wortwolke';
-$string['type_answer'] = 'Geben Sie ein Wort oder eine Aussage ein und drücken Sie die Eingabetaste.';
+$string['allowduplicateanswers'] = 'Erlauben Sie den Schülerinnen und Schülern, dieselbe Antwort mehrmals einzureichen';
+$string['answers_max_number'] = 'Maximale Anzahl von Antworten pro Teilnehmenden (0: unbegrenzt)';
+$string['error_empty_answers'] = 'Leere Antworten sind nicht erlaubt';
+$string['error_no_duplicate_answers'] = 'Doppelte Antworten sind nicht erlaubt';
+$string['error_to_many_answers'] = 'Die maximale Anzahl an Antworten ist erreicht';
 $string['heading_answer'] = 'Antworten';
+$string['hide_results'] = 'Ergebnis der Wortwolke ausblenden';
+$string['no_answer'] = 'Es gibt noch keine Antworten';
+$string['pluginname'] = 'Wortwolke';
+$string['show_results'] = 'Ergebnis der Wortwolke anzeigen';
 $string['showresultlive'] = 'Ergebnisse live anzeigen';
 $string['showresultteacherpermission'] = 'Ergebnisse nur mit Erlaubnis der Lehrkraft anzeigen';
-$string['show_results'] = 'Ergebnis der Wortwolke anzeigen';
-$string['hide_results'] = 'Ergebnis der Wortwolke ausblenden';
 $string['tool_description_short'] = 'Wörter oder Aussagen live einsammeln';
-$string['answers_max_number'] = 'Maximale Anzahl von Antworten pro Teilnehmenden (0: unbegrenzt)';
-$string['allowduplicateanswers'] = 'Erlauben Sie den Schülerinnen und Schülern, dieselbe Antwort mehrmals einzureichen';
-$string['error_empty_answers'] = 'Leere Antworten sind nicht erlaubt';
-$string['error_to_many_answers'] = 'Die maximale Anzahl an Antworten ist erreicht';
-$string['error_no_duplicate_answers'] = 'Doppelte Antworten sind nicht erlaubt';
+$string['type_answer'] = 'Geben Sie ein Wort oder eine Aussage ein und drücken Sie die Eingabetaste.';

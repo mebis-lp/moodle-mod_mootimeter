@@ -265,7 +265,8 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_content_menu_tool(object $page) {
         global $OUTPUT, $PAGE;
-        $params = [];
+
+        $params = $this->get_content_menu_default_parameters($page);
 
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
 
@@ -623,7 +624,8 @@ class quiz extends \mod_mootimeter\toolhelper {
             if (empty($answersgrouped[$answeroption->id])) {
                 $values[] = 0;
             } else {
-                $values[] = (int)$answersgrouped[$answeroption->id]['cnt'];
+                $tmp = (array)$answersgrouped[$answeroption->id];
+                $values[] = (int)$tmp['cnt'];
             }
         }
 
@@ -734,5 +736,55 @@ class quiz extends \mod_mootimeter\toolhelper {
             return $obj['cnt'];
         }, (array)$this->get_answers_grouped(self::ANSWER_TABLE, ["pageid" => $pageid], 'optionid'));
         return array_values($values);
+    }
+
+    /**
+     * Get the rendered answer overview view.
+     *
+     * @param object $page
+     * @return string
+     */
+    public function get_answer_overview(object $page): string {
+        global $PAGE, $OUTPUT;
+
+        $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
+
+        $answeroptions = $this->get_answer_options($page->id);
+
+        $answeroptionstemp = [];
+        foreach ($answeroptions as $answeroption) {
+            $answeroptionstemp[$answeroption->id] = $answeroption->optiontext;
+        }
+
+        $params = [];
+        $i = 1;
+        foreach ($answers as $answer) {
+
+            $user = $this->get_user_by_id($answer->usermodified);
+
+            $userfullname = "";
+            if (!empty($user)) {
+                $userfullname = $user->firstname . " " . $user->lastname;
+            }
+
+            $tmpl = new \core\output\inplace_editable(
+                'mootimeter',
+                'editanswer',
+                $page->id . "_" . $answer->id,
+                has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id)),
+                null,
+                $answer->{self::ANSWER_COLUMN}
+            );
+            $tmpl->set_type_select($answeroptionstemp);
+
+            $params['answers'][] = [
+                'nbr' => $i,
+                'user' => $userfullname,
+                'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
+                'answer' => $OUTPUT->render($tmpl)
+            ];
+            $i++;
+        }
+        return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
     }
 }

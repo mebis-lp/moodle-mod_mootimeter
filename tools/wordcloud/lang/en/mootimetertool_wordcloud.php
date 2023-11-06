@@ -26,16 +26,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Wordcloud';
-$string['type_answer'] = 'Insert a word or statement and hit Enter.';
+$string['allowduplicateanswers'] = 'Allow students to submit the same answer multiple times';
+$string['answers_max_number'] = 'Maximum number of answers per participant (0: unlimited)';
+$string['error_empty_answers'] = 'Empty answers are not allowed';
+$string['error_no_duplicate_answers'] = 'Duplicate answers are not allowed';
+$string['error_to_many_answers'] = 'You reached the maximum amount of answers';
 $string['heading_answer'] = 'Answers';
+$string['hide_results'] = 'Hide result wordcloud';
+$string['no_answer'] = 'There are no answers yet.';
+$string['pluginname'] = 'Wordcloud';
+$string['show_results'] = 'Show result wordcloud';
 $string['showresultlive'] = 'Show results live';
 $string['showresultteacherpermission'] = 'Show results on teacher permission';
-$string['show_results'] = 'Show result wordcloud';
-$string['hide_results'] = 'Hide result wordcloud';
 $string['tool_description_short'] = "Collect words or statements live";
-$string['answers_max_number'] = 'Maximum number of answers per participant (0: unlimited)';
-$string['allowduplicateanswers'] = 'Allow students to submit the same answer multiple times';
-$string['error_empty_answers'] = 'Empty answers are not allowed';
-$string['error_to_many_answers'] = 'You reached the maximum amount of answers';
-$string['error_no_duplicate_answers'] = 'Duplicate answers are not allowed';
+$string['type_answer'] = 'Insert a word or statement and hit Enter.';

@@ -314,7 +314,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     public function get_content_menu_tool(object $page) {
         global $OUTPUT, $PAGE;
 
-        $params = [];
+        $params = $this->get_content_menu_default_parameters($page);
 
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
 

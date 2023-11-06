@@ -51,10 +51,16 @@ class helper {
 
     /**
      * Get a tools answer column.
-     * @param object $page
+     * @param object|int $pageorid
      * @return string
      */
-    public function get_tool_answer_column(object $page): string {
+    public function get_tool_answer_column(object|int $pageorid): string {
+
+        $page = $pageorid;
+        if (!is_object($page)) {
+            $page = $this->get_page($page);
+        }
+
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
         if (!class_exists($classname)) {
             return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
@@ -68,10 +74,16 @@ class helper {
 
     /**
      * Get a tools answer table.
-     * @param object $page
+     * @param object|int $pageorid
      * @return string
      */
-    public function get_tool_answer_table(object $page): string {
+    public function get_tool_answer_table(object|int $pageorid): string {
+
+        $page = $pageorid;
+        if (!is_object($page)) {
+            $page = $this->get_page($page);
+        }
+
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
         if (!class_exists($classname)) {
             return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
@@ -319,6 +331,95 @@ class helper {
             return "Method 'get_result_page' is missing in tool helper class " . $page->tool;
         }
         return $toolhelper->get_result_page($page);
+    }
+
+    /**
+     * Get the rendered answer overview view.
+     * @param object $page
+     * @return string
+     */
+    public function get_rendered_answer_overview(object $page): string {
+        global $OUTPUT, $PAGE;
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        }
+
+        $toolhelper = new $classname();
+
+        if (!method_exists($toolhelper, 'get_answer_overview')) {
+            // If not defined in tool. Use default bahaviour.
+            $answers = $this->get_answers($toolhelper::ANSWER_TABLE, $page->id, $toolhelper::ANSWER_COLUMN);
+            $params = [];
+            $i = 1;
+            foreach ($answers as $answer) {
+                // print_r($this->get_user_by_id($answer->usermodified));die;
+                $user = $this->get_user_by_id($answer->usermodified);
+
+                $userfullname = "";
+                if (!empty($user)) {
+                    $userfullname = $user->firstname . " " . $user->lastname;
+                }
+
+                $tmpl = new \core\output\inplace_editable(
+                    'mootimeter',
+                    'editanswer',
+                    $page->id . "_" . $answer->id,
+                    has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id)),
+                    format_string($answer->{$toolhelper::ANSWER_COLUMN}),
+                    $answer->{$toolhelper::ANSWER_COLUMN}
+                    // new \lang_string('editmytestnamefield', 'tool_mytest'),
+                    // new \lang_string('newvaluestring', 'tool_mytest', format_string($answer->{$toolhelper::ANSWER_COLUMN}))
+                );
+                $answerstr = $OUTPUT->render($tmpl);
+
+                $params['answers'][] = [
+                    'nbr' => $i,
+                    'user' => $userfullname,
+                    'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
+                    'answer' => $answerstr
+                ];
+                $i++;
+            }
+            return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
+        }
+
+        return $toolhelper->get_answer_overview($page);
+    }
+
+    /**
+     * Get the default parameters for content_menu.
+     * @param object $page
+     * @return array
+     */
+    public function get_content_menu_default_parameters(object $page): array {
+        global $PAGE;
+
+        $params = [];
+
+        if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
+
+            // Redirect to Answers Overview View.
+            $params['icon-answer-overview'] = [
+                'icon' => 'fa-table',
+                'id' => 'mtmt_show_answer_overview',
+                'additional_class' => 'mtm_redirect_selector',
+                'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id, 'o' => 1]),
+                'tooltip' => get_string('show_answer_overview', 'mod_mootimeter'),
+            ];
+            if (optional_param('o', "", PARAM_INT)) {
+                $params['icon-answer-overview'] = [
+                    'icon' => 'fa-pencil-square-o',
+                    'id' => 'mtmt_show_answer_overview',
+                    'additional_class' => 'mtm_redirect_selector',
+                    'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id]),
+                    'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
+                ];
+            }
+        }
+        return $params;
     }
 
     /**
@@ -738,5 +839,15 @@ class helper {
         $cache = \cache::make('mod_mootimeter', 'answers');
         $cache->delete('answers_' . $pageid);
         $cache->delete('cnt_' . $pageid);
+    }
+
+    /**
+     * Get User by id.
+     * @param int $userid
+     * @return object
+     */
+    public function get_user_by_id($userid) {
+        global $DB;
+        return $DB->get_record('user', ['id' => $userid]);
     }
 }
