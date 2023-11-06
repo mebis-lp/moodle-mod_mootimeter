@@ -36,7 +36,7 @@ export const init = () => {
  * Call to store an answer
  * @param {int} pageid
  * @param {string} answer
- * @returns
+ * @returns {array}
  */
 const execStoreAnswer = (
     pageid,

@@ -267,10 +267,11 @@ class helper_test extends advanced_testcase {
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
 
+        $this->setUser($this->users['student']);
+
         $helper = new \mod_mootimeter\helper();
 
         $record = new \stdClass();
-        $record->usermodified = $this->users['student']->id;
         $record->answer = "Test";
         $record->timecreated = time();
         $records[] = $record;
@@ -300,11 +301,12 @@ class helper_test extends advanced_testcase {
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
 
+        $this->setUser($this->users['student_not_in_course']);
+
         $helper = new \mod_mootimeter\helper();
 
         $record = new \stdClass();
         $record->pageid = $page->id;
-        $record->usermodified = $this->users['student_not_in_course']->id;
         $record->answer = "Test";
         $record->timecreated = time();
         $records[] = $record;
@@ -333,13 +335,14 @@ class helper_test extends advanced_testcase {
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
 
+        $this->setUser($this->users['student']);
+
         $helper = new \mod_mootimeter\helper();
 
         $helper->set_tool_config($page, 'multipleanswers', 0);
 
         $record = new \stdClass();
         $record->pageid = $page->id;
-        $record->usermodified = $this->users['student']->id;
         $record->answer = "Test";
         $record->timecreated = time();
         $records[] = $record;
@@ -359,7 +362,6 @@ class helper_test extends advanced_testcase {
 
         $record = new \stdClass();
         $record->pageid = $page->id;
-        $record->usermodified = $this->users['student']->id;
         $record->answer = "Test2";
         $record->timecreated = time();
         $records[] = $record;
@@ -393,12 +395,13 @@ class helper_test extends advanced_testcase {
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
 
+        $this->setUser($this->users['student']);
+
         $helper = new \mod_mootimeter\helper();
         $helper->set_tool_config($page, 'multipleanswers', 1);
 
         $record = new \stdClass();
         $record->pageid = $page->id;
-        $record->usermodified = $this->users['student']->id;
         $record->answer = "Test";
         $record->timecreated = time();
         $records[] = $record;
@@ -419,7 +422,6 @@ class helper_test extends advanced_testcase {
 
         $record = new \stdClass();
         $record->pageid = $page->id;
-        $record->usermodified = $this->users['student']->id;
         $record->answer = "Test2";
         $record->timecreated = time();
         $records[] = $record;
@@ -441,14 +443,12 @@ class helper_test extends advanced_testcase {
 
         $record = new \stdClass();
         $record->pageid = $page->id;
-        $record->usermodified = $this->users['student']->id;
         $record->answer = "Test3";
         $record->timecreated = time();
         $records[] = $record;
 
         $record = new \stdClass();
         $record->pageid = $page->id;
-        $record->usermodified = $this->users['student']->id;
         $record->answer = "Test4";
         $record->timecreated = time();
         $records[] = $record;

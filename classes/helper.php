@@ -559,7 +559,7 @@ class helper {
         $cm = self::get_cm_by_instance($instanceid);
         $context = \context_course::instance($cm->course);
 
-        if (!is_enrolled($context, $recordtemp->usermodified)) {
+        if (!is_enrolled($context, $USER->id)) {
             throw new \moodle_exception('notenrolledtocourse', 'error');
         }
 
@@ -568,7 +568,7 @@ class helper {
         if ($allowmultipleanswers) {
 
             if ($updateexisting) {
-                $params = ['pageid' => $recordtemp->pageid, 'usermodified' => $recordtemp->usermodified];
+                $params = ['pageid' => $recordtemp->pageid, 'usermodified' => $USER->id];
                 $DB->delete_records($table, $params);
             }
 
@@ -579,7 +579,6 @@ class helper {
 
                 $answerids[] = $DB->insert_record($table, $dataobject);
                 $pageid = $dataobject->pageid;
-
             }
         }
 

@@ -133,6 +133,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         foreach ($answerslist as $key => $value) {
             $templist[] = array_values((array)$value);
         }
+
         return $templist;
     }
 
@@ -343,7 +344,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'dataset' => join(" ", $dataseticonrestart),
             ];
             $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$params['icon-restart']['id']]);
-
         }
 
         $params['icon-showresults'] = [

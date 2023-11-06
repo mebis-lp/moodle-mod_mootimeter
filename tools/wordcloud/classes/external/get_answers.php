@@ -72,6 +72,11 @@ class get_answers extends external_api {
         $lastupdatednew = $wordcloud->get_last_update_time($pageid);
 
         $answerlist = $wordcloud->get_answerlist_wordcloud($pageid);
+
+        if (empty($answerlist)) {
+            $answerlist=[["keine Antwort vorhanden", "5"]];
+            $lastupdatednew = 10;
+        }
         return ['answerlist' => $answerlist, 'lastupdated' => $lastupdatednew];
     }
 
