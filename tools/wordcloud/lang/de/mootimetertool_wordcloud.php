@@ -34,6 +34,7 @@ $string['error_to_many_answers'] = 'Die maximale Anzahl an Antworten ist erreich
 $string['heading_answer'] = 'Antworten';
 $string['hide_results'] = 'Ergebnis der Wortwolke ausblenden';
 $string['no_answer'] = 'Es gibt noch keine Antworten';
+$string['no_answer_due_to_showteacherpermission'] = 'Die Lehrkraft muss die Anzeige der Antworten erst freigeben.';
 $string['pluginname'] = 'Wortwolke';
 $string['show_results'] = 'Ergebnis der Wortwolke anzeigen';
 $string['showresultlive'] = 'Ergebnisse live anzeigen';

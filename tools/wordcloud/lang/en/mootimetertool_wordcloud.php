@@ -34,6 +34,7 @@ $string['error_to_many_answers'] = 'You reached the maximum amount of answers';
 $string['heading_answer'] = 'Answers';
 $string['hide_results'] = 'Hide result wordcloud';
 $string['no_answer'] = 'There are no answers yet.';
+$string['no_answer_due_to_showteacherpermission'] = 'The teacher must first approve the display of the answers.';
 $string['pluginname'] = 'Wordcloud';
 $string['show_results'] = 'Show result wordcloud';
 $string['showresultlive'] = 'Show results live';

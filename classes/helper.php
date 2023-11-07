@@ -340,6 +340,12 @@ class helper {
      * @return string
      */
     public function get_rendered_answer_overview(object $page): string {
+        global $PAGE;
+
+        // This content should only be viewed with moderator capabilities.
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
+            redirect('view.php?id=' . $PAGE->cm->id . "&pageid=" . $page->id);
+        }
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 

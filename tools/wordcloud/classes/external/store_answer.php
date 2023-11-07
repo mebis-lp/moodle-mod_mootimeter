@@ -74,10 +74,10 @@ class store_answer extends external_api {
         ]);
 
         if (empty($answer) && strlen($answer) == 0) {
-            return ['code' => helper::ERRORCODE_EMPTY_ANSWER, 'string' => get_string(
-                'error_empty_answers',
-                'mootimetertool_wordcloud'
-            ), ];
+            return [
+                'code' => helper::ERRORCODE_EMPTY_ANSWER,
+                'string' => get_string('error_empty_answers', 'mootimetertool_wordcloud'),
+            ];
         }
 
         $helper = new helper();
@@ -87,19 +87,19 @@ class store_answer extends external_api {
         $wordcloud = new \mootimetertool_wordcloud\wordcloud();
         $submittedanswers = $wordcloud->get_user_answers('mtmt_wordcloud_answers', $page->id, 'answer', $USER->id);
 
-        if (count($submittedanswers) >= $maxnumberofanswers && $maxnumberofanswers != 0) {
-            return ['code' => helper::ERRORCODE_TO_MANY_ANSWERS, 'string' => get_string(
-                'error_to_many_answers',
-                'mootimetertool_wordcloud'
-            ), ];
+        if (count($submittedanswers) >= $maxnumberofanswers && $maxnumberofanswers > 0) {
+            return [
+                'code' => helper::ERRORCODE_TO_MANY_ANSWERS,
+                'string' => get_string('error_to_many_answers', 'mootimetertool_wordcloud'),
+            ];
         }
 
         $submittedanswers = $wordcloud->get_answer_list_array($page->id, $USER->id);
         if (!helper::get_tool_config($page->id, "allowduplicateanswers") && in_array($answer, $submittedanswers)) {
-            return ['code' => helper::ERRORCODE_DUPLICATE_ANSWER, 'string' => get_string(
-                'error_no_duplicate_answers',
-                'mootimetertool_wordcloud'
-            ), ];
+            return [
+                'code' => helper::ERRORCODE_DUPLICATE_ANSWER,
+                'string' => get_string('error_no_duplicate_answers', 'mootimetertool_wordcloud'),
+            ];
         }
 
         $wordcloud->insert_answer($page, $answer);
