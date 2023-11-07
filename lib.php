@@ -23,6 +23,8 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_mootimeter\plugininfo\mootimetertool;
+
 /**
  * Return if the plugin supports $feature.
  *
@@ -326,6 +328,10 @@ function mootimeter_trigger_event_course_module_viewed(object $moduleinstance, o
 
 function mootimeter_inplace_editable($itemtype, $itemid, $newvalue) {
     global $DB, $PAGE;
+
+    if ($itemtype === 'editanswerselect') {
+        return \mootimetertool_quiz\local\inplace_edit_answer::update($itemid, $newvalue);
+    }
 
     // Edit the answer in answer overview.
     if ($itemtype == 'editanswer') {

@@ -745,7 +745,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return string
      */
     public function get_answer_overview(object $page): string {
-        global $PAGE, $OUTPUT;
+        global $OUTPUT;
 
         $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
 
@@ -767,21 +767,14 @@ class quiz extends \mod_mootimeter\toolhelper {
                 $userfullname = $user->firstname . " " . $user->lastname;
             }
 
-            $tmpl = new \core\output\inplace_editable(
-                'mootimeter',
-                'editanswer',
-                $page->id . "_" . $answer->id,
-                has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id)),
-                null,
-                $answer->{self::ANSWER_COLUMN}
-            );
-            $tmpl->set_type_select($answeroptionstemp);
+            $tmpl = new \mootimetertool_quiz\local\inplace_edit_answer($page, $answer);
+            $collectionselect = $OUTPUT->render_from_template('core/inplace_editable', $tmpl->export_for_template($OUTPUT));
 
             $params['answers'][] = [
                 'nbr' => $i,
                 'user' => $userfullname,
                 'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
-                'answer' => $OUTPUT->render($tmpl)
+                'answer' => $collectionselect
             ];
             $i++;
         }
