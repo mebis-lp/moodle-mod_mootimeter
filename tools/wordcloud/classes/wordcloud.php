@@ -387,9 +387,12 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             $dataseticonrestart = [
                 'data-ajaxmethode = "mod_mootimeter_delete_all_answers"',
                 'data-pageid="' . $page->id . '"',
+                'data-confirmationtitlestr="'.get_string('delete_all_answers_dialog_title' , 'mod_mootimeter').'"',
+                'data-confirmationquestionstr="'.get_string('delete_all_answers_dialog_question' , 'mod_mootimeter').'"',
+                'data-confirmationtype="DELETE_CANCEL"',
             ];
             $params['icon-restart'] = [
-                'icon' => 'fa-arrow-rotate-left',
+                'icon' => 'fa-trash',
                 'id' => 'mtmt_restart',
                 'iconid' => 'mtmt_restart_iconid',
                 'dataset' => join(" ", $dataseticonrestart),

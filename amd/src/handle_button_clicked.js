@@ -1,10 +1,10 @@
-import {call as fetchMany} from 'core/ajax';
+import { call as fetchMany } from 'core/ajax';
 import Log from 'core/log';
 import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
-import {get_string as getString} from 'core/str';
+import { get_string as getString } from 'core/str';
 
-export const init = async(uniqueID) => {
+export const init = async (uniqueID) => {
     var obj = document.getElementById(uniqueID);
 
     if (!document.getElementById(uniqueID)) {
@@ -13,14 +13,40 @@ export const init = async(uniqueID) => {
 
     obj.addEventListener("click", buttonClicked);
 
+    var dataset = obj.dataset;
+    var confirmationTitleStr;
+    if (!obj.getAttribute("data-confirmationtitlestr")) {
+        confirmationTitleStr = getString('delete', 'core');
+    } else {
+        confirmationTitleStr = dataset.confirmationtitlestr;
+    }
+
+    var confirmationQuestionStr;
+    if (!obj.getAttribute("data-confirmationquestionstr")) {
+        confirmationQuestionStr = getString('areyousure');
+    } else {
+        confirmationQuestionStr = dataset.confirmationquestionstr;
+    }
+
+    var confirmationType;
+    if (!obj.getAttribute("data-confirmationtype")) {
+        confirmationType = ModalFactory.types.DELETE_CANCEL;
+    } else {
+        switch (dataset.confirmationtype) {
+            case 'DELETE_CANCEL':
+                confirmationType = ModalFactory.types.DELETE_CANCEL;
+                break;
+        }
+    }
+
     const modal = await ModalFactory.create({
-        type: ModalFactory.types.DELETE_CANCEL,
-        title: getString('delete', 'core'),
-        body: getString('areyousure'),
+        type: confirmationType,
+        title: confirmationTitleStr,
+        body: confirmationQuestionStr,
         pageid: 5,
     });
 
-    modal.getRoot().on(ModalEvents.delete, function() {
+    modal.getRoot().on(ModalEvents.delete, function () {
         var pageid = obj.dataset.pageid;
         var uniqueID = obj.id;
         var ajaxmethode = obj.dataset.ajaxmethode;
@@ -61,7 +87,7 @@ const execButtonClicked = (
  * @param {string} uniqueID
  * @param {string} ajaxmethode
  */
-const buttonClickedHandle = async(pageid, uniqueID, ajaxmethode) => {
+const buttonClickedHandle = async (pageid, uniqueID, ajaxmethode) => {
     var dataset = JSON.stringify(document.getElementById(uniqueID).dataset);
     const response = await execButtonClicked(pageid, dataset, ajaxmethode);
 
