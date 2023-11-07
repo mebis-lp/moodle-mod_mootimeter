@@ -1,10 +1,10 @@
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
 import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
-import { get_string as getString } from 'core/str';
+import {get_string as getString} from 'core/str';
 
-export const init = async (uniqueID) => {
+export const init = async(uniqueID) => {
     var obj = document.getElementById(uniqueID);
 
     if (!document.getElementById(uniqueID)) {
@@ -87,7 +87,7 @@ const execButtonClicked = (
  * @param {string} uniqueID
  * @param {string} ajaxmethode
  */
-const buttonClickedHandle = async (pageid, uniqueID, ajaxmethode) => {
+const buttonClickedHandle = async(pageid, uniqueID, ajaxmethode) => {
     var dataset = JSON.stringify(document.getElementById(uniqueID).dataset);
     const response = await execButtonClicked(pageid, dataset, ajaxmethode);
 
@@ -97,5 +97,9 @@ const buttonClickedHandle = async (pageid, uniqueID, ajaxmethode) => {
 
     if (response.code == 200) {
         Log.error(response.string);
+    }
+
+    if (response.reload == true) {
+        location.reload();
     }
 };

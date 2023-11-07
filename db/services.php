@@ -122,4 +122,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mod_mootimeter_delete_single_answer' => [
+        'classname'     => 'mod_mootimeter\external\delete_single_answer',
+        'methodname'    => 'execute',
+        'description'   => 'Delete a single answer of a page',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];

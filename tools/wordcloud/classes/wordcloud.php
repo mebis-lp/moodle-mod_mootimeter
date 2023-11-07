@@ -102,7 +102,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @return string
      */
     public function get_answer_overview(object $page): string {
-        global $OUTPUT;
+        global $OUTPUT, $PAGE;
 
         $answers = $this->get_answers($this::ANSWER_TABLE, $page->id, $this::ANSWER_COLUMN);
         $params = [];
@@ -119,12 +119,34 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             $tmpl = new \mootimetertool_wordcloud\local\inplace_edit_answer($page, $answer);
             $answerstr = $OUTPUT->render_from_template('core/inplace_editable', $tmpl->export_for_template($OUTPUT));
 
-            $params['answers'][] = [
+            $paramstemp = [
                 'nbr' => $i,
                 'user' => $userfullname,
                 'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
                 'answer' => $answerstr,
             ];
+
+            // Add delte button to answer.
+            $dataseticonrestart = [
+                'data-ajaxmethode = "mod_mootimeter_delete_single_answer"',
+                'data-pageid="' . $page->id . '"',
+                'data-answerid="' . $answer->id . '"',
+                'data-confirmationtitlestr="' . get_string('delete_single_answer_dialog_title', 'mod_mootimeter') . '"',
+                'data-confirmationquestionstr="' . get_string('delete_single_answer_dialog_question', 'mod_mootimeter') . '"',
+                'data-confirmationtype="DELETE_CANCEL"',
+            ];
+            $buttonid = 'mtmt_delete_answer_' . $answer->id;
+            $paramstemp['icon-delete'] = [
+                'icon' => 'fa-trash',
+                'id' => $buttonid,
+                'iconid' => 'mtmt_delte_iconid_' . $answer->id,
+                'dataset' => join(" ", $dataseticonrestart),
+            ];
+
+            $params['answers'][] = $paramstemp;
+            $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$buttonid]);
+
+            // Count up ansers.
             $i++;
         }
         return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);

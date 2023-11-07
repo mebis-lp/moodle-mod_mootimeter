@@ -28,6 +28,7 @@ namespace mod_mootimeter;
 
 use coding_exception;
 use dml_exception;
+use required_capability_exception;
 
 /**
  * The mod_mootimeter helper class.
@@ -693,7 +694,7 @@ class helper {
     }
 
     /**
-     * Deete all answers of a page.
+     * Delete all answers of a page.
      * @param string $table
      * @param int $pageid
      * @return bool
@@ -711,6 +712,34 @@ class helper {
         }
 
         $params = ['pageid' => $pageid];
+        $return = $DB->delete_records($table, $params);
+        $this->clear_caches($pageid);
+        return $return;
+    }
+
+    /**
+     * Delete a single answer of a page.
+     *
+     * @param string $table
+     * @param int $pageid
+     * @param int $answerid
+     * @return bool
+     * @throws dml_exception
+     * @throws coding_exception
+     * @throws required_capability_exception
+     */
+    public function delete_single_answer(string $table, int $pageid, int $answerid): bool {
+        global $DB;
+
+        $instance = self::get_instance_by_pageid($pageid);
+        $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
+
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
+        }
+
+        $params = ['pageid' => $pageid, 'id' => $answerid];
         $return = $DB->delete_records($table, $params);
         $this->clear_caches($pageid);
         return $return;

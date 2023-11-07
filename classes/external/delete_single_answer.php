@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to delete_all_answers.
+ * Web service to delete_single_answer.
  *
  * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
@@ -25,29 +25,26 @@
 
 namespace mod_mootimeter\external;
 
-use dml_exception;
 use dml_transaction_exception;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
 use external_value;
-use invalid_parameter_exception;
 use Throwable;
-use tool_brickfield\manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
 /**
- * Web service to delete_all_answers.
+ * Web service to delete_single_answer.
  *
  * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class delete_all_answers extends external_api {
+class delete_single_answer extends external_api {
     /**
      * Describes the parameters.
      *
@@ -85,8 +82,10 @@ class delete_all_answers extends external_api {
             $mtmhelper = new \mod_mootimeter\helper();
 
             $page = $mtmhelper->get_page($pageid);
+            $dataset = json_decode($thisdataset);
+
             $answertable = $mtmhelper->get_tool_answer_table($page);
-            $success = $mtmhelper->delete_all_answers($answertable, $pageid);
+            $success = $mtmhelper->delete_single_answer($answertable, $pageid, $dataset->answerid);
 
             if (!$success) {
                 $transaction->dispose();
@@ -95,7 +94,7 @@ class delete_all_answers extends external_api {
 
             $transaction->allow_commit();
 
-            $return = ['code' => 200, 'string' => 'ok'];
+            $return = ['code' => 200, 'string' => 'ok', 'reload' => true];
         } catch (\Exception $e) {
 
             $transaction->rollback($e);
@@ -114,6 +113,7 @@ class delete_all_answers extends external_api {
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
                 'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+                'reload' => new external_value(PARAM_BOOL, 'Indicator to reload page.', VALUE_DEFAULT, false),
             ],
             'Delete page status.'
         );

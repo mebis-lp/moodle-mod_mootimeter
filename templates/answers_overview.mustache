@@ -20,7 +20,11 @@
                     <td>{{user}}</td>
                     <td>{{{answer}}}</td>
                     <td>{{date}}</td>
-                    <td>{{#pix}} i/delete, core {{/pix}}</td>
+                    <td>
+                        {{#icon-delete}}
+                        {{> mod_mootimeter/elements/snippet_button_icon_only_rounded}}
+                        {{/icon-delete}}
+                    </td>
                 </tr>
                 {{/answers}}
             </tbody>
