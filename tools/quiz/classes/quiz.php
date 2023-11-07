@@ -27,6 +27,8 @@ namespace mootimetertool_quiz;
 
 use dml_exception;
 use coding_exception;
+use required_capability_exception;
+use moodle_exception;
 use stdClass;
 
 /**
@@ -223,6 +225,24 @@ class quiz extends \mod_mootimeter\toolhelper {
         $this->store_answer_option($record);
         $this->store_answer_option($record);
         return;
+    }
+
+    /**
+     * Handels inplace_edit.
+     *
+     * @param string $itemtype
+     * @param string $itemid
+     * @param mixed $newvalue
+     * @return mixed
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws required_capability_exception
+     * @throws moodle_exception
+     */
+    public function handle_inplace_edit(string $itemtype, string $itemid, mixed $newvalue) {
+        if ($itemtype === 'editanswerselect') {
+            return \mootimetertool_quiz\local\inplace_edit_answer::update($itemid, $newvalue);
+        }
     }
 
     /**
@@ -774,7 +794,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'nbr' => $i,
                 'user' => $userfullname,
                 'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
-                'answer' => $collectionselect
+                'answer' => $collectionselect,
             ];
             $i++;
         }

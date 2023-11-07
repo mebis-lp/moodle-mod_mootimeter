@@ -17,13 +17,13 @@
 /**
  * Helper class to handle inplace edit of answeroptions.
  *
- * @package     mootimetertool_quiz
+ * @package     mootimetertool_wordcloud
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mootimetertool_quiz\local;
+namespace mootimetertool_wordcloud\local;
 
 use coding_exception;
 use dml_exception;
@@ -31,7 +31,7 @@ use dml_exception;
 /**
  * Helper class to handle inplace edit of answeroptions.
  *
- * @package     mootimetertool_quiz
+ * @package     mootimetertool_wordcloud
  * @copyright   2023, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -49,26 +49,19 @@ class inplace_edit_answer extends \core\output\inplace_editable {
      */
     public function __construct(object $page, object $answer) {
 
-        $quiz = new \mootimetertool_quiz\quiz();
-        $answeroptions = $quiz->get_answer_options($page->id);
+        $wordcloud = new \mootimetertool_wordcloud\wordcloud();
 
-        $answeroptionstemp = [];
-        foreach ($answeroptions as $answeroption) {
-            $answeroptionstemp[$answeroption->id] = $answeroption->optiontext;
-        }
-
-        $instance = $quiz::get_instance_by_pageid($page->id);
-        $cm = $quiz::get_cm_by_instance($instance);
+        $instance = $wordcloud::get_instance_by_pageid($page->id);
+        $cm = $wordcloud::get_cm_by_instance($instance);
 
         parent::__construct(
             'mootimeter',
-            'quiz_editanswerselect',
+            'wordcloud_editanswer',
             $page->id . "_" . $answer->id,
             has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)),
-            $answeroptionstemp[$answer->{$quiz::ANSWER_COLUMN}],
-            $answer->{$quiz::ANSWER_COLUMN}
+            format_string($answer->{$wordcloud::ANSWER_COLUMN}),
+            $answer->{$wordcloud::ANSWER_COLUMN}
         );
-        $this->set_type_select($answeroptionstemp);
     }
 
     /**
@@ -81,46 +74,31 @@ class inplace_edit_answer extends \core\output\inplace_editable {
     public static function update($itemid, $newvalue) {
         global $DB, $PAGE;
 
-        // Clean the new value.
-        $newvalue = clean_param($newvalue, PARAM_INT);
+        $newvalue = clean_param($newvalue, PARAM_TEXT);
 
-        // Extract pageid and answerid.
-        list($pageid, $answerid) = explode("_", $itemid);
-
-        // Generate answeroption array.
-        $quiz = new \mootimetertool_quiz\quiz();
-        $answeroptions = $quiz->get_answer_options($pageid);
-        $answeroptionstemp = [];
-        foreach ($answeroptions as $answeroption) {
-            $answeroptionstemp[$answeroption->id] = $answeroption->optiontext;
-        }
-
-        // Check capabilities.
         $helper = new \mod_mootimeter\helper();
-        $instance = $helper::get_instance_by_pageid($pageid);
-        $cm = $helper::get_cm_by_instance($instance);
-        $modulecontext = \context_module::instance($cm->id);
-        $PAGE->set_context($modulecontext);
-        require_capability('mod/mootimeter:moderator', \context_module::instance($cm->id));
+
+        list($pageid, $answerid) = explode("_", $itemid);
 
         $answertable = $helper->get_tool_answer_table($pageid);
         $answercol = $helper->get_tool_answer_column($pageid);
 
-        // Now check if answeroptionid is in the allowed range.
-        if (!array_key_exists($newvalue, $answeroptionstemp)) {
-            throw new \moodle_exception('invalidparameter', 'debug');
-        }
-
-        // Next update the existing value.
+        // First update the existing value.
         $answerrecord = $DB->get_record($answertable, ['id' => $answerid]);
         $answerrecord->{$answercol} = $newvalue;
         $DB->update_record($answertable, $answerrecord);
 
-        // Now clear the answers cache to make the new answer instantly viewable.
+        // Now clear the answers cache.
         $helper->clear_caches($pageid);
+
+        $instance = $helper::get_instance_by_pageid($pageid);
+        $cm = $helper::get_cm_by_instance($instance);
+        $modulecontext = \context_module::instance($cm->id);
+        $PAGE->set_context($modulecontext);
 
         // Finally return itself.
         $tmpl = new self($helper->get_page($pageid), $answerrecord);
         return $tmpl;
+
     }
 }

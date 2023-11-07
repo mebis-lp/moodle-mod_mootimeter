@@ -80,6 +80,57 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Handels inplace_edit.
+     *
+     * @param string $itemtype
+     * @param string $itemid
+     * @param mixed $newvalue
+     * @return mixed
+     * @throws coding_exception
+     * @throws dml_exception
+     */
+    public function handle_inplace_edit(string $itemtype, string $itemid, mixed $newvalue) {
+        if ($itemtype === 'editanswer') {
+            return \mootimetertool_wordcloud\local\inplace_edit_answer::update($itemid, $newvalue);
+        }
+    }
+
+    /**
+     * Get the answer overview.
+     *
+     * @param object $page
+     * @return string
+     */
+    public function get_answer_overview(object $page): string {
+        global $OUTPUT;
+
+        $answers = $this->get_answers($this::ANSWER_TABLE, $page->id, $this::ANSWER_COLUMN);
+        $params = [];
+        $i = 1;
+        foreach ($answers as $answer) {
+
+            $user = $this->get_user_by_id($answer->usermodified);
+
+            $userfullname = "";
+            if (!empty($user)) {
+                $userfullname = $user->firstname . " " . $user->lastname;
+            }
+
+            $tmpl = new \mootimetertool_wordcloud\local\inplace_edit_answer($page, $answer);
+            $answerstr = $OUTPUT->render_from_template('core/inplace_editable', $tmpl->export_for_template($OUTPUT));
+
+            $params['answers'][] = [
+                'nbr' => $i,
+                'user' => $userfullname,
+                'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
+                'answer' => $answerstr,
+            ];
+            $i++;
+        }
+        return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
+    }
+
+    /**
      * Page type specivic insert_answer
      *
      * @param object $page

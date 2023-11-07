@@ -326,44 +326,25 @@ function mootimeter_trigger_event_course_module_viewed(object $moduleinstance, o
     $event->trigger();
 }
 
+/**
+ * Routing the callbacks for inplace editing to the specific tools.
+ *
+ * @param mixed $itemtype
+ * @param mixed $itemid
+ * @param mixed $newvalue
+ * @return string|void
+ */
 function mootimeter_inplace_editable($itemtype, $itemid, $newvalue) {
-    global $DB, $PAGE;
 
-    if ($itemtype === 'editanswerselect') {
-        return \mootimetertool_quiz\local\inplace_edit_answer::update($itemid, $newvalue);
+    list($tool, $type) = explode("_", $itemtype);
+
+    $classname = "\mootimetertool_" . $tool . "\\" . $tool;
+
+    if (!class_exists($classname)) {
+        return "Class '" . $tool . "' is missing in tool " . $tool;
     }
 
-    // Edit the answer in answer overview.
-    if ($itemtype == 'editanswer') {
-        $newvalue = clean_param($newvalue, PARAM_TEXT);
+    $toolhelper = new $classname();
 
-        $helper = new \mod_mootimeter\helper();
-
-        list($pageid, $answerid) = explode("_", $itemid);
-
-        $answertable = $helper->get_tool_answer_table($pageid);
-        $answercol = $helper->get_tool_answer_column($pageid);
-
-        // First update the existing value.
-        $answerrecord = $DB->get_record($answertable, ['id' => $answerid]);
-        $answerrecord->{$answercol} = $newvalue;
-        $DB->update_record($answertable, $answerrecord);
-
-        // Now clear the answers cache.
-        $helper->clear_caches($pageid);
-
-        $instance = $helper::get_instance_by_pageid($pageid);
-        $cm = $helper::get_cm_by_instance($instance);
-        $modulecontext = \context_module::instance($cm->id);
-        $PAGE->set_context($modulecontext);
-
-        return new \core\output\inplace_editable(
-            'mootimeter',
-            'editanswer',
-            $pageid . "_" . $answerid,
-            has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)),
-            format_string($answerrecord->{$answercol}),
-            $answerrecord->{$answercol}
-        );
-    }
+    return $toolhelper->handle_inplace_edit($type, $itemid, $newvalue);
 }

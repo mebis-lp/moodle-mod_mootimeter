@@ -339,7 +339,6 @@ class helper {
      * @return string
      */
     public function get_rendered_answer_overview(object $page): string {
-        global $OUTPUT, $PAGE;
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
@@ -348,43 +347,6 @@ class helper {
         }
 
         $toolhelper = new $classname();
-
-        if (!method_exists($toolhelper, 'get_answer_overview')) {
-            // If not defined in tool. Use default bahaviour.
-            $answers = $this->get_answers($toolhelper::ANSWER_TABLE, $page->id, $toolhelper::ANSWER_COLUMN);
-            $params = [];
-            $i = 1;
-            foreach ($answers as $answer) {
-                // print_r($this->get_user_by_id($answer->usermodified));die;
-                $user = $this->get_user_by_id($answer->usermodified);
-
-                $userfullname = "";
-                if (!empty($user)) {
-                    $userfullname = $user->firstname . " " . $user->lastname;
-                }
-
-                $tmpl = new \core\output\inplace_editable(
-                    'mootimeter',
-                    'editanswer',
-                    $page->id . "_" . $answer->id,
-                    has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id)),
-                    format_string($answer->{$toolhelper::ANSWER_COLUMN}),
-                    $answer->{$toolhelper::ANSWER_COLUMN}
-                    // new \lang_string('editmytestnamefield', 'tool_mytest'),
-                    // new \lang_string('newvaluestring', 'tool_mytest', format_string($answer->{$toolhelper::ANSWER_COLUMN}))
-                );
-                $answerstr = $OUTPUT->render($tmpl);
-
-                $params['answers'][] = [
-                    'nbr' => $i,
-                    'user' => $userfullname,
-                    'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
-                    'answer' => $answerstr
-                ];
-                $i++;
-            }
-            return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
-        }
 
         return $toolhelper->get_answer_overview($page);
     }

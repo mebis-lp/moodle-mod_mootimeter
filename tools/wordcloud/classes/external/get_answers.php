@@ -74,7 +74,7 @@ class get_answers extends external_api {
         $answerlist = $wordcloud->get_answerlist_wordcloud($pageid);
 
         if (empty($answerlist)) {
-            $answerlist=[[get_string('no_answer', 'mootimetertool_wordcloud'), "2"]];
+            $answerlist = [[get_string('no_answer', 'mootimetertool_wordcloud'), "2"]];
             $lastupdatednew = 10;
         }
         return ['answerlist' => $answerlist, 'lastupdated' => $lastupdatednew];

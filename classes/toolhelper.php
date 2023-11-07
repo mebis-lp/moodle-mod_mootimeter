@@ -94,6 +94,23 @@ abstract class toolhelper extends \mod_mootimeter\helper {
     abstract public function hook_after_new_page_created(object $page);
 
     /**
+     * Handels inplace_edit.
+     * @param string $itemtype
+     * @param string $itemid
+     * @param mixed $newvalue
+     * @return mixed
+     */
+    abstract public function handle_inplace_edit(string $itemtype, string $itemid, mixed $newvalue);
+
+    /**
+     * Get the rendered answer overview view.
+     *
+     * @param object $page
+     * @return string
+     */
+    abstract public function get_answer_overview(object $page): string;
+
+    /**
      * Checks if a select option is selected.
      *
      * @param int $optionid
