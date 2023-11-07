@@ -768,7 +768,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return string
      */
     public function get_answer_overview(object $page): string {
-        global $OUTPUT;
+        global $OUTPUT, $PAGE;
 
         $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
 
@@ -781,6 +781,16 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         $params = [];
         $i = 1;
+
+        $table = new \html_table();
+        $table->head = [
+            '#',
+            get_string('name'),
+            get_string('answer'),
+            get_string('date') . " " . get_string('time'),
+            get_string('options'),
+        ];
+
         foreach ($answers as $answer) {
 
             $user = $this->get_user_by_id($answer->usermodified);
@@ -793,14 +803,40 @@ class quiz extends \mod_mootimeter\toolhelper {
             $tmpl = new \mootimetertool_quiz\local\inplace_edit_answer($page, $answer);
             $collectionselect = $OUTPUT->render_from_template('core/inplace_editable', $tmpl->export_for_template($OUTPUT));
 
-            $params['answers'][] = [
-                'nbr' => $i,
-                'user' => $userfullname,
-                'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
-                'answer' => $collectionselect,
+            // Add delte button to answer.
+            $dataseticonrestart = [
+                'data-ajaxmethode = "mod_mootimeter_delete_single_answer"',
+                'data-pageid="' . $page->id . '"',
+                'data-answerid="' . $answer->id . '"',
+                'data-confirmationtitlestr="' . get_string('delete_single_answer_dialog_title', 'mod_mootimeter') . '"',
+                'data-confirmationquestionstr="' . get_string('delete_single_answer_dialog_question', 'mod_mootimeter') . '"',
+                'data-confirmationtype="DELETE_CANCEL"',
+            ];
+
+            $buttonid = 'mtmt_delete_answer_' . $answer->id;
+
+            $paramstemp = [
+                'icon' => 'fa-trash',
+                'id' => $buttonid,
+                'iconid' => 'mtmt_delte_iconid_' . $answer->id,
+                'dataset' => join(" ", $dataseticonrestart),
+            ];
+
+            $options = $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_button_icon_only_rounded", $paramstemp);
+            $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$buttonid]);
+
+            $table->data[] = [
+                $i,
+                $userfullname,
+                $collectionselect,
+                userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
+                $options,
             ];
             $i++;
         }
+
+        $params['answers'] = \html_writer::table($table);
+
         return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
     }
 }

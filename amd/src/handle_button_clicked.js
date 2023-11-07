@@ -46,7 +46,7 @@ export const init = async(uniqueID) => {
         pageid: 5,
     });
 
-    modal.getRoot().on(ModalEvents.delete, function () {
+    modal.getRoot().on(ModalEvents.delete, function() {
         var pageid = obj.dataset.pageid;
         var uniqueID = obj.id;
         var ajaxmethode = obj.dataset.ajaxmethode;

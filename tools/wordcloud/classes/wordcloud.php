@@ -107,6 +107,16 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $answers = $this->get_answers($this::ANSWER_TABLE, $page->id, $this::ANSWER_COLUMN);
         $params = [];
         $i = 1;
+
+        $table = new \html_table();
+        $table->head = [
+            '#',
+            get_string('name'),
+            get_string('answer'),
+            get_string('date') . " " . get_string('time'),
+            get_string('options'),
+        ];
+
         foreach ($answers as $answer) {
 
             $user = $this->get_user_by_id($answer->usermodified);
@@ -119,13 +129,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             $tmpl = new \mootimetertool_wordcloud\local\inplace_edit_answer($page, $answer);
             $answerstr = $OUTPUT->render_from_template('core/inplace_editable', $tmpl->export_for_template($OUTPUT));
 
-            $paramstemp = [
-                'nbr' => $i,
-                'user' => $userfullname,
-                'date' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
-                'answer' => $answerstr,
-            ];
-
             // Add delte button to answer.
             $dataseticonrestart = [
                 'data-ajaxmethode = "mod_mootimeter_delete_single_answer"',
@@ -135,20 +138,33 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'data-confirmationquestionstr="' . get_string('delete_single_answer_dialog_question', 'mod_mootimeter') . '"',
                 'data-confirmationtype="DELETE_CANCEL"',
             ];
+
             $buttonid = 'mtmt_delete_answer_' . $answer->id;
-            $paramstemp['icon-delete'] = [
+
+            $paramstemp = [
                 'icon' => 'fa-trash',
                 'id' => $buttonid,
                 'iconid' => 'mtmt_delte_iconid_' . $answer->id,
                 'dataset' => join(" ", $dataseticonrestart),
             ];
 
-            $params['answers'][] = $paramstemp;
+            $options = $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_button_icon_only_rounded", $paramstemp);
             $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$buttonid]);
+
+            $table->data[] = [
+                $i,
+                $userfullname,
+                $answerstr,
+                userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
+                $options,
+            ];
 
             // Count up ansers.
             $i++;
         }
+
+        $params['answers'] = \html_writer::table($table);
+
         return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
     }
 

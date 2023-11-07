@@ -3,32 +3,7 @@
 
         <h2>Antwortübersicht</h2>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{{#str}} name {{/str}}</th>
-                    <th scope="col">{{#str}} answer {{/str}}</th>
-                    <th scope="col">{{#str}} date {{/str}}/{{#str}} time {{/str}}</th>
-                    <th scope="col">{{#str}} options {{/str}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#answers}}
-                <tr>
-                    <th scope="row">{{nbr}}</th>
-                    <td>{{user}}</td>
-                    <td>{{{answer}}}</td>
-                    <td>{{date}}</td>
-                    <td>
-                        {{#icon-delete}}
-                        {{> mod_mootimeter/elements/snippet_button_icon_only_rounded}}
-                        {{/icon-delete}}
-                    </td>
-                </tr>
-                {{/answers}}
-            </tbody>
-        </table>
+        {{{answers}}}
 
     </div>
     {{#js}}

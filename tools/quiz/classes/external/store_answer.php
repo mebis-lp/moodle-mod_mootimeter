@@ -80,7 +80,7 @@ class store_answer extends external_api {
             $page = $helper->get_page($pageid);
 
             $maxanswersperuser = helper::get_tool_config($page->id, "maxanswersperuser");
-            if (count($aoids) > $maxanswersperuser && !empty($maxanswersperuser)) {
+            if (count($aoids) > $maxanswersperuser && (int)$maxanswersperuser > 0) {
                 return ['code' => helper::ERRORCODE_TO_MANY_ANSWERS, 'string' => get_string(
                     'error_to_many_answers',
                     'mootimetertool_quiz',
