@@ -471,4 +471,9 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $params = $this->get_renderer_params($page);
         return $OUTPUT->render_from_template("mootimetertool_wordcloud/view_results", $params);
     }
+
+    public function get_rendered_page_no_login_mode(object $page): string {
+                $params = $this->get_renderer_params($page);
+
+    }
 }

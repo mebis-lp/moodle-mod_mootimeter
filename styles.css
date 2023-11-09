@@ -395,6 +395,10 @@
   text-align: center;
   gap: 1.25rem;
 }
+.mootimetercontainer .mootimetercolcontent.mootimeter-no-login-mode {
+  padding: 0;
+  height: 100vH;
+}
 .mootimetercontainer.isNewPage .mootimetercolcontent {
   flex: 0 0 0;
 }
@@ -418,6 +422,10 @@
 .dark .mootimetercolcontent .mootimeter-colcontent-preview input,
 .dark .mootimetercolcontent .mootimeter-colcontent-preview label {
   color: #fff;
+}
+
+.mootimeter-no-login-body {
+  margin: 0;
 }
 
 .mootimetercontainer .divider {

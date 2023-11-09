@@ -87,6 +87,11 @@
       text-align: center;
       gap: 1.25rem;
     }
+
+    &.mootimeter-no-login-mode {
+      padding: 0;
+      height: 100vH;
+    }
   }
 
   &.isNewPage {
@@ -121,4 +126,8 @@
       }
     }
   }
+}
+
+.mootimeter-no-login-body {
+  margin: 0;
 }

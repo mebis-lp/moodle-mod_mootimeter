@@ -335,6 +335,26 @@ class helper {
     }
 
     /**
+     *
+     *
+     * @param object $page
+     * @return string
+     */
+    public function get_rendered_page_no_login_mode(object $page) :string {
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_rendered_page_no_login_mode')) {
+            return "Method 'get_rendered_page_no_login_mode' is missing in tool helper class " . $page->tool;
+        }
+        return $toolhelper->get_result_page($page);
+    }
+
+    /**
      * Get the rendered answer overview view.
      * @param object $page
      * @return string
