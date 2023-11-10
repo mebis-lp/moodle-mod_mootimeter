@@ -94,7 +94,7 @@ $params = [
     'containerclasses' => "border rounded",
     'mootimetercard' => 'border rounded',
     'cmid' => $cm->id,
-    'pages' => $pagehelper->get_pagelist_html($moduleinstance->id, $pageid),
+    'pages' => $pagehelper->get_pagelist_html($cm->id, $pageid),
     'isediting' => $PAGE->user_is_editing(),
 ];
 
@@ -126,6 +126,8 @@ if (empty($pageid)) {
 if ($PAGE->user_is_editing() || count($pages) > 1) {
     $params['showpagescol'] = true;
 }
+
+$params['mootimeterstate-dataset'] = \mod_mootimeter\local\mootimeterstate::get_mootimeterstate_renderable();
 
 // START OUTPUT.
 echo $OUTPUT->header();

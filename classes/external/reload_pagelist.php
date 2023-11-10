@@ -77,9 +77,9 @@ class reload_pagelist extends external_api {
         try {
 
             $pageslisthelper = new \mod_mootimeter\local\pagelist();
-            $pageslist = $pageslisthelper->get_pagelist_html($pageid);
+            $pageslistparams = json_encode($pageslisthelper->get_pagelist_params($cmid, $pageid));
 
-            $return = ['code' => 200, 'string' => 'ok', 'pagelist' => $pageslist];
+            $return = ['code' => 200, 'string' => 'ok', 'pagelist' => $pageslistparams];
         } catch (\Exception $e) {
 
             $return = ['code' => 500, 'string' => $e->getMessage(), 'pagelist' => ''];

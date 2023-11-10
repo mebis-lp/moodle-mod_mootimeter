@@ -1,5 +1,7 @@
 import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
+import {exception as displayException} from 'core/notification';
+import Templates from 'core/templates';
 
 export const init = () => {
     var obj = document.getElementById('mootimeterstate');
@@ -48,12 +50,33 @@ const reloadPagelist = (
  */
 const execReloadPagelist = async(pageid, cmid) => {
     const response = await reloadPagelist(pageid, cmid);
-    window.console.log(response);
+
     if (response.code != 200) {
         Log.error(response.string);
     }
 
     if (response.code == 200) {
-        Log.error(response.string);
+
+        var mtmstate = document.getElementById('mootimeterstate');
+
+        const pagelist = JSON.parse(response.pagelist);
+
+        // If there are no changes in pagelist. We are finished.
+        if (mtmstate.dataset.pagelisttime == pagelist.pagelisttime) {
+            return;
+        }
+
+        // Set new pagelisttime state.
+        mtmstate.setAttribute('data-pagelisttime', pagelist.pagelisttime);
+
+        document.getElementById('mootimeter-pages-list').innerHTML = "";
+        for (var page of pagelist.pageslist) {
+            Templates.renderForPromise('mod_mootimeter/elements/snippet_page_list_element', page)
+                .then(({html, js}) => {
+                    Templates.appendNodeContents('#mootimeter-pages-list', html, js);
+                    return true;
+                })
+                .catch((error) => displayException(error));
+        }
     }
 };

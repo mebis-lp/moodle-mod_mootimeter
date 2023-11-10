@@ -42,23 +42,23 @@ use moodle_exception;
 class pagelist {
 
     /**
-     * Get the pagelist html output.
+     * Get the pagelist parameters for rendering.
      *
-     * @param int $instanceid
-     * @param int $pageselected
-     * @return string
+     * @param int $cmid
+     * @param object|int $pageselected
+     * @return array
      * @throws dml_exception
      * @throws coding_exception
      * @throws moodle_exception
      */
-    public function get_pagelist_html(int $instanceid, object|int $pageselected): string {
-        global $OUTPUT, $USER, $PAGE;
+    public function get_pagelist_params(int $cmid, object|int $pageselected): array {
+        global $USER, $PAGE;
 
         $helper = new \mod_mootimeter\helper();
 
-        $cm = $helper::get_cm_by_instance($instanceid);
-        $modulecontext = \context_module::instance($cm->id);
+        $modulecontext = \context_module::instance($cmid);
         $PAGE->set_context($modulecontext);
+        $cm = get_coursemodule_from_id('mootimeter', $cmid, 0, false, MUST_EXIST);
 
         // Check if the user is enrolled to the course to wich the instance belong to.
         // If not, the user is not allowed to view the page list.
@@ -71,14 +71,15 @@ class pagelist {
 
         $temppages = [];
         $pagenumber = 1;
+        $maxtimecreated = 0;
+
         foreach ($pages as $pagerow) {
             $uniqid = uniqid('mtmt_page_');
+            $pixrawurl = '/mod/mootimeter/tools/' . $pagerow->tool . '/pix/' . $pagerow->tool . '.svg';
             $temppages['pageslist'][] = [
-                'title' => $pagerow->title,
-                'pix' => "tools/" . $pagerow->tool . "/pix/" . $pagerow->tool . ".svg",
+                'toolicon' => (new \moodle_url($pixrawurl))->out(true),
                 'active' => ($pagerow->id == $pageselected) ? "active" : "",
                 'pageid' => $pagerow->id,
-                'sortorder' => $pagerow->sortorder,
                 'pagenumber' => $pagenumber,
                 'width' => "35px",
                 'cmid' => $cm->id,
@@ -86,9 +87,32 @@ class pagelist {
             ];
             $PAGE->requires->js_call_amd('mod_mootimeter/change_page', 'init', [$uniqid]);
 
+            if ($maxtimecreated < $pagerow->timecreated) {
+                $maxtimecreated = $pagerow->timecreated;
+            }
+
             $pagenumber++;
         }
+        $temppages['pagelisttime'] = $maxtimecreated;
+        \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('pagelisttime', $maxtimecreated);
 
-        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_page_list", $temppages);
+        return $temppages;
+    }
+
+    /**
+     * Get the pagelist html output.
+     *
+     * @param int $cmid
+     * @param object|int $pageselected
+     * @return string
+     * @throws dml_exception
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
+    public function get_pagelist_html(int $cmid, object|int $pageselected): string {
+        global $OUTPUT;
+
+        $pagelistparams = $this->get_pagelist_params($cmid, $pageselected);
+        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_page_list", $pagelistparams);
     }
 }
