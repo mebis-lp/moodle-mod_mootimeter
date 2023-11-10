@@ -276,15 +276,17 @@ class helper {
     }
 
     /**
-     * Get rendered page content.
+     * Get parameters to render pagecontent.
      *
      * @param object $page
      * @param object $cm
      * @param bool $withwrapper
-     * @return string
+     * @return array
+     * @throws dml_exception
+     * @throws coding_exception
      */
-    public function get_rendered_page_content(object $page, object $cm, bool $withwrapper = true): string {
-        global $OUTPUT, $PAGE;
+    public function get_rendered_page_content_params (object $page, object $cm, bool $withwrapper = true): array {
+        global $PAGE;
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
@@ -302,15 +304,29 @@ class helper {
             'mootimetercard' => 'border rounded',
             'pageid' => $page->id,
             'cmid' => $cm->id,
-            'title' => s($page->title),
             'question' => s(self::get_tool_config($page, 'question')),
             'isediting' => $PAGE->user_is_editing(),
+            'withwrapper' => $withwrapper,
         ];
+
         $params = array_merge($params, $toolhelper->get_renderer_params($page));
 
-        if ($withwrapper) {
-            return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_wrapper", $params);
-        }
+        return $params;
+    }
+
+    /**
+     * Get rendered page content.
+     *
+     * @param object $page
+     * @param object $cm
+     * @param bool $withwrapper
+     * @return string
+     */
+    public function get_rendered_page_content(object $page, object $cm, bool $withwrapper = true): string {
+        global $OUTPUT;
+
+        $params = $this->get_rendered_page_content_params ($page, $cm, $withwrapper);
+
         return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content2", $params);
     }
 

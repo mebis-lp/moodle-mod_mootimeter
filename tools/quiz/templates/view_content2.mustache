@@ -1,47 +1,54 @@
-<div class="mootimeter-colcontent-preview">
+{{#withwrapper}}
+<div class="mootimetercontainer {{{containerclasses}}}">
+  {{/withwrapper}}
+  <div class="mootimeter-colcontent-preview">
 
-  <div class="mootimeter-colcontent-preview-header" id="mtmt_tool-colct-header">
+    <div class="mootimeter-colcontent-preview-header" id="mtmt_tool-colct-header">
 
-    {{#toolname}}
-    {{> mod_mootimeter/elements/snippet_pill}}
-    {{/toolname}}
+      {{#toolname}}
+      {{> mod_mootimeter/elements/snippet_pill}}
+      {{/toolname}}
 
-    <h4 id="mtm_question">{{{question}}}</h4>
+      <h4 id="mtm_question">{{{question}}}</h4>
 
-    {{#isediting}}
+      {{#isediting}}
+      {{#js}}
+      require(['mootimetertool_quiz/reload_question'], (module) => module.init());
+      {{/js}}
+      {{/isediting}}
+
+    </div>
+
+    <div class="mootimeter-colcontent-preview-options">
+      {{#answeroptions}}
+      {{#cb}}
+      {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+      {{/cb}}
+      {{#rb}}
+      {{> mod_mootimeter/elements/snippet_radio_button}}
+      {{/rb}}
+      {{/answeroptions}}
+    </div>
+
+    <div class="mootimeter-colcontent-preview-send">
+      {{#sendbutton}}
+      {{> mod_mootimeter/elements/snippet_button_full}}
+      {{/sendbutton}}
+      {{#sendbutton_context}}
+      <small>{{text}}</small>
+      {{/sendbutton_context}}
+    </div>
+
+    {{^showanswercorrection}}
     {{#js}}
-    require(['mootimetertool_quiz/reload_question'], (module) => module.init());
+    require(['mootimetertool_quiz/store_answer'], (module) => module.init());
     {{/js}}
-    {{/isediting}}
+    {{/showanswercorrection}}
 
-  </div>
-
-  <div class="mootimeter-colcontent-preview-options">
-    {{#answeroptions}}
-    {{#cb}}
-    {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
-    {{/cb}}
-    {{#rb}}
-    {{> mod_mootimeter/elements/snippet_radio_button}}
-    {{/rb}}
-    {{/answeroptions}}
-  </div>
-
-  <div class="mootimeter-colcontent-preview-send">
-    {{#sendbutton}}
-    {{> mod_mootimeter/elements/snippet_button_full}}
-    {{/sendbutton}}
-    {{#sendbutton_context}}
-    <small>{{text}}</small>
-    {{/sendbutton_context}}
-  </div>
-
-  {{^showanswercorrection}}
-  {{#js}}
-  require(['mootimetertool_quiz/store_answer'], (module) => module.init());
-  {{/js}}
-  {{/showanswercorrection}}
-
-  {{#js}}
+    {{#js}}
     require(['mod_mootimeter/reload_on_state_change'], (module) => module.init("showanswercorrection"));
-  {{/js}}
+    {{/js}}
+  </div>
+  {{#withwrapper}}
+</div>
+{{/withwrapper}}
