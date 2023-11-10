@@ -88,6 +88,11 @@ class pagelist {
             ];
             $PAGE->requires->js_call_amd('mod_mootimeter/change_page', 'init', [$uniqid]);
 
+            $questionmodified = $helper::get_tool_config_timemodified($pagerow, 'question');
+            if ($maxtimecreated < $questionmodified) {
+                $maxtimecreated = $questionmodified;
+            }
+
             if ($maxtimecreated < $pagerow->timecreated) {
                 $maxtimecreated = $pagerow->timecreated;
             }

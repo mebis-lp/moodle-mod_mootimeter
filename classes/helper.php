@@ -458,11 +458,13 @@ class helper {
         if (empty($record = $DB->get_record('mootimeter_tool_settings', $conditions))) {
             $dataobject = (object)$conditions;
             $dataobject->value = $value;
+            $dataobject->timemodified = time();
             $DB->insert_record('mootimeter_tool_settings', $dataobject);
             return;
         }
 
         $record->value = $value;
+        $record->timemodified = time();
         $DB->update_record('mootimeter_tool_settings', $record);
     }
 
@@ -493,6 +495,35 @@ class helper {
         }
 
         return (object) $DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, value');
+    }
+
+    /**
+     * Get the modified timestamp of setting.
+     *
+     * @param int|object $pageorid
+     * @param string $name
+     * @return mixed
+     * @throws dml_exception
+     */
+    public static function get_tool_config_timemodified(int|object $pageorid, string $name = "") {
+        global $DB;
+
+        if (is_object($pageorid)) {
+            $pageorid = $pageorid->id;
+        }
+
+        $conditions = ['pageid' => $pageorid];
+
+        if (!empty($name)) {
+            $conditions['name'] = $name;
+            $field = $DB->get_field('mootimeter_tool_settings', 'timemodified', $conditions);
+            if (empty($field)) {
+                return "";
+            }
+            return $field;
+        }
+
+        return (object) $DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, timemodified');
     }
 
     /**

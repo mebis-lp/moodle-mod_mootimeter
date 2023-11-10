@@ -98,5 +98,20 @@ function xmldb_mootimeter_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2023101000, 'mootimeter');
     }
 
+    if ($oldversion < 2023111000) {
+
+        // Define field timemodified to be added to mootimeter_tool_settings.
+        $table = new xmldb_table('mootimeter_tool_settings');
+        $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'value');
+
+        // Conditionally launch add field timemodified.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Mootimeter savepoint reached.
+        upgrade_mod_savepoint(true, 2023111000, 'mootimeter');
+    }
+
     return true;
 }
