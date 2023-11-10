@@ -84,6 +84,7 @@ class pagelist {
                 'width' => "35px",
                 'cmid' => $cm->id,
                 'id' => $uniqid,
+                'tooltip' => mb_strimwidth($helper::get_tool_config($pagerow, 'question'), 0, 40, '...'),
             ];
             $PAGE->requires->js_call_amd('mod_mootimeter/change_page', 'init', [$uniqid]);
 

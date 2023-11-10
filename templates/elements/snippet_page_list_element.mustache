@@ -1,4 +1,10 @@
-<li class="mootimeter_pages_li d-flex clickable {{ active }}" data-pageid="{{ pageid }}" data-cmid="{{ cmid }}" id="{{id}}">
+<li
+    class="mootimeter_pages_li d-flex clickable {{ active }}"
+    data-pageid="{{ pageid }}"
+    data-cmid="{{ cmid }}"
+    id="{{id}}"
+    {{#tooltip}} data-toggle="tooltip" data-placement="right" title="{{tooltip}}"{{/tooltip}}
+    >
     <span class="mootimeter_pages_count">{{pagenumber}}</span>
     <img src="{{{ toolicon }}}" width="{{width}}" class="m-1" />
 </li>
