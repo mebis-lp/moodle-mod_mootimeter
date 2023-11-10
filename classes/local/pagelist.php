@@ -44,25 +44,19 @@ class pagelist {
     /**
      * Get the pagelist html output.
      *
-     * @param object|int $pageorid
+     * @param int $instanceid
+     * @param int $pageselected
      * @return string
      * @throws dml_exception
      * @throws coding_exception
      * @throws moodle_exception
      */
-    public function get_pagelist_html(object|int $pageorid):string {
+    public function get_pagelist_html(int $instanceid, object|int $pageselected): string {
         global $OUTPUT, $USER, $PAGE;
 
         $helper = new \mod_mootimeter\helper();
 
-        if (!is_object($pageorid)) {
-            $page = $helper->get_page($pageorid);
-        } else {
-            $page = $pageorid;
-        }
-
-        $instance = $helper::get_instance_by_pageid($page->id);
-        $cm = $helper::get_cm_by_instance($instance);
+        $cm = $helper::get_cm_by_instance($instanceid);
         $modulecontext = \context_module::instance($cm->id);
         $PAGE->set_context($modulecontext);
 
@@ -82,7 +76,7 @@ class pagelist {
             $temppages['pageslist'][] = [
                 'title' => $pagerow->title,
                 'pix' => "tools/" . $pagerow->tool . "/pix/" . $pagerow->tool . ".svg",
-                'active' => ($pagerow->id == $page->id) ? "active" : "",
+                'active' => ($pagerow->id == $pageselected) ? "active" : "",
                 'pageid' => $pagerow->id,
                 'sortorder' => $pagerow->sortorder,
                 'pagenumber' => $pagenumber,

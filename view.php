@@ -88,11 +88,13 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
+$pagehelper = new \mod_mootimeter\local\pagelist();
+
 $params = [
     'containerclasses' => "border rounded",
     'mootimetercard' => 'border rounded',
     'cmid' => $cm->id,
-    'pages' => $helper->get_pages_template($pages, $pageid),
+    'pages' => $pagehelper->get_pagelist_html($moduleinstance->id, $pageid),
     'isediting' => $PAGE->user_is_editing(),
 ];
 
