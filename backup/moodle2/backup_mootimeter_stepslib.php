@@ -52,7 +52,7 @@ class backup_mootimeter_activity_structure_step extends backup_activity_structur
         $toolsetting = new backup_nested_element(
             'tool_setting',
             ['id'],
-            ['tool', 'pageid', 'name', 'value']
+            ['tool', 'pageid', 'name', 'value', 'timemodified']
         );
         $page->add_child($toolsettings);
         $toolsettings->add_child($toolsetting);

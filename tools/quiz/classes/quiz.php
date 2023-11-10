@@ -429,6 +429,9 @@ class quiz extends \mod_mootimeter\toolhelper {
         $useransweroptionsid = array_keys($this->get_user_answers(self::ANSWER_TABLE, $page->id, 'optionid', $USER->id));
 
         $inputtype = 'cb';
+        if (self::get_tool_config($page->id, 'maxanswersperuser') == 1) {
+            $inputtype = 'rb';
+        }
         foreach ($answeroptions as $answeroption) {
             $wrapperadditionalclass = (self::get_tool_config($page->id, 'showanswercorrection')) ? "mootimeter-highlighter" : "";
             $wrapperadditionalclass .= ($answeroption->optioniscorrect) ? " mootimeter-success" : "";
