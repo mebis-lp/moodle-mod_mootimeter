@@ -69,14 +69,12 @@ const execReloadPagelist = async(pageid, cmid) => {
         // Set new pagelisttime state.
         mtmstate.setAttribute('data-pagelisttime', pagelist.pagelisttime);
 
-        document.getElementById('mootimeter-pages-list').innerHTML = "";
-        for (var page of pagelist.pageslist) {
-            Templates.renderForPromise('mod_mootimeter/elements/snippet_page_list_element', page)
-                .then(({html, js}) => {
-                    Templates.appendNodeContents('#mootimeter-pages-list', html, js);
-                    return true;
-                })
-                .catch((error) => displayException(error));
-        }
+        // Replace the pages list.
+        Templates.renderForPromise('mod_mootimeter/elements/snippet_page_list', pagelist)
+            .then(({html, js}) => {
+                Templates.replaceNodeContents('#mootimeter-pages-list', html, js);
+                return true;
+            })
+            .catch((error) => displayException(error));
     }
 };

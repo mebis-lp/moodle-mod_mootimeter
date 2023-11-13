@@ -1,14 +1,9 @@
 <div class="container-fluid mootimetercontainer isNotNewPage {{{containerclasses}}}">
   <div class="row h-100">
     {{#showpagescol}}
-    <div class="mootimetercol mootimetercolpages">
+    <div class="mootimetercol mootimetercolpages" id="mootimeter-pages-col">
       <ul id="mootimeter-pages-list" class="">
         {{{pages}}}
-        {{#isediting}}
-        <li id="mootimeter_addpage" class="d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{ cmid }}" data-instance="{{instance}}">
-          <i class="fa fa-plus p-1 mx-1 my-auto"></i>
-        </li>
-        {{/isediting}}
       </ul>
     </div>
     {{/showpagescol}}
@@ -48,5 +43,5 @@
 
 {{#js}}
 require(['mod_mootimeter/main'], (module) => module.init());
-require(['mod_mootimeter/reload_pagelist'], (module) => module.init());
+require(['mod_mootimeter/reload_pagelist'], (module) => module.init("{{isediting}}"));
 {{/js}}

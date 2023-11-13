@@ -73,6 +73,10 @@ class pagelist {
         $pagenumber = 1;
         $maxtimecreated = 0;
 
+        $temppages['cmid'] = $cm->id;
+        $temppages['instance'] = $cm->instance;
+        $temppages['isediting'] = $USER->editing;
+
         foreach ($pages as $pagerow) {
             $uniqid = uniqid('mtmt_page_');
             $pixrawurl = '/mod/mootimeter/tools/' . $pagerow->tool . '/pix/' . $pagerow->tool . '.svg';

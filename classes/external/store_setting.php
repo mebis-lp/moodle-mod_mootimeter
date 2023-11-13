@@ -117,7 +117,7 @@ class store_setting extends external_api {
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
                 'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
-                'options' => new external_value(PARAM_TEXT, 'Additional options for js executions'),
+                'options' => new external_value(PARAM_TEXT, 'Additional options for js executions', VALUE_OPTIONAL, ""),
             ],
             'Set Setting State.'
         );

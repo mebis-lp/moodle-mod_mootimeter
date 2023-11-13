@@ -1,3 +1,11 @@
 {{#pageslist}}
 {{> mod_mootimeter/elements/snippet_page_list_element}}
 {{/pageslist}}
+{{#isediting}}
+<li id="mootimeter_addpage" class="d-flex mootimeter_addpage clickable" data-action="addpage" data-cmid="{{ cmid }}" data-pageid="">
+    <i class="fa fa-plus p-1 mx-1 my-auto"></i>
+</li>
+{{#js}}
+    require(['mod_mootimeter/change_page'], (module) => module.init(["mootimeter_addpage"]));
+{{/js}}
+{{/isediting}}
