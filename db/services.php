@@ -26,30 +26,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $functions = [
-    'mod_mootimeter_store_answer' => [
-        'classname'     => 'mod_mootimeter\external\store_answer',
-        'methodname'    => 'execute',
-        'description'   => 'Store answer of mod_mootimeter.',
-        'type'          => 'write',
-        'ajax'          => true,
-        'capabilities'  => 'mod/mootimeter:view',
-    ],
-    'mod_mootimeter_get_answers' => [
-        'classname'     => 'mod_mootimeter\external\get_answers',
-        'methodname'    => 'execute',
-        'description'   => 'Store answer of mod_mootimeter.',
-        'type'          => 'write',
-        'ajax'          => true,
-        'capabilities'  => 'mod/mootimeter:view',
-    ],
-    'mod_mootimeter_set_show_results_state' => [
-        'classname'     => 'mod_mootimeter\external\set_show_results_state',
-        'methodname'    => 'execute',
-        'description'   => 'Set the state of show results..',
-        'type'          => 'write',
-        'ajax'          => true,
-        'capabilities'  => 'mod/mootimeter:moderator',
-    ],
     'mod_mootimeter_store_setting' => [
         'classname'     => 'mod_mootimeter\external\store_setting',
         'methodname'    => 'execute',
