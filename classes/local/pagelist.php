@@ -75,7 +75,9 @@ class pagelist {
 
         $temppages['cmid'] = $cm->id;
         $temppages['instance'] = $cm->instance;
-        $temppages['isediting'] = $USER->editing;
+        if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)) && !empty($USER->editing)) {
+            $temppages['isediting'] = $USER->editing;
+        }
 
         foreach ($pages as $pagerow) {
             $uniqid = uniqid('mtmt_page_');
