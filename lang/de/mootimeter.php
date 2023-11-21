@@ -41,6 +41,7 @@ $string['modulename'] = 'Mootimeter';
 $string['modulenameplural'] = 'Mootimeter';
 $string['mootimeter:addinstance'] = 'Mootimeter Aktivität hinzufügen';
 $string['mootimeter:moderator'] = 'Mootimeter Moderator Capability';
+$string['mootimeter:view'] = 'Mootimeter View Capability';
 $string['mootimeterfieldset'] = "Weitere Mootimeter-Einstellungen";
 $string['mootimetername'] = "Name";
 $string['mootimetername_help'] = "Titel der Aktivität";
