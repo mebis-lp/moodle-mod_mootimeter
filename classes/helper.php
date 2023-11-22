@@ -278,14 +278,14 @@ class helper {
     /**
      * Get parameters to render pagecontent.
      *
-     * @param object $page
      * @param object $cm
+     * @param object $page
      * @param bool $withwrapper
      * @return array
      * @throws dml_exception
      * @throws coding_exception
      */
-    public function get_rendered_page_content_params (object $cm, object $page, bool $withwrapper = true): array {
+    public function get_rendered_page_content_params(object $cm, object $page, bool $withwrapper = true): array {
         global $USER;
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
@@ -323,17 +323,35 @@ class helper {
     /**
      * Get rendered page content.
      *
-     * @param object $page
      * @param object $cm
+     * @param object $page
      * @param bool $withwrapper
      * @return string
      */
     public function get_rendered_page_content(object $cm, object $page, bool $withwrapper = true): string {
         global $OUTPUT;
 
-        $params = $this->get_rendered_page_content_params ($cm, $page, $withwrapper);
+        $params = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
 
         return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content2", $params['pagecontent']);
+    }
+
+    /**
+     * Get all params to render the whole page content.
+     *
+     * @param int $cmid
+     * @param int $pageid
+     * @param bool $withwrapper
+     * @return array
+     * @throws dml_exception
+     * @throws coding_exception
+     */
+    public function get_page_content_params(int $cmid, int $pageid, bool $withwrapper = true): array {
+        list($course, $cm) = get_course_and_cm_from_cmid($cmid);
+        $page = $this->get_page($pageid);
+        $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
+        $paramscontentmenu = $this->get_content_menu($page);
+        return array_merge($paramscontent, $paramscontentmenu);
     }
 
     /**
@@ -386,18 +404,23 @@ class helper {
      * @return array
      */
     public function get_content_menu_default_parameters(object $page): array {
-        global $PAGE;
 
         $params = [];
 
-        if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
+
+        if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
 
             // Redirect to Answers Overview View.
             $params['icon-answer-overview'] = [
                 'icon' => 'fa-table',
                 'id' => 'mtmt_show_answer_overview',
                 'additional_class' => 'mtm_redirect_selector',
-                'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id, 'o' => 1]),
+                'href' => (new \moodle_url(
+                    '/mod/mootimeter/view.php',
+                    ['id' => $cm->id, 'pageid' => $page->id, 'o' => 1]
+                ))->out(true),
                 'tooltip' => get_string('show_answer_overview', 'mod_mootimeter'),
             ];
             if (optional_param('o', "", PARAM_INT)) {
@@ -405,7 +428,7 @@ class helper {
                     'icon' => 'fa-pencil-square-o',
                     'id' => 'mtmt_show_answer_overview',
                     'additional_class' => 'mtm_redirect_selector',
-                    'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id]),
+                    'href' => (new \moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]))->out(true),
                     'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
                 ];
             }
@@ -417,9 +440,9 @@ class helper {
      * Calls tool method if exists.
      *
      * @param object $page
-     * @return mixed
+     * @return array
      */
-    public function get_content_menu(object $page) {
+    public function get_content_menu(object $page): array {
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {
@@ -427,10 +450,31 @@ class helper {
         }
 
         $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_content_menu_tool')) {
-            return "Method 'get_content_menu_tool' is missing in tool helper class " . $page->tool;
+        if (!method_exists($toolhelper, 'get_content_menu_tool_params')) {
+            return [
+                'contentmenu' => [
+                    'error' => "Method 'get_content_menu_tool_params' is missing in tool helper class " . $page->tool,
+                ],
+            ];
         }
-        return $toolhelper->get_content_menu_tool($page);
+        $params = $toolhelper->get_content_menu_tool_params($page);
+        $params['contentmenu']['template'] = "mod_mootimeter/elements/snippet_content_menu";
+        return $params;
+    }
+
+    /**
+     * Get content menu bar.
+     *
+     * @param object $page
+     * @return string
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
+    public function render_content_menu(object $page): string {
+        global $OUTPUT;
+        $params = $this->get_content_menu($page);
+        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params['contentmenu']);
     }
 
     /**

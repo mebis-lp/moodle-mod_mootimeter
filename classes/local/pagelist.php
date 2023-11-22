@@ -92,7 +92,6 @@ class pagelist {
                 'id' => $uniqid,
                 'tooltip' => mb_strimwidth($helper::get_tool_config($pagerow, 'question'), 0, 40, '...'),
             ];
-            $PAGE->requires->js_call_amd('mod_mootimeter/change_page', 'init', [$uniqid]);
 
             $questionmodified = $helper::get_tool_config_timemodified($pagerow, 'question');
             if ($maxtimecreated < $questionmodified) {

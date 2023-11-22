@@ -401,11 +401,13 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @throws moodle_exception
      */
     public function get_content_menu_tool_params(object $page) {
-        global $PAGE;
+
+        $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
+        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
 
         $params = $this->get_content_menu_default_parameters($page);
 
-        if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
+        if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
 
             $params['icon-eye'] = [
                 'icon' => 'fa-eye',
@@ -419,14 +421,13 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 $params['icon-eye']['icon'] = "fa-eye-slash";
                 $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission', 'mod_mootimeter');
             }
-            $PAGE->requires->js_call_amd('mod_mootimeter/toggle_teacherpermission', 'init', ['toggleteacherpermission']);
 
             // Reset Question.
             $dataseticonrestart = [
                 'data-ajaxmethode = "mod_mootimeter_delete_all_answers"',
                 'data-pageid="' . $page->id . '"',
-                'data-confirmationtitlestr="'.get_string('delete_all_answers_dialog_title' , 'mod_mootimeter').'"',
-                'data-confirmationquestionstr="'.get_string('delete_all_answers_dialog_question' , 'mod_mootimeter').'"',
+                'data-confirmationtitlestr="' . get_string('delete_all_answers_dialog_title', 'mod_mootimeter') . '"',
+                'data-confirmationquestionstr="' . get_string('delete_all_answers_dialog_question', 'mod_mootimeter') . '"',
                 'data-confirmationtype="DELETE_CANCEL"',
             ];
             $params['icon-restart'] = [
@@ -435,41 +436,24 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'iconid' => 'mtmt_restart_iconid',
                 'dataset' => join(" ", $dataseticonrestart),
             ];
-            $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$params['icon-restart']['id']]);
         }
 
         $params['icon-showresults'] = [
             'icon' => 'fa-bar-chart',
             'id' => 'showresults',
             'additional_class' => 'mtm_redirect_selector',
-            'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id, 'r' => 1]),
+            'href' => (new \moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id, 'r' => 1]))->out(true),
             'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
         ];
         if (optional_param('r', "", PARAM_INT)) {
-            $params['icon-showresults'] = [
-                'icon' => 'fa-pencil-square-o',
-                'id' => 'showresults',
-                'additional_class' => 'mtm_redirect_selector',
-                'href' => new \moodle_url('/mod/mootimeter/view.php', ['id' => $PAGE->cm->id, 'pageid' => $page->id]),
-                'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
-            ];
+            $params['icon-showresults']['icon'] = 'fa-pencil-square-o';
+            $params['icon-showresults']['href'] = (new \moodle_url(
+                '/mod/mootimeter/view.php',
+                ['id' => $cm->id, 'pageid' => $page->id]
+            ))->out(true);
+            $params['icon-showresults']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
         }
         return ['contentmenu' => $params];
-    }
-
-    /**
-     * Get content menu bar.
-     *
-     * @param object $page
-     * @return mixed
-     * @throws coding_exception
-     * @throws dml_exception
-     * @throws moodle_exception
-     */
-    public function get_content_menu_tool(object $page) {
-        global $OUTPUT;
-        $params = $this->get_content_menu_tool_params($page);
-        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params['contentmenu']);
     }
 
     /**

@@ -47,8 +47,9 @@ const reloadPagelist = (
  * Executes the call to store input value.
  * @param {int} pageid
  * @param {int} cmid
+ * @param {bool} forcereload
  */
-const execReloadPagelist = async(pageid, cmid) => {
+export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
     const response = await reloadPagelist(pageid, cmid);
 
     if (response.code != 200) {
@@ -62,7 +63,7 @@ const execReloadPagelist = async(pageid, cmid) => {
         const pagelist = JSON.parse(response.pagelist);
 
         // If there are no changes in pagelist. We are finished.
-        if (mtmstate.dataset.pagelisttime == pagelist.pagelisttime) {
+        if (mtmstate.dataset.pagelisttime == pagelist.pagelisttime && !forcereload) {
             return;
         }
 

@@ -106,4 +106,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mod_mootimeter_get_pagecontentparams' => [
+        'classname'     => 'mod_mootimeter\external\get_pagecontentparams',
+        'methodname'    => 'execute',
+        'description'   => 'Get the params to render the pagecontent',
+        'type'          => 'write',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];

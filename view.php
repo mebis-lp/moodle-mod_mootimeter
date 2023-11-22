@@ -99,7 +99,7 @@ $params = [
 ];
 
 if (!empty($page)) {
-    $params['snippet_content_menu'] = $helper->get_content_menu($page);
+    $params['snippet_content_menu'] = $helper->render_content_menu($page);
     $params['toolname'] = get_string("pluginname", "mootimetertool_" . $page->tool);
     $params['pageid'] = $page->id;
     $params['settings'] = $helper->get_col_settings($page);

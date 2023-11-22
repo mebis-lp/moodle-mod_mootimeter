@@ -77,12 +77,12 @@ class get_pagecontentparams extends external_api {
         try {
 
             $helper = new \mod_mootimeter\helper();
-            $pageparams = json_encode($helper->get_rendered_page_content_params($cmid, $pageid));
+            $pageparams = json_encode($helper->get_page_content_params($cmid, $pageid));
 
             $return = ['code' => 200, 'string' => 'ok', 'pageparams' => $pageparams];
         } catch (\Exception $e) {
 
-            $return = ['code' => 500, 'string' => $e->getMessage(), 'pageparams' => ''];
+            $return = ['code' => 500, 'string' => $e->getMessage() . json_encode($e->getTrace()), 'pageparams' => ''];
         }
 
         return $return;
