@@ -762,12 +762,12 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get the rendered answer overview view.
+     * Get the params for answer overview view.
      *
      * @param object $page
-     * @return string
+     * @return array
      */
-    public function get_answer_overview(object $page): string {
+    public function get_answer_overview_params(object $page): array {
         global $OUTPUT, $PAGE;
 
         $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
@@ -836,7 +836,20 @@ class quiz extends \mod_mootimeter\toolhelper {
         }
 
         $params['answers'] = \html_writer::table($table);
+        $returnparams['pagecontent'] = $params;
 
-        return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
+        return $returnparams;
+    }
+
+    /**
+     * Get the rendered answer overview view.
+     *
+     * @param object $page
+     * @return string
+     */
+    public function get_answer_overview(object $page): string {
+        global $OUTPUT;
+        $params = $this->get_answer_overview($page);
+        return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params['pagecontent']);
     }
 }
