@@ -392,7 +392,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get content menu bar.
+     * Get content menu bar params.
      *
      * @param object $page
      * @return mixed
@@ -400,8 +400,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function get_content_menu_tool(object $page) {
-        global $OUTPUT, $PAGE;
+    public function get_content_menu_tool_params(object $page) {
+        global $PAGE;
 
         $params = $this->get_content_menu_default_parameters($page);
 
@@ -454,7 +454,22 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
             ];
         }
-        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params);
+        return ['contentmenu' => $params];
+    }
+
+    /**
+     * Get content menu bar.
+     *
+     * @param object $page
+     * @return mixed
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
+    public function get_content_menu_tool(object $page) {
+        global $OUTPUT;
+        $params = $this->get_content_menu_tool_params($page);
+        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params['contentmenu']);
     }
 
     /**

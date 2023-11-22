@@ -109,7 +109,7 @@ if (!empty($page)) {
     } else if ($isansweroverview) {
         $params['pagecontent'] = $helper->get_rendered_answer_overview($page);
     } else {
-        $params['pagecontent'] = $helper->get_rendered_page_content($page, $cm, false);
+        $params['pagecontent'] = $helper->get_rendered_page_content($cm, $page, false);
     }
 }
 

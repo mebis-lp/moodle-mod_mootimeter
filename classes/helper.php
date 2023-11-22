@@ -285,18 +285,23 @@ class helper {
      * @throws dml_exception
      * @throws coding_exception
      */
-    public function get_rendered_page_content_params (object $page, object $cm, bool $withwrapper = true): array {
-        global $PAGE;
+    public function get_rendered_page_content_params (object $cm, object $page, bool $withwrapper = true): array {
+        global $USER;
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {
-            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+            return ['pagecontent' => ['error' => "Class '" . $page->tool . "' is missing in tool " . $page->tool]];
         }
 
         $toolhelper = new $classname();
         if (!method_exists($toolhelper, 'get_renderer_params')) {
-            return "Method 'get_renderer_params' is missing in tool helper class " . $page->tool;
+            return ['pagecontent' => ['error' => "Method 'get_renderer_params' is missing in tool helper class " . $page->tool]];
+        }
+
+        $isediting = false;
+        if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)) && !empty($USER->editing)) {
+            $isediting = $USER->editing;
         }
 
         $params = [
@@ -305,11 +310,12 @@ class helper {
             'pageid' => $page->id,
             'cmid' => $cm->id,
             'question' => s(self::get_tool_config($page, 'question')),
-            'isediting' => $PAGE->user_is_editing(),
+            'isediting' => $isediting,
             'withwrapper' => $withwrapper,
+            'template' => "mootimetertool_" . $page->tool . "/view_content2",
         ];
 
-        $params = array_merge($params, $toolhelper->get_renderer_params($page));
+        $params['pagecontent'] = array_merge($params, $toolhelper->get_renderer_params($page));
 
         return $params;
     }
@@ -322,12 +328,12 @@ class helper {
      * @param bool $withwrapper
      * @return string
      */
-    public function get_rendered_page_content(object $page, object $cm, bool $withwrapper = true): string {
+    public function get_rendered_page_content(object $cm, object $page, bool $withwrapper = true): string {
         global $OUTPUT;
 
-        $params = $this->get_rendered_page_content_params ($page, $cm, $withwrapper);
+        $params = $this->get_rendered_page_content_params ($cm, $page, $withwrapper);
 
-        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content2", $params);
+        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content2", $params['pagecontent']);
     }
 
     /**
