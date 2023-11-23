@@ -482,13 +482,24 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get the settings column.
+     * Get the params for settings column.
      *
      * @param object $page
-     * @return mixed
+     * @param array $params
+     * @return array
+     * @throws dml_exception
+     * @throws coding_exception
      */
-    public function get_col_settings_tool(object $page) {
-        global $OUTPUT, $PAGE;
+    public function get_col_settings_tool_params(object $page, array $params = []) {
+        global $USER;
+
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)) || empty($USER->editing)) {
+            return [];
+        }
+
+        $params['template'] = 'mootimetertool_quiz/view_settings';
 
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
@@ -516,6 +527,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-cb-without-label-name' => 'ao_iscorrect',
                 'mtm-cb-without-label-ajaxmethode' => "mootimetertool_quiz_store_answeroption_is_correct",
                 'mtm-cb-without-label-checked' => ($answeroption->optioniscorrect) ? "checked" : "",
+                'mtm-cb-without-label-dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,
 
                 'button_icon_only_transparent_id' => 'ao_delete_' . $answeroption->id,
                 'button_icon_only_transparent_dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,
@@ -523,8 +535,6 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'button_icon_only_transparent_additionalclass' => 'mtmt-remove-answeroption',
                 'button_icon_only_transparent_ajaxmethod' => 'mootimetertool_quiz_remove_anseroption',
             ];
-            $PAGE->requires->js_call_amd('mootimetertool_quiz/remove_answer_option', 'init', ['ao_delete_' . $answeroption->id]);
-            $PAGE->requires->js_call_amd('mootimetertool_quiz/reload_answeroption', 'init', [$answeroption->id]);
         }
 
         $params['addoption'] = [
@@ -578,7 +588,6 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_PIE,
             ],
         ];
-        $PAGE->requires->js_call_amd('mootimetertool_quiz/store_visualization', 'init');
 
         $params['maxanswers'] = [
             'title' => get_string('answers_max_number', 'mootimetertool_quiz'),
@@ -594,7 +603,8 @@ class quiz extends \mod_mootimeter\toolhelper {
             ),
         ];
 
-        return $OUTPUT->render_from_template("mootimetertool_quiz/view_settings", $params);
+        $returnparams['colsettings'] = $params;
+        return $returnparams;
     }
 
     /**

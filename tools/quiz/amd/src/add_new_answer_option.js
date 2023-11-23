@@ -17,7 +17,7 @@ export const init = () => {
      * Create new page.
      */
     function store() {
-        const pageid = document.getElementById('add_answer_option').dataset.pageid;
+        const pageid = document.getElementById('mootimeterstate').dataset.pageid;
         storeNewAnswerOption(pageid);
     }
 };

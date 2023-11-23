@@ -302,13 +302,24 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get the settings column.
+     * Get the params for settings column.
      *
      * @param object $page
-     * @return mixed
+     * @param array $params
+     * @return array
+     * @throws dml_exception
+     * @throws coding_exception
      */
-    public function get_col_settings_tool(object $page) {
-        global $OUTPUT;
+    public function get_col_settings_tool_params(object $page, array $params = []) {
+        global $USER;
+
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)) || empty($USER->editing)) {
+            return [];
+        }
+
+        $params['template'] = 'mootimetertool_wordcloud/view_settings';
 
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
@@ -343,8 +354,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'cb_with_label_ajaxmethod' => "mod_mootimeter_store_setting",
             'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'allowduplicateanswers') ? "checked" : ""),
         ];
-
-        return $OUTPUT->render_from_template("mootimetertool_wordcloud/view_settings", $params);
+        $returnparams['colsettings'] = $params;
+        return $returnparams;
     }
 
     /**

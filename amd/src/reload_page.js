@@ -78,6 +78,14 @@ const execReloadPage = async(pageid, cmid) => {
             })
             .catch((error) => displayException(error));
 
+        // Replace the settings col if necessary.
+        Templates.renderForPromise(pageparmas.colsettings.template, pageparmas.colsettings)
+            .then(({html, js}) => {
+                Templates.replaceNodeContents('#mootimeter-col-settings', html, js);
+                return true;
+            })
+            .catch((error) => displayException(error));
+
         // Set URL parameter.
         setGetParam('pageid', pageparmas.pageid);
 

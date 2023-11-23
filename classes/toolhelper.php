@@ -82,9 +82,10 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      * Get the settings column.
      *
      * @param object $page
+     * @param array $defaultparams
      * @return mixed
      */
-    abstract public function get_col_settings_tool(object $page);
+    abstract public function get_col_settings_tool_params(object $page, array $defaultparams);
 
     /**
      * Will be executed after the page is created.

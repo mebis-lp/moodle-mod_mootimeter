@@ -351,7 +351,8 @@ class helper {
         $page = $this->get_page($pageid);
         $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
         $paramscontentmenu = $this->get_content_menu($page);
-        return array_merge($paramscontent, $paramscontentmenu);
+        $paramscolsettings = $this->get_col_settings_params($page);
+        return array_merge($paramscontent, $paramscontentmenu, $paramscolsettings);
     }
 
     /**
@@ -484,6 +485,25 @@ class helper {
      * @return mixed
      */
     public function get_col_settings(object $page) {
+        global $OUTPUT;
+
+        $params = $this->get_col_settings_params($page);
+
+        if (empty($params['colsettings'])) {
+            return "";
+        }
+
+        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_settings", $params['colsettings']);
+    }
+
+    /**
+     * Get the html snippet of the settings column.
+     *
+     * @param object $page
+     * @return mixed
+     */
+    public function get_col_settings_params(object $page): array {
+
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {
@@ -491,10 +511,16 @@ class helper {
         }
 
         $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_col_settings_tool')) {
-            return "Method 'get_col_settings_tool' is missing in tool helper class " . $page->tool;
+        if (!method_exists($toolhelper, 'get_col_settings_tool_params')) {
+            return "Method 'get_col_settings_tool_params' is missing in tool helper class " . $page->tool;
         }
-        return $toolhelper->get_col_settings_tool($page);
+
+        $defaultparams = [
+            'toolname' => get_string("pluginname", "mootimetertool_" . $page->tool),
+            'pageid' => $page->id,
+        ];
+
+        return $toolhelper->get_col_settings_tool_params($page, $defaultparams);
     }
 
     /**

@@ -1,38 +1,51 @@
-{{#question}}
-{{> mod_mootimeter/elements/snippet_input}}
-{{/question}}
+<div class="mootimetersettings mootimeterfullwidth">
 
-{{> mod_mootimeter/elements/snippet_divider}}
+    {{> mod_mootimeter/elements/snippet_settings_col_header}}
 
-<p class="text-bold">{{#str}} answeroptions , mootimetertool_quiz {{/str}}</p>
+    {{#question}}
+    {{> mod_mootimeter/elements/snippet_input}}
+    {{/question}}
 
-<div class="input-with-checkbox-icon_wrapper" id="mtmt-quiz-ao-wrapper">
-    {{#answeroptions}}
-    {{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
-    {{/answeroptions}}
-</div>
+    {{> mod_mootimeter/elements/snippet_divider}}
 
-{{#addoption}}
+    <p class="text-bold">{{#str}} answeroptions , mootimetertool_quiz {{/str}}</p>
+
+    <div class="input-with-checkbox-icon_wrapper" id="mtmt-quiz-ao-wrapper">
+        {{#answeroptions}}
+        {{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
+        {{#js}}
+        require(['mootimetertool_quiz/remove_answer_option'], (module) => module.init(["ao_delete_{{id}}"]));
+        require(['mootimetertool_quiz/reload_answeroption'], (module) => module.init(["{{id}}"]));
+        {{/js}}
+        {{/answeroptions}}
+    </div>
+
+    {{#addoption}}
     {{> mod_mootimeter/elements/snippet_button_icon_with_text}}
     {{#js}}
-        require(['mootimetertool_quiz/add_new_answer_option'], (module) => module.init());
+    require(['mootimetertool_quiz/add_new_answer_option'], (module) => module.init());
     {{/js}}
-{{/addoption}}
+    {{/addoption}}
 
-{{> mod_mootimeter/elements/snippet_divider}}
+    {{> mod_mootimeter/elements/snippet_divider}}
 
-<p class="text-bold">{{#str}} visualization , mootimetertool_quiz {{/str}}</p>
+    <p class="text-bold">{{#str}} visualization , mootimetertool_quiz {{/str}}</p>
 
-<div class="mootimeter-visualization-options-wrapper">
-    {{#visualization}}
-    {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
-    {{/visualization}}
+    <div class="mootimeter-visualization-options-wrapper">
+        {{#visualization}}
+        {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
+        {{/visualization}}
+        {{#js}}
+        require(['mootimetertool_quiz/store_visualization'], (module) => module.init());
+        {{/js}}
+    </div>
+
+    {{> mod_mootimeter/elements/snippet_divider}}
+
+    <p class="text-bold">{{#str}} settings {{/str}}</p>
+
+    {{#maxanswers}}
+    {{> mod_mootimeter/elements/snippet_number_input}}
+    {{/maxanswers}}
+
 </div>
-
-{{> mod_mootimeter/elements/snippet_divider}}
-
-<p class="text-bold">{{#str}} settings {{/str}}</p>
-
-{{#maxanswers}}
-{{> mod_mootimeter/elements/snippet_number_input}}
-{{/maxanswers}}

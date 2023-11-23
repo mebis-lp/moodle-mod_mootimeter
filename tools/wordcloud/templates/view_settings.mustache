@@ -1,16 +1,20 @@
-{{#question}}
-{{> mod_mootimeter/elements/snippet_input}}
-{{/question}}
+<div class="mootimetersettings mootimeterfullwidth">
 
-{{> mod_mootimeter/elements/snippet_divider}}
+    {{> mod_mootimeter/elements/snippet_settings_col_header}}
 
-<p class="text-bold">{{#str}} heading_answer , mootimetertool_wordcloud{{/str}}</p>
+    {{#question}}
+    {{> mod_mootimeter/elements/snippet_input}}
+    {{/question}}
 
-{{#maxinputsperuser}}
-{{> mod_mootimeter/elements/snippet_number_input}}
-{{/maxinputsperuser}}
+    {{> mod_mootimeter/elements/snippet_divider}}
 
-{{#settings}}
+    <p class="text-bold">{{#str}} heading_answer , mootimetertool_wordcloud{{/str}}</p>
+
+    {{#maxinputsperuser}}
+    {{> mod_mootimeter/elements/snippet_number_input}}
+    {{/maxinputsperuser}}
+
+    {{#settings}}
 
     {{> mod_mootimeter/elements/snippet_divider}}
 
@@ -28,4 +32,6 @@
     {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
     {{/showresultlive}}
 
-{{/settings}}
+    {{/settings}}
+
+</div>
