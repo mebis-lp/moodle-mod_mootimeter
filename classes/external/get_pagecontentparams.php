@@ -52,32 +52,39 @@ class get_pagecontentparams extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_REQUIRED),
+            'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_OPTIONAL, 0),
             'cmid' => new external_value(PARAM_INT, 'The coursemodule id.', VALUE_REQUIRED),
+            'dataset' => new external_value(PARAM_RAW, 'The dataset of the button clicked', VALUE_OPTIONAL, ""),
         ]);
     }
 
     /**
      * Execute the service.
      *
-     * @param int $pageid
+     * @param int|null $pageid
      * @param int $cmid
+     * @param string $dataset
      * @return array
      */
-    public static function execute(int $pageid, int $cmid): array {
+    public static function execute(int $pageid, int $cmid, string $dataset = ""): array {
 
         [
             'pageid' => $pageid,
             'cmid' => $cmid,
+            'dataset' => $dataset,
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
             'cmid' => $cmid,
+            'dataset' => $dataset,
         ]);
+
+        $modulecontext = \context_module::instance($cmid);
+        \core_external\external_api::validate_context($modulecontext);
 
         try {
 
             $helper = new \mod_mootimeter\helper();
-            $pageparams = json_encode($helper->get_page_content_params($cmid, $pageid));
+            $pageparams = json_encode($helper->get_page_content_params($cmid, $pageid, true, $dataset));
 
             $return = ['code' => 200, 'string' => 'ok', 'pageparams' => $pageparams];
         } catch (\Exception $e) {

@@ -17,10 +17,13 @@ export const init = (uniqueID) => {
      */
     function changePage() {
         var pageid = this.dataset.pageid;
+        if (pageid === null || pageid === undefined || pageid == "undefined" || pageid.length == 0) {
+            pageid = 0;
+        }
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const cmid = urlParams.get('id');
-        execReloadPage(pageid, cmid);
+        execReloadPage(pageid, cmid, this.dataset);
     }
 };
 
@@ -28,16 +31,19 @@ export const init = (uniqueID) => {
  * Call to store input value
  * @param {int} pageid
  * @param {int} cmid
+ * @param {string} dataset
  * @returns {array}
  */
 const reloadPage = (
     pageid,
-    cmid
+    cmid,
+    dataset
 ) => fetchMany([{
     methodname: 'mod_mootimeter_get_pagecontentparams',
     args: {
         pageid,
-        cmid
+        cmid,
+        dataset
     },
 }])[0];
 
@@ -45,9 +51,20 @@ const reloadPage = (
  * Executes the call to store input value.
  * @param {int} pageid
  * @param {int} cmid
+ * @param {array} dataset
  */
-const execReloadPage = async(pageid, cmid) => {
-    const response = await reloadPage(pageid, cmid);
+export const execReloadPage = async(pageid, cmid, dataset) => {
+
+    // Add all url parameters to dataset.
+    if (dataset.useUrlParams) {
+        const searchParams = new URL(window.location.href).searchParams;
+        searchParams.forEach((value, name) => {
+            dataset[name] = value;
+        });
+    }
+
+    dataset = JSON.stringify(dataset);
+    const response = await reloadPage(pageid, cmid, dataset);
 
     if (response.code != 200) {
         Log.error(response.string);
@@ -79,15 +96,24 @@ const execReloadPage = async(pageid, cmid) => {
             .catch((error) => displayException(error));
 
         // Replace the settings col if necessary.
-        Templates.renderForPromise(pageparmas.colsettings.template, pageparmas.colsettings)
-            .then(({html, js}) => {
-                Templates.replaceNodeContents('#mootimeter-col-settings', html, js);
-                return true;
-            })
-            .catch((error) => displayException(error));
+        if (pageparmas.colsettings) {
+            Templates.renderForPromise(pageparmas.colsettings.template, pageparmas.colsettings)
+                .then(({html, js}) => {
+                    Templates.replaceNodeContents('#mootimeter-col-settings', html, js);
+                    return true;
+                })
+                .catch((error) => displayException(error));
+        }
 
-        // Set URL parameter.
+        // Set URL parameter - pageid.
         setGetParam('pageid', pageparmas.pageid);
+
+        // Set subpage URL parameters.
+        if (pageparmas.contentmenu.sp) {
+            for (const [key, value] of Object.entries(pageparmas.contentmenu.sp)) {
+                setGetParam(key, value);
+            }
+        }
 
         // Set active page marked in pageslist.
         reloadPagelist(pageid, cmid, true);

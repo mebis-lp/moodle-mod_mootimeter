@@ -29,6 +29,7 @@ use coding_exception;
 use dml_exception;
 use moodle_exception;
 use moodle_url;
+use pix_icon;
 
 /**
  * Pluginlib
@@ -96,26 +97,21 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get the answer overview.
+     * Get the answer overview params.
      *
+     * @param object $cm
      * @param object $page
-     * @return string
+     * @return array
      */
-    public function get_answer_overview(object $page): string {
-        global $OUTPUT, $PAGE;
+    public function get_tool_answer_overview_params(object $cm, object $page): array {
+        global $PAGE;
 
         $answers = $this->get_answers($this::ANSWER_TABLE, $page->id, $this::ANSWER_COLUMN);
         $params = [];
+        $params['template'] = 'mootimetertool_wordcloud/view_overview';
         $i = 1;
 
-        $table = new \html_table();
-        $table->head = [
-            '#',
-            get_string('name'),
-            get_string('answer'),
-            get_string('date') . " " . get_string('time'),
-            get_string('options'),
-        ];
+        $renderer = $PAGE->get_renderer('core');
 
         foreach ($answers as $answer) {
 
@@ -125,9 +121,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             if (!empty($user)) {
                 $userfullname = $user->firstname . " " . $user->lastname;
             }
-
-            $tmpl = new \mootimetertool_wordcloud\local\inplace_edit_answer($page, $answer);
-            $answerstr = $OUTPUT->render_from_template('core/inplace_editable', $tmpl->export_for_template($OUTPUT));
 
             // Add delte button to answer.
             $dataseticonrestart = [
@@ -139,33 +132,41 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'data-confirmationtype="DELETE_CANCEL"',
             ];
 
-            $buttonid = 'mtmt_delete_answer_' . $answer->id;
+            $inplaceedit = new \mootimetertool_wordcloud\local\inplace_edit_answer($page, $answer);
 
-            $paramstemp = [
-                'icon' => 'fa-trash',
-                'id' => $buttonid,
-                'iconid' => 'mtmt_delte_iconid_' . $answer->id,
-                'dataset' => join(" ", $dataseticonrestart),
-            ];
-
-            $options = $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_button_icon_only_rounded", $paramstemp);
-            $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$buttonid]);
-
-            $table->data[] = [
-                $i,
-                $userfullname,
-                $answerstr,
-                userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
-                $options,
+            $params['answers'][] = [
+                'nbr' => $i,
+                'userfullname' => $userfullname,
+                'answer' => $inplaceedit->export_for_template($renderer),
+                'datetime' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
+                'options' => [
+                    [
+                        'icon' => 'fa-trash',
+                        'id' => 'mtmt_delete_answer_' . $answer->id,
+                        'iconid' => 'mtmt_delte_iconid_' . $answer->id,
+                        'dataset' => join(" ", $dataseticonrestart),
+                    ],
+                ],
             ];
 
             // Count up ansers.
             $i++;
         }
 
-        $params['answers'] = \html_writer::table($table);
+        return $params;
+    }
 
-        return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
+    /**
+     * Get the answer overview.
+     *
+     * @param object $cm
+     * @param object $page
+     * @return string
+     */
+    public function get_answer_overview(object $cm, object $page): string {
+        global $OUTPUT;
+        $params = $this->get_answer_overview_params($cm, $page);
+        return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params['pagecontent']);
     }
 
     /**
@@ -406,25 +407,29 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * Get content menu bar params.
      *
      * @param object $page
+     * @param array $params
      * @return mixed
      * @throws coding_exception
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function get_content_menu_tool_params(object $page) {
+    public function get_content_menu_tool_params(object $page, array $params) {
 
         $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
         $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
 
-        $params = $this->get_content_menu_default_parameters($page);
-
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
 
+            $dataseticoncheck = [
+                'data-togglename = "showonteacherpermission"',
+                'data-pageid="' . $page->id . '"',
+                'data-iconid = "toggleteacherpermissionid"',
+            ];
             $params['icon-eye'] = [
                 'icon' => 'fa-eye',
                 'id' => 'toggleteacherpermission',
                 'iconid' => 'toggleteacherpermissionid',
-                'dataset' => 'data-pageid="' . $page->id . '" data-iconid="toggleteacherpermissionid"',
+                'dataset' => join(" ", $dataseticoncheck),
             ];
             if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
                 $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission_disabled', 'mod_mootimeter');
@@ -452,33 +457,30 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $params['icon-showresults'] = [
             'icon' => 'fa-bar-chart',
             'id' => 'showresults',
-            'additional_class' => 'mtm_redirect_selector',
-            'href' => (new \moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id, 'r' => 1]))->out(true),
             'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
+            'dataset' => "data-action='showresults' data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'",
         ];
-        if (optional_param('r', "", PARAM_INT)) {
+        if (!empty($params['sp']['r']) && $params['sp']['r'] == 1) {
             $params['icon-showresults']['icon'] = 'fa-pencil-square-o';
-            $params['icon-showresults']['href'] = (new \moodle_url(
-                '/mod/mootimeter/view.php',
-                ['id' => $cm->id, 'pageid' => $page->id]
-            ))->out(true);
             $params['icon-showresults']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
+            $params['icon-showresults']['dataset'] = "data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'";
         }
-        return ['contentmenu' => $params];
+        return $params;
     }
 
     /**
      * Renders the result page of the wordcloud.
      *
      * @param object $page
-     * @return string
+     * @param array $params
+     * @return array
      * @throws dml_exception
-     * @throws coding_exception
      */
-    public function get_result_page(object $page): string {
-        global $OUTPUT;
-
-        $params = $this->get_renderer_params($page);
-        return $OUTPUT->render_from_template("mootimetertool_wordcloud/view_results", $params);
+    public function get_tool_result_page_params(object $page, array $params = []): array {
+        $params['answerslist'] = "";
+        $params['lastupdated'] = $this->get_last_update_time($page->id);
+        $params['pageid'] = $page->id;
+        $params['template'] = "mootimetertool_wordcloud/view_results";
+        return $params;
     }
 }

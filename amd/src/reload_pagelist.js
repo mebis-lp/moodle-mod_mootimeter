@@ -2,6 +2,7 @@ import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
+import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 
 export const init = () => {
     var obj = document.getElementById('mootimeterstate');
@@ -14,11 +15,23 @@ export const init = () => {
         getPagelist();
     }, 5000);
 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const cmid = urlParams.get('id');
+    var pageid = urlParams.get('pageid');
+    if (pageid === null || pageid === undefined || pageid.length == 0) {
+        pageid = 0;
+    }
+    reloadPage(pageid, cmid, '');
+
     /**
      * Store the value.
      */
     function getPagelist() {
         var pageid = document.getElementById('mootimeterstate').dataset.pageid;
+        if (pageid == "undefined" || pageid.length == 0) {
+            pageid = 0;
+        }
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const cmid = urlParams.get('id');

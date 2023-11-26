@@ -52,7 +52,7 @@ class reload_pagelist extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_REQUIRED),
+            'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_OPTIONAL, 0),
             'cmid' => new external_value(PARAM_INT, 'The coursemodule id.', VALUE_REQUIRED),
         ]);
     }

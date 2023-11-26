@@ -1,5 +1,5 @@
 <input
-	id="{{mtm-input-id}}"
+	id="{{mtm-input-id}}_{{uniqid}}"
 	type="text"
 	class="mootimeter-input mootimeterfullwidth {{additional_class}}"
 	{{#mtm-input-name}} name="{{mtm-input-name}}" {{/mtm-input-name}}
@@ -13,6 +13,6 @@
 
 {{#ajaxmethode}}
 {{#js}}
-require(['mod_mootimeter/handler_input'], (module) => module.init("{{mtm-input-id}}"));
+require(['mod_mootimeter/handler_input'], (module) => module.init("{{mtm-input-id}}_{{uniqid}}"));
 {{/js}}
 {{/ajaxmethode}}

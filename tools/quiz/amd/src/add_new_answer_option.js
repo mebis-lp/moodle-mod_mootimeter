@@ -1,6 +1,5 @@
 import {call as fetchMany} from 'core/ajax';
-import {exception as displayException} from 'core/notification';
-import Templates from 'core/templates';
+import { execReloadPage as reloadPage } from 'mod_mootimeter/reload_page'
 
 export const init = () => {
 
@@ -17,15 +16,15 @@ export const init = () => {
      * Create new page.
      */
     function store() {
-        const pageid = document.getElementById('mootimeterstate').dataset.pageid;
-        storeNewAnswerOption(pageid);
+        const dataset = document.getElementById('mootimeterstate').dataset;
+        storeNewAnswerOption(dataset);
     }
 };
 
 /**
  * Call to create a new instance
  * @param {int} pageid
- * @returns
+ * @returns {mixed}
  */
 const execStoreNewAnswerOption = (
     pageid,
@@ -38,40 +37,14 @@ const execStoreNewAnswerOption = (
 
 /**
  * Executes the call to create a new page.
- * @param {int} pageid
+ * @param {array} dataset
  */
-const storeNewAnswerOption = async(pageid) => {
+const storeNewAnswerOption = async(dataset) => {
+    await execStoreNewAnswerOption(dataset.pageid);
 
-    // ===== JUST FOR TEMPORARILY USE: - START
-    const response = await execStoreNewAnswerOption(pageid);
-    document.location.reload(true);
-    return;
-    // ===== JUST FOR TEMPORARILY USE: - ENDE
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const cmid = urlParams.get('id');
 
-    // TODO Implement this.
-    // eslint-disable-next-line no-unreachable
-    const context = {
-        'mtm-input-id': 'ao_text_' + response.aoid,
-        'mtm-input-name': 'ao_text',
-        'ajaxmethode': "mootimetertool_quiz_store_answeroption_text",
-        'additional_class': 'mootimeter-answer-options mootimeter_settings_selector',
-        'dataset': 'data-pageid=' + pageid + ' data-aoid=' + response.aoid,
-
-        'mtm-cb-without-label-id': 'ao_iscorrect_' + response.aoid,
-        'mtm-cb-without-label-name': 'ao_iscorrect',
-        'mtm-cb-without-label-ajaxmethode': "mootimetertool_quiz_store_answeroption_is_correct",
-
-        'button_icon_only_transparent_additionalclass': 'mootimeter-answer-options',
-        'button_icon_only_transparent_dataset': 'data-pageid="' + pageid + '" data-aoid="' + response.aoid + '"',
-        'button_icon_only_transparent_icon': 'fa-close',
-    };
-
-    // Add the answer to the Badges list.
-    Templates.renderForPromise('mod_mootimeter/elements/snippet_input_with_checkbox-icon', context)
-        .then(({html, js}) => {
-            Templates.appendNodeContents('#mtmt-quiz-ao-wrapper', html, js);
-            Templates.runTemplateJS(js);
-            return true;
-        })
-        .catch((error) => displayException(error));
+    reloadPage(dataset.pageid, cmid, dataset);
 };

@@ -71,6 +71,10 @@
       display: flex;
       gap: 1rem;
       box-shadow: 0px 12px 26px 0px #3e455b26;
+
+      &:empty {
+        display: none;
+      }
     }
 
     .mootimeter-colcontent-preview-options {
@@ -119,6 +123,10 @@
       label {
         color: $white-standard;
       }
+    }
+
+    .mootimeter-render-loading {
+    color: #60616d;
     }
   }
 }

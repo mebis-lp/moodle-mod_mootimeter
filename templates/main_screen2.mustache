@@ -1,30 +1,22 @@
 <div class="container-fluid mootimetercontainer isNotNewPage {{{containerclasses}}}">
   <div class="row h-100">
-    {{#showpagescol}}
     <div class="mootimetercol mootimetercolpages" id="mootimeter-pages-col">
       <ul id="mootimeter-pages-list" class="">
-        {{{pages}}}
+        {{> mod_mootimeter/elements/snippet_loadingplaceholder}}
       </ul>
     </div>
-    {{/showpagescol}}
-    {{#isediting}}
-    <div class="mootimetercol mootimetercoledit" id="mootimeter-col-settings">
-    {{{settings}}}
-    </div>
-    {{/isediting}}
+    <div class="mootimetercol mootimetercoledit" id="mootimeter-col-settings"></div>
     <div class="mootimetercol mootimetercolcontent">
-      {{{snippet_content_menu}}}
+      <div class="mootimeter-content-menu" id="mootimeter-pagecontentmenu"></div>
       <div class="mootimeter-content-wrapper" id="mootimeter-pagecontent">
-        {{{pagecontent}}}
+        {{> mod_mootimeter/elements/snippet_loadingplaceholder}}
       </div>
     </div>
   </div>
-  {{! {{> mod_mootimeter/elements/snippet_modal}}
 </div>
 
 {{> mod_mootimeter/elements/snippet_mootimeter_state}}
 
 {{#js}}
-require(['mod_mootimeter/main'], (module) => module.init());
 require(['mod_mootimeter/reload_pagelist'], (module) => module.init("{{isediting}}"));
 {{/js}}

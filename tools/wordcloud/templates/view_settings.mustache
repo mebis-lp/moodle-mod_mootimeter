@@ -4,6 +4,9 @@
 
     {{#question}}
     {{> mod_mootimeter/elements/snippet_input}}
+    {{#js}}
+    require(['mod_mootimeter/reload_page_content'], (module) => module.init("{{mtm-input-id}}_{{uniqid}}"));
+    {{/js}}
     {{/question}}
 
     {{> mod_mootimeter/elements/snippet_divider}}

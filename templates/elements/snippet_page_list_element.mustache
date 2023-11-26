@@ -2,7 +2,7 @@
     class="mootimeter_pages_li d-flex clickable {{ active }}"
     data-pageid="{{ pageid }}"
     data-cmid="{{ cmid }}"
-    id="{{id}}"
+    id="{{id}}_{{uniqid}}"
     {{#tooltip}} data-toggle="tooltip" data-placement="right" title="{{tooltip}}"{{/tooltip}}
     >
     <span class="mootimeter_pages_count">{{pagenumber}}</span>
@@ -10,5 +10,5 @@
 </li>
 
 {{#js}}
-    require(['mod_mootimeter/reload_page'], (module) => module.init(["{{id}}"]));
+    require(['mod_mootimeter/reload_page'], (module) => module.init(["{{id}}_{{uniqid}}"]));
 {{/js}}

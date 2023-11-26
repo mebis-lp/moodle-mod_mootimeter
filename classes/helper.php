@@ -28,6 +28,7 @@ namespace mod_mootimeter;
 
 use coding_exception;
 use dml_exception;
+use moodle_exception;
 use required_capability_exception;
 
 /**
@@ -313,6 +314,7 @@ class helper {
             'isediting' => $isediting,
             'withwrapper' => $withwrapper,
             'template' => "mootimetertool_" . $page->tool . "/view_content2",
+            'sp' => ['r' => 0, 'o' => 0],
         ];
 
         $params['pagecontent'] = array_merge($params, $toolhelper->get_renderer_params($page));
@@ -326,12 +328,13 @@ class helper {
      * @param object $cm
      * @param object $page
      * @param bool $withwrapper
+     * @param string $dataset
      * @return string
      */
-    public function get_rendered_page_content(object $cm, object $page, bool $withwrapper = true): string {
+    public function get_rendered_page_content(object $cm, object $page, bool $withwrapper = true, string $dataset = ""): string {
         global $OUTPUT;
 
-        $params = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
+        $params = $this->get_rendered_page_content_params($cm, $page, $withwrapper, $dataset);
 
         return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content2", $params['pagecontent']);
     }
@@ -342,25 +345,86 @@ class helper {
      * @param int $cmid
      * @param int $pageid
      * @param bool $withwrapper
+     * @param string $dataset
      * @return array
+     * @throws moodle_exception
      * @throws dml_exception
      * @throws coding_exception
      */
-    public function get_page_content_params(int $cmid, int $pageid, bool $withwrapper = true): array {
+    public function get_page_content_params(int $cmid, int $pageid, bool $withwrapper = true, string $dataset = ""): array {
+
+        $dataset = json_decode($dataset);
         list($course, $cm) = get_course_and_cm_from_cmid($cmid);
         $page = $this->get_page($pageid);
-        $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
-        $paramscontentmenu = $this->get_content_menu($page);
+
+        if (empty($pageid)) {
+            if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+                $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page_params($cm);
+            } else {
+                $contentstring = get_string('please_select_a_page', 'mod_mootimeter');
+                if (empty($this->get_pages($cm->instance))) {
+                    $contentstring = get_string('no_pages_header', 'mod_mootimeter');
+                }
+                $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_empty_content_params($contentstring);
+            }
+            // If no page is selected, no more templates (especially the contentmenu) is needed.
+            return $params;
+        } else if (empty($dataset->action)) {
+
+            // Get params of the content section.
+            if (!empty($dataset->r)) {
+                $paramscontent['pagecontent'] = $this->get_result_page_params($cm, $page);
+                $contentmenudefaultparams = ['sp' => ['r' => 1, 'o' => 0]];
+            } else if (!empty($dataset->o)) {
+                $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);
+                $contentmenudefaultparams = ['sp' => ['o' => 1, 'r' => 0]];
+            } else {
+                $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
+                $contentmenudefaultparams = ['sp' => ['o' => (int)!empty($dataset->o), 'r' => (int)!empty($dataset->r)]];
+            }
+        } else if (!empty($dataset->action)) {
+            switch ($dataset->action) {
+                case 'addpage':
+                    $paramscontent['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page_params($cm);
+                    break;
+                case 'showansweroverview':
+                    $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);
+                    $contentmenudefaultparams = ['sp' => ['o' => 1, 'r' => 0]];
+                    break;
+                case 'showresults':
+                    $paramscontent['pagecontent'] = $this->get_result_page_params($cm, $page);
+                    $contentmenudefaultparams = ['sp' => ['r' => 1, 'o' => 0]];
+                    break;
+            }
+        } else if (count($this->get_pages($cm->instance)) == 0) {
+            $contentstring = get_string('no_pages_header', 'mod_mootimeter');
+            $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_empty_content_params($contentstring);
+        }
+
+        $paramscontent['pageid'] = $page->id;
+
+        // Get params of content menu section.
+        $paramscontentmenu = $this->get_content_menu_params($page, $contentmenudefaultparams);
+
+        // Get params of the settings column.
         $paramscolsettings = $this->get_col_settings_params($page);
+
+        // Merge all params and return them.
         return array_merge($paramscontent, $paramscontentmenu, $paramscolsettings);
     }
 
     /**
      * Get the rendered page results
+     * @param object $cm
      * @param object $page
-     * @return string
+     * @return array
      */
-    public function get_rendered_page_result(object $page): string {
+    public function get_result_page_params(object $cm, object $page): array {
+
+        // This content should only be viewed with moderator capabilities.
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            redirect('view.php?id=' . $cm->id . "&pageid=" . $page->id);
+        }
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
@@ -369,23 +433,74 @@ class helper {
         }
 
         $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_result_page')) {
-            return "Method 'get_result_page' is missing in tool helper class " . $page->tool;
+
+        $defaultparams = [
+            'sp' => ['r' => 1],
+        ];
+
+        return $toolhelper->get_tool_result_page_params($page, $defaultparams);
+    }
+
+    /**
+     * Get the rendered page results
+     * @param object $cm
+     * @param object $page
+     * @return string
+     */
+    public function get_result_page(object $cm, object $page): string {
+        global $OUTPUT;
+
+        $params = $this->get_result_page_params($cm, $page);
+        return $OUTPUT->render_from_template($params['template'], $params);
+    }
+
+    /**
+     * Get the params for anser overview page.
+     *
+     * @param object $cm
+     * @param object $page
+     * @return array
+     */
+    public function get_answer_overview_params(object $cm, object $page): array {
+        // This content should only be viewed with moderator capabilities.
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            redirect('view.php?id=' . $cm->id . "&pageid=" . $page->id);
         }
-        return $toolhelper->get_result_page($page);
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return [
+                'error' => "Class '" . $page->tool . "' is missing in tool " . $page->tool,
+            ];
+        }
+
+        $toolhelper = new $classname();
+
+        if (!method_exists($toolhelper, 'get_tool_answer_overview_params')) {
+            return [
+                'error' => "Method 'get_tool_answer_overview_params' is missing in tool helper class " . $page->tool,
+            ];
+        }
+
+        return $toolhelper->get_tool_answer_overview_params($cm, $page);
     }
 
     /**
      * Get the rendered answer overview view.
+     *
+     * @param object $cm
      * @param object $page
      * @return string
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
-    public function get_rendered_answer_overview(object $page): string {
-        global $PAGE;
+    public function get_rendered_answer_overview(object $cm, object $page): string {
 
         // This content should only be viewed with moderator capabilities.
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
-            redirect('view.php?id=' . $PAGE->cm->id . "&pageid=" . $page->id);
+        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+            redirect('view.php?id=' . $cm->id . "&pageid=" . $page->id);
         }
 
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
@@ -396,17 +511,16 @@ class helper {
 
         $toolhelper = new $classname();
 
-        return $toolhelper->get_answer_overview($page);
+        return $toolhelper->get_answer_overview($cm, $page);
     }
 
     /**
      * Get the default parameters for content_menu.
      * @param object $page
+     * @param array $params
      * @return array
      */
-    public function get_content_menu_default_parameters(object $page): array {
-
-        $params = [];
+    public function get_content_menu_default_parameters(object $page, array $params = []): array {
 
         $instance = self::get_instance_by_pageid($page->id);
         $cm = self::get_cm_by_instance($instance);
@@ -415,23 +529,16 @@ class helper {
 
             // Redirect to Answers Overview View.
             $params['icon-answer-overview'] = [
+                'template' => 'mod_mootimeter/elements/snippet_content_menu',
                 'icon' => 'fa-table',
                 'id' => 'mtmt_show_answer_overview',
-                'additional_class' => 'mtm_redirect_selector',
-                'href' => (new \moodle_url(
-                    '/mod/mootimeter/view.php',
-                    ['id' => $cm->id, 'pageid' => $page->id, 'o' => 1]
-                ))->out(true),
-                'tooltip' => get_string('show_answer_overview', 'mod_mootimeter'),
+                'tooltip' => get_string('show_answer_overview', 'mod_mootimeter') . $params['sp']['o'],
+                'dataset' => "data-action='showansweroverview' data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'",
             ];
-            if (optional_param('o', "", PARAM_INT)) {
-                $params['icon-answer-overview'] = [
-                    'icon' => 'fa-pencil-square-o',
-                    'id' => 'mtmt_show_answer_overview',
-                    'additional_class' => 'mtm_redirect_selector',
-                    'href' => (new \moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]))->out(true),
-                    'tooltip' => get_string('tooltip_show_question_page', 'mod_mootimeter'),
-                ];
+            if (!empty($params['sp']['o']) && $params['sp']['o'] == 1) {
+                $params['icon-answer-overview']['icon'] = 'fa-pencil-square-o';
+                $params['icon-answer-overview']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
+                $params['icon-answer-overview']['dataset'] = "data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'";
             }
         }
         return $params;
@@ -441,9 +548,12 @@ class helper {
      * Calls tool method if exists.
      *
      * @param object $page
+     * @param array $defaultparams
      * @return array
+     * @throws dml_exception
+     * @throws coding_exception
      */
-    public function get_content_menu(object $page): array {
+    public function get_content_menu_params(object $page, $defaultparams = []): array {
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {
@@ -458,7 +568,11 @@ class helper {
                 ],
             ];
         }
-        $params = $toolhelper->get_content_menu_tool_params($page);
+
+        // This is necessary, to make it possible to inject dynamic default params during script execution.
+        $defaultparams = array_merge($defaultparams, $this->get_content_menu_default_parameters($page, $defaultparams));
+
+        $params['contentmenu'] = $toolhelper->get_content_menu_tool_params($page, $defaultparams);
         $params['contentmenu']['template'] = "mod_mootimeter/elements/snippet_content_menu";
         return $params;
     }
@@ -474,7 +588,7 @@ class helper {
      */
     public function render_content_menu(object $page): string {
         global $OUTPUT;
-        $params = $this->get_content_menu($page);
+        $params = $this->get_content_menu_params($page);
         return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_content_menu", $params['contentmenu']);
     }
 
@@ -699,16 +813,6 @@ class helper {
         // The config was already set. Toggle it.
         $helper->set_tool_config($page, $statename, 0);
         return 0;
-    }
-
-    /**
-     * Get the content block for the case that there are no pages specified.
-     * @return string
-     */
-    public function get_view_content_no_pages(): string {
-        global $OUTPUT;
-
-        return $OUTPUT->render_from_template("mod_mootimeter/view_no_pages", []);
     }
 
     /**

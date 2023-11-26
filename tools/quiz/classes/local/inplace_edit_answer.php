@@ -48,7 +48,6 @@ class inplace_edit_answer extends \core\output\inplace_editable {
      * @throws coding_exception
      */
     public function __construct(object $page, object $answer) {
-
         $quiz = new \mootimetertool_quiz\quiz();
         $answeroptions = $quiz->get_answer_options($page->id);
 

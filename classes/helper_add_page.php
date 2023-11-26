@@ -42,17 +42,20 @@ class helper_add_page extends \mod_mootimeter\helper {
 
     /**
      * Get the view_content snippet for new_page.
-     * @return mixed
-     * @throws coding_exception
+     *
+     * @param object $cm
+     * @return array
      * @throws dml_exception
+     * @throws coding_exception
      */
-    public static function get_view_content_new_page() {
-        global $OUTPUT, $PAGE;
+    public static function get_view_content_new_page_params(object $cm): array {
 
         $mt = new \mod_mootimeter\plugininfo\mootimetertool();
         $enabledtools = $mt->get_enabled_plugins();
 
         $params = [];
+
+        $params['template'] = 'mod_mootimeter/add_new_page';
 
         foreach ($enabledtools as $key => $tool) {
             $params['tools'][] = [
@@ -62,10 +65,51 @@ class helper_add_page extends \mod_mootimeter\helper {
                 'description' => get_string('tool_description_short', 'mootimetertool_' . $tool),
                 'pix' => "tools/" . $tool . "/pix/" . $tool . ".svg",
                 'additional_class' => 'mtmt-tool-selector-list',
-                'dataset' => 'data-name="' . $tool . '" data-instance="' . $PAGE->cm->instance . '"',
+                'dataset' => 'data-name="' . $tool . '" data-instance="' . $cm->instance . '"',
             ];
         }
 
+        return $params;
+    }
+
+    /**
+     * Get the view_content snippet for no page selected.
+     *
+     * @param string $contentstring
+     * @return array
+     */
+    public static function get_view_empty_content_params($contentstring = 'default heading'): array {
+
+        $params = [];
+
+        $params['template'] = 'mod_mootimeter/view_page_empty_content';
+        $params['contentstring'] = $contentstring;
+
+        return $params;
+    }
+
+    /**
+     * Get the content block for the case that there are no pages specified.
+     *
+     * @param string $contentstring
+     * @return string
+     */
+    public static function get_view_empty_content($contentstring = 'default heading'): string {
+        global $OUTPUT;
+        $params = self::get_view_empty_content_params($contentstring);
+        return $OUTPUT->render_from_template($params['template'], $params);
+    }
+
+    /**
+     * Get the view_content snippet for new_page.
+     *
+     * @param object $cm
+     * @return string
+     */
+    public static function get_view_content_new_page(object $cm): string {
+        global $OUTPUT;
+
+        $params = self::get_view_content_new_page_params($cm);
         $content = $OUTPUT->render_from_template('mod_mootimeter/add_new_page', $params);
 
         return $content;

@@ -11,13 +11,7 @@
       {{> mod_mootimeter/elements/snippet_pill}}
       {{/toolname}}
 
-      <h4 id="mtm_question">{{{question}}}</h4>
-
-      {{#isediting}}
-      {{#js}}
-      require(['mootimetertool_quiz/reload_question'], (module) => module.init());
-      {{/js}}
-      {{/isediting}}
+      <h4 id="mtm_question_{{uniqid}}">{{{question}}}</h4>
 
     </div>
 
@@ -35,21 +29,17 @@
     <div class="mootimeter-colcontent-preview-send">
       {{#sendbutton}}
       {{> mod_mootimeter/elements/snippet_button_full}}
+      {{^showanswercorrection}}
+      {{#js}}
+      require(['mootimetertool_quiz/store_answer'], (module) => module.init("{{mtm-button-id}}_{{uniqid}}"));
+      {{/js}}
+      {{/showanswercorrection}}
       {{/sendbutton}}
+
       {{#sendbutton_context}}
       <small>{{text}}</small>
       {{/sendbutton_context}}
     </div>
-
-    {{^showanswercorrection}}
-    {{#js}}
-    require(['mootimetertool_quiz/store_answer'], (module) => module.init());
-    {{/js}}
-    {{/showanswercorrection}}
-
-    {{#js}}
-    require(['mod_mootimeter/reload_on_state_change'], (module) => module.init("showanswercorrection"));
-    {{/js}}
   </div>
   {{#withwrapper}}
 </div>

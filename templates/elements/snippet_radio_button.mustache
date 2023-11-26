@@ -4,8 +4,7 @@
 >
   <label>
     <input type="radio"
-      id="{{rb_with_label_id}}"
-      id="{{rb_with_label_id}}"
+      id="{{rb_with_label_id}}_{{uniqid}}"
       class="mootimeter-radio-btn {{rb_with_label_additional_class}}"
       {{rb_with_label_checked}}
       {{rb_with_label_additional_attribut}}
@@ -22,13 +21,13 @@
     <span class="radio-btn-icon-wrapper">
       <i class="icon fa fa-check fa-light radio-btn-icon" aria-hidden="true"></i>
     </span>
-        <span id="text_{{rb_with_label_id}}">
+        <span id="text_{{rb_with_label_id}}_{{uniqid}}">
           {{rb_with_label_text}}
         </span>
   </label>
 </div>
 {{#rb_with_label_ajaxmethod}}
 {{#js}}
-require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{rb_with_label_id}}"));
+require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{rb_with_label_id}}_{{uniqid}}"));
 {{/js}}
 {{/rb_with_label_ajaxmethod}}

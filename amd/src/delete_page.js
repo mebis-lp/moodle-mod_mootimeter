@@ -4,28 +4,22 @@ import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
 import {get_string as getString} from 'core/str';
 
-export const init = async() => {
+export const init = async(id) => {
 
     const modal = await ModalFactory.create({
         type: ModalFactory.types.DELETE_CANCEL,
         title: getString('delete', 'core'),
         body: getString('areyousure'),
-        pageid: 5,
     });
 
     modal.getRoot().on(ModalEvents.delete, function() {
-        var pageid = document.getElementById("btn-delete_page").dataset.pageid;
+        var pageid = document.getElementById(id).dataset.pageid;
         execDeletePage(pageid);
     });
 
-    var deletebtns = document.getElementsByClassName("mootimeter-delete-page-btn");
-    if (deletebtns) {
-        Array.from(deletebtns).forEach((element) => {
-            element.addEventListener('click', () => {
-                modal.show();
-            });
-        });
-    }
+    document.getElementById(id).addEventListener('click', () => {
+        modal.show();
+    });
 
     /**
      * Call to store input value

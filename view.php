@@ -35,11 +35,6 @@ $isresultpage = optional_param('r', false, PARAM_BOOL);
 $isansweroverview = optional_param('o', false, PARAM_BOOL);
 $helper = new \mod_mootimeter\helper();
 
-// Check if the provided pageid already exists / else throw error.
-if (!empty($pageid)) {
-    $DB->get_record('mootimeter_pages', ['id' => $pageid], '*', MUST_EXIST);
-}
-
 // Set the pageid pageparam for $PAGE object.
 if ($pageid) {
     $pageparams['pageid'] = $pageid;
@@ -92,41 +87,10 @@ $pagehelper = new \mod_mootimeter\local\pagelist();
 
 $params = [
     'containerclasses' => "border rounded",
-    'mootimetercard' => 'border rounded',
     'cmid' => $cm->id,
     'pages' => $pagehelper->get_pagelist_html($cm->id, $pageid),
     'isediting' => $PAGE->user_is_editing(),
 ];
-
-if (!empty($page)) {
-    $params['snippet_content_menu'] = $helper->render_content_menu($page);
-    $params['toolname'] = get_string("pluginname", "mootimetertool_" . $page->tool);
-    $params['pageid'] = $page->id;
-    $params['settings'] = $helper->get_col_settings($page);
-
-    if ($isresultpage) {
-        $params['pagecontent'] = $helper->get_rendered_page_result($page);
-    } else if ($isansweroverview) {
-        $params['pagecontent'] = $helper->get_rendered_answer_overview($page);
-    } else {
-        $params['pagecontent'] = $helper->get_rendered_page_content($cm, $page, false);
-    }
-}
-
-// Show Pagetype selector.
-if (empty($pageid)) {
-    if (has_capability('mod/mootimeter:moderator', \context_module::instance($PAGE->cm->id))) {
-        $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page();
-    } else {
-        $params['pagecontent'] = $helper->get_view_content_no_pages();
-    }
-}
-
-// Hide Pages col if it is not needed at all.
-if ($PAGE->user_is_editing() || count($pages) > 1) {
-    $params['showpagescol'] = true;
-}
-
 $params['mootimeterstate-dataset'] = \mod_mootimeter\local\mootimeterstate::get_mootimeterstate_renderable();
 
 // START OUTPUT.

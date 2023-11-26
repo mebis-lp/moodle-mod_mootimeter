@@ -1,13 +1,17 @@
 import ChartJS from 'mootimetertool_quiz/chart.umd';
 import {call as fetchMany} from 'core/ajax';
 
-export const init = () => {
+export const init = (id) => {
 
-    const pageid = document.getElementById('mtmt_quiz_canvas').dataset.pageid;
+    if (!document.getElementById(id)) {
+        return;
+    }
+
+    const pageid = document.getElementById(id).dataset.pageid;
 
     setInterval(() => {
         const lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
-        getAnswers(pageid, lastposttimestamp);
+        getAnswers(pageid, lastposttimestamp, id);
     }, 1000);
 };
 
@@ -15,7 +19,7 @@ export const init = () => {
 /**
  * Execute the ajax call to get the aswers and more important data.
  * @param {int} pageid
- * @returns
+ * @returns {mixed}
  */
 const execGetAnswers = (
     pageid,
@@ -30,20 +34,25 @@ const execGetAnswers = (
  * Get the answers and other important data, as well as processing them.
  * @param {int} pageid
  * @param {int} lastposttimestamp
- * @returns
+ * @param {string} id
+ * @returns {mixed}
  */
-const getAnswers = async(pageid, lastposttimestamp) => {
+const getAnswers = async(pageid, lastposttimestamp, id) => {
     const response = await execGetAnswers(pageid);
+
+    if (!document.getElementById(id)) {
+        return;
+    }
 
     // We do not want to do anything if nothing has changed.
     if (
         lastposttimestamp == response.lastupdated
         &&
-        response.chartsettings == document.getElementById('mtmt_quiz_canvas').dataset.chartsettings
+        response.chartsettings == document.getElementById(id).dataset.chartsettings
         &&
-        response.values == document.getElementById('mtmt_quiz_canvas').dataset.values
+        response.values == document.getElementById(id).dataset.values
         &&
-        response.labels == document.getElementById('mtmt_quiz_canvas').dataset.labels
+        response.labels == document.getElementById(id).dataset.labels
     ) {
         return;
     }
@@ -52,7 +61,7 @@ const getAnswers = async(pageid, lastposttimestamp) => {
     let nodelastupdated = document.getElementById('mootimeterstate');
     nodelastupdated.setAttribute('data-lastupdated', response.lastupdated);
 
-    let nodecanvas = document.getElementById('mtmt_quiz_canvas');
+    let nodecanvas = document.getElementById(id);
     nodecanvas.setAttribute('data-labels', response.labels);
     nodecanvas.setAttribute('data-values', response.values);
     nodecanvas.setAttribute('data-chartsettings', response.chartsettings);
@@ -75,12 +84,12 @@ const getAnswers = async(pageid, lastposttimestamp) => {
         options: JSON.parse(response.chartsettings).options
     };
 
-    let chartStatus = ChartJS.getChart("mtmt_quiz_canvas"); // <canvas> id
+    let chartStatus = ChartJS.getChart(id); // <canvas> id
     if (chartStatus != undefined) {
         chartStatus.destroy();
     }
 
-    new ChartJS(document.getElementById('mtmt_quiz_canvas'), config);
+    new ChartJS(document.getElementById(id), config);
     ChartJS.defaults.font.size = 25;
     ChartJS.defaults.stepSize = 1;
 };

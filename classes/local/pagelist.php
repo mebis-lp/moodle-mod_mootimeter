@@ -73,6 +73,7 @@ class pagelist {
         $pagenumber = 1;
         $maxtimecreated = 0;
 
+        $temppages['pageid'] = $pageselected;
         $temppages['cmid'] = $cm->id;
         $temppages['instance'] = $cm->instance;
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)) && !empty($USER->editing)) {

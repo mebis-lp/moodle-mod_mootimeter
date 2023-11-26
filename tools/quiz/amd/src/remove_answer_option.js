@@ -18,7 +18,7 @@ export const init = (id) => {
     function remove() {
         const pageid = this.dataset.pageid;
         const aoid = this.dataset.aoid;
-        return removeAnswerOption(pageid, aoid);
+        removeAnswerOption(pageid, aoid);
     }
 };
 
@@ -26,7 +26,7 @@ export const init = (id) => {
  * Call to remove an answer option
  * @param {int} pageid
  * @param {int} aoid
- * @returns
+ * @returns {mixed}
  */
 const execRemoveAnswerOption = (
     pageid,

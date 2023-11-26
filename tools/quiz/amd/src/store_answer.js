@@ -2,12 +2,11 @@ import {call as fetchMany} from 'core/ajax';
 import {exception as displayException} from 'core/notification';
 import {get_string as getString} from 'core/str';
 import Templates from 'core/templates';
-import Log from 'core/log';
 
-export const init = () => {
+export const init = (uniqId) => {
 
     // Get all up elements.
-    const submitbtn = document.getElementById('mtmt_store_answer');
+    const submitbtn = document.getElementById(uniqId);
 
     if (!submitbtn) {
         return;
@@ -17,6 +16,8 @@ export const init = () => {
 
     /**
      * Create new page.
+     *
+     * @returns {mixed}
      */
     function store() {
         const selectedanswerids = [];

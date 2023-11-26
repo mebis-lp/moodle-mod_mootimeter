@@ -1,10 +1,14 @@
-import { call as fetchMany } from 'core/ajax';
+import {call as fetchMany} from 'core/ajax';
 import WordCloud from 'mootimetertool_wordcloud/wordcloud2';
 
-export const init = () => {
+export const init = (id) => {
 
-    setInterval(function () {
-        getAnswers();
+    if (!document.getElementById(id)) {
+        return;
+    }
+
+    setInterval(() => {
+        getAnswers(id);
     }, 1000);
 };
 
@@ -27,15 +31,30 @@ const execGetAnswers = (
 
 /**
  * Executes the call to get all answers.
+ *
+ * @param {string} id
+ * @returns {mixed}
  */
-const getAnswers = async () => {
+const getAnswers = async(id) => {
 
-    var pageid = document.getElementById('wordcloudcanvas').dataset.pageid;
-    var lastposttimestamp = document.getElementById('mootimeterstate').dataset.lastupdated;
+    if (!document.getElementById(id)) {
+        return;
+    }
+
+    var pageid = document.getElementById(id).dataset.pageid;
+
+    var lastposttimestamp = 0;
+    if (document.getElementById('mootimeterstate').dataset.lastupdated) {
+       lastposttimestamp = document.getElementById('mootimeterstate').dataset.lastupdated;
+    }
 
     const response = await execGetAnswers(pageid, lastposttimestamp);
 
-    if (response.lastupdated == lastposttimestamp) {
+    if (
+        response.lastupdated == lastposttimestamp
+        &&
+        JSON.stringify(response.answerlist) == document.getElementById(id).dataset.answers
+    ) {
         return;
     }
 
@@ -44,18 +63,19 @@ const getAnswers = async () => {
     nodelastupdated.setAttribute('data-lastupdated', response.lastupdated);
 
     // Redraw wordcloud.
-    document.getElementById('wordcloudcanvas').setAttribute('data-answers', JSON.stringify(response.answerlist));
-    redrawwordcloud();
+    document.getElementById(id).setAttribute('data-answers', JSON.stringify(response.answerlist));
+    redrawwordcloud(id);
 
     return;
 };
 
 /**
  * Redraw the wordcloud.
+ * @param {string} id
  */
-function redrawwordcloud() {
-    let mtmtcanvas = document.getElementById('wordcloudcanvas');
+function redrawwordcloud(id) {
+    let mtmtcanvas = document.getElementById(id);
     let answers = JSON.parse(mtmtcanvas.dataset.answers);
 
-    WordCloud(mtmtcanvas, { list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans' });
+    WordCloud(mtmtcanvas, {list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans'});
 }

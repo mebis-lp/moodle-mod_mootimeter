@@ -67,12 +67,12 @@ class inplace_edit_answer extends \core\output\inplace_editable {
     /**
      * Updates the value in database and returns itself, called from inplace_editable callback
      *
-     * @param int $itemid
+     * @param mixed $itemid
      * @param mixed $newvalue
      * @return \self
      */
-    public static function update($itemid, $newvalue) {
-        global $DB, $PAGE;
+    public static function update(mixed $itemid, mixed $newvalue) {
+        global $DB;
 
         $newvalue = clean_param($newvalue, PARAM_TEXT);
 
@@ -90,11 +90,6 @@ class inplace_edit_answer extends \core\output\inplace_editable {
 
         // Now clear the answers cache.
         $helper->clear_caches($pageid);
-
-        $instance = $helper::get_instance_by_pageid($pageid);
-        $cm = $helper::get_cm_by_instance($instance);
-        $modulecontext = \context_module::instance($cm->id);
-        $PAGE->set_context($modulecontext);
 
         // Finally return itself.
         $tmpl = new self($helper->get_page($pageid), $answerrecord);

@@ -3,7 +3,10 @@
     <div class="mootimeter-page-dropdown">
         <i class="icon fa fa-gear fa-light mootimeter-page-dropbtn" aria-hidden="true"></i>
         <div class="mootimeter-page-dropdown-content">
-            <div id="btn-delete_page" class="mootimeter-delete-page-btn" data-pageid="{{pageid}}">{{#str}} delete_page, mod_mootimeter {{/str}}</div>
+            <div id="btn-delete_page_{{uniqid}}" class="mootimeter-delete-page-btn" data-pageid="{{pageid}}">{{#str}} delete_page, mod_mootimeter {{/str}}</div>
         </div>
+        {{#js}}
+        require(['mod_mootimeter/delete_page'], (module) => module.init(["btn-delete_page_{{uniqid}}"]));
+        {{/js}}
     </div>
 </div>

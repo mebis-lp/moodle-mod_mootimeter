@@ -67,7 +67,7 @@
   flex: 7.5rem 0 0;
   max-width: 100%;
   /*    max-height: 75vh;
-      height: 75vh;*/
+  height: 75vh;*/
   overflow-y: auto;
 }
 .mootimetercontainer .mootimetercolpages::-webkit-scrollbar {
@@ -132,6 +132,10 @@
     flex-shrink: 0;
   }
 }
+.mootimetercontainer .mootimetercolpages .mootimeter-render-loading {
+  text-align: center;
+  color: #fff;
+}
 
 .dark .mootimetercolpages {
   background-color: #fff;
@@ -139,6 +143,10 @@
 .dark .mootimetercolpages ul li {
   background-color: #e8e8ea;
   border-color: #a4a5ac;
+}
+.dark .mootimetercolpages .mootimeter-render-loading {
+  text-align: center;
+  color: #60616d;
 }
 
 .contrast .mootimetercolpages ul li {
@@ -212,6 +220,13 @@
 .mootimetercontainer .mootimetercoledit::-webkit-scrollbar-track {
   background: #303142;
 }
+.mootimetercontainer .mootimetercoledit:empty {
+  display: none;
+}
+.mootimetercontainer .mootimetercoledit .mootimeter-render-loading {
+  text-align: center;
+  color: #60616d;
+}
 .mootimetercontainer.isNewPage .mootimetercoledit {
   background-color: #e8e8ea;
   padding: 9.0625rem 0;
@@ -269,6 +284,10 @@
 .dark .mootimetercoledit label,
 .dark .mootimetercoledit input {
   color: #00091e;
+}
+.dark .mootimetercoledit .mootimeter-render-loading {
+  text-align: center;
+  color: #fff;
 }
 
 .mootimeter-header-wrapper h4 {
@@ -383,6 +402,9 @@
   gap: 1rem;
   box-shadow: 0px 12px 26px 0px rgba(62, 69, 91, 0.1490196078);
 }
+.mootimetercontainer .mootimetercolcontent .mootimeter-content-menu:empty {
+  display: none;
+}
 .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview-options {
   display: flex;
   flex-wrap: wrap;
@@ -419,6 +441,9 @@
 .dark .mootimetercolcontent .mootimeter-colcontent-preview input,
 .dark .mootimetercolcontent .mootimeter-colcontent-preview label {
   color: #fff;
+}
+.dark .mootimetercolcontent .mootimeter-render-loading {
+  color: #60616d;
 }
 
 .mootimetercontainer .divider {

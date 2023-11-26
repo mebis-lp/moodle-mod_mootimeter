@@ -2,33 +2,34 @@ import {call as fetchMany} from 'core/ajax';
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 
-export const init = () => {
+export const init = (inputid, enterid) => {
 
     // Register event to input box.
-    const ao = document.getElementById('mootimeter_type_answer');
+    const ao = document.getElementById(inputid);
     if (ao) {
         ao.addEventListener("keyup", function(event) {
             if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-                store();
+                store(inputid);
             }
         });
     }
 
     // Register event to submit button.
-    const ae = document.getElementById('mootimeter_enter_answer');
+    const ae = document.getElementById(enterid);
     if (ae) {
         ae.addEventListener("click", function() {
-            store();
+            store(inputid);
         });
     }
 
     /**
      * Create new page.
+     * @param {string} inputid
      */
-    function store() {
-        var pageid = document.getElementById('mootimeter_type_answer').dataset.pageid;
-        var answer = document.getElementById('mootimeter_type_answer').value;
-        storeAnswer(pageid, answer);
+    function store(inputid) {
+        var pageid = document.getElementById(inputid).dataset.pageid;
+        var answer = document.getElementById(inputid).value;
+        storeAnswer(pageid, answer, inputid);
     }
 };
 
@@ -53,8 +54,9 @@ const execStoreAnswer = (
  * Executes the call to store an answer.
  * @param {int} pageid
  * @param {string} answer
+ * @param {string} inputid
  */
-const storeAnswer = async(pageid, answer) => {
+const storeAnswer = async(pageid, answer, inputid) => {
     const response = await execStoreAnswer(pageid, answer);
 
     removeInfoBox();
@@ -80,7 +82,7 @@ const storeAnswer = async(pageid, answer) => {
     }
 
     // In any case: Empty the input field after post.
-    document.getElementById('mootimeter_type_answer').value = "";
+    document.getElementById(inputid).value = "";
 };
 
 /**

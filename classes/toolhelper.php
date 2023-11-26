@@ -106,10 +106,11 @@ abstract class toolhelper extends \mod_mootimeter\helper {
     /**
      * Get the rendered answer overview view.
      *
+     * @param object $cm
      * @param object $page
      * @return string
      */
-    abstract public function get_answer_overview(object $page): string;
+    abstract public function get_answer_overview(object $cm, object $page): string;
 
     /**
      * Checks if a select option is selected.

@@ -1,5 +1,6 @@
 import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
+import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 
 export const init = (uniqueID) => {
     var obj = document.getElementById(uniqueID);
@@ -16,7 +17,6 @@ export const init = (uniqueID) => {
     function toggleState() {
         var pageid = this.dataset.pageid;
         var uniqueID = this.id;
-
         exectoggleState(pageid, uniqueID);
     }
 };
@@ -74,5 +74,10 @@ const exectoggleState = async(pageid, uniqueID) => {
         let nodelastupdated = document.getElementById('mootimeterstate');
         nodelastupdated.setAttribute('data-lastupdated', 0);
 
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const cmid = urlParams.get('id');
+        dataset.useUrlParams = 1;
+        reloadPage(dataset.pageid, cmid, dataset);
     }
 };

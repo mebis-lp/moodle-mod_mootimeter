@@ -2,7 +2,7 @@
   <label>
     <input
       type="checkbox"
-      id="{{mtm-cb-without-label-id}}"
+      id="{{mtm-cb-without-label-id}}_{{uniqid}}"
       class="mootimeter-checkbox-switch {{mtm-cb-without-label-classes}} {{additional_class}}"
       {{mtm-cb-without-label-checked}}
       {{#mtm-cb-without-label-name}}name="{{mtm-cb-without-label-name}}"{{/mtm-cb-without-label-name}}
@@ -19,6 +19,6 @@
 </div>
 {{#mtm-cb-without-label-ajaxmethode}}
 {{#js}}
-require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{mtm-cb-without-label-id}}"));
+require(['mod_mootimeter/handler_input_checkbox_switch'], (module) => module.init("{{mtm-cb-without-label-id}}_{{uniqid}}"));
 {{/js}}
 {{/mtm-cb-without-label-ajaxmethode}}

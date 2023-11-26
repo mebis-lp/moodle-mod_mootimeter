@@ -18,6 +18,14 @@
     &::-webkit-scrollbar-track {
       background: $grey-400;
     }
+    &:empty {
+      display: none;
+    }
+
+    .mootimeter-render-loading {
+      text-align: center;
+      color: #60616d;
+    }
   }
 
   &.isNewPage {
@@ -91,6 +99,11 @@
     label,
     input {
       color: $grey-500;
+    }
+
+    .mootimeter-render-loading {
+      text-align: center;
+      color: #fff;
     }
   }
 }

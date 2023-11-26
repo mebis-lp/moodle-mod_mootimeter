@@ -4,6 +4,9 @@
 
     {{#question}}
     {{> mod_mootimeter/elements/snippet_input}}
+    {{#js}}
+    require(['mod_mootimeter/reload_page_content'], (module) => module.init("{{mtm-input-id}}_{{uniqid}}"));
+    {{/js}}
     {{/question}}
 
     {{> mod_mootimeter/elements/snippet_divider}}
@@ -14,8 +17,10 @@
         {{#answeroptions}}
         {{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
         {{#js}}
-        require(['mootimetertool_quiz/remove_answer_option'], (module) => module.init(["ao_delete_{{id}}"]));
-        require(['mootimetertool_quiz/reload_answeroption'], (module) => module.init(["{{id}}"]));
+        require(['mootimetertool_quiz/remove_answer_option'], (module) => module.init("{{button_icon_only_transparent_id}}_{{uniqid}}"));
+        require(['mod_mootimeter/reload_page_content'], (module) => module.init("{{mtm-input-id}}_{{uniqid}}"));
+        require(['mod_mootimeter/reload_page_content'], (module) => module.init("{{button_icon_only_transparent_id}}_{{uniqid}}"));
+        require(['mod_mootimeter/reload_page_settings'], (module) => module.init("{{button_icon_only_transparent_id}}_{{uniqid}}"));
         {{/js}}
         {{/answeroptions}}
     </div>
@@ -24,6 +29,8 @@
     {{> mod_mootimeter/elements/snippet_button_icon_with_text}}
     {{#js}}
     require(['mootimetertool_quiz/add_new_answer_option'], (module) => module.init());
+    require(['mod_mootimeter/reload_page_content'], (module) => module.init("{{button_icon_only_transparent_id}}_{{uniqid}}"));
+    require(['mod_mootimeter/reload_page_settings'], (module) => module.init("{{button_icon_only_transparent_id}}_{{uniqid}}"));
     {{/js}}
     {{/addoption}}
 

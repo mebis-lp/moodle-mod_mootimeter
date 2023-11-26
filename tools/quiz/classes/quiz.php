@@ -278,25 +278,29 @@ class quiz extends \mod_mootimeter\toolhelper {
      * Get content menu bar params.
      *
      * @param object $page
+     * @param array $params Defaultparams
      * @return mixed
      * @throws coding_exception
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function get_content_menu_tool_params(object $page) {
+    public function get_content_menu_tool_params(object $page, array $params) {
 
         $instance = \mod_mootimeter\helper::get_instance_by_pageid($page->id);
         $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
 
-        $params = $this->get_content_menu_default_parameters($page);
-
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
 
+            $dataseticoncheck = [
+                'data-togglename = "showonteacherpermission"',
+                'data-pageid="' . $page->id . '"',
+                'data-iconid = "toggleteacherpermissionid"',
+            ];
             $params['icon-eye'] = [
                 'icon' => 'fa-eye',
                 'id' => 'toggleteacherpermission',
                 'iconid' => 'toggleteacherpermissionid',
-                'dataset' => 'data-pageid="' . $page->id . '" data-iconid="toggleteacherpermissionid"',
+                'dataset' => join(" ", $dataseticoncheck),
             ];
             if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
                 $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission_disabled', 'mod_mootimeter');
@@ -351,19 +355,15 @@ class quiz extends \mod_mootimeter\toolhelper {
         $params['icon-showresults'] = [
             'icon' => 'fa-bar-chart',
             'id' => 'showresults',
-            'additional_class' => 'mtm_redirect_selector',
-            'href' => (new \moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id, 'r' => 1]))->out(true),
             'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
+            'dataset' => "data-action='showresults' data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'",
         ];
-        if (optional_param('r', "", PARAM_INT)) {
+        if (!empty($params['sp']['r']) && $params['sp']['r'] == 1) {
             $params['icon-showresults']['icon'] = 'fa-pencil-square-o';
-            $params['icon-showresults']['href'] = (new \moodle_url(
-                '/mod/mootimeter/view.php',
-                ['id' => $cm->id, 'pageid' => $page->id]
-            ))->out(true);
             $params['icon-showresults']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
+            $params['icon-showresults']['dataset'] = "data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'";
         }
-        return ['contentmenu' => $params];
+        return $params;
     }
 
     /**
@@ -514,6 +514,8 @@ class quiz extends \mod_mootimeter\toolhelper {
         $answeroptions = $this->get_answer_options($page->id);
         foreach ($answeroptions as $answeroption) {
             $params['answeroptions'][] = [
+                'aoid' => $answeroption->id,
+
                 'mtm-ao-wrapper-id' => 'ao_wrapper_' . $answeroption->id,
 
                 'mtm-input-id' => 'ao_text_' . $answeroption->id,
@@ -701,18 +703,18 @@ class quiz extends \mod_mootimeter\toolhelper {
      * Renders the result page of the quiz.
      *
      * @param object $page
-     * @return string
+     * @param array $defaultparams
+     * @return array
      * @throws dml_exception
-     * @throws coding_exception
      */
-    public function get_result_page(object $page): string {
-
-        global $OUTPUT;
+    public function get_tool_result_page_params(object $page, array $defaultparams = []): array {
 
         $paramschart = $this->get_result_params_chartjs($page);
-        $paramschart['pageid'] = $page->id;
+        $params = array_merge($defaultparams, $paramschart);
+        $params['pageid'] = $page->id;
+        $params['template'] = "mootimetertool_quiz/view_results";
 
-        return $OUTPUT->render_from_template("mootimetertool_quiz/view_results", $paramschart);
+        return $params;
     }
 
     /**
@@ -774,11 +776,12 @@ class quiz extends \mod_mootimeter\toolhelper {
     /**
      * Get the params for answer overview view.
      *
+     * @param object $cm
      * @param object $page
      * @return array
      */
-    public function get_answer_overview_params(object $page): array {
-        global $OUTPUT, $PAGE;
+    public function get_tool_answer_overview_params(object $cm, object $page): array {
+        global $PAGE;
 
         $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
 
@@ -790,16 +793,10 @@ class quiz extends \mod_mootimeter\toolhelper {
         }
 
         $params = [];
+        $params['template'] = 'mootimetertool_quiz/view_overview';
         $i = 1;
 
-        $table = new \html_table();
-        $table->head = [
-            '#',
-            get_string('name'),
-            get_string('answer'),
-            get_string('date') . " " . get_string('time'),
-            get_string('options'),
-        ];
+        $renderer = $PAGE->get_renderer('core');
 
         foreach ($answers as $answer) {
 
@@ -809,9 +806,6 @@ class quiz extends \mod_mootimeter\toolhelper {
             if (!empty($user)) {
                 $userfullname = $user->firstname . " " . $user->lastname;
             }
-
-            $tmpl = new \mootimetertool_quiz\local\inplace_edit_answer($page, $answer);
-            $collectionselect = $OUTPUT->render_from_template('core/inplace_editable', $tmpl->export_for_template($OUTPUT));
 
             // Add delte button to answer.
             $dataseticonrestart = [
@@ -823,43 +817,39 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'data-confirmationtype="DELETE_CANCEL"',
             ];
 
-            $buttonid = 'mtmt_delete_answer_' . $answer->id;
+            $inplaceedit = new \mootimetertool_quiz\local\inplace_edit_answer($page, $answer);
 
-            $paramstemp = [
-                'icon' => 'fa-trash',
-                'id' => $buttonid,
-                'iconid' => 'mtmt_delte_iconid_' . $answer->id,
-                'dataset' => join(" ", $dataseticonrestart),
+            $params['answers'][] = [
+                'nbr' => $i,
+                'userfullname' => $userfullname,
+                'answer' => $inplaceedit->export_for_template($renderer),
+                'datetime' => userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
+                'options' => [
+                    [
+                        'icon' => 'fa-trash',
+                        'id' => 'mtmt_delete_answer_' . $answer->id,
+                        'iconid' => 'mtmt_delte_iconid_' . $answer->id,
+                        'dataset' => join(" ", $dataseticonrestart),
+                    ],
+                ],
             ];
 
-            $options = $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_button_icon_only_rounded", $paramstemp);
-            $PAGE->requires->js_call_amd('mod_mootimeter/handle_button_clicked', 'init', [$buttonid]);
-
-            $table->data[] = [
-                $i,
-                $userfullname,
-                $collectionselect,
-                userdate($answer->timecreated, get_string('strftimedatetimeshortaccurate', 'core_langconfig')),
-                $options,
-            ];
             $i++;
         }
 
-        $params['answers'] = \html_writer::table($table);
-        $returnparams['pagecontent'] = $params;
-
-        return $returnparams;
+        return $params;
     }
 
     /**
      * Get the rendered answer overview view.
      *
+     * @param object $cm
      * @param object $page
      * @return string
      */
-    public function get_answer_overview(object $page): string {
+    public function get_answer_overview(object $cm, object $page): string {
         global $OUTPUT;
-        $params = $this->get_answer_overview($page);
-        return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params['pagecontent']);
+        $params = $this->get_answer_overview($cm, $page);
+        return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
     }
 }

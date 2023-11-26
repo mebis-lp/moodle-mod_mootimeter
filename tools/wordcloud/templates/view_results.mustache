@@ -1,6 +1,6 @@
 <div
   class="mootimeterfullwidth"
-  id="wordcloudcanvas"
+  id="wordcloudcanvas_{{uniqid}}"
   style="display:block; margin: 10px; height:55vH; width: 100%;"
   data-answers="{{answerslist}}"
   data-pageid="{{pageid}}"
@@ -9,5 +9,5 @@
 </div>
 
 {{#js}}
-    require(['mootimetertool_wordcloud/redraw_wordcloud'], (module) => module.init());
+    require(['mootimetertool_wordcloud/redraw_wordcloud'], (module) => module.init("wordcloudcanvas_{{uniqid}}"));
 {{/js}}
