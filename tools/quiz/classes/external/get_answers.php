@@ -74,11 +74,6 @@ class get_answers extends external_api {
         $quiz = new \mootimetertool_quiz\quiz();
 
         return $quiz->get_result_params_chartjs($pageid);
-
-        $lastupdatednew = $quiz->get_last_update_time($pageid, "quiz");
-
-        $answerlist = $quiz->get_counted_answers($pageid);
-        return ['answerlist' => $answerlist, 'lastupdated' => $lastupdatednew];
     }
 
     /**
@@ -94,7 +89,6 @@ class get_answers extends external_api {
                 'chartsettings' => new external_value(PARAM_TEXT, 'chartsettings'),
                 'question' => new external_value(PARAM_TEXT, 'Question text'),
                 'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated'),
-
             ],
             'Information to redraw quiz'
         );

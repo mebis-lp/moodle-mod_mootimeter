@@ -76,9 +76,6 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
 
         const pageparmas = JSON.parse(response.pageparams);
 
-        // Set new pageid.
-        mtmstate.setAttribute('data-pageid', pageparmas.pageid);
-
         // Replace the pagecontent.
         Templates.renderForPromise(pageparmas.pagecontent.template, pageparmas.pagecontent)
             .then(({html, js}) => {
@@ -88,12 +85,21 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
             .catch((error) => displayException(error));
 
         // Replace the pagecontent menu.
-        Templates.renderForPromise(pageparmas.contentmenu.template, pageparmas.contentmenu)
-            .then(({html, js}) => {
-                Templates.replaceNode('#mootimeter-pagecontentmenu', html, js);
-                return true;
-            })
-            .catch((error) => displayException(error));
+        if (pageparmas.contentmenu) {
+            Templates.renderForPromise(pageparmas.contentmenu.template, pageparmas.contentmenu)
+                .then(({html, js}) => {
+                    Templates.replaceNode('#mootimeter-pagecontentmenu', html, js);
+                    return true;
+                })
+                .catch((error) => displayException(error));
+
+            // Set subpage URL parameters.
+            if (pageparmas.contentmenu.sp) {
+                for (const [key, value] of Object.entries(pageparmas.contentmenu.sp)) {
+                    setGetParam(key, value);
+                }
+            }
+        }
 
         // Replace the settings col if necessary.
         if (pageparmas.colsettings) {
@@ -105,18 +111,19 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
                 .catch((error) => displayException(error));
         }
 
-        // Set URL parameter - pageid.
-        setGetParam('pageid', pageparmas.pageid);
+        if (pageparmas.pageid) {
 
-        // Set subpage URL parameters.
-        if (pageparmas.contentmenu.sp) {
-            for (const [key, value] of Object.entries(pageparmas.contentmenu.sp)) {
-                setGetParam(key, value);
-            }
+            // Set new pageid.
+            mtmstate.setAttribute('data-pageid', pageparmas.pageid);
+
+            // Set URL parameter - pageid.
+            setGetParam('pageid', pageparmas.pageid);
+
         }
 
         // Set active page marked in pageslist.
         reloadPagelist(pageid, cmid, true);
+
 
         // Remove all tooltips of pageslist that are still present.
         document.querySelectorAll('.tooltip').forEach(e => e.remove());

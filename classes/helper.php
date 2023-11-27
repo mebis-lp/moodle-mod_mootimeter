@@ -421,11 +421,6 @@ class helper {
      */
     public function get_result_page_params(object $cm, object $page): array {
 
-        // This content should only be viewed with moderator capabilities.
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
-            redirect('view.php?id=' . $cm->id . "&pageid=" . $page->id);
-        }
-
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
         if (!class_exists($classname)) {

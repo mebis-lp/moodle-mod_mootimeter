@@ -196,8 +196,14 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      */
     protected function get_answers_list(int $pageid, int $userid = 0) {
 
+        $instance = self::get_instance_by_pageid($pageid);
+        $cm = self::get_cm_by_instance($instance);
+
         // We only want to deliver results if showresults is true or the teacher allowed to view it.
-        if (!empty(self::get_tool_config($pageid, 'showonteacherpermission'))) {
+        if (
+            !empty(self::get_tool_config($pageid, 'showonteacherpermission'))
+            || has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
+            ) {
             $params = [
                 'pageid' => $pageid,
             ];
@@ -209,7 +215,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             return (array)$this->get_answers_grouped(self::ANSWER_TABLE, $params);
         }
 
-        return [];
+        return [['answer' => get_string('no_answer_due_to_showteacherpermission', 'mootimetertool_wordcloud'), 'cnt' => 1]];
     }
 
     /**
@@ -368,12 +374,15 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     public function get_last_update_time(int $pageid): int {
         global $DB;
 
-        // We only want to deliver results if showresults is true or the teacher allowed to view it.
+        $instance = self::get_instance_by_pageid($pageid);
+        $cm = self::get_cm_by_instance($instance);
+
+        // We only want to deliver results if the teacher allowed to view it.
         if (
-            $this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-            && empty($this->get_tool_config($pageid, 'showonteacherpermission'))
-        ) {
-            return 0;
+            empty($this->get_tool_config($pageid, 'showonteacherpermission'))
+            && !has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
+            ) {
+            return 100;
         }
 
         $records = $DB->get_records(self::ANSWER_TABLE, ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
@@ -469,7 +478,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Renders the result page of the wordcloud.
+     * Delivers the result page params of the wordcloud.
      *
      * @param object $page
      * @param array $params
@@ -478,7 +487,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      */
     public function get_tool_result_page_params(object $page, array $params = []): array {
         $params['answerslist'] = "";
-        $params['lastupdated'] = $this->get_last_update_time($page->id);
+        $params['lastupdated'] = 0;
         $params['pageid'] = $page->id;
         $params['template'] = "mootimetertool_wordcloud/view_results";
         return $params;

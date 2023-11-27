@@ -34,6 +34,7 @@ $string['ispoll_help'] = "Sie können zwischen Umfrage und Quiz wählen. Quizze 
 $string['ispoll_helptitle'] = "Um welche Art von Quiz handelt es sich?";
 $string['ispoll_label'] = "Quiz-Typ";
 $string['multiple_answers'] = 'Mehrere Antworten';
+$string['no_answer_due_to_showteacherpermission'] = 'Die Lehrkraft muss zunächst das Anzeigen der Ergebnisse erlauben.';
 $string['nodata'] = "Noch keine Daten verfügbar";
 $string['pluginname'] = 'Quiz';
 $string['poll'] = "Umfrage";

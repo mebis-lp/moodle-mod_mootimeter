@@ -646,7 +646,14 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @throws dml_exception
      */
     public function get_quiz_results_chartjs(object $page): array {
-        if (self::get_tool_config($page, 'showonteacherpermission')) {
+
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
+
+        if (
+            self::get_tool_config($page, 'showonteacherpermission')
+            || has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
+        ) {
             $answersgrouped = (array)$this->get_answers_grouped(self::ANSWER_TABLE, ["pageid" => $page->id], 'optionid');
         } else {
             $answersgrouped = [];
@@ -690,11 +697,22 @@ class quiz extends \mod_mootimeter\toolhelper {
             : self::VISUALIZATION_ID_CHART_BAR;
         $chartsettings = $this->get_visualization_settings_charjs($visualizationtype, $page->id);
 
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
+        if (
+            self::get_tool_config($page, 'showonteacherpermission')
+            || has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
+        ) {
+            $question = self::get_tool_config($page, 'question');
+        } else {
+            $question = get_string('no_answer_due_to_showteacherpermission', 'mootimetertool_quiz');
+        }
+
         $params = [
             'chartsettings' => json_encode($chartsettings),
             'labels' => json_encode($labels),
             'values' => json_encode($values),
-            'question' => self::get_tool_config($page, 'question'),
+            'question' => $question,
             'lastupdated' => $this->get_last_update_time($page->id, "quiz"),
         ];
 
@@ -744,10 +762,13 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function get_last_update_time(int $pageid): int {
         global $DB;
 
-        // We only want to deliver results if showresults is true or the teacher allowed to view it.
+        $instance = self::get_instance_by_pageid($pageid);
+        $cm = self::get_cm_by_instance($instance);
+
+        // We only want to deliver results if the teacher allowed to view it.
         if (
-            $this->get_tool_config($pageid, 'showresult') == self::MTMT_VIEW_RESULT_TEACHERPERMISSION
-            && empty($this->get_tool_config($pageid, 'showonteacherpermission'))
+            empty($this->get_tool_config($pageid, 'showonteacherpermission'))
+            && !has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
         ) {
             return 0;
         }

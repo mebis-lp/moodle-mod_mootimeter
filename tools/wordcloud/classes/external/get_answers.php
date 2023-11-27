@@ -73,14 +73,6 @@ class get_answers extends external_api {
 
         $answerlist = $wordcloud->get_answerlist_wordcloud($pageid);
 
-        if (empty($answerlist)) {
-            if (empty(\mod_mootimeter\helper::get_tool_config($pageid, 'showonteacherpermission'))) {
-                $answerlist = [[get_string('no_answer_due_to_showteacherpermission', 'mootimetertool_wordcloud'), "2"]];
-            } else {
-                $answerlist = [[get_string('no_answer', 'mootimetertool_wordcloud'), "2"]];
-            }
-            $lastupdatednew = 10;
-        }
         return ['answerlist' => $answerlist, 'lastupdated' => $lastupdatednew];
     }
 

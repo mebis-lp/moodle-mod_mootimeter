@@ -19,6 +19,7 @@ export const init = () => {
     const urlParams = new URLSearchParams(queryString);
     const cmid = urlParams.get('id');
     var pageid = urlParams.get('pageid');
+
     if (pageid === null || pageid === undefined || pageid.length == 0) {
         pageid = 0;
     }
@@ -28,10 +29,15 @@ export const init = () => {
      * Store the value.
      */
     function getPagelist() {
-        var pageid = document.getElementById('mootimeterstate').dataset.pageid;
-        if (pageid == "undefined" || pageid.length == 0) {
-            pageid = 0;
+        var pageid = 0;
+
+        if (document.getElementById('mootimeterstate').dataset.pageid) {
+            pageid = document.getElementById('mootimeterstate').dataset.pageid;
+            if (pageid == "undefined" || pageid.length == 0) {
+                pageid = 0;
+            }
         }
+
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const cmid = urlParams.get('id');
