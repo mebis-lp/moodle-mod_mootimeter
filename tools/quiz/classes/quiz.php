@@ -197,12 +197,14 @@ class quiz extends \mod_mootimeter\toolhelper {
             $records[] = $record;
         }
 
+        $enablemultipleanswers = (self::get_tool_config($page, 'maxanswersperuser') > 1) ? true : false;
+
         $this->store_answer(
             self::ANSWER_TABLE,
             $records,
             true,
             self::ANSWER_COLUMN,
-            (bool)self::get_tool_config($page, 'multipleanswers')
+            $enablemultipleanswers
         );
     }
 
