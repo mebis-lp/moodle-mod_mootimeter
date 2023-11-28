@@ -28,7 +28,7 @@
     {{#addoption}}
     {{> mod_mootimeter/elements/snippet_button_icon_with_text}}
     {{#js}}
-    require(['mootimetertool_quiz/add_new_answer_option'], (module) => module.init());
+    require(['mootimetertool_quiz/add_new_answer_option'], (module) => module.init("wrapper_add_answer_option_{{uniqid}}"));
     require(['mod_mootimeter/reload_page_content'], (module) => module.init("{{button_icon_only_transparent_id}}_{{uniqid}}"));
     require(['mod_mootimeter/reload_page_settings'], (module) => module.init("{{button_icon_only_transparent_id}}_{{uniqid}}"));
     {{/js}}

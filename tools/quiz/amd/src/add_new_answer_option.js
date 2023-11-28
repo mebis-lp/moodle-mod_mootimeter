@@ -1,10 +1,10 @@
 import {call as fetchMany} from 'core/ajax';
-import { execReloadPage as reloadPage } from 'mod_mootimeter/reload_page'
+import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page'
 
-export const init = () => {
+export const init = (uniqId) => {
 
     // Get all up elements.
-    var ao = document.getElementById('wrapper_add_answer_option');
+    var ao = document.getElementById(uniqId);
 
     if (!ao) {
         return;

@@ -356,6 +356,7 @@ class helper {
         $dataset = json_decode($dataset);
         list($course, $cm) = get_course_and_cm_from_cmid($cmid);
         $page = $this->get_page($pageid);
+        $contentmenudefaultparams = [];
 
         if (empty($pageid)) {
             if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
@@ -386,6 +387,7 @@ class helper {
             switch ($dataset->action) {
                 case 'addpage':
                     $paramscontent['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page_params($cm);
+                    $nosettingscol = true;
                     break;
                 case 'showansweroverview':
                     $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);
