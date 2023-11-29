@@ -43,7 +43,7 @@
         {{> mod_mootimeter/elements/snippet_settings_visualization_option}}
         {{/visualization}}
         {{#js}}
-        require(['mootimetertool_quiz/store_visualization'], (module) => module.init());
+        require(['mootimetertool_quiz/store_visualization'], (module) => module.init("{{uniqid}}"));
         {{/js}}
     </div>
 

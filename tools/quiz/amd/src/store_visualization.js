@@ -1,7 +1,7 @@
 import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
 
-export const init = () => {
+export const init = (uniqid) => {
 
     // Get all up elements.
     var visualizationElements = document.getElementsByClassName('mtmt_visualization_selector');
@@ -19,7 +19,7 @@ export const init = () => {
     function store() {
         var pageid = this.dataset.pageid;
         var visualizationtypeid = this.dataset.visuid;
-        storeVisualizationType(pageid, visualizationtypeid);
+        storeVisualizationType(pageid, visualizationtypeid, uniqid);
     }
 };
 
@@ -27,7 +27,7 @@ export const init = () => {
  * Call to create a new instance
  * @param {int} pageid
  * @param {int} visuid
- * @returns
+ * @returns {mixed}
  */
 const execStoreVisualizationType = (
     pageid,
@@ -44,8 +44,9 @@ const execStoreVisualizationType = (
  * Executes the call to create a new page.
  * @param {int} pageid
  * @param {int} visuid
+ * @param {string} uniqid
  */
-const storeVisualizationType = async(pageid, visuid) => {
+const storeVisualizationType = async(pageid, visuid, uniqid) => {
     const response = await execStoreVisualizationType(pageid, visuid);
     if (response.code != 200) {
         Log.error(response.string);
@@ -56,6 +57,6 @@ const storeVisualizationType = async(pageid, visuid) => {
         for (let i = 0; i < visualizationElements.length; i++) {
             visualizationElements[i].classList.remove("active");
         }
-        document.getElementById('visualization_' + visuid).classList.add("active");
+        document.getElementById('visualization_' + visuid + '_' + uniqid).classList.add("active");
     }
 };
