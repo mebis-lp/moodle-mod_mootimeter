@@ -41,6 +41,12 @@
     padding: 0;
     height: 50%;
 
+    &:hover {
+      .icon {
+        color: $white-standard;
+      }
+    }
+
     .icon {
       height: 0rem;
     }
@@ -53,6 +59,12 @@
     padding: 0;
     height: 50%;
 
+    &:hover {
+      .icon {
+        color: $white-standard;
+      }
+    }
+
     .icon {
       height: 1.8rem;
     }
@@ -60,12 +72,6 @@
 
   .icon {
     color: $grey-300;
-  }
-
-  &:hover {
-    .icon {
-      color: $white-standard;
-    }
   }
 }
 
