@@ -66,6 +66,13 @@
       gap: 1rem;
     }
 
+    #mtmt_wordcloud_pills {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
     .mootimeter-content-menu {
       position: absolute;
       top: 1.25rem;
