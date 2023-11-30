@@ -1,6 +1,7 @@
 .button-icon-with-text {
   @include flex-center-all;
   gap: 0.5rem;
+  cursor: pointer;
 
   .icon {
     font-size: 1.25rem;
