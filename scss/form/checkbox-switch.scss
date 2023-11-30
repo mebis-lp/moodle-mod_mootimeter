@@ -1,4 +1,5 @@
-.mootimeter-checkbox-switch {
+.mootimeter-checkbox-switch,
+#page input[type="checkbox"].mootimeter-checkbox-switch {
   position: relative;
   width: 2.75rem;
   height: 1.5625rem;
@@ -12,16 +13,20 @@
   background-color: unset;
 
   &::before {
-    content: "";
+    content: ""!important;
     width: 1.125rem;
     height: 1.125rem;
     border-radius: 50%;
     background: $grey-200;
     position: absolute;
-    top: 50%;
+    top: 50%!important;
     transform: translateY(-50%);
-    left: 0.125rem;
+    left: 0.125rem!important;
     transition: 0.5s;
+  }
+
+  &::after {
+    display: none!important;
   }
 
   &:checked {
