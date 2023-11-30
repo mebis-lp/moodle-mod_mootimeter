@@ -33,6 +33,7 @@ $string['error_to_many_answers'] = 'You have selected to many answers. You only 
 $string['ispoll_help'] = "You can choose between poll and quiz. Quizzes have wrong and right answers";
 $string['ispoll_helptitle'] = "What kind of quiz is it?";
 $string['ispoll_label'] = "Quiz type";
+$string['mark_correct_answer'] = 'Please mark the correct answer (optional)';
 $string['multiple_answers'] = 'Multiple answers';
 $string['no_answer_due_to_showteacherpermission'] = 'The teacher must first allow the results to be displayed.';
 $string['nodata'] = "No data available yet";

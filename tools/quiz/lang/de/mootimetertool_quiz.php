@@ -33,6 +33,7 @@ $string['error_to_many_answers'] = 'Sie haben zu viele Antworten ausgewählt. Si
 $string['ispoll_help'] = "Sie können zwischen Umfrage und Quiz wählen. Quizze haben richtige und falsche Antworten.";
 $string['ispoll_helptitle'] = "Um welche Art von Quiz handelt es sich?";
 $string['ispoll_label'] = "Quiz-Typ";
+$string['mark_correct_answer'] = 'Bitte die korrekte(n) Antwort(en) markieren (optional)';
 $string['multiple_answers'] = 'Mehrere Antworten';
 $string['no_answer_due_to_showteacherpermission'] = 'Die Lehrkraft muss zunächst das Anzeigen der Ergebnisse erlauben.';
 $string['nodata'] = "Noch keine Daten verfügbar";

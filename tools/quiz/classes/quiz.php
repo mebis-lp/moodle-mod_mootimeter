@@ -513,6 +513,14 @@ class quiz extends \mod_mootimeter\toolhelper {
             'ajaxmethode' => "mod_mootimeter_store_setting",
         ];
 
+        $params['notification_mark_correct_anser'] = [
+            'notification_id' => 'mtmt_mark_correct_answer',
+            'notification_type' => 'info',
+            'notification_icon' => 'fa-share fa-flip-vertical',
+            'notification_icon_rotation' => 'mootimeter_rotate_110',
+            'notification_text' => get_string('mark_correct_answer', 'mootimetertool_quiz'),
+        ];
+
         $answeroptions = $this->get_answer_options($page->id);
         foreach ($answeroptions as $answeroption) {
             $params['answeroptions'][] = [
