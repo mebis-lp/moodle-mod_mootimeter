@@ -4,13 +4,11 @@
     background-color: $grey-500;
     flex: 7.5rem 0 0;
     max-width: 100%;
-    /*    max-height: 75vh;
-    height: 75vh;*/
     overflow-y: auto;
     border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
 
-    @media screen and (max-width: 469px) {
+    @media screen and (max-width: 539px) {
       border-top-left-radius: 0.5rem;
       border-top-right-radius: 0.5rem;
       border-bottom-left-radius: 0;
@@ -69,7 +67,7 @@
       }
     }
 
-    @media screen and (max-width: 469px) {
+    @media screen and (max-width: 539px) {
       flex-grow: 1;
 
       ul {

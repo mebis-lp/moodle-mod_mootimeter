@@ -46,4 +46,15 @@ $notification-warning: #ff00001a;
     height: 100%;
     z-index: 99999;
   }
+
+
+
+  .mootimetercolpages,
+  .mootimetercoledit,
+  .mootimetercolcontent {
+    @media screen and (min-width: 469px) {
+      min-height: 646px;
+      max-height: 850px;
+    }
+  }
 }
