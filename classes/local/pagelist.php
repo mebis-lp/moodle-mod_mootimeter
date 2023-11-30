@@ -82,7 +82,7 @@ class pagelist {
 
         foreach ($pages as $pagerow) {
             $uniqid = uniqid('mtmt_page_');
-            $pixrawurl = '/mod/mootimeter/tools/' . $pagerow->tool . '/pix/' . $pagerow->tool . '.svg';
+            $pixrawurl = '/mod/mootimeter/tools/' . $pagerow->tool . '/pix/' . $pagerow->tool . '-white.svg';
             $temppages['pageslist'][] = [
                 'toolicon' => (new \moodle_url($pixrawurl))->out(true),
                 'active' => ($pagerow->id == $pageselected) ? "active" : "",
