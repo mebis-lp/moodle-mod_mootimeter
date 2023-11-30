@@ -7,6 +7,14 @@
     /*    max-height: 75vh;
     height: 75vh;*/
     overflow-y: auto;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+
+    @media screen and (max-width: 469px) {
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      border-bottom-left-radius: 0;
+    }
 
     &::-webkit-scrollbar {
       width: 12px;
@@ -29,7 +37,7 @@
         background-color: $grey-400;
         color: $white-standard;
         margin-bottom: 1rem;
-        border: 0.0625rem $lernplatform-300 solid;
+        border: 0.0625rem $grey-300 solid;
         min-height: 3.75rem;
         justify-content: center;
         position: relative;
@@ -40,7 +48,6 @@
 
         &.active {
           border-color: $lernplatform-300;
-          background-color: $grey-200;
         }
 
         .mootimeter_pages_count {

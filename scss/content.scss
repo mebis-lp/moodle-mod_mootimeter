@@ -10,6 +10,15 @@
     max-height: 100vh;
     overflow-y: auto;
 
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+
+    @media screen and (max-width: 469px) {
+      border-bottom-left-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+      border-top-right-radius: 0;
+    }
+
     &::-webkit-scrollbar {
       width: 12px;
     }
