@@ -86,7 +86,6 @@ $PAGE->set_context($modulecontext);
 $pagehelper = new \mod_mootimeter\local\pagelist();
 
 $params = [
-    'containerclasses' => "border rounded",
     'cmid' => $cm->id,
     'pages' => $pagehelper->get_pagelist_html($cm->id, $pageid),
     'isediting' => $PAGE->user_is_editing(),

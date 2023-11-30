@@ -25,7 +25,10 @@
     {{#input_answer}}
     {{> mod_mootimeter/elements/snippet_input}}
     {{#js}}
-    require(['mootimetertool_wordcloud/store_answer'], (module) => module.init("{{mtm-input-id}}_{{uniqid}}","{{mtm-button-id}}_{{uniqid}}"));
+    require(['mootimetertool_wordcloud/store_answer'], (module) => module.init(
+      "{{mtm-input-id}}_{{uniqid}}",
+      "{{mtm-button-id}}_{{uniqid}}"
+      ));
     {{/js}}
     {{/input_answer}}
 

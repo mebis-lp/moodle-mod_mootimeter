@@ -306,8 +306,6 @@ class helper {
         }
 
         $params = [
-            'containerclasses' => "border rounded",
-            'mootimetercard' => 'border rounded',
             'pageid' => $page->id,
             'cmid' => $cm->id,
             'question' => s(self::get_tool_config($page, 'question')),
@@ -361,12 +359,14 @@ class helper {
         if (empty($pageid)) {
             if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
                 $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page_params($cm);
+                $params['colsettings'] = ['template' => 'mod_mootimeter/elements/snippet_empty'];
             } else {
                 $contentstring = get_string('please_select_a_page', 'mod_mootimeter');
                 if (empty($this->get_pages($cm->instance))) {
                     $contentstring = get_string('no_pages_header', 'mod_mootimeter');
                 }
                 $params['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_empty_content_params($contentstring);
+                $params['colsettings'] = ['template' => 'mod_mootimeter/elements/snippet_empty'];
             }
             // If no page is selected, no more templates (especially the contentmenu) is needed.
             return $params;
@@ -387,7 +387,6 @@ class helper {
             switch ($dataset->action) {
                 case 'addpage':
                     $paramscontent['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page_params($cm);
-                    $nosettingscol = true;
                     break;
                 case 'showansweroverview':
                     $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);

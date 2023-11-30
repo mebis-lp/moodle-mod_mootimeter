@@ -60,6 +60,9 @@
 .mootimetercontainer input {
   font-family: "Atkinson Hyperlegible", sans-serif;
 }
+.mootimetercontainer .mootimeter_rotate_110 {
+  transform: rotate(110deg);
+}
 
 .mootimetercontainer .mootimetercolpages {
   position: relative;
@@ -515,6 +518,11 @@
   background-color: #e8e8ea;
   border: 1px solid #00091e;
   color: #00091e;
+}
+
+.mootimetersettings .mootimeter-colcontent-preview-notification {
+  background-color: #60616d;
+  color: #fff;
 }
 
 .mootimetercontainer .modal {

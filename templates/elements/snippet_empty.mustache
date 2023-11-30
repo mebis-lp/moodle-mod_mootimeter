@@ -15,23 +15,8 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template mod_mootimeter/essentials/snippet_button_full
+    @template mod_mootimeter/elements/snippet_empty
 
-    Template for rendering a button.
+    This template is intentionally empty in order to override existing contents.
 
-    Example context (json):
-    {
-        "mtm-button-id": "mootimeter-button-id-1",
-        "mtm-button-additional_class": "mootimeter-additionalclass1 mootimeter-additionalclass2",
-        "mtm-button-dataset": "data-pageid=1 data-cmid=124 ...",
-        "mtm-button-text": "This is the button text",
-    }
 }}
-
-<button
-    {{#mtm-button-id}} id="{{mtm-button-id}}_{{uniqid}}" {{/mtm-button-id}}
-    class="mootimeter-btn mootimeter-btn-full {{{mtm-button-additional_class}}}"
-    {{{mtm-button-dataset}}}
->
-{{mtm-button-text}}
-</button>

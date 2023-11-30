@@ -13,6 +13,10 @@
 
     <p class="text-bold">{{#str}} answeroptions , mootimetertool_quiz {{/str}}</p>
 
+    {{#notification_mark_correct_anser}}
+    {{> mod_mootimeter/elements/snippet_notification}}
+    {{/notification_mark_correct_anser}}
+
     <div class="input-with-checkbox-icon_wrapper" id="mtmt-quiz-ao-wrapper">
         {{#answeroptions}}
         {{> mod_mootimeter/elements/snippet_input_with_checkbox-icon}}
