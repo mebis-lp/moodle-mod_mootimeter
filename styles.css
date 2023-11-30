@@ -1,6 +1,22 @@
 .mootimetercontainer *:focus {
   outline: none;
 }
+.mootimetercontainer.fullscreen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+}
+@media screen and (min-width: 469px) {
+  .mootimetercontainer .mootimetercolpages,
+  .mootimetercontainer .mootimetercoledit,
+  .mootimetercontainer .mootimetercolcontent {
+    min-height: 646px;
+    max-height: 850px;
+  }
+}
 
 @font-face {
   font-display: swap;
@@ -69,9 +85,16 @@
   background-color: #00091e;
   flex: 7.5rem 0 0;
   max-width: 100%;
-  /*    max-height: 75vh;
-  height: 75vh;*/
   overflow-y: auto;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+@media screen and (max-width: 539px) {
+  .mootimetercontainer .mootimetercolpages {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0;
+  }
 }
 .mootimetercontainer .mootimetercolpages::-webkit-scrollbar {
   width: 12px;
@@ -92,7 +115,7 @@
   background-color: #303142;
   color: #fff;
   margin-bottom: 1rem;
-  border: 0.0625rem #dc6534 solid;
+  border: 0.0625rem #60616d solid;
   min-height: 3.75rem;
   justify-content: center;
   position: relative;
@@ -102,7 +125,6 @@
 }
 .mootimetercontainer .mootimetercolpages ul li.active {
   border-color: #dc6534;
-  background-color: #a4a5ac;
 }
 .mootimetercontainer .mootimetercolpages ul li .mootimeter_pages_count {
   position: absolute;
@@ -119,7 +141,7 @@
   background-color: #d33f01;
   border: 0.0625rem #d33f01 solid;
 }
-@media screen and (max-width: 469px) {
+@media screen and (max-width: 539px) {
   .mootimetercontainer .mootimetercolpages {
     flex-grow: 1;
   }
@@ -208,7 +230,6 @@
 .mootimetercontainer .mootimetercoledit {
   flex: 20rem 2 0;
   background-color: #303142;
-  max-height: 100vh;
   max-width: 100%;
   overflow-y: auto;
 }
@@ -272,6 +293,7 @@
 .mootimetercontainer.isNotNewPage .mootimetersettings .mootimeter-visualization-options-wrapper {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .dark .mootimetercoledit {
@@ -293,30 +315,37 @@
   color: #fff;
 }
 
+.mootimeter-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .mootimeter-header-wrapper h4 {
   float: left;
 }
 .mootimeter-header-wrapper .icon {
   float: right;
+  font-size: 1.25rem;
   width: 20px;
   height: 20px;
   margin-right: 0;
-  font-size: 1.5rem;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropbtn {
   padding: 16px;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown {
+  position: relative;
   float: right;
+  cursor: pointer;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown-content {
+  position: absolute;
+  right: 0;
+  top: 2.6rem;
   display: none;
-  position: relative;
   background-color: #e8e8ea;
   width: 180px;
   z-index: 1;
-  right: 0;
-  top: 2.6rem;
   border-radius: 7px;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown-content div {
@@ -343,8 +372,16 @@
   position: relative;
   padding: 6.25rem 2.5rem;
   max-width: 100%;
-  max-height: 100vh;
   overflow-y: auto;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+@media screen and (max-width: 469px) {
+  .mootimetercontainer .mootimetercolcontent {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0;
+  }
 }
 .mootimetercontainer .mootimetercolcontent::-webkit-scrollbar {
   width: 12px;
@@ -371,9 +408,6 @@
     padding: 5.75rem 0.625rem 0.625rem 0.625rem;
   }
 }
-.mootimetercontainer .mootimetercolcontent .mootimeter-content-wrapper div {
-  max-height: 75vh;
-}
 .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview {
   border-radius: 0.5rem;
   background-color: #fff;
@@ -395,6 +429,12 @@
   justify-content: start;
   gap: 1rem;
 }
+.mootimetercontainer .mootimetercolcontent #mtmt_wordcloud_pills {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
 .mootimetercontainer .mootimetercolcontent .mootimeter-content-menu {
   position: absolute;
   top: 1.25rem;
@@ -407,6 +447,16 @@
 }
 .mootimetercontainer .mootimetercolcontent .mootimeter-content-menu:empty {
   display: none;
+}
+@media screen and (max-width: 425px) {
+  .mootimetercontainer .mootimetercolcontent .mootimeter-content-menu {
+    padding: 0.5rem 0.5rem;
+    gap: 0.5rem;
+  }
+  .mootimetercontainer .mootimetercolcontent .mootimeter-content-menu .mootimeter-btn-icon-only-rounded {
+    width: 2.1875rem;
+    height: 2.1875rem;
+  }
 }
 .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview-options {
   display: flex;
@@ -674,7 +724,8 @@
   color: #d33f01;
 }
 
-.mootimeter-checkbox-switch {
+.mootimeter-checkbox-switch,
+#page input[type=checkbox].mootimeter-checkbox-switch {
   position: relative;
   width: 2.75rem;
   height: 1.5625rem;
@@ -688,23 +739,30 @@
   cursor: pointer;
   background-color: unset;
 }
-.mootimeter-checkbox-switch::before {
-  content: "";
+.mootimeter-checkbox-switch::before,
+#page input[type=checkbox].mootimeter-checkbox-switch::before {
+  content: "" !important;
   width: 1.125rem;
   height: 1.125rem;
   border-radius: 50%;
   background: #a4a5ac;
   position: absolute;
-  top: 50%;
+  top: 50% !important;
   transform: translateY(-50%);
-  left: 0.125rem;
+  left: 0.125rem !important;
   transition: 0.5s;
 }
-.mootimeter-checkbox-switch:checked {
+.mootimeter-checkbox-switch::after,
+#page input[type=checkbox].mootimeter-checkbox-switch::after {
+  display: none !important;
+}
+.mootimeter-checkbox-switch:checked,
+#page input[type=checkbox].mootimeter-checkbox-switch:checked {
   background: #d33f01;
   border-color: #d33f01;
 }
-.mootimeter-checkbox-switch:checked::before {
+.mootimeter-checkbox-switch:checked::before,
+#page input[type=checkbox].mootimeter-checkbox-switch:checked::before {
   transform: translate(100%, -50%);
   background: #303142;
 }
@@ -846,6 +904,9 @@
   padding: 0;
   height: 50%;
 }
+.mootimeter-number-input .mootimeter-number-input-btn-up:hover .icon {
+  color: #fff;
+}
 .mootimeter-number-input .mootimeter-number-input-btn-up .icon {
   height: 0rem;
 }
@@ -856,14 +917,14 @@
   padding: 0;
   height: 50%;
 }
+.mootimeter-number-input .mootimeter-number-input-btn-down:hover .icon {
+  color: #fff;
+}
 .mootimeter-number-input .mootimeter-number-input-btn-down .icon {
   height: 1.8rem;
 }
 .mootimeter-number-input .icon {
   color: #60616d;
-}
-.mootimeter-number-input:hover .icon {
-  color: #fff;
 }
 
 .contrast .mootimeter-number-input input {
@@ -910,6 +971,10 @@
   background: #a4a5ac;
   color: #00091e;
   border: 1px solid #00091e;
+}
+
+.mootimeter-delete-page-btn {
+  cursor: pointer;
 }
 
 .mootimeter-btn-small {
@@ -1076,6 +1141,7 @@
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
 }
 .button-icon-with-text .icon {
   font-size: 1.25rem;
