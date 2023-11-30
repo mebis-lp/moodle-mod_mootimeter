@@ -297,6 +297,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $params['input_answer'] = [
             'mtm-input-id' => 'mootimeter_type_answer',
             'mtm-input-name' => 'answer',
+            'mtm-button-id' => 'mootimeter_enter_answer',
             'dataset' => 'data-pageid="' . $page->id . '"',
         ];
 
