@@ -415,6 +415,8 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         // Parameter for initial wordcloud rendering.
         $params['pageid'] = $page->id;
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
 
         if (self::get_tool_config($page->id, 'showanswercorrection')) {
             $params['showanswercorrection'] = true;
@@ -435,12 +437,21 @@ class quiz extends \mod_mootimeter\toolhelper {
             $wrapperadditionalclass = (self::get_tool_config($page->id, 'showanswercorrection')) ? "mootimeter-highlighter" : "";
             $wrapperadditionalclass .= ($answeroption->optioniscorrect) ? " mootimeter-success" : "";
 
+            if (
+                empty($answeroption->optiontext)
+                && has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
+            ) {
+                $optiontext = get_string('enter_answeroption', 'mootimetertool_quiz');
+            } else {
+                $optiontext = $answeroption->optiontext;
+            }
+
             $params['answeroptions'][$inputtype][] = [
                 'wrapper_' . $inputtype . '_with_label_id' => "wrapper_ao_" . $answeroption->id,
                 'wrapper_' . $inputtype . '_with_label_additional_class' => $wrapperadditionalclass,
 
                 $inputtype . '_with_label_id' => "ao_" . $answeroption->id,
-                $inputtype . '_with_label_text' => $answeroption->optiontext,
+                $inputtype . '_with_label_text' => $optiontext,
                 'pageid' => $page->id,
                 $inputtype . '_with_label_name' => 'multipleanswers[]',
                 $inputtype . '_with_label_value' => $answeroption->id,
@@ -531,6 +542,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-input-id' => 'ao_text_' . $answeroption->id,
                 'mtm-input-name' => 'ao_text',
                 'mtm-input-value' => $answeroption->optiontext,
+                'mtm-input-placeholder' => get_string('enter_answeroption', 'mootimetertool_quiz'),
                 'ajaxmethode' => "mootimetertool_quiz_store_answeroption_text",
                 'additional_class' => 'mootimeter-answer-options mootimeter_settings_selector',
                 'dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,

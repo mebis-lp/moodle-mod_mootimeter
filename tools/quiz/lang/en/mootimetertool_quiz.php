@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['add_question_option'] = "Add answer option";
 $string['answeroptions'] = "Answer options";
 $string['answers_max_number'] = 'Maximum number of answers that can be selected per participant (0: unlimited)';
+$string['enter_answeroption'] = 'Please enter an answer option.';
 $string['error_to_many_answers'] = 'You have selected to many answers. You only can select {$a} options.';
 $string['ispoll_help'] = "You can choose between poll and quiz. Quizzes have wrong and right answers";
 $string['ispoll_helptitle'] = "What kind of quiz is it?";
