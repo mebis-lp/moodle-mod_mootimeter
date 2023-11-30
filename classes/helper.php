@@ -306,8 +306,6 @@ class helper {
         }
 
         $params = [
-            'containerclasses' => "border rounded",
-            'mootimetercard' => 'border rounded',
             'pageid' => $page->id,
             'cmid' => $cm->id,
             'question' => s(self::get_tool_config($page, 'question')),
