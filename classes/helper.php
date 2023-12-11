@@ -51,6 +51,11 @@ class helper {
     /** @var int Webservice returning error code - Duplicate Answers */
     const ERRORCODE_DUPLICATE_ANSWER = 1002;
 
+    /** @var int Page is visible */
+    const PAGE_VISIBLE = 1;
+    /** @var int Page is unvisible */
+    const PAGE_UNVISIBLE = 0;
+
     /**
      * Get a tools answer column.
      * @param object|int $pageorid
@@ -119,6 +124,7 @@ class helper {
             $origrecord->title = $record->title;
             $origrecord->tool = $record->tool;
             $origrecord->timemodified = time();
+            $origrecord->visible = $record->visible;
             $origrecord->sortorder = $record->sortorder;
             $DB->update_record('mootimeter_pages', $origrecord);
             return $origrecord->id;
@@ -181,7 +187,19 @@ class helper {
      */
     public function get_pages(int $instanceid) {
         global $DB;
-        return $DB->get_records('mootimeter_pages', ['instance' => $instanceid], 'id ASC');
+
+        $params = ['instance' => $instanceid];
+
+        if (
+            empty(has_capability(
+                'mod/mootimeter:moderator',
+                \context_module::instance(self::get_cm_by_instance($instanceid)->id)
+            ))
+        ) {
+            $params['visible'] = self::PAGE_VISIBLE;
+        }
+
+        return $DB->get_records('mootimeter_pages', $params, 'id ASC');
     }
 
     /**
@@ -191,9 +209,19 @@ class helper {
      * @return mixed
      * @throws dml_exception
      */
-    public function get_page(int $pageid) {
+    public function get_page(int $pageid): bool|object {
         global $DB;
+
+        if (empty($pageid)) {
+            return false;
+        }
+
         $params = ['id' => $pageid];
+
+        if (empty(has_capability('mod/mootimeter:moderator', \context_module::instance(self::get_cm_by_pageid($pageid)->id)))) {
+            $params['visible'] = self::PAGE_VISIBLE;
+        }
+
         return $DB->get_record('mootimeter_pages', $params);
     }
 
@@ -231,28 +259,15 @@ class helper {
     }
 
     /**
-     * Get pages array for renderer.
+     * Get the course module by pageid.
      *
-     * @param array $pages
      * @param int $pageid
-     * @return array
+     * @return object
+     * @throws dml_exception
      */
-    public function get_pages_template(array $pages, int $pageid) {
-        $temppages = [];
-        $pagenumber = 1;
-        foreach ($pages as $page) {
-            $temppages[] = [
-                'title' => $page->title,
-                'pix' => "tools/" . $page->tool . "/pix/" . $page->tool . ".svg",
-                'active' => ($page->id == $pageid) ? "active" : "",
-                'pageid' => $page->id,
-                'sortorder' => $page->sortorder,
-                'pagenumber' => $pagenumber,
-                'width' => "35px",
-            ];
-            $pagenumber++;
-        }
-        return $temppages;
+    public static function get_cm_by_pageid(int $pageid): object {
+        $instance = self::get_instance_by_pageid($pageid);
+        return self::get_cm_by_instance($instance);
     }
 
     /**
@@ -630,6 +645,29 @@ class helper {
             'pageid' => $page->id,
         ];
 
+        // Now configure the page_visible toggle.
+        $pagevisibleiconclass = 'fa-eye';
+        $tooltip = get_string('tooltip_enable_page', 'mod_mootimeter');
+        if (empty($page->visible)) {
+            $pagevisibleiconclass = 'fa-eye-slash';
+            $tooltip = get_string('tooltip_disable_page', 'mod_mootimeter');
+        }
+
+        $dataseticoncheck = [
+            'data-togglename = "page_visibility"',
+            'data-pageid = "' . $page->id . '"',
+            'data-iconid = "page_visibility_iconid"',
+            'data-iconenabled = "fa-eye"',
+            'data-icondisabled = "fa-eye-slash"',
+        ];
+        $defaultparams['page_visibility-eye'] = [
+            'icon' => $pagevisibleiconclass,
+            'id' => 'toggle_page_visibility',
+            'iconid' => 'page_visibility_iconid',
+            'dataset' => implode(" ", $dataseticoncheck),
+            'tooltip' => $tooltip,
+        ];
+
         return $toolhelper->get_col_settings_tool_params($page, $defaultparams);
     }
 
@@ -789,26 +827,34 @@ class helper {
      */
     public function toggle_state(object $page, string $statename): int {
 
-        $instance = self::get_instance_by_pageid($page->id);
-        $cm = self::get_cm_by_instance($instance);
+        $cm = self::get_cm_by_pageid($page->id);
         $context = \context_module::instance($cm->id);
 
         if (!has_capability('mod/mootimeter:moderator', $context)) {
             throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
-        $togglestate = self::get_tool_config($page->id, $statename);
+        switch ($statename) {
+            case 'page_visibility':
+                $page->visible = (empty($page->visible)) ? self::PAGE_VISIBLE : self::PAGE_UNVISIBLE;
+                $this->store_page($page);
+                return $page->visible;
+                break;
+            default:
+                $togglestate = self::get_tool_config($page->id, $statename);
 
-        $helper = new \mod_mootimeter\helper();
-        if (empty($togglestate)) {
-            // The config is not set yet. Set the value to 1.
-            $helper->set_tool_config($page, $statename, 1);
-            return 1;
+                $helper = new \mod_mootimeter\helper();
+                if (empty($togglestate)) {
+                    // The config is not set yet. Set the value to 1.
+                    $helper->set_tool_config($page, $statename, 1);
+                    return 1;
+                }
+
+                // The config was already set. Toggle it.
+                $helper->set_tool_config($page, $statename, 0);
+                return 0;
+                break;
         }
-
-        // The config was already set. Toggle it.
-        $helper->set_tool_config($page, $statename, 0);
-        return 0;
     }
 
     /**

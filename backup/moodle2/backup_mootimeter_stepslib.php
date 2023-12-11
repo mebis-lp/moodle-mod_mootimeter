@@ -41,7 +41,7 @@ class backup_mootimeter_activity_structure_step extends backup_activity_structur
         $page = new backup_nested_element(
             'page',
             ['id'],
-            ['instance', 'tool', 'title', 'sortorder', 'timecreated', 'timemodified']
+            ['instance', 'tool', 'title', 'visible', 'sortorder', 'timecreated', 'timemodified']
         );
         $mootimeter->add_child($pages);
         $pages->add_child($page);

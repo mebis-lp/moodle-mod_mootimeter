@@ -48,6 +48,17 @@
           border-color: $lernplatform-300;
         }
 
+        &.pageunvisible {
+          background: linear-gradient(
+            to top left,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0) calc(50% - 0.8px),
+            rgba(255, 255, 255, 1) 50%,
+            rgba(255, 255, 255, 0) calc(50% + 0.8px),
+            rgba(255, 255, 255, 0) 100%
+          );
+        }
+
         .mootimeter_pages_count {
           position: absolute;
           left: 0.4375rem;
@@ -99,6 +110,19 @@
       li {
         background-color: $grey-100;
         border-color: $grey-200;
+
+        &.pageunvisible {
+          background: linear-gradient(
+            to top left,
+            rgba(232, 232, 234, 1) 0%,
+            rgba(232, 232, 234, 1) calc(50% - 0.8px),
+            rgba(96, 97, 109, 1) 50%,
+            rgba(232, 232, 234, 1) calc(50% + 0.8px),
+            rgba(232, 232, 234, 1) 100%
+          );
+
+          color: $grey-100;
+        }
       }
     }
 

@@ -86,6 +86,7 @@ class pagelist {
             $temppages['pageslist'][] = [
                 'toolicon' => (new \moodle_url($pixrawurl))->out(true),
                 'active' => ($pagerow->id == $pageselected) ? "active" : "",
+                'pageunvisible' => (empty($pagerow->visible)) ? "pageunvisible" : "",
                 'pageid' => $pagerow->id,
                 'pagenumber' => $pagenumber,
                 'width' => "35px",

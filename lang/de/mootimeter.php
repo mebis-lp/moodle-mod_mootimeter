@@ -70,5 +70,7 @@ $string['title'] = 'Seitentitel';
 $string['toolsettings'] = 'Einstellungen für Werkzeuge';
 $string['tooltip_content_menu_teacherpermission'] = 'Klicken um den Schülern zu erlauben, die Ergebnisse einzusehen.';
 $string['tooltip_content_menu_teacherpermission_disabled'] = 'Klicken um die Ergebnisse zu verbergen.';
+$string['tooltip_disable_page'] = 'Klicken um die Seite für Teilnehmer freizugeben.';
+$string['tooltip_enable_page'] = 'Klicken um die Seite vor Teilnehmern zu verbergen.';
 $string['tooltip_show_question_page'] = 'Zur Frage wechseln';
 $string['tooltip_show_results_page'] = 'Zu den Ergebnissen wechseln';

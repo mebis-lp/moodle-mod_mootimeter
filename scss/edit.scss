@@ -105,6 +105,10 @@
       text-align: center;
       color: #fff;
     }
+
+    .mootimeter-page-dropdown {
+      color: $grey-400;
+    }
   }
 }
 
@@ -133,6 +137,10 @@
     position: relative;
     float: right;
     cursor: pointer;
+
+    &:hover {
+      color: $grey-200;
+    }
   }
 
   .mootimeter-page-dropdown-content {

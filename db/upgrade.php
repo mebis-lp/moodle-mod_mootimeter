@@ -113,5 +113,26 @@ function xmldb_mootimeter_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2023111000, 'mootimeter');
     }
 
+    if ($oldversion < 2023121101) {
+
+        $table = new xmldb_table('mootimeter_pages');
+        // Define field visible to be added to mootimeter_pages.
+        $field = new xmldb_field('visible', XMLDB_TYPE_INTEGER, '1', null, null, null, '1', 'title');
+        // Define index visible_sortorder to be added to mootimeter_pages.
+        $index = new xmldb_index('visible_sortorder', XMLDB_INDEX_NOTUNIQUE, ['visible', 'sortorder']);
+
+        // Conditionally launch add field visible.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Conditionally launch add index visible_sortorder.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Mootimeter savepoint reached.
+        upgrade_mod_savepoint(true, 2023121101, 'mootimeter');
+    }
+
     return true;
 }

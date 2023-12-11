@@ -126,6 +126,9 @@
 .mootimetercontainer .mootimetercolpages ul li.active {
   border-color: #dc6534;
 }
+.mootimetercontainer .mootimetercolpages ul li.pageunvisible {
+  background: linear-gradient(to top left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) calc(50% - 0.8px), rgb(255, 255, 255) 50%, rgba(255, 255, 255, 0) calc(50% + 0.8px), rgba(255, 255, 255, 0) 100%);
+}
 .mootimetercontainer .mootimetercolpages ul li .mootimeter_pages_count {
   position: absolute;
   left: 0.4375rem;
@@ -168,6 +171,10 @@
 .dark .mootimetercolpages ul li {
   background-color: #e8e8ea;
   border-color: #a4a5ac;
+}
+.dark .mootimetercolpages ul li.pageunvisible {
+  background: linear-gradient(to top left, rgb(232, 232, 234) 0%, rgb(232, 232, 234) calc(50% - 0.8px), rgb(96, 97, 109) 50%, rgb(232, 232, 234) calc(50% + 0.8px), rgb(232, 232, 234) 100%);
+  color: #e8e8ea;
 }
 .dark .mootimetercolpages .mootimeter-render-loading {
   text-align: center;
@@ -314,6 +321,9 @@
   text-align: center;
   color: #fff;
 }
+.dark .mootimetercoledit .mootimeter-page-dropdown {
+  color: #303142;
+}
 
 .mootimeter-header-wrapper {
   display: flex;
@@ -337,6 +347,9 @@
   position: relative;
   float: right;
   cursor: pointer;
+}
+.mootimeter-header-wrapper .mootimeter-page-dropdown:hover {
+  color: #a4a5ac;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown-content {
   position: absolute;
