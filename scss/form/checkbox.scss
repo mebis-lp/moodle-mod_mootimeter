@@ -50,3 +50,9 @@
     }
   }
 }
+
+.dark {
+  .mootimeter-checkbox.mootimeter-success label {
+      color: $grey-500;
+  }
+}
