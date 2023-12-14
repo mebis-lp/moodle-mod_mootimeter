@@ -1,9 +1,10 @@
 .mootimeter-highlighter {
-    padding: 10px;
+    padding: 0.25rem 0.5rem;
+    @include rounded-s;
 
     &.mootimeter-success {
-        border: 2px solid green;
-        background-color: lightgreen;
+        border: 2px solid $feedback-success-200;
+        background-color: $feedback-success-100;
     }
 
     &.mootimeter-danger {
