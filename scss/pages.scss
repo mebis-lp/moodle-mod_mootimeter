@@ -4,7 +4,6 @@
     background-color: $grey-500;
     flex: 7.5rem 0 0;
     max-width: 100%;
-    overflow-y: auto;
     border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
 
@@ -12,6 +11,17 @@
       border-top-left-radius: 0.5rem;
       border-top-right-radius: 0.5rem;
       border-bottom-left-radius: 0;
+
+      &:after {
+        content: '';
+        width: 25%;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        pointer-events: none;
+        background: linear-gradient(270deg, #00091E -8.89%, rgba(0, 9, 30, 0.00) 88.89%);
+      }
     }
 
     &::-webkit-scrollbar {
@@ -27,6 +37,26 @@
       background: $grey-500;
     }
 
+    @media screen and (max-width: 539px) {
+      #mootimeter-pages-list {
+          overflow-y: auto;
+          padding-right: 3.4375rem;
+
+          &::-webkit-scrollbar {
+            width: 12px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background-color: $grey-300;
+            border-radius: 20px;
+            border: 3px solid $grey-500;
+          }
+          &::-webkit-scrollbar-track {
+            background: $grey-500;
+          }
+        }
+    }
+    
     ul {
       padding: 2.5rem 1.0625rem;
 
