@@ -4,14 +4,14 @@
     {{#icon-eye}}
     {{> mod_mootimeter/elements/snippet_button_icon_only_rounded}}
     {{#js}}
-    require(['mod_mootimeter/toggle_state'], (module) => module.init(["{{id}}_{{uniqid}}"]));
+    require(['mod_mootimeter/toggle_state'], (module) => module.init(["{{id}}_{{uniqid}}", "{{iconid}}_{{uniqid}}",]));
     {{/js}}
     {{/icon-eye}}
 
     {{#icon-check}}
     {{> mod_mootimeter/elements/snippet_button_icon_only_rounded}}
     {{#js}}
-    require(['mod_mootimeter/toggle_state'], (module) => module.init(["{{id}}_{{uniqid}}"]));
+    require(['mod_mootimeter/toggle_state'], (module) => module.init(["{{id}}_{{uniqid}}", "{{iconid}}_{{uniqid}}",]));
     {{/js}}
     {{/icon-check}}
 
@@ -39,6 +39,13 @@
     require(['mod_mootimeter/reload_page'], (module) => module.init(["{{id}}_{{uniqid}}"]));
     {{/js}}
     {{/icon-showresults}}
+
+    {{#icon-fullscreen}}
+    {{> mod_mootimeter/elements/snippet_button_icon_only_rounded}}
+    {{#js}}
+    require(['mod_mootimeter/toggle_fullscreen'], (module) => module.init(["{{id}}_{{uniqid}}", "{{iconid}}_{{uniqid}}",]));
+    {{/js}}
+    {{/icon-fullscreen}}
 
 </div>
 

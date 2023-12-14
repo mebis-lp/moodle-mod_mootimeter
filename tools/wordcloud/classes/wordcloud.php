@@ -433,7 +433,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             $dataseticoncheck = [
                 'data-togglename = "showonteacherpermission"',
                 'data-pageid="' . $page->id . '"',
-                'data-iconid = "toggleteacherpermissionid"',
             ];
             $params['icon-eye'] = [
                 'icon' => 'fa-eye',

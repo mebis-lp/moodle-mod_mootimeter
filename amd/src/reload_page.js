@@ -23,7 +23,23 @@ export const init = (uniqueID) => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const cmid = urlParams.get('id');
-        execReloadPage(pageid, cmid, this.dataset);
+        var datasetobj = this.dataset;
+        Object.assign(datasetobj, getParams());
+        execReloadPage(pageid, cmid, datasetobj);
+    }
+
+    /**
+     * Get an array of all url search params.
+     * @param {string} url
+     * @returns {array}
+     */
+    function getParams(url = window.location) {
+        // Create a params object
+        let params = {};
+        new URL(url).searchParams.forEach(function(val, key) {
+            params[key] = val;
+        });
+        return params;
     }
 };
 
@@ -93,10 +109,12 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
                 })
                 .catch((error) => displayException(error));
 
-            // Set subpage URL parameters.
+                // Set subpage URL parameters.
             if (pageparmas.contentmenu.sp) {
+                var container = document.querySelector(".mootimetercontainer");
                 for (const [key, value] of Object.entries(pageparmas.contentmenu.sp)) {
                     setGetParam(key, value);
+                    setFullscreenClass(container, key, value);
                 }
             }
         }
@@ -143,5 +161,19 @@ function setGetParam(key, value) {
             + window.location.pathname
             + '?' + params.toString();
         window.history.pushState({path: newUrl}, '', newUrl);
+    }
+}
+
+/**
+ * Set the fullscreen class to the mootimetercontainr
+ * @param {mixed} container
+ * @param {string} key
+ * @param {int} value
+ */
+function setFullscreenClass(container, key, value) {
+    if (key == 'f' && value == 1) {
+        container.classList.add("fullscreen");
+    } else if (key == 'f' && value == 0) {
+        container.classList.remove("fullscreen");
     }
 }

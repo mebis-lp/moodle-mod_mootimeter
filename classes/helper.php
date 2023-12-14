@@ -327,7 +327,11 @@ class helper {
             'isediting' => $isediting,
             'withwrapper' => $withwrapper,
             'template' => "mootimetertool_" . $page->tool . "/view_content2",
-            'sp' => ['r' => 0, 'o' => 0],
+            'sp' => [
+                'r' => optional_param('r', 0, PARAM_INT),
+                'o' => optional_param('o', 0, PARAM_INT),
+                'f' => optional_param('f', 0, PARAM_INT),
+            ],
         ];
 
         $params['pagecontent'] = array_merge($params, $toolhelper->get_renderer_params($page));
@@ -369,7 +373,11 @@ class helper {
         $dataset = json_decode($dataset);
         list($course, $cm) = get_course_and_cm_from_cmid($cmid);
         $page = $this->get_page($pageid);
-        $contentmenudefaultparams = [];
+        $contentmenudefaultparams = ['sp' => [
+            'r' => (!empty($dataset->r)) ? $dataset->r : 0,
+            'o' => (!empty($dataset->o)) ? $dataset->o : 0,
+            'f' => (!empty($dataset->f)) ? $dataset->f : 0,
+        ]];
 
         if (empty($pageid)) {
             if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
@@ -390,13 +398,14 @@ class helper {
             // Get params of the content section.
             if (!empty($dataset->r)) {
                 $paramscontent['pagecontent'] = $this->get_result_page_params($cm, $page);
-                $contentmenudefaultparams = ['sp' => ['r' => 1, 'o' => 0]];
+                $contentmenudefaultparams['sp']['r'] = 1;
             } else if (!empty($dataset->o)) {
                 $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);
-                $contentmenudefaultparams = ['sp' => ['o' => 1, 'r' => 0]];
+                $contentmenudefaultparams['sp']['o'] = 1;
             } else {
                 $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
-                $contentmenudefaultparams = ['sp' => ['o' => (int)!empty($dataset->o), 'r' => (int)!empty($dataset->r)]];
+                $contentmenudefaultparams['sp']['o'] = (int)!empty($dataset->o);
+                $contentmenudefaultparams['sp']['r'] = (int)!empty($dataset->r);
             }
         } else if (!empty($dataset->action)) {
             switch ($dataset->action) {
@@ -405,11 +414,11 @@ class helper {
                     break;
                 case 'showansweroverview':
                     $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);
-                    $contentmenudefaultparams = ['sp' => ['o' => 1, 'r' => 0]];
+                    $contentmenudefaultparams['sp']['o'] = 1;
                     break;
                 case 'showresults':
                     $paramscontent['pagecontent'] = $this->get_result_page_params($cm, $page);
-                    $contentmenudefaultparams = ['sp' => ['r' => 1, 'o' => 0]];
+                    $contentmenudefaultparams['sp']['r'] = 1;
                     break;
             }
         } else if (count($this->get_pages($cm->instance)) == 0) {
@@ -540,10 +549,9 @@ class helper {
 
             // Redirect to Answers Overview View.
             $params['icon-answer-overview'] = [
-                'template' => 'mod_mootimeter/elements/snippet_content_menu',
                 'icon' => 'fa-table',
                 'id' => 'mtmt_show_answer_overview',
-                'tooltip' => get_string('show_answer_overview', 'mod_mootimeter') . $params['sp']['o'],
+                'tooltip' => get_string('show_answer_overview', 'mod_mootimeter'),
                 'dataset' => "data-action='showansweroverview' data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'",
             ];
             if (!empty($params['sp']['o']) && $params['sp']['o'] == 1) {
@@ -552,6 +560,23 @@ class helper {
                 $params['icon-answer-overview']['dataset'] = "data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'";
             }
         }
+
+        $dataset = [
+            "data-pageid = '" . $page->id . "'",
+            "data-cmid = '" . $cm->id . "'",
+        ];
+        $params['icon-fullscreen'] = [
+            'icon' => 'fa-expand',
+            'iconid' => 'mtmt_fullscreen_toggle_icon',
+            'id' => 'mtmt_fullscreen_toggle',
+            'tooltip' => get_string('tooltip_fullscreen_expand', 'mod_mootimeter'),
+            'dataset' => implode(" ", $dataset),
+        ];
+        if (!empty($params['sp']['f']) && $params['sp']['f'] == 1) {
+            $params['icon-fullscreen']['icon'] = 'fa-compress';
+            $params['icon-fullscreen']['tooltip'] = get_string('tooltip_fullscreen_compress', 'mod_mootimeter');
+        }
+
         return $params;
     }
 

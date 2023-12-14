@@ -182,23 +182,29 @@ class quiz extends \mod_mootimeter\toolhelper {
         global $DB;
 
         $records = [];
-        foreach ($aoids as $aoid) {
 
+        // Iterate through each answer option.
+        foreach ($aoids as $aoid) {
             // First check if the selected answer is part of the page.
             if (!$DB->record_exists('mtmt_quiz_options', ['id' => $aoid])) {
+                // Skip to the next iteration if the answer is not part of the page.
                 continue;
             }
 
+            // Create a new record object.
             $record = new \stdClass();
             $record->pageid = $page->id;
-
             $record->optionid = $aoid;
             $record->timecreated = time();
+
+            // Add the record to the records array.
             $records[] = $record;
         }
 
+        // Check if multiple answers are allowed.
         $enablemultipleanswers = (self::get_tool_config($page, 'maxanswersperuser') > 1) ? true : false;
 
+        // Store the answers in the database.
         $this->store_answer(
             self::ANSWER_TABLE,
             $records,
@@ -295,18 +301,17 @@ class quiz extends \mod_mootimeter\toolhelper {
 
             $dataseticoncheck = [
                 'data-togglename = "showonteacherpermission"',
-                'data-pageid="' . $page->id . '"',
-                'data-iconid = "toggleteacherpermissionid"',
+                'data-pageid = "' . $page->id . '"',
             ];
             $params['icon-eye'] = [
                 'icon' => 'fa-eye',
                 'id' => 'toggleteacherpermission',
                 'iconid' => 'toggleteacherpermissionid',
-                'dataset' => join(" ", $dataseticoncheck),
+                'dataset' => implode(" ", $dataseticoncheck),
             ];
             if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
                 $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission_disabled', 'mod_mootimeter');
-            } else if (empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+            } else {
                 $params['icon-eye']['icon'] = "fa-eye-slash";
                 $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission', 'mod_mootimeter');
             }
@@ -314,22 +319,21 @@ class quiz extends \mod_mootimeter\toolhelper {
             // Reset Question.
             $dataseticonrestart = [
                 'data-ajaxmethode = "mod_mootimeter_delete_all_answers"',
-                'data-pageid="' . $page->id . '"',
-                'data-confirmationtitlestr="' . get_string('delete_all_answers_dialog_title', 'mod_mootimeter') . '"',
-                'data-confirmationquestionstr="' . get_string('delete_all_answers_dialog_question', 'mod_mootimeter') . '"',
-                'data-confirmationtype="DELETE_CANCEL"',
+                'data-pageid = "' . $page->id . '"',
+                'data-confirmationtitlestr = "' . get_string('delete_all_answers_dialog_title', 'mod_mootimeter') . '"',
+                'data-confirmationquestionstr = "' . get_string('delete_all_answers_dialog_question', 'mod_mootimeter') . '"',
+                'data-confirmationtype = "DELETE_CANCEL"',
             ];
             $params['icon-restart'] = [
                 'icon' => 'fa-trash',
                 'id' => 'mtmt_restart',
                 'iconid' => 'mtmt_restart_iconid',
-                'dataset' => join(" ", $dataseticonrestart),
+                'dataset' => implode(" ", $dataseticonrestart),
             ];
 
             $dataseticoncheck = [
                 'data-togglename = "showanswercorrection"',
                 'data-pageid = ' . $page->id,
-                'data-iconid = "toggleshowanswercorrectioniconid"',
                 // To configure the response handling.
                 'data-iconenabled = "fa-check-square-o"',
                 'data-icondisabled = "fa-square-o"',
@@ -340,7 +344,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             $params['icon-check'] = [
                 'id' => 'toggleshowanswercorrectionid',
                 'iconid' => 'toggleshowanswercorrectioniconid',
-                'dataset' => join(" ", $dataseticoncheck),
+                'dataset' => implode(" ", $dataseticoncheck),
             ];
             if (!empty(self::get_tool_config($page->id, 'showanswercorrection'))) {
                 $params['icon-check']['icon'] = "fa-check-square-o";
