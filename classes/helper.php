@@ -601,21 +601,21 @@ class helper {
                 $params['icon-answer-overview']['dataset'] = "data-action='showquestionpage' data-pageid='"
                     . $page->id . "' data-cmid='" . $cm->id . "'";
             }
+        }
 
-            $params['icon-showresults'] = [
-                'icon' => 'fa-bar-chart',
-                'id' => 'showresults',
-                'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
-                'dataset' => "data-action='showresults' data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'",
-            ];
-            if (
-                !empty($params['sp']['r']) && $params['sp']['r'] == 1
-            ) {
-                $params['icon-showresults']['icon'] = 'fa-pencil-square-o';
-                $params['icon-showresults']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
-                $params['icon-showresults']['dataset'] = "data-action='showquestionpage' data-pageid='"
-                    . $page->id . "' data-cmid='" . $cm->id . "'";
-            }
+        $params['icon-showresults'] = [
+            'icon' => 'fa-bar-chart',
+            'id' => 'showresults',
+            'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
+            'dataset' => "data-action='showresults' data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'",
+        ];
+        if (
+            !empty($params['sp']['r']) && $params['sp']['r'] == 1
+        ) {
+            $params['icon-showresults']['icon'] = 'fa-pencil-square-o';
+            $params['icon-showresults']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
+            $params['icon-showresults']['dataset'] = "data-action='showquestionpage' data-pageid='"
+                . $page->id . "' data-cmid='" . $cm->id . "'";
         }
 
         $dataset = [

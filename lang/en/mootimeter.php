@@ -37,7 +37,6 @@ $string['delete_single_answer_dialog_question'] = 'Do you realy want to delte th
 $string['delete_single_answer_dialog_title'] = 'Delete this answer?';
 $string['deleteerror'] = 'Something went wrong while deleting the page. Please contact your support.';
 $string['enter_question'] = 'Please enter a question.';
-
 $string['loading'] = 'Loading! Please wait...';
 $string['modulename'] = 'Mootimeter';
 $string['modulenameplural'] = 'Mootimeter';
@@ -72,7 +71,7 @@ $string['subplugintype_mootimetertool_plural'] = 'Mootimeter Tools';
 $string['title'] = 'Page Title';
 $string['toolsettings'] = 'Tool settings';
 $string['tooltip_content_menu_teacherpermission'] = 'Click to allow students to view the results.';
-$string['tooltip_content_menu_teacherpermission_disabled'] = 'Click to hide the results.';
+$string['tooltip_content_menu_teacherpermission_disabled'] = 'Click to hide the results from the students.';
 $string['tooltip_disable_page'] = 'Click to disable this page for participants.';
 $string['tooltip_enable_page'] = 'Click to enable this page for participants.';
 $string['tooltip_fullscreen_compress'] = 'Leave fullscreen mode';
