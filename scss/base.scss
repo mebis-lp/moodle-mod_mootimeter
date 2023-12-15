@@ -19,8 +19,8 @@ $lernplatform-500: #a93201;
 $feedback-error: #ff0000;
 $notification-warning: #ff00001a;
 
-$feedback-success-200: #00C431;
-$feedback-success-100: #D9F6E0;
+$feedback-success-200: #00c431;
+$feedback-success-100: #d9f6e0;
 
 @mixin rounded-s {
   border-radius: 0.25rem;
@@ -37,9 +37,9 @@ $feedback-success-100: #D9F6E0;
 }
 
 .mootimetercontainer {
-	*:focus {
-    	outline: none;
-	}
+  *:focus {
+    outline: none;
+  }
 
   &.fullscreen {
     position: absolute;
@@ -49,8 +49,6 @@ $feedback-success-100: #D9F6E0;
     height: 100%;
     z-index: 99999;
   }
-
-
 
   .mootimetercolpages,
   .mootimetercoledit,
@@ -63,5 +61,18 @@ $feedback-success-100: #D9F6E0;
 }
 
 .tooltip {
-  z-index: 100000!important;
+  z-index: 100000 !important;
+}
+
+/** This is to hide the topbar on fullscreen mode. */
+#page-wrapper.fullscreen {
+  .navbar,
+  bycs-topbar {
+    display: none;
+  }
+
+  /** Setting for theme_boost */
+  #page {
+    margin-top: 0;
+  }
 }

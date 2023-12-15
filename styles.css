@@ -22,6 +22,18 @@
   z-index: 100000 !important;
 }
 
+/** This is to hide the topbar on fullscreen mode. */
+#page-wrapper.fullscreen {
+  /** Setting for theme_boost */
+}
+#page-wrapper.fullscreen .navbar,
+#page-wrapper.fullscreen bycs-topbar {
+  display: none;
+}
+#page-wrapper.fullscreen #page {
+  margin-top: 0;
+}
+
 @font-face {
   font-display: swap;
   font-family: "Atkinson Hyperlegible";
@@ -1215,8 +1227,8 @@
   border-radius: 0.25rem;
 }
 .mootimeter-highlighter.mootimeter-success {
-  border: 2px solid #00C431;
-  background-color: #D9F6E0;
+  border: 2px solid #00c431;
+  background-color: #d9f6e0;
 }
 .mootimeter-highlighter.mootimeter-danger {
   border: 2px solid red;

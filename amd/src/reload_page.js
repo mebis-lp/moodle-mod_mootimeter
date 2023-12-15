@@ -173,7 +173,9 @@ function setGetParam(key, value) {
 function setFullscreenClass(container, key, value) {
     if (key == 'f' && value == 1) {
         container.classList.add("fullscreen");
+        document.getElementById("page-wrapper").classList.add("fullscreen");
     } else if (key == 'f' && value == 0) {
         container.classList.remove("fullscreen");
+        document.getElementById("page-wrapper").classList.remove("fullscreen");
     }
 }
