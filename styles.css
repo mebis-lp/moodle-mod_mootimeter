@@ -9,13 +9,17 @@
   height: 100%;
   z-index: 99999;
 }
-@media screen and (min-width: 469px) {
+@media screen and (min-width: 539px) {
   .mootimetercontainer .mootimetercolpages,
   .mootimetercontainer .mootimetercoledit,
   .mootimetercontainer .mootimetercolcontent {
     min-height: 646px;
     max-height: 850px;
   }
+}
+
+.tooltip {
+  z-index: 100000 !important;
 }
 
 @font-face {
@@ -85,7 +89,6 @@
   background-color: #00091e;
   flex: 7.5rem 0 0;
   max-width: 100%;
-  overflow-y: auto;
   border-top-left-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
 }
@@ -94,6 +97,16 @@
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
     border-bottom-left-radius: 0;
+  }
+  .mootimetercontainer .mootimetercolpages:after {
+    content: "";
+    width: 25%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+    background: linear-gradient(270deg, #00091E -8.89%, rgba(0, 9, 30, 0) 88.89%);
   }
 }
 .mootimetercontainer .mootimetercolpages::-webkit-scrollbar {
@@ -106,6 +119,23 @@
 }
 .mootimetercontainer .mootimetercolpages::-webkit-scrollbar-track {
   background: #00091e;
+}
+@media screen and (max-width: 539px) {
+  .mootimetercontainer .mootimetercolpages #mootimeter-pages-list {
+    overflow-y: auto;
+    padding-right: 3.4375rem;
+  }
+  .mootimetercontainer .mootimetercolpages #mootimeter-pages-list::-webkit-scrollbar {
+    width: 12px;
+  }
+  .mootimetercontainer .mootimetercolpages #mootimeter-pages-list::-webkit-scrollbar-thumb {
+    background-color: #60616d;
+    border-radius: 20px;
+    border: 3px solid #00091e;
+  }
+  .mootimetercontainer .mootimetercolpages #mootimeter-pages-list::-webkit-scrollbar-track {
+    background: #00091e;
+  }
 }
 .mootimetercontainer .mootimetercolpages ul {
   padding: 2.5rem 1.0625rem;
@@ -208,7 +238,7 @@
   gap: 8px;
 }
 
-@media screen and (max-width: 469px) {
+@media screen and (max-width: 539px) {
   .mootimeter-tool-select-wrapper {
     display: block;
   }
@@ -366,13 +396,18 @@
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  border-radius: 7px;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown-content div:hover {
   background-color: #a4a5ac;
-  border-radius: 7px;
 }
 .mootimeter-header-wrapper .mootimeter-page-dropdown:hover .mootimeter-page-dropdown-content {
   display: block;
+}
+
+.dark .mootimeter-page-dropdown-content div {
+  background-color: #00091e;
+  color: #fff;
 }
 
 .mootimetercontainer .mootimetercolcontent {
@@ -389,7 +424,7 @@
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
 }
-@media screen and (max-width: 469px) {
+@media screen and (max-width: 539px) {
   .mootimetercontainer .mootimetercolcontent {
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
@@ -407,7 +442,7 @@
 .mootimetercontainer .mootimetercolcontent::-webkit-scrollbar-track {
   background: #e8e8ea;
 }
-@media screen and (max-width: 469px) {
+@media screen and (max-width: 539px) {
   .mootimetercontainer .mootimetercolcontent {
     padding: 0;
   }
@@ -416,7 +451,7 @@
   display: block;
   width: 100%;
 }
-@media screen and (max-width: 469px) {
+@media screen and (max-width: 539px) {
   .mootimetercontainer .mootimetercolcontent .mootimeter-content-wrapper {
     padding: 5.75rem 0.625rem 0.625rem 0.625rem;
   }
@@ -431,7 +466,7 @@
   gap: 2.5rem;
   margin: 0 auto;
 }
-@media screen and (max-width: 469px) {
+@media screen and (max-width: 539px) {
   .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview {
     padding: 1rem;
   }
@@ -536,6 +571,10 @@
 .mootimeter-pill.mootimeter-pill-inline {
   display: inline-block;
   margin-bottom: 3px;
+}
+
+.dark .mootimeter-pill {
+  color: #00091e;
 }
 
 .mootimeter-colcontent-preview-notification {
@@ -689,6 +728,10 @@
   transform: scale(1);
   opacity: 1;
   color: #d33f01;
+}
+
+.dark .mootimeter-checkbox.mootimeter-success label {
+  color: #00091e;
 }
 
 .mootimeter-radio-btn label {
@@ -1168,11 +1211,12 @@
 }
 
 .mootimeter-highlighter {
-  padding: 10px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
 }
 .mootimeter-highlighter.mootimeter-success {
-  border: 2px solid green;
-  background-color: lightgreen;
+  border: 2px solid #00C431;
+  background-color: #D9F6E0;
 }
 .mootimeter-highlighter.mootimeter-danger {
   border: 2px solid red;
