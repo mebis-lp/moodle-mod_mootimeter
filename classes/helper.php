@@ -374,9 +374,9 @@ class helper {
         list($course, $cm) = get_course_and_cm_from_cmid($cmid);
         $page = $this->get_page($pageid);
         $contentmenudefaultparams = ['sp' => [
-            'r' => (empty($dataset->{'r'})) ? 0 : $dataset->{'r'},
-            'o' => (empty($dataset->{'o'})) ? 0 : $dataset->{'o'},
-            'f' => (empty($dataset->{'f'})) ? 0 : $dataset->{'f'},
+            'r' => (empty($dataset->r)) ? 0 : clean_param($dataset->r, PARAM_INT),
+            'o' => (empty($dataset->o)) ? 0 : clean_param($dataset->o, PARAM_INT),
+            'f' => (empty($dataset->f)) ? 0 : clean_param($dataset->f, PARAM_INT),
         ]];
 
         if (empty($pageid)) {
@@ -412,11 +412,6 @@ class helper {
                 case 'addpage':
                     $paramscontent['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page_params($cm);
                     break;
-                case 'showquestionpage':
-                    $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
-                    $contentmenudefaultparams['sp']['o'] = 0;
-                    $contentmenudefaultparams['sp']['r'] = 0;
-                    break;
                 case 'showansweroverview':
                     $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);
                     $contentmenudefaultparams['sp']['r'] = 0;
@@ -426,6 +421,12 @@ class helper {
                     $paramscontent['pagecontent'] = $this->get_result_page_params($cm, $page);
                     $contentmenudefaultparams['sp']['r'] = 1;
                     $contentmenudefaultparams['sp']['o'] = 0;
+                    break;
+                case 'showquestionpage':
+                default:
+                    $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
+                    $contentmenudefaultparams['sp']['o'] = 0;
+                    $contentmenudefaultparams['sp']['r'] = 0;
                     break;
             }
         } else if (count($this->get_pages($cm->instance)) == 0) {
@@ -734,7 +735,7 @@ class helper {
             $tooltip = get_string('tooltip_disable_page', 'mod_mootimeter');
         }
 
-        $dataseticoncheck = [
+        $dataseticonvisibility = [
             'data-togglename = "page_visibility"',
             'data-pageid = "' . $page->id . '"',
             'data-iconid = "page_visibility_iconid"',
@@ -745,7 +746,7 @@ class helper {
             'icon' => $pagevisibleiconclass,
             'id' => 'toggle_page_visibility',
             'iconid' => 'page_visibility_iconid',
-            'dataset' => implode(" ", $dataseticoncheck),
+            'dataset' => implode(" ", $dataseticonvisibility),
             'tooltip' => $tooltip,
         ];
 
