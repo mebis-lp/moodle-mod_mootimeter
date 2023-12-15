@@ -21,8 +21,6 @@ export const init = (ids) => {
         }
 
         var datasetobj = this.dataset;
-        Object.assign(datasetobj, getParams());
-
         reloadPage(this.dataset.pageid, this.dataset.cmid, datasetobj);
 
     });
@@ -44,16 +42,16 @@ function setGetParam(key, value) {
     }
 }
 
-/**
- * Get an array of all url search params.
- * @param {string} url
- * @returns {array}
- */
-function getParams(url = window.location) {
-    // Create a params object
-    let params = {};
-    new URL(url).searchParams.forEach(function(val, key) {
-        params[key] = val;
-    });
-    return params;
-}
+// /**
+//  * Get an array of all url search params.
+//  * @param {string} url
+//  * @returns {array}
+//  */
+// function getParams(url = window.location) {
+//     // Create a params object
+//     let params = {};
+//     new URL(url).searchParams.forEach(function(val, key) {
+//         params[key] = val;
+//     });
+//     return params;
+// }

@@ -374,9 +374,9 @@ class helper {
         list($course, $cm) = get_course_and_cm_from_cmid($cmid);
         $page = $this->get_page($pageid);
         $contentmenudefaultparams = ['sp' => [
-            'r' => (!empty($dataset->r)) ? $dataset->r : 0,
-            'o' => (!empty($dataset->o)) ? $dataset->o : 0,
-            'f' => (!empty($dataset->f)) ? $dataset->f : 0,
+            'r' => (empty($dataset->{'r'})) ? 0 : $dataset->{'r'},
+            'o' => (empty($dataset->{'o'})) ? 0 : $dataset->{'o'},
+            'f' => (empty($dataset->{'f'})) ? 0 : $dataset->{'f'},
         ]];
 
         if (empty($pageid)) {
@@ -396,29 +396,36 @@ class helper {
         } else if (empty($dataset->action)) {
 
             // Get params of the content section.
-            if (!empty($dataset->r)) {
+            if (!empty($contentmenudefaultparams['sp']['r'])) {
                 $paramscontent['pagecontent'] = $this->get_result_page_params($cm, $page);
-                $contentmenudefaultparams['sp']['r'] = 1;
-            } else if (!empty($dataset->o)) {
+                $contentmenudefaultparams['sp']['o'] = 0;
+            } else if (!empty($contentmenudefaultparams['sp']['o'])) {
                 $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);
-                $contentmenudefaultparams['sp']['o'] = 1;
+                $contentmenudefaultparams['sp']['r'] = 0;
             } else {
                 $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
-                $contentmenudefaultparams['sp']['o'] = (int)!empty($dataset->o);
-                $contentmenudefaultparams['sp']['r'] = (int)!empty($dataset->r);
+                $contentmenudefaultparams['sp']['o'] = 0;
+                $contentmenudefaultparams['sp']['r'] = 0;
             }
         } else if (!empty($dataset->action)) {
             switch ($dataset->action) {
                 case 'addpage':
                     $paramscontent['pagecontent'] = \mod_mootimeter\helper_add_page::get_view_content_new_page_params($cm);
                     break;
+                case 'showquestionpage':
+                    $paramscontent = $this->get_rendered_page_content_params($cm, $page, $withwrapper);
+                    $contentmenudefaultparams['sp']['o'] = 0;
+                    $contentmenudefaultparams['sp']['r'] = 0;
+                    break;
                 case 'showansweroverview':
                     $paramscontent['pagecontent'] = $this->get_answer_overview_params($cm, $page);
+                    $contentmenudefaultparams['sp']['r'] = 0;
                     $contentmenudefaultparams['sp']['o'] = 1;
                     break;
                 case 'showresults':
                     $paramscontent['pagecontent'] = $this->get_result_page_params($cm, $page);
                     $contentmenudefaultparams['sp']['r'] = 1;
+                    $contentmenudefaultparams['sp']['o'] = 0;
                     break;
             }
         } else if (count($this->get_pages($cm->instance)) == 0) {
@@ -547,6 +554,39 @@ class helper {
 
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
 
+            // Set up icon to toggle "show on teacher permission".
+            $dataseticoneye = [
+                'data-togglename = "showonteacherpermission"',
+                'data-pageid = "' . $page->id . '"',
+            ];
+            $params['icon-eye'] = [
+                'icon' => 'fa-eye',
+                'id' => 'toggleteacherpermission',
+                'iconid' => 'toggleteacherpermissionid',
+                'dataset' => implode(" ", $dataseticoneye),
+            ];
+            if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
+                $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission_disabled', 'mod_mootimeter');
+            } else {
+                $params['icon-eye']['icon'] = "fa-eye-slash";
+                $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission', 'mod_mootimeter');
+            }
+
+            // Reset Question.
+            $dataseticonrestart = [
+                'data-ajaxmethode = "mod_mootimeter_delete_all_answers"',
+                'data-pageid = "' . $page->id . '"',
+                'data-confirmationtitlestr = "' . get_string('delete_all_answers_dialog_title', 'mod_mootimeter') . '"',
+                'data-confirmationquestionstr = "' . get_string('delete_all_answers_dialog_question', 'mod_mootimeter') . '"',
+                'data-confirmationtype = "DELETE_CANCEL"',
+            ];
+            $params['icon-restart'] = [
+                'icon' => 'fa-trash',
+                'id' => 'mtmt_restart',
+                'iconid' => 'mtmt_restart_iconid',
+                'dataset' => implode(" ", $dataseticonrestart),
+            ];
+
             // Redirect to Answers Overview View.
             $params['icon-answer-overview'] = [
                 'icon' => 'fa-table',
@@ -557,7 +597,23 @@ class helper {
             if (!empty($params['sp']['o']) && $params['sp']['o'] == 1) {
                 $params['icon-answer-overview']['icon'] = 'fa-pencil-square-o';
                 $params['icon-answer-overview']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
-                $params['icon-answer-overview']['dataset'] = "data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'";
+                $params['icon-answer-overview']['dataset'] = "data-action='showquestionpage' data-pageid='"
+                    . $page->id . "' data-cmid='" . $cm->id . "'";
+            }
+
+            $params['icon-showresults'] = [
+                'icon' => 'fa-bar-chart',
+                'id' => 'showresults',
+                'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
+                'dataset' => "data-action='showresults' data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'",
+            ];
+            if (
+                !empty($params['sp']['r']) && $params['sp']['r'] == 1
+            ) {
+                $params['icon-showresults']['icon'] = 'fa-pencil-square-o';
+                $params['icon-showresults']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
+                $params['icon-showresults']['dataset'] = "data-action='showquestionpage' data-pageid='"
+                    . $page->id . "' data-cmid='" . $cm->id . "'";
             }
         }
 

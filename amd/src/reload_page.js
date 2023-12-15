@@ -23,23 +23,7 @@ export const init = (uniqueID) => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const cmid = urlParams.get('id');
-        var datasetobj = this.dataset;
-        Object.assign(datasetobj, getParams());
-        execReloadPage(pageid, cmid, datasetobj);
-    }
-
-    /**
-     * Get an array of all url search params.
-     * @param {string} url
-     * @returns {array}
-     */
-    function getParams(url = window.location) {
-        // Create a params object
-        let params = {};
-        new URL(url).searchParams.forEach(function(val, key) {
-            params[key] = val;
-        });
-        return params;
+        execReloadPage(pageid, cmid, this.dataset);
     }
 };
 
@@ -71,12 +55,10 @@ const reloadPage = (
  */
 export const execReloadPage = async(pageid, cmid, dataset) => {
 
-    // Add all url parameters to dataset.
-    if (dataset.useUrlParams) {
-        const searchParams = new URL(window.location.href).searchParams;
-        searchParams.forEach((value, name) => {
-            dataset[name] = value;
-        });
+    if (!dataset) {
+        dataset = getParams();
+    } else {
+        Object.assign(dataset, getParams());
     }
 
     dataset = JSON.stringify(dataset);
@@ -162,6 +144,20 @@ function setGetParam(key, value) {
             + '?' + params.toString();
         window.history.pushState({path: newUrl}, '', newUrl);
     }
+}
+
+/**
+ * Get an array of all url search params.
+ * @param {string} url
+ * @returns {array}
+ */
+function getParams(url = window.location) {
+    // Create a params object
+    let params = {};
+    new URL(url).searchParams.forEach(function(val, key) {
+        params[key] = val;
+    });
+    return params;
 }
 
 /**

@@ -300,38 +300,6 @@ class quiz extends \mod_mootimeter\toolhelper {
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
 
             $dataseticoncheck = [
-                'data-togglename = "showonteacherpermission"',
-                'data-pageid = "' . $page->id . '"',
-            ];
-            $params['icon-eye'] = [
-                'icon' => 'fa-eye',
-                'id' => 'toggleteacherpermission',
-                'iconid' => 'toggleteacherpermissionid',
-                'dataset' => implode(" ", $dataseticoncheck),
-            ];
-            if (!empty(self::get_tool_config($page->id, 'showonteacherpermission'))) {
-                $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission_disabled', 'mod_mootimeter');
-            } else {
-                $params['icon-eye']['icon'] = "fa-eye-slash";
-                $params['icon-eye']['tooltip'] = get_string('tooltip_content_menu_teacherpermission', 'mod_mootimeter');
-            }
-
-            // Reset Question.
-            $dataseticonrestart = [
-                'data-ajaxmethode = "mod_mootimeter_delete_all_answers"',
-                'data-pageid = "' . $page->id . '"',
-                'data-confirmationtitlestr = "' . get_string('delete_all_answers_dialog_title', 'mod_mootimeter') . '"',
-                'data-confirmationquestionstr = "' . get_string('delete_all_answers_dialog_question', 'mod_mootimeter') . '"',
-                'data-confirmationtype = "DELETE_CANCEL"',
-            ];
-            $params['icon-restart'] = [
-                'icon' => 'fa-trash',
-                'id' => 'mtmt_restart',
-                'iconid' => 'mtmt_restart_iconid',
-                'dataset' => implode(" ", $dataseticonrestart),
-            ];
-
-            $dataseticoncheck = [
                 'data-togglename = "showanswercorrection"',
                 'data-pageid = ' . $page->id,
                 // To configure the response handling.
@@ -356,18 +324,6 @@ class quiz extends \mod_mootimeter\toolhelper {
                 $params['icon-check']['icon'] = "fa-square-o";
                 $params['icon-check']['tooltip'] = get_string('tooltip_content_menu_answercorrection', 'mootimetertool_quiz');
             }
-        }
-
-        $params['icon-showresults'] = [
-            'icon' => 'fa-bar-chart',
-            'id' => 'showresults',
-            'tooltip' => get_string('tooltip_show_results_page', 'mod_mootimeter'),
-            'dataset' => "data-action='showresults' data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'",
-        ];
-        if (!empty($params['sp']['r']) && $params['sp']['r'] == 1) {
-            $params['icon-showresults']['icon'] = 'fa-pencil-square-o';
-            $params['icon-showresults']['tooltip'] = get_string('tooltip_show_question_page', 'mod_mootimeter');
-            $params['icon-showresults']['dataset'] = "data-pageid='" . $page->id . "' data-cmid='" . $cm->id . "'";
         }
         return $params;
     }
