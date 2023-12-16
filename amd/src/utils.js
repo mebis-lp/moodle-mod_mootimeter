@@ -64,3 +64,32 @@ export const getGetParams = (url = window.location) => {
     });
     return params;
 };
+
+/**
+ * Remove a defined parameter from url, without reload the page.
+ * @param {string} parameter
+ * @returns {string}
+ */
+export const removeGetParam = (parameter) => {
+    var url = document.location.href;
+    var urlparts = url.split('?');
+
+    if (urlparts.length >= 2) {
+        var urlBase = urlparts.shift();
+        var queryString = urlparts.join("?");
+
+        var prefix = encodeURIComponent(parameter) + '=';
+        var pars = queryString.split(/[&;]/g);
+        for (var i = pars.length; i-- > 0;) {
+            if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+                pars.splice(i, 1);
+            }
+        }
+        url = urlBase + '?' + pars.join('&');
+
+        // Push the new url directly to url bar .
+        window.history.pushState('', document.title, url);
+
+    }
+    return url;
+};

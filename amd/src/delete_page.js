@@ -3,6 +3,8 @@ import Log from 'core/log';
 import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
 import {get_string as getString} from 'core/str';
+import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
+import {removeGetParam} from 'mod_mootimeter/utils';
 
 export const init = async(id) => {
 
@@ -45,8 +47,7 @@ export const init = async(id) => {
             Log.error(response.string);
             return;
         }
-
-        window.location.href = window.location.origin
-            + window.location.pathname + "?id=" + response.cmid;
+        removeGetParam('pageid', window.location.href);
+        reloadPage(0, response.cmid);
     };
 };
