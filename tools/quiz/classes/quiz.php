@@ -587,6 +587,23 @@ class quiz extends \mod_mootimeter\toolhelper {
             ),
         ];
 
+        $params['anonymousmode'] = [
+            'cb_with_label_id' => 'anonymousmode',
+            'pageid' => $page->id,
+            'cb_with_label_text' => get_string('anonymousmode', 'mod_mootimeter')
+                . " " . get_string('anonymousmode_desc', 'mod_mootimeter'),
+            'cb_with_label_name' => 'anonymousmode',
+            'cb_with_label_additional_class' => 'mootimeter_settings_selector',
+            'cb_with_label_ajaxmethod' => "mod_mootimeter_store_setting",
+            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'anonymousmode') ? "checked" : ""),
+        ];
+
+        $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
+        if (!empty(self::get_tool_config($page->id, "anonymousmode")) && !empty($answers)) {
+            $params['anonymousmode']['cb_with_label_checked'] .= ' disabled ';
+            unset($params['anonymousmode']['cb_with_label_ajaxmethod']);
+        }
+
         $returnparams['colsettings'] = $params;
         return $returnparams;
     }
@@ -806,8 +823,10 @@ class quiz extends \mod_mootimeter\toolhelper {
             $user = $this->get_user_by_id($answer->usermodified);
 
             $userfullname = "";
-            if (!empty($user)) {
+            if (!empty($user) && empty(self::get_tool_config($page->id, "anonymousmode"))) {
                 $userfullname = $user->firstname . " " . $user->lastname;
+            } else if (!empty(self::get_tool_config($page->id, "anonymousmode"))) {
+                $userfullname = get_string('anonymous_name', 'mod_mootimeter');
             }
 
             // Add delte button to answer.

@@ -27,6 +27,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['addpage'] = 'Seite hinzufügen';
+$string['anonymousmode'] = 'Wenn aktiv, können Lehrer die Schülernamen nicht sehen.';
+$string['anonymousmode_desc'] = 'Dieses Setting kann nicht verändert werden, sobald Antworten existieren';
+$string['anonymous_name'] = 'Anonym';
 $string['cachedef_answers'] = 'Enthält die Antworten für die Seiten.';
 $string['cannotview'] = 'Sie haben keine Berechtigung, auf diese Seite zuzugreifen!';
 $string['createnewpagesettings'] = 'Neue Seiteneinstellungen';

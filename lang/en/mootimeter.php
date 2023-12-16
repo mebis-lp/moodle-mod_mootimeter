@@ -27,6 +27,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['addpage'] = 'Add Page';
+$string['anonymousmode'] = 'If checked, teachers can not view voters names.';
+$string['anonymousmode_desc'] = 'This setting can not be changed when answers exist!';
+$string['anonymous_name'] = 'Anonymous';
 $string['cachedef_answers'] = 'Contains the pages answers.';
 $string['cannotview'] = 'You are not allowed to access this page!';
 $string['createnewpagesettings'] = 'New page settings';
