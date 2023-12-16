@@ -1,4 +1,5 @@
 import {call as fetchMany} from 'core/ajax';
+import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 
 export const init = (uniqueID) => {
     const obj = document.getElementById(uniqueID);
@@ -44,6 +45,5 @@ const createNewPage = (
  */
 const storeNewPage = async(tool, instance) => {
     const response = await createNewPage(tool, instance);
-    window.location.href = window.location.origin
-        + window.location.pathname + "?id=" + response.cmid + "&pageid=" + response.pageid;
+    reloadPage(response.pageid, response.cmid);
 };

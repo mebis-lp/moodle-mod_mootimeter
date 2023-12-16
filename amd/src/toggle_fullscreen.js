@@ -1,5 +1,5 @@
 import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
-
+import {setGetParam} from 'mod_mootimeter/utils';
 
 export const init = (ids) => {
 
@@ -25,33 +25,3 @@ export const init = (ids) => {
 
     });
 };
-
-/**
- * Set the Query Parameter.
- * @param {string} key
- * @param {string} value
- */
-function setGetParam(key, value) {
-    if (history.pushState) {
-        var params = new URLSearchParams(window.location.search);
-        params.set(key, value);
-        var newUrl = window.location.origin
-            + window.location.pathname
-            + '?' + params.toString();
-        window.history.pushState({path: newUrl}, '', newUrl);
-    }
-}
-
-// /**
-//  * Get an array of all url search params.
-//  * @param {string} url
-//  * @returns {array}
-//  */
-// function getParams(url = window.location) {
-//     // Create a params object
-//     let params = {};
-//     new URL(url).searchParams.forEach(function(val, key) {
-//         params[key] = val;
-//     });
-//     return params;
-// }
