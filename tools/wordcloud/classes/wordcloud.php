@@ -124,8 +124,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 $userfullname = get_string('anonymous_name', 'mod_mootimeter');
             }
 
-            // Add delte button to answer.
-            $dataseticonrestart = [
+            // Add delete button to answer.
+            $dataseticontrash = [
                 'data-ajaxmethode = "mod_mootimeter_delete_single_answer"',
                 'data-pageid="' . $page->id . '"',
                 'data-answerid="' . $answer->id . '"',
@@ -146,7 +146,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                         'icon' => 'fa-trash',
                         'id' => 'mtmt_delete_answer_' . $answer->id,
                         'iconid' => 'mtmt_delte_iconid_' . $answer->id,
-                        'dataset' => join(" ", $dataseticonrestart),
+                        'dataset' => implode(" ", $dataseticontrash),
                     ],
                 ],
             ];
@@ -289,10 +289,26 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         // Parameter for initializing Badges.
         $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
 
-        $params["answers"] = array_values(array_map(function ($element) {
+        $params["answers"] = array_values(array_map(function ($element) use ($page){
+
+            // Add delete button to answer.
+            $dataseticontrash = [
+                'data-ajaxmethode = "mod_mootimeter_delete_single_answer"',
+                'data-pageid="' . $page->id . '"',
+                'data-answerid="' . $element->id . '"',
+                'data-confirmationtitlestr="' . get_string('delete_single_answer_dialog_title', 'mod_mootimeter') . '"',
+                'data-confirmationquestionstr="' . get_string('delete_single_answer_dialog_question', 'mod_mootimeter') . '"',
+                'data-confirmationtype="DELETE_CANCEL"',
+            ];
+
             return [
                 'pill' => $element->answer,
                 'additional_class' => 'mootimeter-pill-inline',
+                'deletebutton' => [
+                    'id' => 'mtmt_delete_answer_' . $element->id,
+                    'iconid' => 'mtmt_delte_iconid_' . $element->id,
+                    'dataset' => implode(" ", $dataseticontrash),
+                ],
             ];
         }, $this->get_user_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN, $USER->id)));
 

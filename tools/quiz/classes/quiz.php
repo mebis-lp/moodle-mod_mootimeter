@@ -395,7 +395,9 @@ class quiz extends \mod_mootimeter\toolhelper {
         }
         foreach ($answeroptions as $answeroption) {
             $wrapperadditionalclass = (self::get_tool_config($page->id, 'showanswercorrection')) ? "mootimeter-highlighter" : "";
-            $wrapperadditionalclass .= ($answeroption->optioniscorrect) ? " mootimeter-success" : "";
+            $wrapperadditionalclass .= (
+                self::get_tool_config($page->id, 'showanswercorrection') && $answeroption->optioniscorrect
+            ) ? " mootimeter-success" : "";
 
             if (
                 empty($answeroption->optiontext)

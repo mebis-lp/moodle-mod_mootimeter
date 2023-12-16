@@ -3,6 +3,8 @@ import Log from 'core/log';
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 import {execReloadPagelist as reloadPagelist} from 'mod_mootimeter/reload_pagelist';
+import {getGetParams} from 'mod_mootimeter/utils';
+import {setGetParam} from 'mod_mootimeter/utils';
 
 export const init = (uniqueID) => {
 
@@ -56,9 +58,9 @@ const reloadPage = (
 export const execReloadPage = async(pageid, cmid, dataset) => {
 
     if (!dataset) {
-        dataset = getParams();
+        dataset = getGetParams();
     } else {
-        Object.assign(dataset, getParams());
+        Object.assign(dataset, getGetParams());
     }
 
     dataset = JSON.stringify(dataset);
@@ -129,36 +131,6 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
         document.querySelectorAll('.tooltip').forEach(e => e.remove());
     }
 };
-
-/**
- * Set the Query Parameter.
- * @param {string} key
- * @param {string} value
- */
-function setGetParam(key, value) {
-    if (history.pushState) {
-        var params = new URLSearchParams(window.location.search);
-        params.set(key, value);
-        var newUrl = window.location.origin
-            + window.location.pathname
-            + '?' + params.toString();
-        window.history.pushState({path: newUrl}, '', newUrl);
-    }
-}
-
-/**
- * Get an array of all url search params.
- * @param {string} url
- * @returns {array}
- */
-function getParams(url = window.location) {
-    // Create a params object
-    let params = {};
-    new URL(url).searchParams.forEach(function(val, key) {
-        params[key] = val;
-    });
-    return params;
-}
 
 /**
  * Set the fullscreen class to the mootimetercontainr

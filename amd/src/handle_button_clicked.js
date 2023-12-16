@@ -3,6 +3,7 @@ import Log from 'core/log';
 import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
 import {get_string as getString} from 'core/str';
+import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 
 export const init = async(uniqueID) => {
     var obj = document.getElementById(uniqueID);
@@ -100,6 +101,8 @@ const buttonClickedHandle = async(pageid, uniqueID, ajaxmethode) => {
     }
 
     if (response.reload == true) {
-        location.reload();
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        reloadPage(urlParams.get('pageid'), urlParams.get('id'));
     }
 };

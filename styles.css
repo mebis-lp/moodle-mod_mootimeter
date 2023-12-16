@@ -7,7 +7,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 99999;
+  z-index: 1051;
 }
 @media screen and (min-width: 539px) {
   .mootimetercontainer.fullscreen .mootimetercolpages,
@@ -590,6 +590,15 @@
 .mootimeter-pill.mootimeter-pill-inline {
   display: inline-block;
   margin-bottom: 3px;
+}
+.mootimeter-pill.mootimeter-pill-inline i {
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 3px;
+}
+.mootimeter-pill.mootimeter-pill-inline i:hover {
+  background-color: #d33f01;
+  color: #fff;
 }
 
 .dark .mootimeter-pill {

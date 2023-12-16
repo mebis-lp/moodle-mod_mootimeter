@@ -1103,7 +1103,7 @@ class helper {
     }
 
     /**
-     * Get all pgae answers of a specific user. Using get_answers method to use the cache.
+     * Get all page answers of a specific user. Using get_answers method to use the cache.
      *
      * @param string $table
      * @param int $pageid
