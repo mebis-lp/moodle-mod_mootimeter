@@ -48,6 +48,14 @@ $feedback-success-100: #d9f6e0;
     width: 100%;
     height: 100%;
     z-index: 99999;
+
+    .mootimetercolpages,
+    .mootimetercoledit,
+    .mootimetercolcontent {
+      @media screen and (min-width: 539px) {
+        max-height: 100vH;
+      }
+    }
   }
 
   .mootimetercolpages,

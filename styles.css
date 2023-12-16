@@ -10,6 +10,13 @@
   z-index: 99999;
 }
 @media screen and (min-width: 539px) {
+  .mootimetercontainer.fullscreen .mootimetercolpages,
+  .mootimetercontainer.fullscreen .mootimetercoledit,
+  .mootimetercontainer.fullscreen .mootimetercolcontent {
+    max-height: 100vH;
+  }
+}
+@media screen and (min-width: 539px) {
   .mootimetercontainer .mootimetercolpages,
   .mootimetercontainer .mootimetercoledit,
   .mootimetercontainer .mootimetercolcontent {
