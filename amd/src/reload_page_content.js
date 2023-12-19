@@ -3,6 +3,7 @@ import Log from 'core/log';
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 import {execReloadPagelist as reloadPagelist} from 'mod_mootimeter/reload_pagelist';
+import {setGetParam} from 'mod_mootimeter/utils';
 
 export const init = (uniqueID) => {
 
@@ -85,19 +86,3 @@ const execReloadPage = async(pageid, cmid, dataset) => {
         document.querySelectorAll('.tooltip').forEach(e => e.remove());
     }
 };
-
-/**
- * Set the Query Parameter.
- * @param {string} key
- * @param {string} value
- */
-function setGetParam(key, value) {
-    if (history.pushState) {
-        var params = new URLSearchParams(window.location.search);
-        params.set(key, value);
-        var newUrl = window.location.origin
-            + window.location.pathname
-            + '?' + params.toString();
-        window.history.pushState({path: newUrl}, '', newUrl);
-    }
-}

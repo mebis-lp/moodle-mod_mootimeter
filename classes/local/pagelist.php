@@ -41,6 +41,11 @@ use moodle_exception;
  */
 class pagelist {
 
+    /** @var int Permutate direction up */
+    const PERMUTATE_UP = 1;
+    /** @var int Permutate direction down */
+    const PERMUTATE_DOWN = -1;
+
     /**
      * Get the pagelist parameters for rendering.
      *
@@ -67,7 +72,7 @@ class pagelist {
             throw new \moodle_exception('notenrolledtocourse', 'error');
         }
 
-        $pages = $helper->get_pages($cm->instance);
+        $pages = $helper->get_pages($cm->instance, "sortorder ASC");
 
         $temppages = [];
         $pagenumber = 1;
@@ -81,7 +86,7 @@ class pagelist {
         }
 
         foreach ($pages as $pagerow) {
-            $uniqid = uniqid('mtmt_page_');
+            $uniqid = uniqid('mtmt_page_'); // This is necessary to separate the different page list elements.
             $pixrawurl = '/mod/mootimeter/tools/' . $pagerow->tool . '/pix/' . $pagerow->tool . '-white.svg';
             $temppages['pageslist'][] = [
                 'toolicon' => (new \moodle_url($pixrawurl))->out(true),
@@ -96,13 +101,7 @@ class pagelist {
             ];
 
             $questionmodified = $helper::get_tool_config_timemodified($pagerow, 'question');
-            if ($maxtimecreated < $questionmodified) {
-                $maxtimecreated = $questionmodified;
-            }
-
-            if ($maxtimecreated < $pagerow->timecreated) {
-                $maxtimecreated = $pagerow->timecreated;
-            }
+            $maxtimecreated = max($maxtimecreated, $questionmodified, $pagerow->timecreated, $pagerow->timemodified);
 
             $pagenumber++;
         }
@@ -127,5 +126,74 @@ class pagelist {
 
         $pagelistparams = $this->get_pagelist_params($cmid, $pageselected);
         return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_page_list", $pagelistparams);
+    }
+
+    /**
+     * Permutate the pages of an instance until the targetposition of page is reached.
+     * @param int $pageid
+     * @param int $targetposition
+     * @return void
+     */
+    public function permutate_sortorder(int $pageid, int $targetposition) {
+        global $DB;
+
+        $helper = new \mod_mootimeter\helper();
+        $instance = $helper::get_instance_by_pageid($pageid);
+
+        // First reset the sortorder of all pages to take sure that there are no missing sortordersteps.
+        $pages = $helper->get_pages($instance, 'sortorder ASC');
+        $i = 0; // Starting with 0, because core_sortable starts with index 0.
+        foreach ($pages as $page) {
+            $page->sortorder = $i;
+            $page->timemodified = time();
+            $helper->store_page($page);
+            $i++;
+        }
+        $page = $helper->get_page($pageid);
+
+        if ($page->sortorder == $targetposition) {
+            // Nothing to do here.
+            return;
+        }
+
+        // Get the permutation direction.
+        if ($page->sortorder < $targetposition) {
+            $permutationdirection = self::PERMUTATE_UP;
+        } else {
+            $permutationdirection = self::PERMUTATE_DOWN;
+        }
+
+        // Now permutate the pages as long as $page->sortorder reaches $targetposition.
+        // Or an timeout is reached.
+        $counter = 0;
+        $page = $helper->get_page($pageid);
+        while ($page->sortorder != $targetposition) {
+            // Early exit, to prevent endless loop.
+            if ($counter >= 1000) {
+                // Exit the loop when the counter exceeds the limit.
+                break;
+            }
+
+            $params = [
+                'instance' => $page->instance,
+                'sortorder' => $page->sortorder + $permutationdirection,
+            ];
+            $page2 = $DB->get_record('mootimeter_pages', $params);
+
+            if (empty($page2)) {
+                break;
+            }
+
+            // Permutate page and page 2.
+            $tempsortorder = $page->sortorder;
+            $page->sortorder = $page2->sortorder;
+            $page2->sortorder = $tempsortorder;
+
+            // Save chenges of page2.
+            $helper->store_page($page2);
+            $counter++;
+        }
+        // Finally store the new positioned page.
+        $helper->store_page($page);
     }
 }

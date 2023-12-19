@@ -126,7 +126,6 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
         // Set active page marked in pageslist.
         reloadPagelist(pageid, cmid, true);
 
-
         // Remove all tooltips of pageslist that are still present.
         document.querySelectorAll('.tooltip').forEach(e => e.remove());
     }

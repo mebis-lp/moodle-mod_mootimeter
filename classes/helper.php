@@ -173,19 +173,27 @@ class helper {
             throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
-        $dataobject = $this->get_page($pageid);
-        $dataobject->{$column} = $value;
-
-        $this->store_page($dataobject);
+        switch ($column) {
+            case 'sortorder':
+                $pagelisthelper = new \mod_mootimeter\local\pagelist();
+                $pagelisthelper->permutate_sortorder($pageid, $value);
+                break;
+            default:
+                $dataobject = $this->get_page($pageid);
+                $dataobject->{$column} = $value;
+                $this->store_page($dataobject);
+                break;
+        }
     }
 
     /**
      * Get all pages of an instance.
      *
      * @param int $instanceid
+     * @param string $sort
      * @return mixed
      */
-    public function get_pages(int $instanceid) {
+    public function get_pages(int $instanceid, string $sort = 'id ASC') {
         global $DB;
 
         $params = ['instance' => $instanceid];
@@ -199,7 +207,7 @@ class helper {
             $params['visible'] = self::PAGE_VISIBLE;
         }
 
-        return $DB->get_records('mootimeter_pages', $params, 'id ASC');
+        return $DB->get_records('mootimeter_pages', $params, $sort);
     }
 
     /**

@@ -160,6 +160,47 @@ class helper_test extends advanced_testcase {
     }
 
     /**
+     * Store page details and handle sortorder
+     * @covers \mod_mootimeter\helper->store_page_detail
+     */
+    public function test_store_page_detail_sortorder(): void {
+        $this->resetAfterTest();
+
+        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
+        $helper = new \mod_mootimeter\helper();
+
+        $this->setUser($this->users['teacher']);
+        $page1 = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id]);
+        $page2 = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id]);
+        $page3 = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id]);
+        $page4 = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id]);
+
+        // Sort to the beginning of the list.
+        $helper->store_page_detail($page3->id, 'sortorder', 0);
+
+        $this->assertEquals(1, $helper->get_page($page1->id)->sortorder);
+        $this->assertEquals(2, $helper->get_page($page2->id)->sortorder);
+        $this->assertEquals(0, $helper->get_page($page3->id)->sortorder);
+        $this->assertEquals(3, $helper->get_page($page4->id)->sortorder);
+
+        // Sort to the end of the list.
+        $helper->store_page_detail($page3->id, 'sortorder', 3);
+
+        $this->assertEquals(0, $helper->get_page($page1->id)->sortorder);
+        $this->assertEquals(1, $helper->get_page($page2->id)->sortorder);
+        $this->assertEquals(3, $helper->get_page($page3->id)->sortorder);
+        $this->assertEquals(2, $helper->get_page($page4->id)->sortorder);
+
+        // Finally make some sorts between beginning and ending of the list.
+        $helper->store_page_detail($page3->id, 'sortorder', 2);
+        $helper->store_page_detail($page3->id, 'sortorder', 1);
+        $this->assertEquals(0, $helper->get_page($page1->id)->sortorder);
+        $this->assertEquals(2, $helper->get_page($page2->id)->sortorder);
+        $this->assertEquals(1, $helper->get_page($page3->id)->sortorder);
+        $this->assertEquals(3, $helper->get_page($page4->id)->sortorder);
+    }
+
+    /**
      * Validate that a page belongs to an instance.
      * @return void
      * @throws coding_exception

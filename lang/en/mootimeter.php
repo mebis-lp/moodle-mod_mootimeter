@@ -27,9 +27,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['addpage'] = 'Add Page';
+$string['anonymous_name'] = 'Anonymous';
 $string['anonymousmode'] = 'If checked, teachers can not view voters names.';
 $string['anonymousmode_desc'] = 'This setting can not be changed when answers exist!';
-$string['anonymous_name'] = 'Anonymous';
 $string['cachedef_answers'] = 'Contains the pages answers.';
 $string['cannotview'] = 'You are not allowed to access this page!';
 $string['createnewpagesettings'] = 'New page settings';
@@ -39,6 +39,7 @@ $string['delete_page'] = 'Delete Page';
 $string['delete_single_answer_dialog_question'] = 'Do you realy want to delte this answer?';
 $string['delete_single_answer_dialog_title'] = 'Delete this answer?';
 $string['deleteerror'] = 'Something went wrong while deleting the page. Please contact your support.';
+$string['dialogue_move_pagelistelement'] = 'Fragenseite verschieben';
 $string['enter_question'] = 'Please enter a question.';
 $string['loading'] = 'Loading! Please wait...';
 $string['modulename'] = 'Mootimeter';

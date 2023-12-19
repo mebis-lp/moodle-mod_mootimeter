@@ -3,6 +3,9 @@ import Log from 'core/log';
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
+import SortableList from 'core/sortable_list';
+import jQuery from 'jquery';
+import {ajaxRequestInput} from 'mod_mootimeter/utils';
 
 export const init = () => {
     var obj = document.getElementById('mootimeterstate');
@@ -93,8 +96,39 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
         Templates.renderForPromise('mod_mootimeter/elements/snippet_page_list', pagelist)
             .then(({html, js}) => {
                 Templates.replaceNodeContents('#mootimeter-pages-list', html, js);
+
+                // Finally make pageslist sortable.
+                var listelements = document.getElementsByClassName('mootimeter_pages_li');
+                var uniqid = listelements[0].dataset.uniqid;
+                new SortableList('#mootimeter-pages-list', {
+                    moveHandlerSelector: '.mootimeter_page_move_sortablehandle_' + uniqid,
+                });
+                jQuery('.mootimeter_pages_li_sortable_' + uniqid).on(SortableList.EVENTS.DROP, function(_, info) {
+                    var newIndex = info.targetList.children().index(info.element);
+                    storePagePosition(this.dataset.pageid, newIndex);
+                });
+
+                // Remove all tooltips of pageslist that are still present.
+                document.querySelectorAll('.tooltip').forEach(e => e.remove());
+
                 return true;
             })
             .catch((error) => displayException(error));
     }
+};
+
+/**
+ * Store the new page position.
+ * @param {int} pageid
+ * @param {int} newIndex
+ */
+const storePagePosition = (pageid, newIndex) => {
+    window.console.log([pageid, newIndex]);
+    ajaxRequestInput(
+        'mod_mootimeter_store_page_details',
+        pageid,
+        'sortorder',
+        newIndex,
+        ''
+    );
 };

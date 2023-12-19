@@ -1,5 +1,6 @@
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
+import {call as fetchMany} from 'core/ajax';
 
 /**
  * Generate an info box.
@@ -93,3 +94,28 @@ export const removeGetParam = (parameter) => {
     }
     return url;
 };
+
+/**
+ * Call to store input value
+ * @param {string} ajaxmethode
+ * @param {int} pageid
+ * @param {string} inputname
+ * @param {string} inputvalue
+ * @param {string} thisDataset
+ * @returns {mixed}
+ */
+export const ajaxRequestInput = (
+    ajaxmethode,
+    pageid,
+    inputname,
+    inputvalue,
+    thisDataset
+) => fetchMany([{
+    methodname: ajaxmethode,
+    args: {
+        pageid,
+        inputname,
+        inputvalue,
+        thisDataset
+    },
+}])[0];

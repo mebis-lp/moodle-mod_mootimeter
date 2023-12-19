@@ -27,18 +27,19 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['addpage'] = 'Seite hinzufügen';
+$string['anonymous_name'] = 'Anonym';
 $string['anonymousmode'] = 'Wenn aktiv, können Lehrer die Schülernamen nicht sehen.';
 $string['anonymousmode_desc'] = 'Dieses Setting kann nicht verändert werden, sobald Antworten existieren';
-$string['anonymous_name'] = 'Anonym';
 $string['cachedef_answers'] = 'Enthält die Antworten für die Seiten.';
 $string['cannotview'] = 'Sie haben keine Berechtigung, auf diese Seite zuzugreifen!';
 $string['createnewpagesettings'] = 'Neue Seiteneinstellungen';
 $string['delete_all_answers_dialog_question'] = 'Möchten Sie wirklich alle Antworten löschen?';
 $string['delete_all_answers_dialog_title'] = 'Alle Antworten löschen?';
 $string['delete_page'] = 'Seite löschen';
-$string['deleteerror'] = 'Beim Löschen der Seite ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Support.';
 $string['delete_single_answer_dialog_question'] = 'Möchten Sie wirklich diese Antwort löschen?';
 $string['delete_single_answer_dialog_title'] = 'Diese Antwort löschen?';
+$string['deleteerror'] = 'Beim Löschen der Seite ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Support.';
+$string['dialogue_move_pagelistelement'] = 'Fragenseite verschieben';
 $string['enter_question'] = 'Bitte geben Sie eine Frage ein.';
 $string['modulename'] = 'Mootimeter';
 $string['modulenameplural'] = 'Mootimeter';
