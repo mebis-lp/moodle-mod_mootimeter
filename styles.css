@@ -257,6 +257,7 @@
   display: flex;
   align-items: flex-start;
   gap: 20px;
+  flex-wrap: wrap;
 }
 .mootimeter-tool-select-wrapper .mootimeter-radio-card {
   display: flex;
