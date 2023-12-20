@@ -79,4 +79,34 @@ class mod_mootimeter_generator extends testing_module_generator {
 
         return $mtmhelper->get_page($pageid);
     }
+
+    /**
+     * Create a quiz/poll answer option.
+     * @param object $page
+     * @param object $record
+     * @return void
+     */
+    public function create_quiz_poll_answer_option(object $page, object $record): void {
+        global $USER;
+
+        $record = new stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = (empty($record->userid)) ? $USER->id : $record->userid;
+        $record->optiontext = (empty($record->optiontext)) ? 'Default Option' : $record->optiontext;
+        if ($page->tool == "quiz") {
+            $record->optioniscorrect = (empty($record->optioniscorrect)) ? 0 : $record->optioniscorrect;
+        }
+        $record->timecreated = time();
+
+        if ($page->tool == "poll") {
+            $mtmthelper = new \mootimetertool_poll\poll();
+        }
+        if ($page->tool == "quiz") {
+            $mtmthelper = new \mootimetertool_quiz\quiz();
+        }
+
+        // Store two answer options as default.
+        $mtmthelper->store_answer_option($record);
+        return;
+    }
 }

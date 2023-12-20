@@ -240,7 +240,9 @@ class quiz extends \mod_mootimeter\toolhelper {
         $record->pageid = $page->id;
         $record->usermodified = $USER->id;
         $record->optiontext = "";
-        $record->optioniscorrect = 0;
+        if ($page->tool == 'quiz') {
+            $record->optioniscorrect = 0;
+        }
         $record->timecreated = time();
 
         // Store two answer options as default.
