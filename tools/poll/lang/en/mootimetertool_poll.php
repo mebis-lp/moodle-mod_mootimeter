@@ -28,4 +28,4 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Poll';
 $string['poll'] = "Poll";
-$string['tool_description_short'] = "Collect answers live";
+$string['tool_description_short'] = "Get a live feedback to a question";

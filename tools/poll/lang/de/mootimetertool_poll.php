@@ -28,4 +28,4 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Umfrage';
 $string['poll'] = "Umfrage";
-$string['tool_description_short'] = "Antworten live einsammeln";
+$string['tool_description_short'] = "Live-Feedback zu einer Frage einholen";
