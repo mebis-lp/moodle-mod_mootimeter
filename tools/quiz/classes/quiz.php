@@ -45,10 +45,16 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @var string Answer cloum
      */
     const ANSWER_COLUMN = "optionid";
+
     /**
      * @var string Answer table
      */
     const ANSWER_TABLE = "mtmt_quiz_answers";
+
+    /**
+     * @var string Answer option table name.
+     */
+    const ANSWER_OPTION_TABLE = "mtmt_quiz_options";
 
     /** @var string ChartJS default color
      * TODO: Make it an admin setting.
@@ -85,6 +91,14 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_answer_table() {
         return self::ANSWER_TABLE;
+    }
+
+    /**
+     * Get the tools answer table.
+     * @return string
+     */
+    public function get_answer_option_table() {
+        return self::ANSWER_OPTION_TABLE;
     }
 
     /**
@@ -186,7 +200,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         // Iterate through each answer option.
         foreach ($aoids as $aoid) {
             // First check if the selected answer is part of the page.
-            if (!$DB->record_exists('mtmt_quiz_options', ['id' => $aoid])) {
+            if (!$DB->record_exists($this->get_answer_option_table(), ['id' => $aoid])) {
                 // Skip to the next iteration if the answer is not part of the page.
                 continue;
             }
@@ -206,10 +220,10 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         // Store the answers in the database.
         $this->store_answer(
-            self::ANSWER_TABLE,
+            $this->get_answer_table(),
             $records,
             true,
-            self::ANSWER_COLUMN,
+            $this->get_answer_column(),
             $enablemultipleanswers
         );
     }
@@ -269,17 +283,20 @@ class quiz extends \mod_mootimeter\toolhelper {
         }
 
         if (!empty($record->id)) {
-            $origrecord = $DB->get_record('mtmt_quiz_options', ['id' => $record->id]);
+            $page = $this->get_page($record->pageid);
+            $origrecord = $DB->get_record($this->get_answer_option_table(), ['id' => $record->id]);
             $origrecord->pageid = $record->pageid;
             $origrecord->optiontext = $record->optiontext;
-            $origrecord->optioniscorrect = $record->optioniscorrect;
+            if ($page->tool == 'quiz') {
+                $origrecord->optioniscorrect = $record->optioniscorrect;
+            }
             $origrecord->timemodified = time();
 
-            $DB->update_record('mtmt_quiz_options', $origrecord);
+            $DB->update_record($this->get_answer_option_table(), $origrecord);
             return $origrecord->id;
         }
 
-        return $DB->insert_record('mtmt_quiz_options', $record, true);
+        return $DB->insert_record($this->get_answer_option_table(), $record, true);
     }
 
     /**
@@ -349,8 +366,8 @@ class quiz extends \mod_mootimeter\toolhelper {
 
             $transaction = $DB->start_delegated_transaction();
 
-            $DB->delete_records('mtmt_quiz_options', ['pageid' => $pageid, 'id' => $aoid]);
-            $DB->delete_records(self::ANSWER_TABLE, ['pageid' => $pageid, 'optionid' => $aoid]);
+            $DB->delete_records($this->get_answer_option_table(), ['pageid' => $pageid, 'id' => $aoid]);
+            $DB->delete_records($this->get_answer_table(), ['pageid' => $pageid, 'optionid' => $aoid]);
 
             $transaction->allow_commit();
 
@@ -384,10 +401,11 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         // Parameter for initializing Badges.
         $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
+        $params['template'] = "mootimetertool_quiz/view_content2";
 
         $answeroptions = $this->get_answer_options($page->id);
 
-        $useransweroptionsid = array_keys($this->get_user_answers(self::ANSWER_TABLE, $page->id, 'optionid', $USER->id));
+        $useransweroptionsid = array_keys($this->get_user_answers($this->get_answer_table(), $page->id, 'optionid', $USER->id));
 
         $inputtype = 'cb';
         if (self::get_tool_config($page->id, 'maxanswersperuser') == 1) {
@@ -446,6 +464,17 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Get an answer option.
+     *
+     * @param array $conditions
+     * @return object
+     */
+    public function get_answer_option(array $conditions): object {
+        global $DB;
+        return $DB->get_record($this->get_answer_option_table(), $conditions);
+    }
+
+    /**
      * Get all answer options of a page.
      *
      * @param int $pageid
@@ -453,7 +482,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_answer_options(int $pageid): array {
         global $DB;
-        return $DB->get_records('mtmt_quiz_options', ['pageid' => $pageid]);
+        return $DB->get_records($this->get_answer_option_table(), ['pageid' => $pageid]);
     }
 
     /**
@@ -476,6 +505,11 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         $params['template'] = 'mootimetertool_quiz/view_settings';
 
+        $params['ispoll'] = false;
+        if ($page->tool == "poll") {
+            $params['ispoll'] = true;
+        }
+
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
             'mtm-input-value' => s(self::get_tool_config($page, 'question')),
@@ -494,11 +528,16 @@ class quiz extends \mod_mootimeter\toolhelper {
             'notification_text' => get_string('mark_correct_answer', 'mootimetertool_quiz'),
         ];
 
+        $ispoll = false;
+        if ($page->tool == "poll") {
+            $ispoll = true;
+        }
+
         $answeroptions = $this->get_answer_options($page->id);
         foreach ($answeroptions as $answeroption) {
             $params['answeroptions'][] = [
                 'aoid' => $answeroption->id,
-
+                'ispoll' => $ispoll,
                 'mtm-ao-wrapper-id' => 'ao_wrapper_' . $answeroption->id,
 
                 'mtm-input-id' => 'ao_text_' . $answeroption->id,
@@ -600,7 +639,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'anonymousmode') ? "checked" : ""),
         ];
 
-        $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
+        $answers = $this->get_answers($this->get_answer_table(), $page->id, $this->get_answer_column());
         if (!empty(self::get_tool_config($page->id, "anonymousmode")) && !empty($answers)) {
             $params['anonymousmode']['cb_with_label_checked'] .= ' disabled ';
             unset($params['anonymousmode']['cb_with_label_ajaxmethod']);
@@ -653,7 +692,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             self::get_tool_config($page, 'showonteacherpermission')
             || has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
         ) {
-            $answersgrouped = (array)$this->get_answers_grouped(self::ANSWER_TABLE, ["pageid" => $page->id], 'optionid');
+            $answersgrouped = (array)$this->get_answers_grouped($this->get_answer_table(), ["pageid" => $page->id], 'optionid');
         } else {
             $answersgrouped = [];
         }
@@ -744,8 +783,8 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function delete_page_tool(object $page) {
         global $DB;
         try {
-            $DB->delete_records('mtmt_quiz_options', ['pageid' => $page->id]);
-            $DB->delete_records(self::ANSWER_TABLE, ['pageid' => $page->id]);
+            $DB->delete_records($this->get_answer_option_table(), ['pageid' => $page->id]);
+            $DB->delete_records($this->get_answer_table(), ['pageid' => $page->id]);
         } catch (\Exception $e) {
             return false;
         }
@@ -772,7 +811,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             return 0;
         }
 
-        $records = $DB->get_records(self::ANSWER_TABLE, ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
+        $records = $DB->get_records($this->get_answer_table(), ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
 
         if (empty($records)) {
             return 0;
@@ -791,7 +830,7 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function get_counted_answers(int $pageid) {
         $values = array_map(function ($obj) {
             return $obj['cnt'];
-        }, (array)$this->get_answers_grouped(self::ANSWER_TABLE, ["pageid" => $pageid], 'optionid'));
+        }, (array)$this->get_answers_grouped($this->get_answer_table(), ["pageid" => $pageid], 'optionid'));
         return array_values($values);
     }
 
@@ -805,7 +844,7 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function get_tool_answer_overview_params(object $cm, object $page): array {
         global $PAGE;
 
-        $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
+        $answers = $this->get_answers($this->get_answer_table(), $page->id, $this->get_answer_column());
 
         $answeroptions = $this->get_answer_options($page->id);
 
@@ -852,7 +891,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                     [
                         'icon' => 'fa-trash',
                         'id' => 'mtmt_delete_answer_' . $answer->id,
-                        'iconid' => 'mtmt_delte_iconid_' . $answer->id,
+                        'iconid' => 'mtmt_delete_iconid_' . $answer->id,
                         'dataset' => join(" ", $dataseticonrestart),
                     ],
                 ],

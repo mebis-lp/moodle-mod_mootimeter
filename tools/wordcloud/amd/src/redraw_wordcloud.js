@@ -7,8 +7,11 @@ export const init = (id) => {
         return;
     }
 
-    setInterval(() => {
+    var interval = setInterval(() => {
         getAnswers(id);
+        if (!document.getElementById(id)) {
+            clearInterval(interval);
+        }
     }, 1000);
 };
 

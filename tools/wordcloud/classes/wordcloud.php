@@ -145,7 +145,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                     [
                         'icon' => 'fa-trash',
                         'id' => 'mtmt_delete_answer_' . $answer->id,
-                        'iconid' => 'mtmt_delte_iconid_' . $answer->id,
+                        'iconid' => 'mtmt_delete_iconid_' . $answer->id,
                         'dataset' => implode(" ", $dataseticontrash),
                     ],
                 ],
@@ -288,8 +288,9 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         // Parameter for initializing Badges.
         $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
+        $params['template'] = "mootimetertool_" . $page->tool . "/view_content2";
 
-        $params["answers"] = array_values(array_map(function ($element) use ($page){
+        $params["answers"] = array_values(array_map(function ($element) use ($page) {
 
             // Add delete button to answer.
             $dataseticontrash = [
@@ -306,7 +307,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
                 'additional_class' => 'mootimeter-pill-inline',
                 'deletebutton' => [
                     'id' => 'mtmt_delete_answer_' . $element->id,
-                    'iconid' => 'mtmt_delte_iconid_' . $element->id,
+                    'iconid' => 'mtmt_delete_iconid_' . $element->id,
                     'dataset' => implode(" ", $dataseticontrash),
                 ],
             ];

@@ -139,7 +139,7 @@ class helper {
         }
         $toolhelper = new $classname();
         if (!method_exists($toolhelper, 'hook_after_new_page_created')) {
-            return "Method 'get_renderer_params' is missing in tool helper class " . $record->tool;
+            return "Method 'hook_after_new_page_created' is missing in tool helper class " . $record->tool;
         }
 
         $record->id = $pageid;
@@ -334,7 +334,6 @@ class helper {
             'question' => s(self::get_tool_config($page, 'question')),
             'isediting' => $isediting,
             'withwrapper' => $withwrapper,
-            'template' => "mootimetertool_" . $page->tool . "/view_content2",
             'sp' => [
                 'r' => optional_param('r', 0, PARAM_INT),
                 'o' => optional_param('o', 0, PARAM_INT),

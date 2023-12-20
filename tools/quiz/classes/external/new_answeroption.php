@@ -72,16 +72,29 @@ class new_answeroption extends external_api {
             'pageid' => $pageid,
         ]);
 
-        $quiz = new \mootimetertool_quiz\quiz();
+        $helper = new \mod_mootimeter\helper();
+        $page = $helper->get_page($pageid);
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return ['pagecontent' => ['error' => "Class '" . $page->tool . "' is missing in tool " . $page->tool]];
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'store_answer_option')) {
+            return ['pagecontent' => ['error' => "Method 'store_answer_option' is missing in tool helper class " . $page->tool]];
+        }
 
         $record = new \stdClass();
         $record->pageid = $pageid;
         $record->usermodified = $USER->id;
         $record->optiontext = '';
-        $record->optioniscorrect = 0;
+        if ($page->tool == 'quiz') {
+            $record->optioniscorrect = 0;
+        }
         $record->timecreated = time();
 
-        return ['aoid' => $quiz->store_answer_option($record)];
+        return ['aoid' => $toolhelper->store_answer_option($record)];
     }
 
     /**

@@ -48,24 +48,27 @@ class inplace_edit_answer extends \core\output\inplace_editable {
      * @throws coding_exception
      */
     public function __construct(object $page, object $answer) {
-        $quiz = new \mootimetertool_quiz\quiz();
-        $answeroptions = $quiz->get_answer_options($page->id);
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+        $toolhelper = new $classname();
+
+        $answeroptions = $toolhelper->get_answer_options($page->id);
 
         $answeroptionstemp = [];
         foreach ($answeroptions as $answeroption) {
             $answeroptionstemp[$answeroption->id] = $answeroption->optiontext;
         }
 
-        $instance = $quiz::get_instance_by_pageid($page->id);
-        $cm = $quiz::get_cm_by_instance($instance);
+        $instance = $toolhelper::get_instance_by_pageid($page->id);
+        $cm = $toolhelper::get_cm_by_instance($instance);
 
         parent::__construct(
             'mootimeter',
             'quiz_editanswerselect',
             $page->id . "_" . $answer->id,
             has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)),
-            $answeroptionstemp[$answer->{$quiz::ANSWER_COLUMN}],
-            $answer->{$quiz::ANSWER_COLUMN}
+            $answeroptionstemp[$answer->{$toolhelper->get_answer_column()}],
+            $answer->{$toolhelper->get_answer_column()}
         );
         $this->set_type_select($answeroptionstemp);
     }
@@ -85,17 +88,19 @@ class inplace_edit_answer extends \core\output\inplace_editable {
 
         // Extract pageid and answerid.
         list($pageid, $answerid) = explode("_", $itemid);
+        $helper = new \mod_mootimeter\helper();
+        $page = $helper->get_page($pageid);
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+        $toolhelper = new $classname();
 
         // Generate answeroption array.
-        $quiz = new \mootimetertool_quiz\quiz();
-        $answeroptions = $quiz->get_answer_options($pageid);
+        $answeroptions = $toolhelper->get_answer_options($pageid);
         $answeroptionstemp = [];
         foreach ($answeroptions as $answeroption) {
             $answeroptionstemp[$answeroption->id] = $answeroption->optiontext;
         }
 
         // Check capabilities.
-        $helper = new \mod_mootimeter\helper();
         $instance = $helper::get_instance_by_pageid($pageid);
         $cm = $helper::get_cm_by_instance($instance);
         $modulecontext = \context_module::instance($cm->id);

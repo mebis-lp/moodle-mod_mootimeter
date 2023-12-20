@@ -71,9 +71,11 @@ class get_answers extends external_api {
             ]
         );
 
-        $quiz = new \mootimetertool_quiz\quiz();
-
-        return $quiz->get_result_params_chartjs($pageid);
+        $helper = new \mod_mootimeter\helper();
+        $page = $helper->get_page($pageid);
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+        $toolhelper = new $classname();
+        return $toolhelper->get_result_params_chartjs($pageid);
     }
 
     /**

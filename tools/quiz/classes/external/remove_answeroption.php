@@ -75,8 +75,20 @@ class remove_answeroption extends external_api {
             'aoid' => $aoid,
         ]);
 
-        $quiz = new \mootimetertool_quiz\quiz();
-        return $quiz->remove_answer_option($pageid, $aoid);
+        $helper = new \mod_mootimeter\helper();
+        $page = $helper->get_page($pageid);
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+
+        if (!class_exists($classname)) {
+            return ['pagecontent' => ['error' => "Class '" . $page->tool . "' is missing in tool " . $page->tool]];
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'remove_answer_option')) {
+            return ['pagecontent' => ['error' => "Method 'remove_answer_option' is missing in tool helper class " . $page->tool]];
+        }
+
+        return $toolhelper->remove_answer_option($pageid, $aoid);
 
     }
 

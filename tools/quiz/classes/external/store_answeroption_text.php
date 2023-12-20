@@ -82,15 +82,25 @@ class store_answeroption_text extends external_api {
         ]);
 
         try {
+            $helper = new \mod_mootimeter\helper();
+            $page = $helper->get_page($pageid);
+            $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
-            $quiz = new \mootimetertool_quiz\quiz();
-            $record = new stdClass();
+            if (!class_exists($classname)) {
+                return ['pagecontent' => ['error' => "Class '" . $page->tool . "' is missing in tool " . $page->tool]];
+            }
+
+            $toolhelper = new $classname();
+            if (!method_exists($toolhelper, 'store_answer_option')) {
+                return ['pagecontent' => [
+                    'error' => "Method 'store_answer_option' is missing in tool helper class " . $page->tool,
+                ]];
+            }
 
             $dataset = json_decode($datasetjson);
-
-            $record = $DB->get_record('mtmt_quiz_options', ['id' => $dataset->aoid, 'pageid' => $pageid]);
+            $record = $toolhelper->get_answer_option(['id' => $dataset->aoid, 'pageid' => $pageid]);
             $record->optiontext = $inputvalue;
-            $quiz->store_answer_option($record);
+            $toolhelper->store_answer_option($record);
 
             $return = ['code' => 200, 'string' => 'ok'];
         } catch (\Exception $e) {

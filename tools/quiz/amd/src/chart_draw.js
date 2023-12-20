@@ -9,9 +9,12 @@ export const init = (id) => {
 
     const pageid = document.getElementById(id).dataset.pageid;
 
-    setInterval(() => {
+    var interval = setInterval(() => {
         const lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
         getAnswers(pageid, lastposttimestamp, id);
+        if (!document.getElementById(id)) {
+            clearInterval(interval);
+        }
     }, 1000);
 };
 
