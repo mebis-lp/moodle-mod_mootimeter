@@ -130,6 +130,7 @@ class helper {
             return $origrecord->id;
         }
         $record->timecreated = time();
+        $record->sortorder = $this->get_page_next_sortorder($instance);
         $pageid = $DB->insert_record('mootimeter_pages', $record, true);
 
         // Hook to do further actions depending on mtmt tool.
