@@ -105,7 +105,7 @@ class provider implements
         }
 
         manager::plugintype_class_callback(
-            'assignsubmission',
+            'mootimetertool',
             self::MOOTIMETERTOOL_USER_INTERFACE,
             'get_userids_from_context',
             [$userlist]

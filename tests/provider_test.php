@@ -28,12 +28,10 @@ namespace mod_mootimeter\privacy;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-// require_once($CFG->dirroot . '/mod/assign/locallib.php');
 
 use core_privacy\tests\provider_testcase;
-// use core_privacy\local\request\writer;
-// use core_privacy\local\request\approved_contextlist;
-// use mod_assign\privacy\provider;
+use core_privacy\local\request\writer;
+use core_privacy\local\request\approved_contextlist;
 
 /**
  * Unit tests for mod/mootimeter/classes/privacy/
@@ -143,6 +141,7 @@ class provider_test extends provider_testcase {
 
     /**
      * Test that getting the contexts for a user.
+     * @covers \core_privacy\local\request\core_userlist_provider::get_contexts_for_userid
      */
     public function test_get_contexts_for_userid() {
         $this->resetAfterTest();
@@ -204,100 +203,46 @@ class provider_test extends provider_testcase {
         $this->assertEmpty(array_diff($usercontextids, $contextlist->get_contextids()));
     }
 
-    // /**
-    //  * Test returning a list of user IDs related to a context (assign).
-    //  */
-    // public function test_get_users_in_context() {
-    //     global $DB;
+    /**
+     * Test returning a list of user IDs related to a context.
+     * @covers \core_privacy\local\request\core_userlist_provider::get_users_in_context
+     */
+    public function test_get_users_in_context() {
+        $this->resetAfterTest();
 
-    //     $this->resetAfterTest();
+        $mtmthelper = new \mootimetertool_quiz\quiz();
+        $ao1 = array_pop($this->mootimeter[1]['pages'][1]['answeroptions']);
+        $ao2 = array_pop($this->mootimeter[1]['pages'][1]['answeroptions']);
 
-    //     $course = $this->getDataGenerator()->create_course();
+        // Two of the three users answered the question.
+        $this->setUser($this->users['student1']);
+        $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao1->id]);
+        $this->setUser($this->users['student2']);
+        $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao2->id]);
 
-    //     // Only made a comment on a submission.
-    //     $user1 = $this->getDataGenerator()->create_user();
-    //     // User 2 only has information about an activity override.
-    //     $user2 = $this->getDataGenerator()->create_user();
-    //     // User 3 made a submission.
-    //     $user3 = $this->getDataGenerator()->create_user();
-    //     // User 4 makes a submission and it is marked by the teacher.
-    //     $user4 = $this->getDataGenerator()->create_user();
-    //     // Grading and providing feedback as a teacher.
-    //     $user5 = $this->getDataGenerator()->create_user();
-    //     // This user has no entries and should not show up.
-    //     $user6 = $this->getDataGenerator()->create_user();
+        $context = \context_module::instance($this->mootimeter[1]['instance']->cmid);
+        $userlist = new \core_privacy\local\request\userlist($context, 'mootimeter');
+        provider::get_users_in_context($userlist);
+        $userids = $userlist->get_userids();
 
-    //     $this->getDataGenerator()->enrol_user($user1->id, $course->id, 'student');
-    //     $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'student');
-    //     $this->getDataGenerator()->enrol_user($user3->id, $course->id, 'student');
-    //     $this->getDataGenerator()->enrol_user($user4->id, $course->id, 'student');
-    //     $this->getDataGenerator()->enrol_user($user5->id, $course->id, 'editingteacher');
-    //     $this->getDataGenerator()->enrol_user($user6->id, $course->id, 'student');
+        $this->assertTrue(in_array($this->users['student1']->id, $userids));
+        $this->assertTrue(in_array($this->users['student2']->id, $userids));
+        $this->assertFalse(in_array($this->users['student3']->id, $userids));
 
-    //     $assign1 = $this->create_instance([
-    //         'course' => $course,
-    //         'assignsubmission_onlinetext_enabled' => true,
-    //         'assignfeedback_comments_enabled' => true
-    //     ]);
-    //     $assign2 = $this->create_instance(['course' => $course]);
+        // Now the third user answers the question.
+        $this->setUser($this->users['student3']);
+        $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao1->id]);
 
-    //     $context = $assign1->get_context();
+        $userlist = new \core_privacy\local\request\userlist($context, 'mootimeter');
+        provider::get_users_in_context($userlist);
+        $userids = $userlist->get_userids();
 
-    //     // Jam an entry in the comments table for user 1.
-    //     $comment = (object) [
-    //         'contextid' => $context->id,
-    //         'component' => 'assignsubmission_comments',
-    //         'commentarea' => 'submission_comments',
-    //         'itemid' => 5,
-    //         'content' => 'A comment by user 1',
-    //         'format' => 0,
-    //         'userid' => $user1->id,
-    //         'timecreated' => time()
-    //     ];
-    //     $DB->insert_record('comments', $comment);
+        $this->assertTrue(in_array($this->users['student3']->id, $userids));
+    }
 
-    //     $this->setUser($user5); // Set the user to the teacher.
-
-    //     $overridedata = new \stdClass();
-    //     $overridedata->assignid = $assign1->get_instance()->id;
-    //     $overridedata->userid = $user2->id;
-    //     $overridedata->duedate = time();
-    //     $overridedata->allowsubmissionsfromdate = time();
-    //     $overridedata->cutoffdate = time();
-    //     $DB->insert_record('assign_overrides', $overridedata);
-
-    //     $submissiontext = 'My first submission';
-    //     $submission = $this->create_submission($assign1, $user3, $submissiontext);
-
-    //     $submissiontext = 'My first submission';
-    //     $submission = $this->create_submission($assign1, $user4, $submissiontext);
-
-    //     $this->setUser($user5);
-
-    //     $grade = '72.00';
-    //     $teachercommenttext = 'This is better. Thanks.';
-    //     $data = new \stdClass();
-    //     $data->attemptnumber = 1;
-    //     $data->grade = $grade;
-    //     $data->assignfeedbackcomments_editor = ['text' => $teachercommenttext, 'format' => FORMAT_MOODLE];
-
-    //     // Give the submission a grade.
-    //     $assign1->save_grade($user4->id, $data);
-
-    //     $userlist = new \core_privacy\local\request\userlist($context, 'assign');
-    //     provider::get_users_in_context($userlist);
-    //     $userids = $userlist->get_userids();
-    //     $this->assertTrue(in_array($user1->id, $userids));
-    //     $this->assertTrue(in_array($user2->id, $userids));
-    //     $this->assertTrue(in_array($user3->id, $userids));
-    //     $this->assertTrue(in_array($user4->id, $userids));
-    //     $this->assertTrue(in_array($user5->id, $userids));
-    //     $this->assertFalse(in_array($user6->id, $userids));
-    // }
-
-    // /**
-    //  * Test that a student with multiple submissions and grades is returned with the correct data.
-    //  */
+    /**
+     * Test that a student with multiple submissions and grades is returned with the correct data.
+     */
     // public function test_export_user_data_student() {
     //     global $DB;
     //     $this->resetAfterTest();
