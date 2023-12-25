@@ -50,8 +50,7 @@ use \core_privacy\manager;
 class provider implements
     \core_privacy\local\metadata\provider,
     \mod_mootimeter\privacy\mootimetertool_provider,
-    \mod_mootimeter\privacy\mootimetertool_user_provider
-    {
+    \mod_mootimeter\privacy\mootimetertool_user_provider {
 
     /**
      * Provides meta data that is stored about a user with mod_assign
@@ -62,16 +61,28 @@ class provider implements
     public static function get_metadata(collection $collection): collection {
 
         $collection->add_database_table(
-            'mootimetertool_poll_subs',
+            'mtmt_poll_answers',
             [
-                'usermodified' => 'privacy:metadata:mootimetertool_poll_subs:userid',
-                'pageid' => 'privacy:metadata:mootimetertool_poll_subs:pageid',
-                'optionid' => 'privacy:metadata:mootimetertool_poll_subs:optionid',
-                'timecreated' => 'privacy:metadata:mootimetertool_poll_subs:timecreated',
-                'timemodified' => 'privacy:metadata:mootimetertool_poll_subs:timemodified',
+                'usermodified' => 'privacy:metadata:mtmt_poll_answers:userid',
+                'pageid' => 'privacy:metadata:mtmt_poll_answers:pageid',
+                'optionid' => 'privacy:metadata:mtmt_poll_answers:optionid',
+                'timecreated' => 'privacy:metadata:mtmt_poll_answers:timecreated',
+                'timemodified' => 'privacy:metadata:mtmt_poll_answers:timemodified',
 
             ],
-            'privacy:metadata:mootimetertool_poll_subs'
+            'privacy:metadata:mtmt_poll_answers'
+        );
+
+        $collection->add_database_table(
+            'mtmt_poll_options',
+            [
+                'pageid' => 'privacy:metadata:mtmt_poll_options:pageid',
+                'optiontext' => 'privacy:metadata:mtmt_poll_options:optiontext',
+                'timecreated' => 'privacy:metadata:mtmt_poll_options:timecreated',
+                'timemodified' => 'privacy:metadata:mtmt_poll_options:timemodified',
+
+            ],
+            'privacy:metadata:mtmt_poll_options'
         );
 
         return $collection;
@@ -127,7 +138,39 @@ class provider implements
                   JOIN {mtmt_poll_answers} mtmta ON mtmta.pageid = mtmp.id
                   WHERE ctx.id = :contextid AND ctx.contextlevel = :contextlevel";
         $userlist->add_from_sql('userid', $sql, $params);
-
     }
 
+    /**
+     * Export the mootimetertool user data.
+     *
+     * @param mootimeter_plugin_request_data $exportdata
+     * @return void
+     */
+    public static function export_mootimetertool_user_data(
+        \mod_mootimeter\privacy\mootimeter_plugin_request_data $exportdata
+    ): void {
+
+        if ($exportdata->get_page()->tool != "poll") {
+            return;
+        }
+
+        $mtmthelper = new \mootimetertool_poll\poll();
+
+        $contextdata = $mtmthelper->get_user_answers(
+            $mtmthelper->get_answer_table(),
+            $exportdata->get_page()->id,
+            $mtmthelper->get_answer_column(),
+            $exportdata->get_user()->id
+        );
+        $i = 1;
+        foreach ($contextdata as $row) {
+
+            $answeroption = $mtmthelper->get_answer_option(['id' => $row->optionid]);
+            $answer = ['answeroptionid' => $row->optionid, 'answer' => $answeroption->optiontext];
+            $currentpath = $exportdata->get_subcontext();
+            $currentpath[] = get_string('privacy:answerspath', 'mootimetertool_poll') . "_" . $i;
+            writer::with_context($exportdata->get_context())->export_data($currentpath, (object)$answer);
+            $i++;
+        }
+    }
 }

@@ -62,7 +62,7 @@ interface mootimetertool_provider extends \core_privacy\local\request\plugin\sub
      *
      * @param  mootimeter_plugin_request_data $exportdata Information to use to export user data for this sub-plugin.
      */
-    // public static function export_mootimetertool_user_data(mootimeter_plugin_request_data $exportdata);
+    public static function export_mootimetertool_user_data(mootimeter_plugin_request_data $exportdata);
 
     /**
      * Any call to this method should delete all user data for the context defined in the deletion_criteria.

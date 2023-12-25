@@ -130,4 +130,7 @@ class provider implements
 
     }
 
+    public static function export_mootimetertool_user_data(\mod_mootimeter\privacy\mootimeter_plugin_request_data $exportdata) {
+    }
+
 }

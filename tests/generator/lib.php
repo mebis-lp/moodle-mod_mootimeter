@@ -25,7 +25,7 @@
 class mod_mootimeter_generator extends testing_module_generator {
 
     /** @var Mootimeter default tool */
-    const MTMT_DEFAULT_TOOLNAME = 'wordcloud';
+    const MTMT_DEFAULT_TOOLNAME_WORDCLOUD = 'wordcloud';
 
     /**
      * Creates an instance of a mootimeter.
@@ -35,11 +35,11 @@ class mod_mootimeter_generator extends testing_module_generator {
      * @return stdClass mootimeter instance
      */
     public function create_instance($record = null, array $options = null): stdClass {
-        $record = (array) $record + [
-            'name' => 'Test Mootimeter',
-            'intro' => 'This is a test description',
-            'introformat' => 1,
-        ];
+
+        $newrecord = [];
+        $newrecord['name'] = (empty($record['name'])) ? 'Test Mootimeter' : $record['name'];
+        $newrecord['intro'] = (empty($record['intro'])) ? 'This is a test description' : $record['intro'];
+        $newrecord['introformat'] = (empty($record['introformat'])) ? 1 : $record['introformat'];
 
         return parent::create_instance($record, (array) $options);
     }
@@ -58,7 +58,7 @@ class mod_mootimeter_generator extends testing_module_generator {
 
         $record = (array) $record;
 
-        $tool = (empty($record['tool'])) ? self::MTMT_DEFAULT_TOOLNAME : $record['tool'];
+        $tool = (empty($record['tool'])) ? self::MTMT_DEFAULT_TOOLNAME_WORDCLOUD : $record['tool'];
 
         if (empty($record['instance'])) {
             mtrace('mootimetertool_' . $tool . " instance is missing.");

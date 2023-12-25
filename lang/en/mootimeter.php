@@ -62,6 +62,7 @@ $string['please_select_a_page'] = 'Please select a page, to answer a question';
 $string['pluginadministration'] = 'Moodimeter administration';
 $string['pluginname'] = 'Mootimeter';
 $string['privacy:metadata:mootimetertoolpluginsummary'] = 'Mootimetertools subplugin summary';
+$string['privacy:pagepath'] = 'Path of page with id: {$a}';
 $string['question'] = 'Question';
 $string['select_page_type_heading'] = 'Please select the question type of a new question.';
 $string['select_page_type_paragraph'] = '';

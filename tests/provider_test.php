@@ -54,6 +54,13 @@ class provider_test extends provider_testcase {
     /** @var object $generator The generator instance */
     private $generator;
 
+    /** @var string The name of the first mootimeter instance */
+    const INSTANCE_1_NAME = 'Mootimeter 1';
+    /** @var string The name of the second mootimeter instance */
+    const INSTANCE_2_NAME = 'Mootimeter 2';
+    /** @var string The name of the third mootimeter instance */
+    const INSTANCE_3_NAME = 'Mootimeter 3';
+
     /**
      * Setup the test cases.
      */
@@ -94,7 +101,6 @@ class provider_test extends provider_testcase {
             true
         );
 
-        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $helper = new \mod_mootimeter\helper();
 
         // Create multiple mootimeter instances.
@@ -102,10 +108,20 @@ class provider_test extends provider_testcase {
 
         // Mootimeter with a tool quiz.
         $mtmthelper = new \mootimetertool_quiz\quiz();
+        $record = ['course' => $this->courses[1], 'name' => self::INSTANCE_1_NAME];
         $this->mootimeter[1]['instance'] = $this->generator->create_module('mootimeter', ['course' => $this->courses[1]]);
         $record = ['instance' => $this->mootimeter[1]['instance']->id, 'tool' => 'quiz'];
-        $this->mootimeter[1]['pages'][1]['page']= $helper->get_page($helper->store_page((object) $record));
+        $this->mootimeter[1]['pages'][1]['page'] = $helper->get_page($helper->store_page((object) $record));
         $pageid = $this->mootimeter[1]['pages'][1]['page']->id;
+
+        // Insert some answeroption text.
+        $answeroptions = $mtmthelper->get_answer_options($pageid);
+        $ao1 = array_pop($answeroptions);
+        $ao2 = array_pop($answeroptions);
+        $ao1->optiontext = 'Quiz-Option 1';
+        $mtmthelper->store_answer_option($ao1);
+        $ao2->optiontext = 'Quiz-Option 2';
+        $mtmthelper->store_answer_option($ao2);
         $this->mootimeter[1]['pages'][1]['answeroptions'] = $mtmthelper->get_answer_options($pageid);
 
         // Mootimeter with a tool poll.
@@ -114,6 +130,16 @@ class provider_test extends provider_testcase {
         $record = ['instance' => $this->mootimeter[2]['instance']->id, 'tool' => 'poll'];
         $this->mootimeter[2]['pages'][1]['page'] = $helper->get_page($helper->store_page((object) $record));
         $pageid = $this->mootimeter[2]['pages'][1]['page']->id;
+
+        // Insert some answeroption text.
+        $answeroptions = $mtmthelper->get_answer_options($pageid);
+        $ao1 = array_pop($answeroptions);
+        $ao2 = array_pop($answeroptions);
+        $ao1->optiontext = 'Poll-Option 1';
+        $mtmthelper->store_answer_option($ao1);
+        $ao2->optiontext = 'Poll-Option 2';
+        $mtmthelper->store_answer_option($ao2);
+
         $this->mootimeter[2]['pages'][1]['answeroptions'] = $mtmthelper->get_answer_options($pageid);
 
         // Mootimeter with a tool wordcloud.
@@ -180,6 +206,7 @@ class provider_test extends provider_testcase {
         $mtmthelper = new \mootimetertool_poll\poll();
         $ao1 = array_pop($this->mootimeter[2]['pages'][1]['answeroptions']);
         $ao2 = array_pop($this->mootimeter[2]['pages'][1]['answeroptions']);
+
         $this->setUser($this->users['student1']);
         $mtmthelper->insert_answer($this->mootimeter[2]['pages'][1]['page'], [$ao1->id]);
         $contextlist = provider::get_contexts_for_userid($this->users['student1']->id);
@@ -241,105 +268,81 @@ class provider_test extends provider_testcase {
     }
 
     /**
-     * Test that a student with multiple submissions and grades is returned with the correct data.
+     * Test that a student with multiple answers is returned with the correct data.
      */
-    // public function test_export_user_data_student() {
-    //     global $DB;
-    //     $this->resetAfterTest();
-    //     $course = $this->getDataGenerator()->create_course();
-    //     $coursecontext = \context_course::instance($course->id);
+    public function test_export_user_data() {
+        $this->resetAfterTest();
 
-    //     $user = $this->getDataGenerator()->create_user();
-    //     $teacher = $this->getDataGenerator()->create_user();
-    //     $this->getDataGenerator()->enrol_user($user->id, $course->id, 'student');
-    //     $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
-    //     $assign = $this->create_instance([
-    //         'course' => $course,
-    //         'name' => 'Assign 1',
-    //         'attemptreopenmethod' => ASSIGN_ATTEMPT_REOPEN_METHOD_MANUAL,
-    //         'maxattempts' => 3,
-    //         'assignsubmission_onlinetext_enabled' => true,
-    //         'assignfeedback_comments_enabled' => true
-    //     ]);
+        $mtmthelper = new \mootimetertool_quiz\quiz();
+        $ao1 = array_pop($this->mootimeter[1]['pages'][1]['answeroptions']);
+        $ao2 = array_pop($this->mootimeter[1]['pages'][1]['answeroptions']);
 
-    //     $context = $assign->get_context();
-    //     // Create some submissions (multiple attempts) for a student.
-    //     $submissiontext = 'My first submission';
-    //     $submission = $this->create_submission($assign, $user, $submissiontext);
+        // Two of the three users answered the question.
+        $this->setUser($this->users['student1']);
+        $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao1->id, $ao2->id]);
+        $this->setUser($this->users['student2']);
+        $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao2->id]);
 
-    //     $this->setUser($teacher);
+        $context = \context_module::instance($this->mootimeter[1]['instance']->cmid);
 
-    //     $overridedata = new \stdClass();
-    //     $overridedata->assignid = $assign->get_instance()->id;
-    //     $overridedata->userid = $user->id;
-    //     $overridedata->duedate = time();
-    //     $overridedata->allowsubmissionsfromdate = time();
-    //     $overridedata->cutoffdate = time();
-    //     $DB->insert_record('assign_overrides', $overridedata);
+        $writer = writer::with_context($context);
+        $this->assertFalse($writer->has_any_data());
 
-    //     $grade1 = '67.00';
-    //     $teachercommenttext = 'Please try again.';
-    //     $data = new \stdClass();
-    //     $data->attemptnumber = 0;
-    //     $data->grade = $grade1;
-    //     $data->assignfeedbackcomments_editor = ['text' => $teachercommenttext, 'format' => FORMAT_MOODLE];
+        // The student should have answered the question.
+        // Add the course context as well to make sure there is no error.
 
-    //     // Give the submission a grade.
-    //     $assign->save_grade($user->id, $data);
+        $coursecontext = \context_course::instance($this->courses[1]->id);
+        $approvedlist = new approved_contextlist($this->users['student1'], 'mod_mootimeter', [$context->id, $coursecontext->id]);
+        provider::export_user_data($approvedlist);
 
-    //     $submissiontext2 = 'My second submission';
-    //     $submission = $this->create_submission($assign, $user, $submissiontext2, 1);
+        // Check that we have general details about the mootimeter instance.
+        $this->assertEquals(self::INSTANCE_1_NAME, $writer->get_data()->name);
 
-    //     $this->setUser($teacher);
+        // Check mootimetertools.
+        $path = [
+            'Path of page with id: ' . $this->mootimeter[1]['pages'][1]['page']->id,
+            get_string('privacy:answerspath', 'mootimetertool_quiz') . '_1',
+        ];
 
-    //     $grade2 = '72.00';
-    //     $teachercommenttext2 = 'This is better. Thanks.';
-    //     $data = new \stdClass();
-    //     $data->attemptnumber = 1;
-    //     $data->grade = $grade2;
-    //     $data->assignfeedbackcomments_editor = ['text' => $teachercommenttext2, 'format' => FORMAT_MOODLE];
+        $this->assertEquals($ao1->id, $writer->get_data($path)->answeroptionid);
+        $this->assertEquals($ao1->optiontext, $writer->get_data($path)->answer);
 
-    //     // Give the submission a grade.
-    //     $assign->save_grade($user->id, $data);
+        // =======.
+        // Now test tool poll.
+        // =======.
+        $mtmthelper = new \mootimetertool_poll\poll();
+        $ao1 = array_pop($this->mootimeter[2]['pages'][1]['answeroptions']);
+        $ao2 = array_pop($this->mootimeter[2]['pages'][1]['answeroptions']);
 
-    //     /** @var \core_privacy\tests\request\content_writer $writer */
-    //     $writer = writer::with_context($context);
-    //     $this->assertFalse($writer->has_any_data());
+        // Two of the three users answered the question.
+        $this->setUser($this->users['student1']);
+        $mtmthelper->insert_answer($this->mootimeter[2]['pages'][1]['page'], [$ao1->id, $ao2->id]);
+        $this->setUser($this->users['student2']);
+        $mtmthelper->insert_answer($this->mootimeter[2]['pages'][1]['page'], [$ao2->id]);
 
-    //     // The student should have some text submitted.
-    //     // Add the course context as well to make sure there is no error.
-    //     $approvedlist = new approved_contextlist($user, 'mod_assign', [$context->id, $coursecontext->id]);
-    //     provider::export_user_data($approvedlist);
+        $context = \context_module::instance($this->mootimeter[2]['instance']->cmid);
 
-    //     // Check that we have general details about the assignment.
-    //     $this->assertEquals('Assign 1', $writer->get_data()->name);
-    //     // Check Submissions.
-    //     $this->assertEquals($submissiontext, $writer->get_data(['attempt 1', 'Submission Text'])->text);
-    //     $this->assertEquals($submissiontext2, $writer->get_data(['attempt 2', 'Submission Text'])->text);
-    //     $this->assertEquals(1, $writer->get_data(['attempt 1', 'submission'])->attemptnumber);
-    //     $this->assertEquals(2, $writer->get_data(['attempt 2', 'submission'])->attemptnumber);
-    //     // Check grades.
-    //     $this->assertEquals((float)$grade1, $writer->get_data(['attempt 1', 'grade'])->grade);
-    //     $this->assertEquals((float)$grade2, $writer->get_data(['attempt 2', 'grade'])->grade);
-    //     // Check feedback.
-    //     $this->assertStringContainsString($teachercommenttext, $writer->get_data(['attempt 1', 'Feedback comments'])->commenttext);
-    //     $this->assertStringContainsString($teachercommenttext2, $writer->get_data(['attempt 2', 'Feedback comments'])->commenttext);
+        $writer = writer::with_context($context);
+        $this->assertFalse($writer->has_any_data());
 
-    //     // Check override data was exported correctly.
-    //     $overrideexport = $writer->get_data(['Overrides']);
-    //     $this->assertEquals(
-    //         \core_privacy\local\request\transform::datetime($overridedata->duedate),
-    //         $overrideexport->duedate
-    //     );
-    //     $this->assertEquals(
-    //         \core_privacy\local\request\transform::datetime($overridedata->cutoffdate),
-    //         $overrideexport->cutoffdate
-    //     );
-    //     $this->assertEquals(
-    //         \core_privacy\local\request\transform::datetime($overridedata->allowsubmissionsfromdate),
-    //         $overrideexport->allowsubmissionsfromdate
-    //     );
-    // }
+        // The student should have answered the question.
+        // Add the course context as well to make sure there is no error.
+
+        $coursecontext = \context_course::instance($this->courses[2]->id);
+        $approvedlist = new approved_contextlist($this->users['student1'], 'mod_mootimeter', [$context->id, $coursecontext->id]);
+        provider::export_user_data($approvedlist);
+
+        // Check that we have general details about the mootimeter instance.
+        $this->assertEquals(self::INSTANCE_2_NAME, $writer->get_data()->name);
+
+        // Check mootimetertools.
+        $path = [
+            'Path of page with id: ' . $this->mootimeter[2]['pages'][1]['page']->id,
+            get_string('privacy:answerspath', 'mootimetertool_poll') . '_1',
+        ];
+        $this->assertEquals($ao1->id, $writer->get_data($path)->answeroptionid);
+        $this->assertEquals($ao1->optiontext, $writer->get_data($path)->answer);
+    }
 
     // /**
     //  * Tests the data returned for a teacher.

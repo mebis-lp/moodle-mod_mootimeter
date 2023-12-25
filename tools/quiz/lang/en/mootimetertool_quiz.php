@@ -36,6 +36,7 @@ $string['multiple_answers'] = 'Multiple answers';
 $string['no_answer_due_to_showteacherpermission'] = 'The teacher must first allow the results to be displayed.';
 $string['nodata'] = "No data available yet";
 $string['pluginname'] = 'Quiz';
+$string['privacy:answerspath'] = 'Antworten';
 $string['privacy:metadata:mootimetertool_quiz_subs'] = 'Privacy Provider of the mootimetertool Quiz';
 $string['privacy:metadata:mootimetertool_quiz_subs:optionid'] = 'Option ID';
 $string['privacy:metadata:mootimetertool_quiz_subs:pageid'] = 'Page ID';

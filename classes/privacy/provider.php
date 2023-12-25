@@ -69,6 +69,9 @@ class provider implements
 
         $collection->add_plugintype_link('mootimetertool', [], 'privacy:metadata:mootimetertoolpluginsummary');
 
+        // Link to subplugins.
+        $collection->add_plugintype_link('mootimetertool', [], 'privacy:metadata:mootimetertoolpluginsummary');
+
         return $collection;
     }
 
@@ -123,8 +126,68 @@ class provider implements
             if ($context->contextlevel != CONTEXT_MODULE) {
                 continue;
             }
+
             $user = $contextlist->get_user();
             $mootimeterdata = helper::get_context_data($context, $user);
+            writer::with_context($context)->export_data([], $mootimeterdata);
+
+            $cm = get_coursemodule_from_id('', $context->instanceid);
+            $mtmhelper = new \mod_mootimeter\helper();
+            $mootimeterinstance = $mtmhelper::get_mootimeter_instance($cm->instance);
+            writer::with_context($context)->export_data([], $mootimeterinstance);
+
+            static::export_mootimetertool_data($mootimeterinstance, $user, $context, []);
+
+        }
+    }
+
+    /**
+     * Exports answered data for a user.
+     *
+     * @param  object          $mootimeterinstance           The mootimeterinstance object
+     * @param  object          $user                         The user object
+     * @param  \context        $context                      The context
+     */
+    protected static function export_mootimetertool_data(
+        object $mootimeterinstance,
+        object $user,
+        object $context,
+        array $path,
+    ) {
+        $helper = new \mod_mootimeter\helper();
+        $toolpages = $helper->get_all_tools_of_instance($mootimeterinstance);
+        foreach ($toolpages as $tool => $pages) {
+
+            foreach($pages as $page){
+                $subpath = array_merge($path, [get_string('privacy:pagepath', 'mod_mootimeter', $page->id)]);
+                $params = new mootimeter_plugin_request_data($context, $page, $user, $subpath);
+                manager::plugintype_class_callback(
+                    'mootimetertool',
+                    self::MOOTIMETERTOOL_INTERFACE,
+                    'export_mootimetertool_user_data',
+                    [$params]
+                );
+            }
+
+            // writer::with_context($context)->export_data(['test'], (object)['text' => "TEST"]);
+
+            // self::export_mootimetertool_data($mootimeterinstance, $user, $context, $submissionpath);
+            // $grade = $assign->get_user_grade($user->id, false, $submission->attemptnumber);
+            // if ($grade) {
+            //     $params = new assign_plugin_request_data($context, $assign, $grade, $submissionpath, $teacher);
+            //     manager::plugintype_class_callback(
+            //         'assignfeedback',
+            //         self::ASSIGNFEEDBACK_INTERFACE,
+            //         'export_feedback_user_data',
+            //         [$params]
+            //     );
+
+            //     self::export_grade_data($grade, $context, $submissionpath);
+            //     // Check for advanced grading and retrieve that information.
+            //     if (isset($controller)) {
+            //         \core_grading\privacy\provider::export_item_data($context, $grade->id, $submissionpath);
+            //     }
+            // }
         }
     }
 

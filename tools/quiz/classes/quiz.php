@@ -102,6 +102,14 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Get the pix tool. This can be the same between multiple tools e.g. quiz and poll.
+     * @return string
+     */
+    public function get_pix_toolname() {
+        return "quiz";
+    }
+
+    /**
      * Get chartjs visualization settings.
      * @param int $visualizationtypeid
      * @param mixed $pageid
@@ -216,7 +224,10 @@ class quiz extends \mod_mootimeter\toolhelper {
         }
 
         // Check if multiple answers are allowed.
-        $enablemultipleanswers = (self::get_tool_config($page, 'maxanswersperuser') > 1) ? true : false;
+        $enablemultipleanswers = (
+            self::get_tool_config($page, 'maxanswersperuser') > 1
+            || (int) self::get_tool_config($page, 'maxanswersperuser') == 0
+        ) ? true : false;
 
         // Store the answers in the database.
         $this->store_answer(
@@ -286,7 +297,7 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         if (!empty($record->id)) {
             $page = $this->get_page($record->pageid);
-            $origrecord = $DB->get_record($this->get_answer_option_table(), ['id' => $record->id]);
+            $origrecord = $DB->get_record($this->get_answer_option_table(), ['id' => $record->id], '*', MUST_EXIST);
             $origrecord->pageid = $record->pageid;
             $origrecord->optiontext = $record->optiontext;
             if ($page->tool == 'quiz') {
@@ -407,7 +418,12 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         $answeroptions = $this->get_answer_options($page->id);
 
-        $useransweroptionsid = array_keys($this->get_user_answers($this->get_answer_table(), $page->id, 'optionid', $USER->id));
+        $useransweroptionsid = array_keys($this->get_user_answers(
+            $this->get_answer_table(),
+            $page->id,
+            $this->get_answer_column(),
+            $USER->id
+        ));
 
         $inputtype = 'cb';
         if (self::get_tool_config($page->id, 'maxanswersperuser') == 1) {
@@ -469,9 +485,9 @@ class quiz extends \mod_mootimeter\toolhelper {
      * Get an answer option.
      *
      * @param array $conditions
-     * @return object
+     * @return bool|object
      */
-    public function get_answer_option(array $conditions): object {
+    public function get_answer_option(array $conditions): bool|object {
         global $DB;
         return $DB->get_record($this->get_answer_option_table(), $conditions);
     }
@@ -578,7 +594,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_PILLAR,
                 'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
                 'mtm-button-icon-img' => [
-                    'path' => "tools/" . $page->tool . "/pix/chart-pillar.svg",
+                    'path' => "tools/" . $this->get_pix_toolname() . "/pix/chart-pillar.svg",
                     'width' => "24px",
                 ],
                 'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_PILLAR) ? true : false,
@@ -588,7 +604,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_BAR,
                 'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
                 'mtm-button-icon-img' => [
-                    'path' => "tools/" . $page->tool . "/pix/chart-bar.svg",
+                    'path' => "tools/" . $this->get_pix_toolname() . "/pix/chart-bar.svg",
                     'width' => "24px",
                 ],
                 'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_BAR) ? true : false,
@@ -598,7 +614,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_LINE,
                 'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
                 'mtm-button-icon-img' => [
-                    'path' => "tools/" . $page->tool . "/pix/chart-line.svg",
+                    'path' => "tools/" . $this->get_pix_toolname() . "/pix/chart-line.svg",
                     'width' => "24px",
                 ],
                 'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_LINE) ? true : false,
@@ -608,7 +624,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_PIE,
                 'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
                 'mtm-button-icon-img' => [
-                    'path' => "tools/" . $page->tool . "/pix/chart-pie.svg",
+                    'path' => "tools/" . $this->get_pix_toolname() . "/pix/chart-pie.svg",
                     'width' => "24px",
                 ],
                 'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_PIE) ? true : false,
@@ -694,7 +710,11 @@ class quiz extends \mod_mootimeter\toolhelper {
             self::get_tool_config($page, 'showonteacherpermission')
             || has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
         ) {
-            $answersgrouped = (array)$this->get_answers_grouped($this->get_answer_table(), ["pageid" => $page->id], 'optionid');
+            $answersgrouped = (array)$this->get_answers_grouped(
+                $this->get_answer_table(),
+                ["pageid" => $page->id],
+                $this->get_answer_column()
+            );
         } else {
             $answersgrouped = [];
         }
@@ -832,7 +852,7 @@ class quiz extends \mod_mootimeter\toolhelper {
     public function get_counted_answers(int $pageid) {
         $values = array_map(function ($obj) {
             return $obj['cnt'];
-        }, (array)$this->get_answers_grouped($this->get_answer_table(), ["pageid" => $pageid], 'optionid'));
+        }, (array)$this->get_answers_grouped($this->get_answer_table(), ["pageid" => $pageid], $this->get_answer_column()));
         return array_values($values);
     }
 
