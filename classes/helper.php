@@ -57,6 +57,31 @@ class helper {
     const PAGE_UNVISIBLE = 0;
 
     /**
+     * Get all tools of instance.#
+     *
+     * @param int|object $instanceorid
+     * @return array
+     * @throws dml_exception
+     * @throws coding_exception
+     */
+    public function get_all_tools_of_instance(int|object $instanceorid) {
+
+        if (is_object($instanceorid)) {
+            $instanceid = $instanceorid->id;
+        } else {
+            $instanceid = $instanceorid;
+        }
+
+        $pages = $this->get_pages($instanceid);
+
+        $toolpages = [];
+        foreach ($pages as $page) {
+            $toolpages[$page->tool][] = $page;
+        }
+        return $toolpages;
+    }
+
+    /**
      * Get a tools answer column.
      * @param object|int $pageorid
      * @return string
@@ -236,12 +261,25 @@ class helper {
 
     /**
      * Get instance by mootimeter pageid
-     * @param mixed $pageid
+     * @param int $pageid
      * @return int
      */
-    public static function get_instance_by_pageid($pageid): int {
+    public static function get_instance_by_pageid(int $pageid): int {
         global $DB;
         return $DB->get_field('mootimeter_pages', 'instance', ['id' => $pageid], IGNORE_MISSING);
+    }
+
+
+    /**
+     * Get the mootimeterinstance
+     *
+     * @param int $instanceid
+     * @return object
+     * @throws dml_exception
+     */
+    public static function get_mootimeter_instance(int $instanceid): object {
+        global $DB;
+        return $DB->get_record('mootimeter', ['id' => $instanceid]);
     }
 
     /**
@@ -261,9 +299,7 @@ class helper {
      */
     public static function get_cm_by_instance(int $instance): object {
         global $DB;
-
         $module = $DB->get_record('modules', ['name' => 'mootimeter']);
-
         return $DB->get_record('course_modules', ['module' => $module->id, 'instance' => $instance]);
     }
 

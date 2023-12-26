@@ -36,6 +36,7 @@ $string['hide_results'] = 'Hide result wordcloud';
 $string['no_answer'] = 'There are no answers yet.';
 $string['no_answer_due_to_showteacherpermission'] = 'The teacher must first allow the answers to be displayed.';
 $string['pluginname'] = 'Wordcloud';
+$string['privacy:answerspath'] = 'Antworten';
 $string['show_results'] = 'Show result wordcloud';
 $string['showresultlive'] = 'Show results live';
 $string['showresultteacherpermission'] = 'Show results on teacher permission';

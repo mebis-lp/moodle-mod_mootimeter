@@ -25,7 +25,7 @@
 class mod_mootimeter_generator extends testing_module_generator {
 
     /** @var Mootimeter default tool */
-    const MTMT_DEFAULT_TOOLNAME = 'wordcloud';
+    const MTMT_DEFAULT_TOOLNAME_WORDCLOUD = 'wordcloud';
 
     /**
      * Creates an instance of a mootimeter.
@@ -35,11 +35,11 @@ class mod_mootimeter_generator extends testing_module_generator {
      * @return stdClass mootimeter instance
      */
     public function create_instance($record = null, array $options = null): stdClass {
-        $record = (array) $record + [
-            'name' => 'Test Mootimeter',
-            'intro' => 'This is a test description',
-            'introformat' => 1,
-        ];
+
+        $newrecord = [];
+        $newrecord['name'] = (empty($record['name'])) ? 'Test Mootimeter' : $record['name'];
+        $newrecord['intro'] = (empty($record['intro'])) ? 'This is a test description' : $record['intro'];
+        $newrecord['introformat'] = (empty($record['introformat'])) ? 1 : $record['introformat'];
 
         return parent::create_instance($record, (array) $options);
     }
@@ -58,7 +58,7 @@ class mod_mootimeter_generator extends testing_module_generator {
 
         $record = (array) $record;
 
-        $tool = (empty($record['tool'])) ? self::MTMT_DEFAULT_TOOLNAME : $record['tool'];
+        $tool = (empty($record['tool'])) ? self::MTMT_DEFAULT_TOOLNAME_WORDCLOUD : $record['tool'];
 
         if (empty($record['instance'])) {
             mtrace('mootimetertool_' . $tool . " instance is missing.");
@@ -78,5 +78,35 @@ class mod_mootimeter_generator extends testing_module_generator {
         $pageid = $mtmhelper->store_page((object)$record);
 
         return $mtmhelper->get_page($pageid);
+    }
+
+    /**
+     * Create a quiz/poll answer option.
+     * @param object $page
+     * @param object $record
+     * @return void
+     */
+    public function create_quiz_poll_answer_option(object $page, object $record): void {
+        global $USER;
+
+        $record = new stdClass();
+        $record->pageid = $page->id;
+        $record->usermodified = (empty($record->userid)) ? $USER->id : $record->userid;
+        $record->optiontext = (empty($record->optiontext)) ? 'Default Option' : $record->optiontext;
+        if ($page->tool == "quiz") {
+            $record->optioniscorrect = (empty($record->optioniscorrect)) ? 0 : $record->optioniscorrect;
+        }
+        $record->timecreated = time();
+
+        if ($page->tool == "poll") {
+            $mtmthelper = new \mootimetertool_poll\poll();
+        }
+        if ($page->tool == "quiz") {
+            $mtmthelper = new \mootimetertool_quiz\quiz();
+        }
+
+        // Store two answer options as default.
+        $mtmthelper->store_answer_option($record);
+        return;
     }
 }
