@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 // require_once($CFG->dirroot . '/mod/assign/locallib.php');
 
+use coding_exception;
 use \core_privacy\local\metadata\collection;
 use \core_privacy\local\request\contextlist;
 use \core_privacy\local\request\writer;
@@ -38,6 +39,7 @@ use \core_privacy\local\request\helper;
 use \core_privacy\local\request\userlist;
 use \core_privacy\local\request\approved_userlist;
 use \core_privacy\manager;
+use dml_exception;
 
 /**
  * Privacy class for requesting user data.
@@ -137,7 +139,6 @@ class provider implements
             writer::with_context($context)->export_data([], $mootimeterinstance);
 
             static::export_mootimetertool_data($mootimeterinstance, $user, $context, []);
-
         }
     }
 
@@ -158,7 +159,7 @@ class provider implements
         $toolpages = $helper->get_all_tools_of_instance($mootimeterinstance);
         foreach ($toolpages as $tool => $pages) {
 
-            foreach($pages as $page){
+            foreach ($pages as $page) {
                 $subpath = array_merge($path, [get_string('privacy:pagepath', 'mod_mootimeter', $page->id)]);
                 $params = new mootimeter_plugin_request_data($context, $page, $user, $subpath);
                 manager::plugintype_class_callback(
@@ -168,42 +169,45 @@ class provider implements
                     [$params]
                 );
             }
-
-            // writer::with_context($context)->export_data(['test'], (object)['text' => "TEST"]);
-
-            // self::export_mootimetertool_data($mootimeterinstance, $user, $context, $submissionpath);
-            // $grade = $assign->get_user_grade($user->id, false, $submission->attemptnumber);
-            // if ($grade) {
-            //     $params = new assign_plugin_request_data($context, $assign, $grade, $submissionpath, $teacher);
-            //     manager::plugintype_class_callback(
-            //         'assignfeedback',
-            //         self::ASSIGNFEEDBACK_INTERFACE,
-            //         'export_feedback_user_data',
-            //         [$params]
-            //     );
-
-            //     self::export_grade_data($grade, $context, $submissionpath);
-            //     // Check for advanced grading and retrieve that information.
-            //     if (isset($controller)) {
-            //         \core_grading\privacy\provider::export_item_data($context, $grade->id, $submissionpath);
-            //     }
-            // }
         }
     }
 
+    /**
+     * Delete data for all users in context.
+     *
+     * @param \context $context
+     * @return void
+     * @throws dml_exception
+     * @throws coding_exception
+     */
     public static function delete_data_for_all_users_in_context($context) {
-
+        if ($context->contextlevel == CONTEXT_MODULE) {
+            $cm = get_coursemodule_from_id('mootimeter', $context->instanceid);
+            if ($cm) {
+                $helper = new \mod_mootimeter\helper();
+                $toolpages = $helper->get_all_tools_of_instance($cm->instance);
+                foreach ($toolpages as $tool => $pages) {
+                    foreach ($pages as $page) {
+                        // What to do first... Get sub plugins to delete their stuff.
+                        $requestdata = new mootimeter_plugin_request_data($context, $page);
+                        manager::plugintype_class_callback(
+                            'mootimetertool',
+                            self::MOOTIMETERTOOL_INTERFACE,
+                            'delete_answers_for_context',
+                            [$requestdata]
+                        );
+                    }
+                }
+            }
+        }
     }
 
-    public static function delete_data_for_user(approved_contextlist $contextlist){
-
+    public static function delete_data_for_user(approved_contextlist $contextlist) {
     }
 
     public static function export_user_preferences(int $userid) {
-
     }
 
     public static function delete_data_for_users(approved_userlist $userlist) {
-
     }
 }

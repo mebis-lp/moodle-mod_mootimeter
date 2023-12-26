@@ -66,13 +66,12 @@ interface mootimetertool_provider extends \core_privacy\local\request\plugin\sub
 
     /**
      * Any call to this method should delete all user data for the context defined in the deletion_criteria.
-     * assign_plugin_request_data contains:
+     * mootimeter_plugin_request_data contains:
      * - context
-     * - assign object
      *
-     * @param assign_plugin_request_data $requestdata Information to use to delete user data for this mootimetertool.
+     * @param mootimeter_plugin_request_data $requestdata Information to use to delete user data for this mootimetertool.
      */
-    // public static function delete_mootimetertool_for_context(assign_plugin_request_data $requestdata);
+    public static function delete_answers_for_context(mootimeter_plugin_request_data $requestdata);
 
     /**
      * A call to this method should delete user data (where practicle) from the userid and context.

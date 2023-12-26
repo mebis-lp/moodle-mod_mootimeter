@@ -149,9 +149,7 @@ class provider implements
      * @param mootimeter_plugin_request_data $exportdata
      * @return void
      */
-    public static function export_mootimetertool_user_data(
-        \mod_mootimeter\privacy\mootimeter_plugin_request_data $exportdata
-    ): void {
+    public static function export_mootimetertool_user_data(mootimeter_plugin_request_data $exportdata): void {
 
         if ($exportdata->get_page()->tool != "quiz") {
             return;
@@ -176,5 +174,21 @@ class provider implements
             writer::with_context($exportdata->get_context())->export_data($currentpath, (object)$answer);
             $i++;
         }
+    }
+
+    /**
+     * Any call to this method should delete all user data for the context defined in the deletion_criteria.
+     *
+     * @param  mootimeter_plugin_request_data $requestdata Data useful for deleting user data from this sub-plugin.
+     */
+    public static function delete_answers_for_context(mootimeter_plugin_request_data $requestdata) {
+
+        if ($requestdata->get_page()->tool != "quiz") {
+            return;
+        }
+
+        $mtmthelper = new \mootimetertool_quiz\quiz();
+        $page = $requestdata->get_page();
+        $mtmthelper->delete_answers_tool($page, ['pageid' => $page->id]);
     }
 }

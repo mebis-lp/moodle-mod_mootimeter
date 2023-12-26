@@ -814,6 +814,19 @@ class quiz extends \mod_mootimeter\toolhelper {
     }
 
     /**
+     * Delete answers by condition.
+     *
+     * @param object $page
+     * @param array $conditions
+     * @return void
+     */
+    public function delete_answers_tool(object $page, array $conditions): void {
+        global $DB;
+        $DB->delete_records($this->get_answer_table(), $conditions);
+        $this->clear_caches($page->id);
+    }
+
+    /**
      * Get the lastupdated timestamp.
      *
      * @param int $pageid

@@ -38,6 +38,7 @@ use \core_privacy\local\request\helper;
 use \core_privacy\local\request\userlist;
 use \core_privacy\local\request\approved_userlist;
 use \core_privacy\manager;
+use mod_mootimeter\privacy\mootimeter_plugin_request_data;
 
 /**
  * Privacy class for requesting user data.
@@ -172,5 +173,21 @@ class provider implements
             writer::with_context($exportdata->get_context())->export_data($currentpath, (object)$answer);
             $i++;
         }
+    }
+
+    /**
+     * Any call to this method should delete all user data for the context defined in the deletion_criteria.
+     *
+     * @param  mootimeter_plugin_request_data $requestdata Data useful for deleting user data from this sub-plugin.
+     */
+    public static function delete_answers_for_context(mootimeter_plugin_request_data $requestdata) {
+
+        if ($requestdata->get_page()->tool != "poll") {
+            return;
+        }
+
+        $mtmthelper = new \mootimetertool_poll\poll();
+        $page = $requestdata->get_page();
+        $mtmthelper->delete_answers_tool($page, ['pageid' => $page->id]);
     }
 }
