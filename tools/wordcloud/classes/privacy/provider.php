@@ -25,19 +25,11 @@
 
 namespace mootimetertool_wordcloud\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
-// require_once($CFG->dirroot . '/mod/assign/locallib.php');
-
-use \core_privacy\local\metadata\collection;
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\transform;
-use \core_privacy\local\request\helper;
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\manager;
+use coding_exception;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\writer;
+use dml_exception;
 use mod_mootimeter\privacy\mootimeter_plugin_request_data;
 
 /**
@@ -51,8 +43,7 @@ use mod_mootimeter\privacy\mootimeter_plugin_request_data;
 class provider implements
     \core_privacy\local\metadata\provider,
     \mod_mootimeter\privacy\mootimetertool_provider,
-    \mod_mootimeter\privacy\mootimetertool_user_provider
-    {
+    \mod_mootimeter\privacy\mootimetertool_user_provider {
 
     /**
      * Provides meta data that is stored about a user with mod_assign
@@ -82,6 +73,7 @@ class provider implements
      * Returns all of the contexts that has information relating to the userid.
      *
      * @param  int $userid The user ID.
+     * @param  contextlist $contextlist The contextlist
      * @return contextlist an object with the contexts related to a userid.
      */
     public static function get_context_for_userid_within_mootimetertool(int $userid, contextlist $contextlist) {
@@ -117,7 +109,7 @@ class provider implements
         $params = [
             'modulename' => 'mootimeter',
             'contextid' => $context->id,
-            'contextlevel' => CONTEXT_MODULE
+            'contextlevel' => CONTEXT_MODULE,
         ];
 
         $sql = "SELECT DISTINCT mtmta.usermodified as userid
@@ -131,6 +123,11 @@ class provider implements
 
     }
 
+    /**
+     * Export user data.
+     * @param mootimeter_plugin_request_data $exportdata
+     * @return void
+     */
     public static function export_mootimetertool_user_data(\mod_mootimeter\privacy\mootimeter_plugin_request_data $exportdata) {
 
         if ($exportdata->get_page()->tool != "wordcloud") {

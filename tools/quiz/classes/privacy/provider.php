@@ -25,22 +25,10 @@
 
 namespace mootimetertool_quiz\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
-// require_once($CFG->dirroot . '/mod/assign/locallib.php');
-
-use coding_exception;
-use \core_privacy\local\metadata\collection;
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\transform;
-use \core_privacy\local\request\helper;
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\manager;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\writer;
 use mod_mootimeter\privacy\mootimeter_plugin_request_data;
-use dml_exception;
 
 /**
  * Privacy class for requesting user data.
@@ -95,6 +83,7 @@ class provider implements
      * Returns all of the contexts that has information relating to the userid.
      *
      * @param  int $userid The user ID.
+     * @param  contextlist $contextlist The contextlist
      * @return contextlist an object with the contexts related to a userid.
      */
     public static function get_context_for_userid_within_mootimetertool(int $userid, contextlist $contextlist) {
@@ -130,7 +119,7 @@ class provider implements
         $params = [
             'modulename' => 'mootimeter',
             'contextid' => $context->id,
-            'contextlevel' => CONTEXT_MODULE
+            'contextlevel' => CONTEXT_MODULE,
         ];
 
         $sql = "SELECT DISTINCT mtmta.usermodified as userid

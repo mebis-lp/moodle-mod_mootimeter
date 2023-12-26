@@ -28,8 +28,6 @@ namespace mod_mootimeter\privacy;
 
 use core_privacy\local\request\contextlist;
 
-defined('MOODLE_INTERNAL') || die();
-
 interface mootimetertool_provider extends \core_privacy\local\request\plugin\subplugin_provider {
 
     /**
@@ -41,15 +39,6 @@ interface mootimetertool_provider extends \core_privacy\local\request\plugin\sub
      * @param \core_privacy\local\request\contextlist $contextlist Use add_from_sql with this object to add your context IDs.
      */
     public static function get_context_for_userid_within_mootimetertool(int $userid, contextlist $contextlist);
-
-    /**
-     * Returns student user ids related to the provided teacher ID. If it is possible that a student ID will not be returned by
-     * the sql query in \mod_mootimeter\privacy\provider::find_grader_info() Then you need to provide some sql to retrive those
-     * student IDs. This is highly likely if you had to fill in get_context_for_userid_within_mootimetertool above.
-     *
-     * @param  useridlist $useridlist A user ID list object that you can append your user IDs to.
-     */
-    // public static function get_student_user_ids(useridlist $useridlist);
 
     /**
      * This method is used to export any user data this sub-plugin has using the mootimeter_plugin_request_data object to get the

@@ -25,20 +25,15 @@
 
 namespace mod_mootimeter\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
-// require_once($CFG->dirroot . '/mod/assign/locallib.php');
-
 use coding_exception;
-use \core_privacy\local\metadata\collection;
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\transform;
-use \core_privacy\local\request\helper;
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\manager;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\writer;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\helper;
+use core_privacy\local\request\userlist;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\manager;
 use dml_exception;
 
 /**
@@ -147,7 +142,8 @@ class provider implements
      *
      * @param  object          $mootimeterinstance           The mootimeterinstance object
      * @param  object          $user                         The user object
-     * @param  \context        $context                      The context
+     * @param  object          $context                      The context
+     * @param  array           $path                         Data-Path
      */
     protected static function export_mootimetertool_data(
         object $mootimeterinstance,
@@ -206,7 +202,7 @@ class provider implements
     /**
      * Delete data for a user in context.
      *
-     * @param \context $context
+     * @param \approved_contextlist $contextlist
      * @return void
      */
     public static function delete_data_for_user(approved_contextlist $contextlist) {

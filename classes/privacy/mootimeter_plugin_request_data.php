@@ -24,9 +24,8 @@
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace mod_mootimeter\privacy;
 
-defined('MOODLE_INTERNAL') || die();
+namespace mod_mootimeter\privacy;
 
 /**
  * An object for fulfilling an mootimeter plugin data request.
@@ -53,12 +52,6 @@ class mootimeter_plugin_request_data {
     /** @var array The user IDs of the users that will be affected. */
     protected $userids;
 
-    // /** @var array The toolanswers related to the users. */
-    // protected $toolanswers = [];
-
-    // /** @var object The mootimeter object */
-    // protected $mootimeter;
-
     /**
      * Object creator for mootimeter plugin request data.
      *
@@ -67,12 +60,16 @@ class mootimeter_plugin_request_data {
      * @param object $user The user object.
      * @param array  $subcontext
      */
-    public function __construct(\context $context, object $page, object $user = new \stdClass(), array $subcontext = []) {
+    public function __construct(\context $context, object $page, object $user = null, array $subcontext = []) {
         $this->context = $context;
         $this->page = $page;
-        $this->user = $user;
+        if ($user == null) {
+            $this->user = new \stdClass();
+        } else {
+            $this->user = $user;
+        }
         $this->subcontext = $subcontext;
-     }
+    }
 
     /**
      * Method for adding an array of user IDs. This will do a query to populate the submissions and grades
@@ -128,5 +125,4 @@ class mootimeter_plugin_request_data {
     public function get_subcontext() {
         return $this->subcontext;
     }
-
 }

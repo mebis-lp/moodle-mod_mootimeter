@@ -25,19 +25,9 @@
 
 namespace mootimetertool_poll\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
-// require_once($CFG->dirroot . '/mod/assign/locallib.php');
-
-use \core_privacy\local\metadata\collection;
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\transform;
-use \core_privacy\local\request\helper;
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\manager;
+use core_privacy\local\metadata\collection;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\writer;
 use mod_mootimeter\privacy\mootimeter_plugin_request_data;
 
 /**
@@ -93,6 +83,7 @@ class provider implements
      * Returns all of the contexts that has information relating to the userid.
      *
      * @param  int $userid The user ID.
+     * @param  contextlist $contextlist The contextlist
      * @return contextlist an object with the contexts related to a userid.
      */
     public static function get_context_for_userid_within_mootimetertool(int $userid, contextlist $contextlist) {
@@ -128,7 +119,7 @@ class provider implements
         $params = [
             'modulename' => 'mootimeter',
             'contextid' => $context->id,
-            'contextlevel' => CONTEXT_MODULE
+            'contextlevel' => CONTEXT_MODULE,
         ];
 
         $sql = "SELECT DISTINCT mtmta.usermodified as userid
@@ -189,7 +180,6 @@ class provider implements
         $page = $requestdata->get_page();
         $mtmthelper->delete_answers_tool($page, ['pageid' => $page->id]);
     }
-
 
     /**
      * Any call to this method should delete users data for the context defined in the deletion_criteria.

@@ -26,12 +26,10 @@
  */
 namespace mod_mootimeter\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 interface mootimetertool_user_provider extends
         \core_privacy\local\request\plugin\subplugin_provider,
-        \core_privacy\local\request\shared_userlist_provider
-    {
+        \core_privacy\local\request\shared_userlist_provider {
+
 
     /**
      * If you have tables that contain userids please fill in this method.
@@ -39,15 +37,4 @@ interface mootimetertool_user_provider extends
      * @param  \core_privacy\local\request\userlist $userlist The userlist object
      */
     public static function get_userids_from_context(\core_privacy\local\request\userlist $userlist);
-
-    /**
-     * Deletes all answers from userids provided in a context.
-     * mootimeter_plugin_request_data contains:
-     * - context
-     * - mootimeter object
-     * - user ids
-     * @param  mootimeter_plugin_request_data $deletedata A class that contains the relevant information required for deletion.
-     */
-    // public static function delete_feedback_for_grades(mootimeter_plugin_request_data $deletedata);
-
 }

@@ -169,7 +169,7 @@ class provider_test extends provider_testcase {
      * Test that getting the contexts for a user.
      * @covers \core_privacy\local\request\core_userlist_provider::get_contexts_for_userid
      */
-    public function test_get_contexts_for_userid() {
+    public function test_get_contexts_for_userid(): void {
         $this->resetAfterTest();
 
         // The user will be in these contexts.
@@ -234,7 +234,7 @@ class provider_test extends provider_testcase {
      * Test returning a list of user IDs related to a context.
      * @covers \core_privacy\local\request\core_userlist_provider::get_users_in_context
      */
-    public function test_get_users_in_context() {
+    public function test_get_users_in_context(): void {
         $this->resetAfterTest();
 
         $mtmthelper = new \mootimetertool_quiz\quiz();
@@ -269,8 +269,9 @@ class provider_test extends provider_testcase {
 
     /**
      * Test that a student with multiple answers is returned with the correct data.
+     * @covers \provider::export_user_data
      */
-    public function test_export_user_data() {
+    public function test_export_user_data(): void {
         $this->resetAfterTest();
 
         $mtmthelper = new \mootimetertool_quiz\quiz();
@@ -307,9 +308,8 @@ class provider_test extends provider_testcase {
         $this->assertEquals($ao1->id, $writer->get_data($path)->answeroptionid);
         $this->assertEquals($ao1->optiontext, $writer->get_data($path)->answer);
 
-        // =======.
         // Now test tool poll.
-        // =======.
+
         $mtmthelper = new \mootimetertool_poll\poll();
         $ao1 = array_pop($this->mootimeter[2]['pages'][1]['answeroptions']);
         $ao2 = array_pop($this->mootimeter[2]['pages'][1]['answeroptions']);
@@ -343,9 +343,8 @@ class provider_test extends provider_testcase {
         $this->assertEquals($ao1->id, $writer->get_data($path)->answeroptionid);
         $this->assertEquals($ao1->optiontext, $writer->get_data($path)->answer);
 
-        // =======.
         // Now test tool wordcloud.
-        // =======.
+
         $mtmthelper = new \mootimetertool_wordcloud\wordcloud();
 
         $this->setUser($this->users['student1']);
@@ -383,8 +382,9 @@ class provider_test extends provider_testcase {
 
     /**
      * A test for deleting all user data for a given context.
+     * @covers \provider::delete_data_for_all_users_in_context
      */
-    public function test_delete_data_for_all_users_in_context() {
+    public function test_delete_data_for_all_users_in_context(): void {
         $this->resetAfterTest();
 
         $mtmthelper = new \mootimetertool_quiz\quiz();
@@ -475,8 +475,9 @@ class provider_test extends provider_testcase {
 
     /**
      * A test for deleting all user data for one user.
+     * @covers \provider::delete_data_for_user
      */
-    public function test_delete_data_for_user() {
+    public function test_delete_data_for_user(): void {
         $this->resetAfterTest();
 
         $mtmthelper = new \mootimetertool_quiz\quiz();
@@ -578,8 +579,9 @@ class provider_test extends provider_testcase {
 
     /**
      * A test for deleting all user data for a bunch of users.
+     * @covers \provider::delete_data_for_user
      */
-    public function test_delete_data_for_users() {
+    public function test_delete_data_for_users(): void {
         $this->resetAfterTest();
 
         $mtmthelper = new \mootimetertool_quiz\quiz();
