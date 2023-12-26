@@ -238,6 +238,47 @@ class provider implements
         }
     }
 
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param  approved_userlist $userlist The approved context and user information to delete information for.
+     */
     public static function delete_data_for_users(approved_userlist $userlist) {
+        $context = $userlist->get_context();
+        if ($context->contextlevel != CONTEXT_MODULE) {
+            return;
+        }
+        $userids = $userlist->get_userids();
+
+        $cm = get_coursemodule_from_id('mootimeter', $context->instanceid);
+        if ($cm) {
+            $helper = new \mod_mootimeter\helper();
+            $toolpages = $helper->get_all_tools_of_instance($cm->instance);
+
+            foreach ($toolpages as $tool => $pages) {
+                foreach ($pages as $page) {
+                    foreach ($userids as $userid) {
+                        $user = \core_user::get_user($userid);
+                        $requestdata = new mootimeter_plugin_request_data($context, $page, $user);
+                        manager::plugintype_class_callback(
+                            'mootimetertool',
+                            self::MOOTIMETERTOOL_INTERFACE,
+                            'delete_answers_for_user',
+                            [$requestdata]
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Export user preferences.
+     *
+     * @param int $userid
+     * @return void
+     */
+    public static function export_user_preferences(int $userid) {
+        // Nothing to do here.
     }
 }
