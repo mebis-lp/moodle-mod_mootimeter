@@ -476,126 +476,104 @@ class provider_test extends provider_testcase {
     /**
      * A test for deleting all user data for one user.
      */
-    // public function test_delete_data_for_user() {
-    //     $this->resetAfterTest();
-    //     $course = $this->getDataGenerator()->create_course();
+    public function test_delete_data_for_user() {
+        $this->resetAfterTest();
 
-    //     $coursecontext = \context_course::instance($course->id);
+        $mtmthelper = new \mootimetertool_quiz\quiz();
+        $ao1 = array_pop($this->mootimeter[1]['pages'][1]['answeroptions']);
+        $ao2 = array_pop($this->mootimeter[1]['pages'][1]['answeroptions']);
 
-    //     $user1 = $this->getDataGenerator()->create_user();
-    //     $user2 = $this->getDataGenerator()->create_user();
-    //     $teacher = $this->getDataGenerator()->create_user();
-    //     $this->getDataGenerator()->enrol_user($user1->id, $course->id, 'student');
-    //     $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'student');
-    //     $this->getDataGenerator()->enrol_user($teacher->id, $course->id, 'editingteacher');
-    //     $assign = $this->create_instance([
-    //         'course' => $course,
-    //         'name' => 'Assign 1',
-    //         'attemptreopenmethod' => ASSIGN_ATTEMPT_REOPEN_METHOD_MANUAL,
-    //         'maxattempts' => 3,
-    //         'assignsubmission_onlinetext_enabled' => true,
-    //         'assignfeedback_comments_enabled' => true
-    //     ]);
+        // Two of the three users answered the question.
+        $this->setUser($this->users['student1']);
+        $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao1->id, $ao2->id]);
+        $this->setUser($this->users['student2']);
+        $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao2->id]);
 
-    //     $context = $assign->get_context();
+        $context = \context_module::instance($this->mootimeter[1]['instance']->cmid);
 
-    //     // Create and grade some submissions from the students.
-    //     $submissiontext = 'My first submission';
-    //     $submission1 = $this->create_submission($assign, $user1, $submissiontext);
+        $answers = (array)$mtmthelper->get_answers(
+            $mtmthelper->get_answer_table(),
+            $this->mootimeter[1]['pages'][1]['page']->id,
+            $mtmthelper->get_answer_column()
+        );
+        $this->assertCount(3, $answers);
 
-    //     $this->setUser($teacher);
+        // Delete student1's data.
+        $coursecontext = \context_course::instance($this->courses[1]->id);
+        $approvedlist = new approved_contextlist($this->users['student1'], 'mod_mootimeter', [$context->id, $coursecontext->id]);
 
-    //     // Overrides for both students.
-    //     $overridedata = new \stdClass();
-    //     $overridedata->assignid = $assign->get_instance()->id;
-    //     $overridedata->userid = $user1->id;
-    //     $overridedata->duedate = time();
-    //     $DB->insert_record('assign_overrides', $overridedata);
-    //     $overridedata->userid = $user2->id;
-    //     $DB->insert_record('assign_overrides', $overridedata);
-    //     assign_update_events($assign);
+        provider::delete_data_for_user($approvedlist);
 
-    //     $grade1 = '54.00';
-    //     $teachercommenttext = 'Comment on user 1 attempt 1.';
-    //     $data = new \stdClass();
-    //     $data->attemptnumber = 0;
-    //     $data->grade = $grade1;
-    //     $data->assignfeedbackcomments_editor = ['text' => $teachercommenttext, 'format' => FORMAT_MOODLE];
+        $answers = (array)$mtmthelper->get_answers(
+            $mtmthelper->get_answer_table(),
+            $this->mootimeter[1]['pages'][1]['page']->id,
+            $mtmthelper->get_answer_column()
+        );
+        $this->assertCount(1, $answers);
 
-    //     // Give the submission a grade.
-    //     $assign->save_grade($user1->id, $data);
+        // Test tool poll.
 
-    //     // Create and grade some submissions from the students.
-    //     $submissiontext2 = 'My first submission for user 2';
-    //     $submission2 = $this->create_submission($assign, $user2, $submissiontext2);
+        $mtmthelper = new \mootimetertool_poll\poll();
+        $ao1 = array_pop($this->mootimeter[2]['pages'][1]['answeroptions']);
+        $ao2 = array_pop($this->mootimeter[2]['pages'][1]['answeroptions']);
 
-    //     $this->setUser($teacher);
+        // Two of the three users answered the question.
+        $this->setUser($this->users['student1']);
+        $mtmthelper->insert_answer($this->mootimeter[2]['pages'][1]['page'], [$ao1->id, $ao2->id]);
+        $this->setUser($this->users['student2']);
+        $mtmthelper->insert_answer($this->mootimeter[2]['pages'][1]['page'], [$ao2->id]);
 
-    //     $grade2 = '56.00';
-    //     $teachercommenttext2 = 'Comment on user 2 first attempt.';
-    //     $data = new \stdClass();
-    //     $data->attemptnumber = 0;
-    //     $data->grade = $grade2;
-    //     $data->assignfeedbackcomments_editor = ['text' => $teachercommenttext2, 'format' => FORMAT_MOODLE];
+        $context = \context_module::instance($this->mootimeter[2]['instance']->cmid);
 
-    //     // Give the submission a grade.
-    //     $assign->save_grade($user2->id, $data);
+        $answers = (array)$mtmthelper->get_answers(
+            $mtmthelper->get_answer_table(),
+            $this->mootimeter[2]['pages'][1]['page']->id,
+            $mtmthelper->get_answer_column()
+        );
+        $this->assertCount(3, $answers);
 
-    //     // Create and grade some submissions from the students.
-    //     $submissiontext3 = 'My second submission for user 2';
-    //     $submission3 = $this->create_submission($assign, $user2, $submissiontext3, 1);
+        // Delete student1's data.
+        $coursecontext = \context_course::instance($this->courses[2]->id);
+        $approvedlist = new approved_contextlist($this->users['student1'], 'mod_mootimeter', [$context->id, $coursecontext->id]);
 
-    //     $this->setUser($teacher);
+        provider::delete_data_for_user($approvedlist);
+        $answers = (array)$mtmthelper->get_answers(
+            $mtmthelper->get_answer_table(),
+            $this->mootimeter[2]['pages'][1]['page']->id,
+            $mtmthelper->get_answer_column()
+        );
+        $this->assertCount(1, $answers);
 
-    //     $grade3 = '83.00';
-    //     $teachercommenttext3 = 'Comment on user 2 another attempt.';
-    //     $data = new \stdClass();
-    //     $data->attemptnumber = 1;
-    //     $data->grade = $grade3;
-    //     $data->assignfeedbackcomments_editor = ['text' => $teachercommenttext3, 'format' => FORMAT_MOODLE];
+        // Test tool wordcoud.
 
-    //     // Give the submission a grade.
-    //     $assign->save_grade($user2->id, $data);
+        $mtmthelper = new \mootimetertool_wordcloud\wordcloud();
+        $this->setUser($this->users['student1']);
+        $mtmthelper->insert_answer($this->mootimeter[3]['pages'][1]['page'], "Answer 1");
+        $mtmthelper->insert_answer($this->mootimeter[3]['pages'][1]['page'], "Answer 2");
+        $this->setUser($this->users['teacher']);
+        $mtmthelper->insert_answer($this->mootimeter[3]['pages'][1]['page'], "Answer 3");
 
-    //     // Delete user 2's data.
-    //     $approvedlist = new approved_contextlist($user2, 'mod_assign', [$context->id, $coursecontext->id]);
-    //     provider::delete_data_for_user($approvedlist);
+        $context = \context_module::instance($this->mootimeter[3]['instance']->cmid);
 
-    //     // Check all relevant tables.
-    //     $records = $DB->get_records('assign_submission');
-    //     foreach ($records as $record) {
-    //         $this->assertEquals($user1->id, $record->userid);
-    //         $this->assertNotEquals($user2->id, $record->userid);
-    //     }
-    //     $records = $DB->get_records('assign_grades');
-    //     foreach ($records as $record) {
-    //         $this->assertEquals($user1->id, $record->userid);
-    //         $this->assertNotEquals($user2->id, $record->userid);
-    //     }
-    //     $records = $DB->get_records('assignsubmission_onlinetext');
-    //     $this->assertCount(1, $records);
-    //     $record = array_shift($records);
-    //     // The only submission is for user 1.
-    //     $this->assertEquals($submission1->id, $record->submission);
-    //     $records = $DB->get_records('assignfeedback_comments');
-    //     $this->assertCount(1, $records);
-    //     $record = array_shift($records);
-    //     // The only record is the feedback comment for user 1.
-    //     $this->assertEquals($teachercommenttext, $record->commenttext);
+        $answers = (array)$mtmthelper->get_answers(
+            $mtmthelper->get_answer_table(),
+            $this->mootimeter[3]['pages'][1]['page']->id,
+            $mtmthelper->get_answer_column()
+        );
+        $this->assertCount(3, $answers);
 
-    //     // Check calendar events as well as assign overrides.
-    //     $records = $DB->get_records('event');
-    //     $this->assertCount(1, $records);
-    //     $record = array_shift($records);
-    //     // The remaining event should be for user 1.
-    //     $this->assertEquals($user1->id, $record->userid);
-    //     // Now for assign_overrides
-    //     $records = $DB->get_records('assign_overrides');
-    //     $this->assertCount(1, $records);
-    //     $record = array_shift($records);
-    //     // The remaining event should be for user 1.
-    //     $this->assertEquals($user1->id, $record->userid);
-    // }
+        // Delete student1's data.
+        $coursecontext = \context_course::instance($this->courses[3]->id);
+        $approvedlist = new approved_contextlist($this->users['student1'], 'mod_mootimeter', [$context->id, $coursecontext->id]);
+
+        provider::delete_data_for_user($approvedlist);
+        $answers = (array)$mtmthelper->get_answers(
+            $mtmthelper->get_answer_table(),
+            $this->mootimeter[3]['pages'][1]['page']->id,
+            $mtmthelper->get_answer_column()
+        );
+        $this->assertCount(1, $answers);
+    }
 
     // /**
     //  * A test for deleting all user data for a bunch of users.

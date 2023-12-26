@@ -181,7 +181,6 @@ class provider implements
      * @param  mootimeter_plugin_request_data $requestdata Data useful for deleting user data from this sub-plugin.
      */
     public static function delete_answers_for_context(mootimeter_plugin_request_data $requestdata) {
-
         if ($requestdata->get_page()->tool != "poll") {
             return;
         }
@@ -189,5 +188,22 @@ class provider implements
         $mtmthelper = new \mootimetertool_poll\poll();
         $page = $requestdata->get_page();
         $mtmthelper->delete_answers_tool($page, ['pageid' => $page->id]);
+    }
+
+
+    /**
+     * Any call to this method should delete users data for the context defined in the deletion_criteria.
+     *
+     * @param  mootimeter_plugin_request_data $requestdata Data useful for deleting user data from this sub-plugin.
+     */
+    public static function delete_answers_for_user($requestdata) {
+        if ($requestdata->get_page()->tool != "poll") {
+            return;
+        }
+
+        $mtmthelper = new \mootimetertool_poll\poll();
+        $user = $requestdata->get_user();
+        $page = $requestdata->get_page();
+        $mtmthelper->delete_answers_tool($page, ['pageid' => $page->id, 'usermodified' => $user->id]);
     }
 }

@@ -181,6 +181,7 @@ class provider implements
      * @throws coding_exception
      */
     public static function delete_data_for_all_users_in_context($context) {
+
         if ($context->contextlevel == CONTEXT_MODULE) {
             $cm = get_coursemodule_from_id('mootimeter', $context->instanceid);
             if ($cm) {
@@ -202,10 +203,39 @@ class provider implements
         }
     }
 
+    /**
+     * Delete data for a user in context.
+     *
+     * @param \context $context
+     * @return void
+     */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
-    }
+        foreach ($contextlist->get_contexts() as $context) {
+            // Check that the context is a module context.
+            if ($context->contextlevel != CONTEXT_MODULE) {
+                continue;
+            }
 
-    public static function export_user_preferences(int $userid) {
+            $cm = get_coursemodule_from_id('mootimeter', $context->instanceid);
+            if ($cm) {
+                $helper = new \mod_mootimeter\helper();
+                $toolpages = $helper->get_all_tools_of_instance($cm->instance);
+                $user = $contextlist->get_user();
+
+                foreach ($toolpages as $tool => $pages) {
+                    foreach ($pages as $page) {
+                        // What to do first... Get sub plugins to delete their stuff.
+                        $requestdata = new mootimeter_plugin_request_data($context, $page, $user);
+                        manager::plugintype_class_callback(
+                            'mootimetertool',
+                            self::MOOTIMETERTOOL_INTERFACE,
+                            'delete_answers_for_user',
+                            [$requestdata]
+                        );
+                    }
+                }
+            }
+        }
     }
 
     public static function delete_data_for_users(approved_userlist $userlist) {

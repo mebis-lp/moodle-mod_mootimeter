@@ -129,20 +129,4 @@ class mootimeter_plugin_request_data {
         return $this->subcontext;
     }
 
-    // /**
-    //  * Fetches all of the submissions and grades related to the User IDs provided. Use get_grades, get_submissions etc to
-    //  * retrieve this information.
-    //  */
-    // public function populate_submissions_and_grades() {
-    //     global $DB;
-
-    //     if (empty($this->get_userids())) {
-    //         throw new \coding_exception('Please use set_userids() before calling this method.');
-    //     }
-
-    //     list($sql, $params) = $DB->get_in_or_equal($this->get_userids(), SQL_PARAMS_NAMED);
-    //     $params['assign'] = $this->get_assign()->get_instance()->id;
-    //     $this->submissions = $DB->get_records_select('assign_submission', "assignment = :assign AND userid $sql", $params);
-    //     $this->grades = $DB->get_records_select('assign_grades', "assignment = :assign AND userid $sql", $params);
-    // }
 }
