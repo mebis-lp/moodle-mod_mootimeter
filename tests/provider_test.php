@@ -342,6 +342,43 @@ class provider_test extends provider_testcase {
         ];
         $this->assertEquals($ao1->id, $writer->get_data($path)->answeroptionid);
         $this->assertEquals($ao1->optiontext, $writer->get_data($path)->answer);
+
+        // =======.
+        // Now test tool wordcloud.
+        // =======.
+        $mtmthelper = new \mootimetertool_wordcloud\wordcloud();
+
+        $this->setUser($this->users['student1']);
+        $mtmthelper->insert_answer($this->mootimeter[3]['pages'][1]['page'], "Answer 1");
+        $mtmthelper->insert_answer($this->mootimeter[3]['pages'][1]['page'], "Answer 2");
+
+        $context = \context_module::instance($this->mootimeter[3]['instance']->cmid);
+
+        $writer = writer::with_context($context);
+        $this->assertFalse($writer->has_any_data());
+
+        // The student should have answered the question.
+        // Add the course context as well to make sure there is no error.
+
+        $coursecontext = \context_course::instance($this->courses[3]->id);
+        $approvedlist = new approved_contextlist($this->users['student1'], 'mod_mootimeter', [$context->id, $coursecontext->id]);
+        provider::export_user_data($approvedlist);
+
+        // Check that we have general details about the mootimeter instance.
+        $this->assertEquals(self::INSTANCE_3_NAME, $writer->get_data()->name);
+
+        // Check mootimetertools.
+        $path = [
+            'Path of page with id: ' . $this->mootimeter[3]['pages'][1]['page']->id,
+            get_string('privacy:answerspath', 'mootimetertool_wordcloud') . '_1',
+        ];
+        $this->assertEquals("Answer 1", $writer->get_data($path)->scalar);
+
+        $path = [
+            'Path of page with id: ' . $this->mootimeter[3]['pages'][1]['page']->id,
+            get_string('privacy:answerspath', 'mootimetertool_wordcloud') . '_2',
+        ];
+        $this->assertEquals("Answer 2", $writer->get_data($path)->scalar);
     }
 
     // /**

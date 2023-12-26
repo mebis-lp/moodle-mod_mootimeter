@@ -131,6 +131,29 @@ class provider implements
     }
 
     public static function export_mootimetertool_user_data(\mod_mootimeter\privacy\mootimeter_plugin_request_data $exportdata) {
+
+        if ($exportdata->get_page()->tool != "wordcloud") {
+            return;
+        }
+
+        $mtmthelper = new \mootimetertool_wordcloud\wordcloud();
+
+        $contextdata = $mtmthelper->get_user_answers(
+            $mtmthelper->get_answer_table(),
+            $exportdata->get_page()->id,
+            $mtmthelper->get_answer_column(),
+            $exportdata->get_user()->id
+        );
+
+        $i = 1;
+        foreach ($contextdata as $row) {
+            $answer = $row->answer;
+            $currentpath = $exportdata->get_subcontext();
+            $currentpath[] = get_string('privacy:answerspath', 'mootimetertool_wordcloud') . "_" . $i;
+            writer::with_context($exportdata->get_context())->export_data($currentpath, (object)$answer);
+            $i++;
+        }
+
     }
 
 }
