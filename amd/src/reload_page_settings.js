@@ -51,7 +51,13 @@ const reloadPage = (
  * @param {array} dataset
  */
 const execReloadPage = async(pageid, cmid, dataset) => {
-    dataset = JSON.stringify(dataset);
+
+    if (!dataset) {
+        dataset = JSON.stringify([]);
+    } else {
+        dataset = JSON.stringify(dataset);
+    }
+
     const response = await reloadPage(pageid, cmid, dataset);
 
     if (response.code != 200) {

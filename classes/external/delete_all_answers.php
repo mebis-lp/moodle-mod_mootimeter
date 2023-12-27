@@ -25,16 +25,13 @@
 
 namespace mod_mootimeter\external;
 
-use dml_exception;
 use dml_transaction_exception;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
 use external_value;
-use invalid_parameter_exception;
 use Throwable;
-use tool_brickfield\manager;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');

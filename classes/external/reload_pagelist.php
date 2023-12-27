@@ -25,13 +25,11 @@
 
 namespace mod_mootimeter\external;
 
-use dml_exception;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
 use external_value;
-use invalid_parameter_exception;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
@@ -52,7 +50,7 @@ class reload_pagelist extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_OPTIONAL, 0),
+            'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_REQUIRED),
             'cmid' => new external_value(PARAM_INT, 'The coursemodule id.', VALUE_REQUIRED),
         ]);
     }
