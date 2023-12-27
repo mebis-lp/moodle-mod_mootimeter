@@ -18,14 +18,21 @@ export const init = (uniqueID) => {
      * Store the value.
      */
     function changePage() {
-        var pageid = this.dataset.pageid;
+        var pageid = 0;
+        var dataset = "";
+        if (this.dataset) {
+            pageid = this.dataset.pageid;
+            dataset = this.dataset;
+        }
+
         if (pageid === null || pageid === undefined || pageid == "undefined" || pageid.length == 0) {
             pageid = 0;
         }
+
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const cmid = urlParams.get('id');
-        execReloadPage(pageid, cmid, this.dataset);
+        execReloadPage(pageid, cmid, dataset);
     }
 };
 

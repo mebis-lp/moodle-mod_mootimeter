@@ -99,14 +99,16 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
 
                 // Finally make pageslist sortable.
                 var listelements = document.getElementsByClassName('mootimeter_pages_li');
-                var uniqid = listelements[0].dataset.uniqid;
-                new SortableList('#mootimeter-pages-list', {
-                    moveHandlerSelector: '.mootimeter_page_move_sortablehandle_' + uniqid,
-                });
-                jQuery('.mootimeter_pages_li_sortable_' + uniqid).on(SortableList.EVENTS.DROP, function(_, info) {
-                    var newIndex = info.targetList.children().index(info.element);
-                    storePagePosition(this.dataset.pageid, newIndex);
-                });
+                if (listelements[0]) {
+                    var uniqid = listelements[0].dataset.uniqid;
+                    new SortableList('#mootimeter-pages-list', {
+                        moveHandlerSelector: '.mootimeter_page_move_sortablehandle_' + uniqid,
+                    });
+                    jQuery('.mootimeter_pages_li_sortable_' + uniqid).on(SortableList.EVENTS.DROP, function(_, info) {
+                        var newIndex = info.targetList.children().index(info.element);
+                        storePagePosition(this.dataset.pageid, newIndex);
+                    });
+                }
 
                 // Remove all tooltips of pageslist that are still present.
                 document.querySelectorAll('.tooltip').forEach(e => e.remove());
@@ -123,7 +125,6 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
  * @param {int} newIndex
  */
 const storePagePosition = (pageid, newIndex) => {
-    window.console.log([pageid, newIndex]);
     ajaxRequestInput(
         'mod_mootimeter_store_page_details',
         pageid,
