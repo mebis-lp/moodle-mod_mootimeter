@@ -88,15 +88,11 @@ const execButtonClicked = (
  * @param {string} uniqueID
  * @param {string} ajaxmethode
  */
-const buttonClickedHandle = (pageid, uniqueID, ajaxmethode) => {
+const buttonClickedHandle = async(pageid, uniqueID, ajaxmethode) => {
     var dataset = JSON.stringify(document.getElementById(uniqueID).dataset);
-    const response = execButtonClicked(pageid, dataset, ajaxmethode);
+    const response = await execButtonClicked(pageid, dataset, ajaxmethode);
 
     if (response.code != 200) {
-        Log.error(response.string);
-    }
-
-    if (response.code == 200) {
         Log.error(response.string);
     }
 
