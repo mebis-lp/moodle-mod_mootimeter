@@ -102,7 +102,10 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
         // Replace the pages list.
         Templates.renderForPromise('mod_mootimeter/elements/snippet_page_list', pagelist)
             .then(({html, js}) => {
-                Templates.replaceNodeContents('#mootimeter-pages-list', html, js);
+                if (document.getElementById('mootimeter-addpage-button')) {
+                    document.getElementById('mootimeter-addpage-button').remove();
+                }
+                Templates.replaceNode(document.getElementById('mootimeter-pages-list'), html, js);
 
                 // Finally make pageslist sortable.
                 var listelements = document.getElementsByClassName('mootimeter_pages_li');

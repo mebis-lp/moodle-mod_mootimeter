@@ -57,8 +57,12 @@
         }
     }
 
+    #mootimeter-addpage-button {
+      padding: 0 1.0625rem 2.5rem 1.0625rem;
+    }
+
     ul {
-      padding: 2.5rem 1.0625rem;
+      padding: 2.5rem 1.0625rem 0 1.0625rem;
 
       li {
         @include rounded-s;

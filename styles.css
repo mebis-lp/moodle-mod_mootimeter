@@ -156,8 +156,11 @@
     background: #00091e;
   }
 }
+.mootimetercontainer .mootimetercolpages #mootimeter-addpage-button {
+  padding: 0 1.0625rem 2.5rem 1.0625rem;
+}
 .mootimetercontainer .mootimetercolpages ul {
-  padding: 2.5rem 1.0625rem;
+  padding: 2.5rem 1.0625rem 0 1.0625rem;
 }
 .mootimetercontainer .mootimetercolpages ul li {
   border-radius: 0.25rem;
