@@ -148,8 +148,33 @@ function setFullscreenClass(container, key, value) {
     if (key == 'f' && value == 1) {
         container.classList.add("fullscreen");
         document.getElementById("page-wrapper").classList.add("fullscreen");
+        openBrowserFullscreen(document.getElementById("page-wrapper"));
     } else if (key == 'f' && value == 0) {
         container.classList.remove("fullscreen");
         document.getElementById("page-wrapper").classList.remove("fullscreen");
+        closeBrowswerFullscreen();
+    }
+}
+
+/**
+ * Trigger browsers fullscreen mode.
+ * @param {mixed} elem
+ */
+function openBrowserFullscreen(elem) {
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+    }
+}
+
+/**
+ * Close browsers fullscreen.
+ */
+function closeBrowswerFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
     }
 }
