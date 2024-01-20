@@ -3,24 +3,34 @@ import Log from 'core/log';
 
 export const init = (uniqueID) => {
     const obj = document.getElementById(uniqueID);
+    let typingTimer;
+    let doneTypingInterval = 350;
 
     if (!document.getElementById(uniqueID)) {
         return;
     }
 
-    obj.addEventListener("keyup", mootimeterStoreInput);
+    obj.addEventListener("keyup", eventHandler);
+
+    /**
+     * Eventhandler
+     */
+    function eventHandler() {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(mootimeterStoreInput, doneTypingInterval);
+    }
 
     /**
      * Store the value.
      * @returns {mixed}
      */
     function mootimeterStoreInput() {
-        const id = this.id;
-        const pageid = this.dataset.pageid;
-        const ajaxmethode = this.dataset.ajaxmethode;
-        const inputname = this.dataset.name;
+        const id = obj.id;
+        const pageid = obj.dataset.pageid;
+        const ajaxmethode = obj.dataset.ajaxmethode;
+        const inputname = obj.dataset.name;
         const inputvalue = document.getElementById(id).value;
-        const thisDataset = JSON.stringify(this.dataset);
+        const thisDataset = JSON.stringify(obj.dataset);
         return execStoreInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
     }
 };

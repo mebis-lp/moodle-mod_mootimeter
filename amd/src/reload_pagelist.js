@@ -86,7 +86,6 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
         const loadpageid = pagelist.loadpageid;
 
         // Reload pagecontent if page does not exit any more.
-        window.console.log(pagelist.loadpageid);
         if (pagelist.loadpageid) {
             reloadPage(loadpageid, cmid, '');
         }
