@@ -90,6 +90,9 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
             reloadPage(loadpageid, cmid, '');
         }
 
+        // Set new refreshinterval state.
+        mtmstate.setAttribute('data-refreshinterval', pagelist.refreshinterval);
+
         // If there are no changes in pagelist. We are finished.
         if (mtmstate.dataset.pagelisttime == pagelist.pagelisttime && !forcereload) {
             return;

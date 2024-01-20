@@ -7,12 +7,15 @@ export const init = (id) => {
         return;
     }
 
+    // Initially getAnswers.
+    getAnswers(id);
+
     var interval = setInterval(() => {
         getAnswers(id);
         if (!document.getElementById(id)) {
             clearInterval(interval);
         }
-    }, 1000);
+    }, document.getElementById('mootimeterstate').dataset.refreshinterval);
 };
 
 /**
