@@ -46,4 +46,7 @@ const createNewPage = (
 const storeNewPage = async(tool, instance) => {
     const response = await createNewPage(tool, instance);
     reloadPage(response.pageid, response.cmid);
+
+    // Scroll to top if a new page is created.
+    document.getElementById("mootimeter-main-container").scrollIntoView();
 };
