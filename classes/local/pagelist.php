@@ -50,13 +50,13 @@ class pagelist {
      * Get the pagelist parameters for rendering.
      *
      * @param int $cmid
-     * @param object|int $pageselected
+     * @param int $pageidselected
      * @return array
      * @throws dml_exception
      * @throws coding_exception
      * @throws moodle_exception
      */
-    public function get_pagelist_params(int $cmid, object|int $pageselected): array {
+    public function get_pagelist_params(int $cmid, int $pageidselected): array {
         global $USER, $PAGE;
 
         $helper = new \mod_mootimeter\helper();
@@ -75,10 +75,16 @@ class pagelist {
         $pages = $helper->get_pages($cm->instance, "sortorder ASC");
 
         $temppages = [];
+        if (!in_array($pageidselected, array_keys($pages)) && $pageidselected > 0) {
+            $temppages = $pages;
+            $temppages['loadpageid'] = array_shift($temppages)->id;
+            $pageidselected = $temppages['loadpageid'];
+        }
+
         $pagenumber = 1;
         $maxtimecreated = 0;
 
-        $temppages['pageid'] = $pageselected;
+        $temppages['pageid'] = $pageidselected;
         $temppages['cmid'] = $cm->id;
         $temppages['instance'] = $cm->instance;
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)) && !empty($USER->editing)) {
@@ -90,7 +96,7 @@ class pagelist {
             $pixrawurl = '/mod/mootimeter/tools/' . $pagerow->tool . '/pix/' . $pagerow->tool . '-white.svg';
             $temppages['pageslist'][] = [
                 'toolicon' => (new \moodle_url($pixrawurl))->out(true),
-                'active' => ($pagerow->id == $pageselected) ? "active" : "",
+                'active' => ($pagerow->id == $pageidselected) ? "active" : "",
                 'pageunvisible' => (empty($pagerow->visible)) ? "pageunvisible" : "",
                 'pageid' => $pagerow->id,
                 'pagenumber' => $pagenumber,
@@ -109,23 +115,6 @@ class pagelist {
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('pagelisttime', $maxtimecreated);
 
         return $temppages;
-    }
-
-    /**
-     * Get the pagelist html output.
-     *
-     * @param int $cmid
-     * @param object|int $pageselected
-     * @return string
-     * @throws dml_exception
-     * @throws coding_exception
-     * @throws moodle_exception
-     */
-    public function get_pagelist_html(int $cmid, object|int $pageselected): string {
-        global $OUTPUT;
-
-        $pagelistparams = $this->get_pagelist_params($cmid, $pageselected);
-        return $OUTPUT->render_from_template("mod_mootimeter/elements/snippet_page_list", $pagelistparams);
     }
 
     /**

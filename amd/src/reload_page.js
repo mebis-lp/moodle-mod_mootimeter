@@ -149,7 +149,7 @@ function setFullscreenClass(container, key, value) {
         container.classList.add("fullscreen");
         document.getElementById("page-wrapper").classList.add("fullscreen");
         openBrowserFullscreen(document.getElementById("page-wrapper"));
-    } else if (key == 'f' && value == 0) {
+    } else if (key == 'f' && value == 0 && document.fullscreenElement !== null) {
         container.classList.remove("fullscreen");
         document.getElementById("page-wrapper").classList.remove("fullscreen");
         closeBrowswerFullscreen();

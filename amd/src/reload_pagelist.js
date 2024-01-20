@@ -83,6 +83,13 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
         var mtmstate = document.getElementById('mootimeterstate');
 
         const pagelist = JSON.parse(response.pagelist);
+        const loadpageid = pagelist.loadpageid;
+
+        // Reload pagecontent if page does not exit any more.
+        window.console.log(pagelist.loadpageid);
+        if (pagelist.loadpageid) {
+            reloadPage(loadpageid, cmid, '');
+        }
 
         // If there are no changes in pagelist. We are finished.
         if (mtmstate.dataset.pagelisttime == pagelist.pagelisttime && !forcereload) {
