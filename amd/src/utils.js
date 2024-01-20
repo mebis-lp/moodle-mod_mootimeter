@@ -119,3 +119,11 @@ export const ajaxRequestInput = (
         thisDataset
     },
 }])[0];
+
+/**
+ * Sets a timeout to delay the next steps.
+ *
+ * @param {int} ms
+ * @returns {mixed}
+ */
+export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));

@@ -318,6 +318,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             'mtm-input-name' => 'answer',
             'mtm-button-id' => 'mootimeter_enter_answer',
             'dataset' => 'data-pageid="' . $page->id . '"',
+            'autofocus' => true,
+            'additional_class' => 'mtmt-wc-answerinput',
         ];
 
         $params['button_answer'] = [
