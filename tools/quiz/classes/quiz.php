@@ -611,16 +611,6 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_BAR,
             ],
             [
-                'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_LINE,
-                'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
-                'mtm-button-icon-img' => [
-                    'path' => "tools/" . $this->get_pix_toolname() . "/pix/chart-line.svg",
-                    'width' => "24px",
-                ],
-                'mtm-button-icon-active' => ($visualizationtype == self::VISUALIZATION_ID_CHART_LINE) ? true : false,
-                'mtm-button-icon-dataset' => 'data-pageid="' . $page->id . '" data-visuid=' . self::VISUALIZATION_ID_CHART_LINE,
-            ],
-            [
                 'mtm-button-icon-id' => 'visualization_' . self::VISUALIZATION_ID_CHART_PIE,
                 'mtm-button-icon-additionalclass' => 'mtmt_visualization_selector',
                 'mtm-button-icon-img' => [
