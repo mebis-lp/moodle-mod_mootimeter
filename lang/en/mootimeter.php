@@ -77,6 +77,7 @@ $string['title'] = 'Page Title';
 $string['toolsettings'] = 'Tool settings';
 $string['tooltip_content_menu_teacherpermission'] = 'Click to allow students to view the results.';
 $string['tooltip_content_menu_teacherpermission_disabled'] = 'Click to hide the results from the students.';
+$string['tooltip_delete_all_answers'] = 'Delete all answers';
 $string['tooltip_disable_page'] = 'Click to disable this page for participants.';
 $string['tooltip_enable_page'] = 'Click to enable this page for participants.';
 $string['tooltip_fullscreen_compress'] = 'Leave fullscreen mode';

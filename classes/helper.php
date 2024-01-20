@@ -630,6 +630,7 @@ class helper {
                 'id' => 'mtmt_restart',
                 'iconid' => 'mtmt_restart_iconid',
                 'dataset' => implode(" ", $dataseticonrestart),
+                'tooltip' => get_string('tooltip_delete_all_answers', 'mod_mootimeter'),
             ];
 
             // Redirect to Answers Overview View.
