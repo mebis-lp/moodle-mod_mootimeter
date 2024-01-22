@@ -88,7 +88,6 @@ class get_answers extends external_api {
                     new external_multiple_structure(
                         new external_value(PARAM_RAW, 'Answertext'),
                         new external_value(PARAM_INT, 'Fontsize of the answer'),
-                        "Answer"
                     ),
                     'The answerslist.',
                 ),
