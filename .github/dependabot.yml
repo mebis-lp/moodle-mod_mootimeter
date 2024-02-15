@@ -5,10 +5,10 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
-    directory: "/tool/quiz"
+    directory: "/tools/quiz"
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
-    directory: "/tool/wordcloud"
+    directory: "/tools/wordcloud"
     schedule:
       interval: "daily"
