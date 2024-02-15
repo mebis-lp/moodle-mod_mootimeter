@@ -37,31 +37,40 @@ $feedback-success-100: #d9f6e0;
 }
 
 .mootimetercontainer {
-  *:focus {
-    outline: none;
-  }
+  max-width: 1400px;
+
+	*:focus {
+    	outline: none;
+	}
 
   &.fullscreen {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
-    z-index: 1051;
+    max-width: unset;
+    height: 100vh;
+    overflow: scroll;
+    z-index: 99999;
 
     .mootimetercolpages,
     .mootimetercoledit,
     .mootimetercolcontent {
-      @media screen and (min-width: 539px) {
-        max-height: 100vH;
+      @media screen and (min-width: 680px) {
+        min-height: unset;
+        max-height: unset;
       }
+    }
+
+    .row:first-child {
+      height: 100%;
     }
   }
 
   .mootimetercolpages,
   .mootimetercoledit,
   .mootimetercolcontent {
-    @media screen and (min-width: 539px) {
+    @media screen and (min-width: 680px) {
       min-height: 646px;
       max-height: 850px;
     }

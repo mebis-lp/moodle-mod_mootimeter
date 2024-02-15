@@ -1,22 +1,31 @@
+.mootimetercontainer {
+  max-width: 1400px;
+}
 .mootimetercontainer *:focus {
   outline: none;
 }
 .mootimetercontainer.fullscreen {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;
-  z-index: 1051;
+  max-width: unset;
+  height: 100vh;
+  overflow: scroll;
+  z-index: 99999;
 }
-@media screen and (min-width: 539px) {
+@media screen and (min-width: 680px) {
   .mootimetercontainer.fullscreen .mootimetercolpages,
   .mootimetercontainer.fullscreen .mootimetercoledit,
   .mootimetercontainer.fullscreen .mootimetercolcontent {
-    max-height: 100vH;
+    min-height: unset;
+    max-height: unset;
   }
 }
-@media screen and (min-width: 539px) {
+.mootimetercontainer.fullscreen .row:first-child {
+  height: 100%;
+}
+@media screen and (min-width: 680px) {
   .mootimetercontainer .mootimetercolpages,
   .mootimetercontainer .mootimetercoledit,
   .mootimetercontainer .mootimetercolcontent {
@@ -111,7 +120,7 @@
   border-top-left-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
 }
-@media screen and (max-width: 539px) {
+@media screen and (max-width: 680px) {
   .mootimetercontainer .mootimetercolpages {
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
@@ -126,6 +135,7 @@
     top: 0;
     pointer-events: none;
     background: linear-gradient(270deg, #00091E -8.89%, rgba(0, 9, 30, 0) 88.89%);
+    border-top-right-radius: 0.5rem;
   }
 }
 .mootimetercontainer .mootimetercolpages::-webkit-scrollbar {
@@ -139,7 +149,7 @@
 .mootimetercontainer .mootimetercolpages::-webkit-scrollbar-track {
   background: #00091e;
 }
-@media screen and (max-width: 539px) {
+@media screen and (max-width: 680px) {
   .mootimetercontainer .mootimetercolpages #mootimeter-pages-list {
     overflow-y: auto;
     padding-right: 3.4375rem;
@@ -208,7 +218,7 @@
   background-color: #d33f01;
   border: 0.0625rem #d33f01 solid;
 }
-@media screen and (max-width: 539px) {
+@media screen and (max-width: 680px) {
   .mootimetercontainer .mootimetercolpages {
     flex-grow: 1;
   }
@@ -264,13 +274,13 @@
 }
 .mootimeter-tool-select-wrapper .mootimeter-radio-card {
   display: flex;
-  width: 300px;
-  height: 180px;
-  padding: 24px;
+  width: 18.75rem;
+  height: 11.25rem;
+  padding: 1.5rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 @media screen and (max-width: 539px) {
@@ -282,18 +292,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 2.5rem;
 }
 
 .mootimeter-add-tool-header {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 .mootimeter-add-tool-header h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
   align-self: stretch;
+}
+@media screen and (max-width: 680px) {
+  .mootimeter-add-tool-header h3 {
+    font-size: 1.5rem;
+    line-height: 2.125rem;
+  }
 }
 .mootimeter-add-tool-header p {
   align-self: stretch;
@@ -638,12 +654,21 @@
   background-color: #e8e8ea;
   color: #303142;
 }
-.mootimeter-colcontent-preview-notification.notification-success {
-  background-color: var(--success);
+.mootimeter-colcontent-preview-notification.notification-info .icon {
   color: #303142;
+}
+.mootimeter-colcontent-preview-notification.notification-success {
+  background-color: #d9f6e0;
+  color: #303142;
+}
+.mootimeter-colcontent-preview-notification.notification-success .icon {
+  color: #00c431;
 }
 .mootimeter-colcontent-preview-notification.notification-warning {
   background-color: rgba(255, 0, 0, 0.1019607843);
+  color: #ff0000;
+}
+.mootimeter-colcontent-preview-notification.notification-warning .icon {
   color: #ff0000;
 }
 .mootimeter-colcontent-preview-notification .icon {
@@ -1263,7 +1288,7 @@
   background-color: #d9f6e0;
 }
 .mootimeter-highlighter.mootimeter-danger {
-  border: 2px solid red;
+  border: 1px solid red;
   background-color: lightcoral;
 }
 

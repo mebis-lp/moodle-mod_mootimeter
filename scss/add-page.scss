@@ -6,13 +6,13 @@
 
     .mootimeter-radio-card {
         display: flex;
-        width: 300px;
-        height: 180px;
-        padding: 24px;
+        width: 18.75rem;
+        height: 11.25rem;
+        padding: 1.5rem;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
     }
 }
 
@@ -26,17 +26,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 2.5rem;
 }
 
 .mootimeter-add-tool-header {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
+
     h3 {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
+        gap: 0.25rem;
         align-self: stretch;
+
+        @media screen and (max-width: 680px) {
+            font-size: 1.5rem;
+            line-height: 2.125rem;
+        }
     }
 
     p {
