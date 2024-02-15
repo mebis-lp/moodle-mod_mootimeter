@@ -7,7 +7,7 @@
     border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
 
-    @media screen and (max-width: 539px) {
+    @media screen and (max-width: 680px) {
       border-top-left-radius: 0.5rem;
       border-top-right-radius: 0.5rem;
       border-bottom-left-radius: 0;
@@ -21,6 +21,7 @@
         top: 0;
         pointer-events: none;
         background: linear-gradient(270deg, #00091E -8.89%, rgba(0, 9, 30, 0.00) 88.89%);
+        border-top-right-radius: .5rem;
       }
     }
 
@@ -37,7 +38,7 @@
       background: $grey-500;
     }
 
-    @media screen and (max-width: 539px) {
+    @media screen and (max-width: 680px) {
       #mootimeter-pages-list {
           overflow-y: auto;
           padding-right: 3.4375rem;
@@ -97,7 +98,7 @@
       }
     }
 
-    @media screen and (max-width: 539px) {
+    @media screen and (max-width: 680px) {
       flex-grow: 1;
 
       ul {

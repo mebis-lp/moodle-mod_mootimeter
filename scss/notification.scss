@@ -15,16 +15,25 @@
   &.notification-info {
     background-color: $grey-100;
     color: $grey-400;
+    .icon {
+      color: $grey-400;
+    }
   }
 
   &.notification-success {
-    background-color: var(--success);
+    background-color: $feedback-success-100;
     color: $grey-400;
+    .icon {
+      color: $feedback-success-200;
+    }
   }
 
   &.notification-warning {
     background-color: $notification-warning;
     color: $feedback-error;
+    .icon {
+      color: $feedback-error;
+    }
   }
 
   .icon {
@@ -38,23 +47,23 @@
 }
 
 .dark {
-	.mootimeter-colcontent-preview-notification {
-		background-color: $grey-500;
-		color: $white-standard;
-	}
+  .mootimeter-colcontent-preview-notification {
+    background-color: $grey-500;
+    color: $white-standard;
+  }
 }
 
 .contrast {
-	.mootimeter-colcontent-preview-notification {
-		background-color: $grey-100;
-		border: 1px solid $grey-500;
-		color: $grey-500;
-	}
+  .mootimeter-colcontent-preview-notification {
+    background-color: $grey-100;
+    border: 1px solid $grey-500;
+    color: $grey-500;
+  }
 }
 
 .mootimetersettings {
-	.mootimeter-colcontent-preview-notification {
-		background-color: $grey-300;
+  .mootimeter-colcontent-preview-notification {
+    background-color: $grey-300;
     color: #fff;
   }
 }
