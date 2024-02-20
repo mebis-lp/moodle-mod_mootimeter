@@ -123,6 +123,8 @@
       .mootimeter_addpage {
         background-color: $lernplatform-400;
         border: 0.0625rem $lernplatform-400 solid;
+        width: 100%;
+        z-index: 1;
       }
     }
 
