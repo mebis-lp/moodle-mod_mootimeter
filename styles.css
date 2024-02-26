@@ -22,6 +22,9 @@
     max-height: unset;
   }
 }
+.mootimetercontainer.fullscreen .mootimetercolcontent {
+  height: 100%;
+}
 .mootimetercontainer.fullscreen .row:first-child {
   height: 100%;
 }
@@ -860,8 +863,7 @@
   border-radius: 3.125rem;
   border: 0.125rem solid #a4a5ac;
   -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   outline: none;
   cursor: pointer;
   background-color: unset;
