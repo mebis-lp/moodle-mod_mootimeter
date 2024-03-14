@@ -1,14 +1,9 @@
 {
   "name": "moodle-mod_mootimeter",
-  "devDependencies": {
-    "node-sass": "^9.0.0"
-  },
   "scripts": {
-    "compile-sass": "node-sass styles.scss styles.css"
+    "compile-sass": "sass --no-source-map styles.scss styles.css"
   },
-  "stylelint": {
-    "ignoreFiles": [
-      "styles.css"
-    ]
+  "devDependencies": {
+    "sass": "^1.72.0"
   }
 }
