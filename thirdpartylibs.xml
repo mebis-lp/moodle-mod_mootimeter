@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<libraries>
+    <library>
+        <location>styles.css</location>
+        <name>Styles</name>
+        <description>The styles of the plugin, need to be declared as thirdpartylib so codechecker will ignore it</description>
+        <license>GPL v3</license>
+        <copyrights>
+            <copyright>ISB Bayern</copyright>
+        </copyrights>
+    </library>
+</libraries>
