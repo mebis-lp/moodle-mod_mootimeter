@@ -630,7 +630,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'min' => 0,
             'pageid' => $page->id,
             'ajaxmethode' => "mod_mootimeter_store_setting",
-            'value' => (empty(self::get_tool_config($page->id, "maxanswersperuser"))) ? 0 : self::get_tool_config(
+            'value' => (empty(self::get_tool_config($page->id, "maxanswersperuser"))) ? '0' : self::get_tool_config(
                 $page->id,
                 "maxanswersperuser"
             ),
