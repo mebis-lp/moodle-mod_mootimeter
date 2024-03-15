@@ -38,7 +38,12 @@ if ($hassiteconfig) {
             PARAM_INT
         ));
 
-
+        $settings->add(new admin_setting_configcheckbox(
+            'mod_mootimeter/default_new_page_visibility',
+            get_string('default_new_page_visibility', 'mod_mootimeter'),
+            get_string('default_new_page_visibility_desc', 'mod_mootimeter'),
+            0
+        ));
 
     }
 }

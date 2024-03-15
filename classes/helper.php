@@ -156,6 +156,8 @@ class helper {
         }
         $record->timecreated = time();
         $record->sortorder = $this->get_page_next_sortorder($instance);
+        $defaultvisibility = get_config('mod_mootimeter', 'default_new_page_visibility');
+        $record->visible = (empty($defaultvisibility)) ? 0 : $defaultvisibility;
         $pageid = $DB->insert_record('mootimeter_pages', $record, true);
 
         // Hook to do further actions depending on mtmt tool.
