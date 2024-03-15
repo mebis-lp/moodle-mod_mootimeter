@@ -47,12 +47,22 @@
     .mootimeter-colcontent-preview {
       @include rounded-m;
       background-color: $white-standard;
-      max-width: 32.25rem;
       padding: 2.5rem;
       display: flex;
       flex-direction: column;
       gap: 2.5rem;
       margin: 0 auto;
+
+      &.mootimeter-width-s {
+        max-width: 32.25rem;
+        justify-content: center;
+      }
+
+      &.mootimeter-width-xl {
+        width: 100%;
+        height: 80vH;
+        justify-content: center;
+      }
 
       @media screen and (max-width: 539px) {
         padding: 1rem;

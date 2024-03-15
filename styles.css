@@ -515,12 +515,20 @@
 .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview {
   border-radius: 0.5rem;
   background-color: #fff;
-  max-width: 32.25rem;
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
   margin: 0 auto;
+}
+.mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview.mootimeter-width-s {
+  max-width: 32.25rem;
+  justify-content: center;
+}
+.mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview.mootimeter-width-xl {
+  width: 100%;
+  height: 80vH;
+  justify-content: center;
 }
 @media screen and (max-width: 539px) {
   .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview {
@@ -863,7 +871,8 @@
   border-radius: 3.125rem;
   border: 0.125rem solid #a4a5ac;
   -webkit-appearance: none;
-  appearance: none;
+  -moz-appearance: none;
+       appearance: none;
   outline: none;
   cursor: pointer;
   background-color: unset;
