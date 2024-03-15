@@ -818,11 +818,23 @@ class helper {
             $page = $pageorid;
         }
 
+        // First do some capability check.
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
+
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
+        }
+
         $conditions = [
             'tool' => $page->tool,
             'pageid' => $page->id,
             'name' => $name,
         ];
+
+        // This is a hook to make some context specific changes or validation to specific
+        $value = $this->hook_process_value($page, $name, $value);
 
         if (empty($record = $DB->get_record('mootimeter_tool_settings', $conditions))) {
             $dataobject = (object)$conditions;
@@ -893,6 +905,33 @@ class helper {
         }
 
         return (object) $DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, timemodified');
+    }
+
+    /**
+     *
+     *
+     * @param object $page
+     * @param string $name
+     * @param string|int $value
+     * @return string|int
+     */
+    public function hook_process_value(object $page, string $name, string|int $value): string|int {
+
+        switch ($name) {
+            case 'anonymousmode':
+                // If there is already any answer stored. Then the setting could not be changed.
+                if (!empty($this->get_answers(
+                    $this->get_tool_answer_table($page),
+                    $page->id,
+                    $this->get_tool_answer_column($page)
+                ))) {
+                    $value = $this->get_tool_config($page, 'anonymousmode');
+                }
+                return $value;
+                break;
+        }
+
+        return $value;
     }
 
     /**

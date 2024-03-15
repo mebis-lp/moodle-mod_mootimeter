@@ -648,7 +648,8 @@ class quiz extends \mod_mootimeter\toolhelper {
         ];
 
         $answers = $this->get_answers($this->get_answer_table(), $page->id, $this->get_answer_column());
-        if (!empty(self::get_tool_config($page->id, "anonymousmode")) && !empty($answers)) {
+        // The anonymous mode could not be changed if, there are any answers already given OR
+        if (!empty($answers)) {
             $params['anonymousmode']['cb_with_label_checked'] .= ' disabled ';
             unset($params['anonymousmode']['cb_with_label_ajaxmethod']);
         }
