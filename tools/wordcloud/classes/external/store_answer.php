@@ -95,7 +95,8 @@ class store_answer extends external_api {
         }
 
         $submittedanswers = $wordcloud->get_answer_list_array($page->id, $USER->id);
-        if (!helper::get_tool_config($page->id, "allowduplicateanswers") && in_array($answer, $submittedanswers)) {
+        // Use strtolower in order to ignore case sensitive inputs of users. This makes the result more precise.
+        if (!helper::get_tool_config($page->id, "allowduplicateanswers") && in_array(strtolower($answer), $submittedanswers)) {
             return [
                 'code' => helper::ERRORCODE_DUPLICATE_ANSWER,
                 'string' => get_string('error_no_duplicate_answers', 'mootimetertool_wordcloud'),
