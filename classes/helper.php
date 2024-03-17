@@ -833,7 +833,7 @@ class helper {
             'name' => $name,
         ];
 
-        // This is a hook to make some context specific changes or validation to specific
+        // This is a hook to make some context specific changes or validation of specific dependencies.
         $value = $this->hook_process_value($page, $name, $value);
 
         if (empty($record = $DB->get_record('mootimeter_tool_settings', $conditions))) {
@@ -908,7 +908,9 @@ class helper {
     }
 
     /**
+     * Hook handle to validate the settings value with tool specific needs.
      *
+     * TODO: Make an abstract class and an implementation in the tool, to define tool specific / additional validations.
      *
      * @param object $page
      * @param string $name

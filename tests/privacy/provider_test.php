@@ -209,6 +209,10 @@ class provider_test extends provider_testcase {
 
         $this->setUser($this->users['student1']);
         $mtmthelper->insert_answer($this->mootimeter[2]['pages'][1]['page'], [$ao1->id]);
+
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
+
         $contextlist = provider::get_contexts_for_userid($this->users['student1']->id);
         $this->assertEquals(count($usercontextids), count($contextlist->get_contextids()));
         // There should be no difference between the contexts.
@@ -224,6 +228,10 @@ class provider_test extends provider_testcase {
         $mtmthelper = new \mootimetertool_wordcloud\wordcloud();
         $this->setUser($this->users['student1']);
         $mtmthelper->insert_answer($this->mootimeter[3]['pages'][1]['page'], "Test");
+
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
+
         $contextlist = provider::get_contexts_for_userid($this->users['student1']->id);
         $this->assertEquals(count($usercontextids), count($contextlist->get_contextids()));
         // There should be no difference between the contexts.
@@ -247,6 +255,8 @@ class provider_test extends provider_testcase {
         $this->setUser($this->users['student2']);
         $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao2->id]);
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $context = \context_module::instance($this->mootimeter[1]['instance']->cmid);
         $userlist = new \core_privacy\local\request\userlist($context, 'mootimeter');
         provider::get_users_in_context($userlist);
@@ -260,6 +270,8 @@ class provider_test extends provider_testcase {
         $this->setUser($this->users['student3']);
         $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao1->id]);
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $userlist = new \core_privacy\local\request\userlist($context, 'mootimeter');
         provider::get_users_in_context($userlist);
         $userids = $userlist->get_userids();
@@ -292,6 +304,9 @@ class provider_test extends provider_testcase {
         // The student should have answered the question.
         // Add the course context as well to make sure there is no error.
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
+
         $coursecontext = \context_course::instance($this->courses[1]->id);
         $approvedlist = new approved_contextlist($this->users['student1'], 'mod_mootimeter', [$context->id, $coursecontext->id]);
         provider::export_user_data($approvedlist);
@@ -322,6 +337,8 @@ class provider_test extends provider_testcase {
 
         $context = \context_module::instance($this->mootimeter[2]['instance']->cmid);
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $writer = writer::with_context($context);
         $this->assertFalse($writer->has_any_data());
 
@@ -353,6 +370,8 @@ class provider_test extends provider_testcase {
 
         $context = \context_module::instance($this->mootimeter[3]['instance']->cmid);
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $writer = writer::with_context($context);
         $this->assertFalse($writer->has_any_data());
 
@@ -397,6 +416,8 @@ class provider_test extends provider_testcase {
         $this->setUser($this->users['student2']);
         $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao2->id]);
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $context = \context_module::instance($this->mootimeter[1]['instance']->cmid);
 
         $answers = (array)$mtmthelper->get_answers(
@@ -427,6 +448,8 @@ class provider_test extends provider_testcase {
         $this->setUser($this->users['student2']);
         $mtmthelper->insert_answer($this->mootimeter[2]['pages'][1]['page'], [$ao2->id]);
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $context = \context_module::instance($this->mootimeter[2]['instance']->cmid);
 
         $answers = (array)$mtmthelper->get_answers(
@@ -454,6 +477,8 @@ class provider_test extends provider_testcase {
         $this->setUser($this->users['teacher']);
         $mtmthelper->insert_answer($this->mootimeter[3]['pages'][1]['page'], "Answer 3");
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $context = \context_module::instance($this->mootimeter[3]['instance']->cmid);
 
         $answers = (array)$mtmthelper->get_answers(
@@ -490,6 +515,8 @@ class provider_test extends provider_testcase {
         $this->setUser($this->users['student2']);
         $mtmthelper->insert_answer($this->mootimeter[1]['pages'][1]['page'], [$ao2->id]);
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $context = \context_module::instance($this->mootimeter[1]['instance']->cmid);
 
         $answers = (array)$mtmthelper->get_answers(
@@ -524,6 +551,8 @@ class provider_test extends provider_testcase {
         $this->setUser($this->users['student2']);
         $mtmthelper->insert_answer($this->mootimeter[2]['pages'][1]['page'], [$ao2->id]);
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $context = \context_module::instance($this->mootimeter[2]['instance']->cmid);
 
         $answers = (array)$mtmthelper->get_answers(
@@ -554,6 +583,8 @@ class provider_test extends provider_testcase {
         $this->setUser($this->users['teacher']);
         $mtmthelper->insert_answer($this->mootimeter[3]['pages'][1]['page'], "Answer 3");
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $context = \context_module::instance($this->mootimeter[3]['instance']->cmid);
 
         $answers = (array)$mtmthelper->get_answers(
@@ -613,6 +644,8 @@ class provider_test extends provider_testcase {
             $this->users['student2']->id,
         ];
 
+        // Now switch back to admin user. Because the privacy api works with all capabilities.
+        $this->setAdminUser();
         $userlist = new \core_privacy\local\request\approved_userlist($context, 'mootimeter', $userids);
         provider::delete_data_for_users($userlist);
 

@@ -181,7 +181,7 @@ class provider implements
         if ($context->contextlevel == CONTEXT_MODULE) {
             $cm = get_coursemodule_from_id('mootimeter', $context->instanceid);
             if ($cm) {
-                $helper = new \mod_mootimeter\helper();
+                $helper = new \mod_mootimeter\helper(['privacyexport' => 1]);
                 $toolpages = $helper->get_all_tools_of_instance($cm->instance);
                 foreach ($toolpages as $tool => $pages) {
                     foreach ($pages as $page) {

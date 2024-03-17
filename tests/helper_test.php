@@ -376,11 +376,13 @@ class helper_test extends advanced_testcase {
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
 
-        $this->setUser($this->users['student']);
+        $this->setAdminUser();
 
         $helper = new \mod_mootimeter\helper();
 
         $helper->set_tool_config($page, 'multipleanswers', 0);
+
+        $this->setUser($this->users['student']);
 
         $record = new \stdClass();
         $record->pageid = $page->id;
@@ -436,11 +438,12 @@ class helper_test extends advanced_testcase {
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
         $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
 
-        $this->setUser($this->users['student']);
-
         $helper = new \mod_mootimeter\helper();
+
+        $this->setAdminUser();
         $helper->set_tool_config($page, 'multipleanswers', 1);
 
+        $this->setUser($this->users['student']);
         $record = new \stdClass();
         $record->pageid = $page->id;
         $record->answer = "Test";

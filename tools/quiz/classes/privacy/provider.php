@@ -152,7 +152,6 @@ class provider implements
             $mtmthelper->get_answer_column(),
             $exportdata->get_user()->id
         );
-
         $i = 1;
         foreach ($contextdata as $row) {
 

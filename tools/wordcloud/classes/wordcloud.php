@@ -396,7 +396,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         ];
 
         $answers = $this->get_answers(self::ANSWER_TABLE, $page->id, self::ANSWER_COLUMN);
-        // The anonymous mode could not be changed if, there are any answers already given OR
+        // The anonymous mode could not be changed if, there are any answers already given.
         if (!empty($answers)) {
             $params['settings']['anonymousmode']['cb_with_label_disabled'] = 'disabled';
             unset($params['settings']['anonymousmode']['cb_with_label_ajaxmethod']);
