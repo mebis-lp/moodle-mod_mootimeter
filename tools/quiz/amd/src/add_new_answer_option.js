@@ -1,5 +1,5 @@
 import {call as fetchMany} from 'core/ajax';
-import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page'
+import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 
 export const init = (uniqId) => {
 

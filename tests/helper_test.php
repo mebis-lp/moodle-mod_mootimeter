@@ -42,7 +42,7 @@ use required_capability_exception;
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class helper_test extends advanced_testcase {
+final class helper_test extends advanced_testcase {
 
     /** @var \stdClass The course used for testing */
     private $course;

@@ -41,7 +41,7 @@ use core_privacy\local\request\approved_contextlist;
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider_test extends provider_testcase {
+final class provider_test extends provider_testcase {
 
     /** @var array The courses used for testing */
     private $courses = [];
