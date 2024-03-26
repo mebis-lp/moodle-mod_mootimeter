@@ -26,8 +26,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['allowduplicateanswers'] = 'Schülerinnen und Schülern erlauben, dieselbe Antwort mehrmals einzureichen';
-$string['answers_max_number'] = 'Maximale Anzahl von Antworten pro Teilnehmenden (0: unbegrenzt)';
+$string['allowduplicateanswers'] = 'Teilnehmern erlauben, dieselbe Antwort mehrmals einzureichen';
+$string['answers_max_number'] = 'Maximale Anzahl von Antworten pro Teilnehmer (0: unbegrenzt)';
 $string['error_empty_answers'] = 'Leere Antworten sind nicht erlaubt';
 $string['error_no_duplicate_answers'] = 'Doppelte Antworten sind nicht erlaubt';
 $string['error_to_many_answers'] = 'Die maximale Anzahl an Antworten ist erreicht';
