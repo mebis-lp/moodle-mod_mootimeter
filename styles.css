@@ -527,7 +527,7 @@
 }
 .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview.mootimeter-width-xl {
   width: 100%;
-  height: 80vH;
+  height: 600px;
   justify-content: center;
 }
 @media screen and (max-width: 539px) {
@@ -609,6 +609,11 @@
 }
 .dark .mootimetercolcontent .mootimeter-render-loading {
   color: #60616d;
+}
+
+.mootimetercontainer.fullscreen .mootimetercolcontent .mootimeter-colcontent-preview.mootimeter-width-xl {
+  height: 80vH;
+  justify-content: center;
 }
 
 .mootimetercontainer .divider {

@@ -113,6 +113,9 @@ class pagelist {
         }
         $temppages['pagelisttime'] = $maxtimecreated;
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('pagelisttime', $maxtimecreated);
+
+        \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('lastnewanswer', $maxtimecreated);
+
         $temppages['refreshinterval'] = get_config('mod_mootimeter', 'refreshinterval');
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('refreshinterval', $temppages['refreshinterval']);
         return $temppages;
