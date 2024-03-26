@@ -11,15 +11,17 @@ export const init = (id) => {
     let lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
     getAnswers(pageid, lastposttimestamp, id);
 
-    var interval = setInterval(() => {
-        lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
-        getAnswers(pageid, lastposttimestamp, id);
-        if (!document.getElementById(id)) {
-            clearInterval(interval);
-        }
-    }, document.getElementById('mootimeterstate').dataset.refreshinterval);
+    setTimeout(() => {
+        const intervalms = document.getElementById('mootimeterstate').dataset.refreshinterval;
+        const interval = setInterval(() => {
+            lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
+            getAnswers(pageid, lastposttimestamp, id);
+            if (!document.getElementById(id)) {
+                clearInterval(interval);
+            }
+        }, intervalms);
+    }, 5000);
 };
-
 
 /**
  * Execute the ajax call to get the aswers and more important data.
