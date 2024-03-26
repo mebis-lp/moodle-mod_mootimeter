@@ -42,14 +42,14 @@
 }
 
 /** This is to hide the topbar on fullscreen mode. */
-#page-wrapper.fullscreen {
+#mootimetertool_wordcloud_get_answers #page-wrapper.fullscreen {
   /** Setting for theme_boost */
 }
-#page-wrapper.fullscreen .navbar,
-#page-wrapper.fullscreen bycs-topbar {
+#mootimetertool_wordcloud_get_answers #page-wrapper.fullscreen .navbar,
+#mootimetertool_wordcloud_get_answers #page-wrapper.fullscreen bycs-topbar {
   display: none;
 }
-#page-wrapper.fullscreen #page {
+#mootimetertool_wordcloud_get_answers #page-wrapper.fullscreen #page {
   margin-top: 0;
 }
 

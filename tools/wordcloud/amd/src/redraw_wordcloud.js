@@ -9,13 +9,16 @@ export const init = (id) => {
 
     // Initially getAnswers.
     getAnswers(id);
+    setTimeout(() => {
+        const intervalms = document.getElementById('mootimeterstate').dataset.refreshinterval;
+        const interval = setInterval(() => {
+            getAnswers(id);
+            if (!document.getElementById(id)) {
+                clearInterval(interval);
+            }
+        }, intervalms);
+    }, 5000);
 
-    var interval = setInterval(() => {
-        getAnswers(id);
-        if (!document.getElementById(id)) {
-            clearInterval(interval);
-        }
-    }, document.getElementById('mootimeterstate').dataset.refreshinterval);
 };
 
 /**

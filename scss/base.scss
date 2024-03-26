@@ -39,9 +39,9 @@ $feedback-success-100: #d9f6e0;
 .mootimetercontainer {
   max-width: 1400px;
 
-	*:focus {
-    	outline: none;
-	}
+  *:focus {
+    outline: none;
+  }
 
   &.fullscreen {
     position: fixed;
@@ -86,14 +86,17 @@ $feedback-success-100: #d9f6e0;
 }
 
 /** This is to hide the topbar on fullscreen mode. */
-#page-wrapper.fullscreen {
-  .navbar,
-  bycs-topbar {
-    display: none;
-  }
+#mootimetertool_wordcloud_get_answers {
+  #page-wrapper.fullscreen {
 
-  /** Setting for theme_boost */
-  #page {
-    margin-top: 0;
+    .navbar,
+    bycs-topbar {
+      display: none;
+    }
+
+    /** Setting for theme_boost */
+    #page {
+      margin-top: 0;
+    }
   }
 }
