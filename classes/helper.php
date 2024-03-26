@@ -869,7 +869,7 @@ class helper {
         if (!empty($name)) {
             $conditions['name'] = $name;
             $field = $DB->get_field('mootimeter_tool_settings', 'value', $conditions);
-            if (empty($field)) {
+            if ($field === false) {
                 return "";
             }
             return $field;

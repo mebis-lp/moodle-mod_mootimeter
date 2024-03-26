@@ -35,11 +35,11 @@ class backup_mootimetertool_wordcloud_subplugin extends backup_subplugin {
 
         if ($userinfo) {
             $subpluginwordcloudanswers = new backup_nested_element(
-                'mtmt_wordcloud_answers',
+                'mootimetertool_wordcloud_answers',
                 ['id'],
                 ['pageid', 'usermodified', 'usermodified', 'answer', 'timecreated', 'timemodified']
             );
-            $subpluginwordcloudanswers->set_source_table('mtmt_wordcloud_answers', ['pageid' => backup::VAR_PARENTID]);
+            $subpluginwordcloudanswers->set_source_table('mootimetertool_wordcloud_answers', ['pageid' => backup::VAR_PARENTID]);
             $subpluginwrapper->add_child($subpluginwordcloudanswers);
         }
         var_dump($subplugin);

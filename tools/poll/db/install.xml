@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/mootimeter/tools/poll/db" VERSION="20231016" COMMENT="XMLDB file for Moodle mod/mootimeter/tools/poll"
+<XMLDB PATH="mod/mootimeter/tools/poll/db" VERSION="20240326" COMMENT="XMLDB file for Moodle mod/mootimeter/tools/poll"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="mtmt_poll_options" COMMENT="Options for polls">
+    <TABLE NAME="mootimetertool_poll_options" COMMENT="Options for polls">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="pageid" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
@@ -19,7 +19,7 @@
         <INDEX NAME="pageid" UNIQUE="false" FIELDS="pageid"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="mtmt_poll_answers" COMMENT="Users answers to questions">
+    <TABLE NAME="mootimetertool_poll_answers" COMMENT="Users answers to questions">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="pageid" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>

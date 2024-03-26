@@ -321,7 +321,7 @@ final class helper_test extends advanced_testcase {
         $this->expectException(\moodle_exception::class);
         $this->expectExceptionMessage('pageidmissing');
         $helper->store_answer(
-            'mtmt_wordcloud_answers',
+            'mootimetertool_wordcloud_answers',
             $records,
             false,
             self::ANSWER_COLUMN_WORDCLOD,
@@ -355,7 +355,7 @@ final class helper_test extends advanced_testcase {
         $this->expectException(\moodle_exception::class);
         $this->expectExceptionMessage('notenrolledtocourse');
         $helper->store_answer(
-            'mtmt_wordcloud_answers',
+            'mootimetertool_wordcloud_answers',
             $records,
             true,
             self::ANSWER_COLUMN_WORDCLOD,
@@ -391,14 +391,14 @@ final class helper_test extends advanced_testcase {
         $records[] = $record;
 
         $helper->store_answer(
-            'mtmt_wordcloud_answers',
+            'mootimetertool_wordcloud_answers',
             $records,
             true,
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // False.
         );
 
-        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $answers = $helper->get_answers('mootimetertool_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
         $this->assertCount(1, (array)$answers);
 
         $answer1 = (array) $answers;
@@ -410,14 +410,14 @@ final class helper_test extends advanced_testcase {
         $records[] = $record;
 
         $helper->store_answer(
-            'mtmt_wordcloud_answers',
+            'mootimetertool_wordcloud_answers',
             $records,
             true,
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // False.
         );
 
-        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $answers = $helper->get_answers('mootimetertool_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
         $this->assertCount(1, (array)$answers);
         $answer2 = (array) $answers;
 
@@ -451,14 +451,14 @@ final class helper_test extends advanced_testcase {
         $records[] = $record;
 
         $helper->store_answer(
-            'mtmt_wordcloud_answers',
+            'mootimetertool_wordcloud_answers',
             $records,
             false,
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
         );
 
-        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $answers = $helper->get_answers('mootimetertool_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
         $this->assertCount(1, (array)$answers);
 
         // Reset records array.
@@ -471,14 +471,14 @@ final class helper_test extends advanced_testcase {
         $records[] = $record;
 
         $helper->store_answer(
-            'mtmt_wordcloud_answers',
+            'mootimetertool_wordcloud_answers',
             $records,
             false,
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
         );
 
-        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $answers = $helper->get_answers('mootimetertool_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
         $this->assertCount(2, (array)$answers);
 
         // Now try to store a doubled answer and update the existing answers.
@@ -498,14 +498,14 @@ final class helper_test extends advanced_testcase {
         $records[] = $record;
 
         $helper->store_answer(
-            'mtmt_wordcloud_answers',
+            'mootimetertool_wordcloud_answers',
             $records,
             true,
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
         );
 
-        $answers = $helper->get_answers('mtmt_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
+        $answers = $helper->get_answers('mootimetertool_wordcloud_answers', $page->id, self::ANSWER_COLUMN_WORDCLOD);
         $this->assertCount(2, (array)$answers);
 
         $answervalues = array_map(function ($tempanswer) {

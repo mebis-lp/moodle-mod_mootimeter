@@ -33,21 +33,21 @@ class backup_mootimetertool_quiz_subplugin extends backup_subplugin {
         $subplugin = $this->get_subplugin_element();
         $subpluginwrapper = new backup_nested_element($this->get_recommended_name());
         $subpluginquizoptions = new backup_nested_element(
-            'mtmt_quiz_options',
+            'mootimetertool_quiz_options',
             ['id'],
             ['pageid', 'optiontext', 'optioniscorrect', 'timecreated', 'timemodified']
         );
         $subplugin->add_child($subpluginwrapper);
         $subpluginwrapper->add_child($subpluginquizoptions);
-        $subpluginquizoptions->set_source_table('mtmt_quiz_options', ['pageid' => backup::VAR_PARENTID]);
+        $subpluginquizoptions->set_source_table('mootimetertool_quiz_options', ['pageid' => backup::VAR_PARENTID]);
 
         if ($userinfo) {
             $subpluginquizanswers = new backup_nested_element(
-                'mtmt_quiz_answers',
+                'mootimetertool_quiz_answers',
                 ['id'],
                 ['pageid', 'usermodified', 'optionid', 'timecreated', 'timemodified']
             );
-            $subpluginquizanswers->set_source_table('mtmt_quiz_answers', ['pageid' => backup::VAR_PARENTID]);
+            $subpluginquizanswers->set_source_table('mootimetertool_quiz_answers', ['pageid' => backup::VAR_PARENTID]);
             $subpluginwrapper->add_child($subpluginquizanswers);
         }
 

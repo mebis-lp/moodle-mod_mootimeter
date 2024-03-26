@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023040614;
+$plugin->version   = 2024030600;
 $plugin->requires  = 2022111800;
 $plugin->component = 'mootimetertool_wordcloud';

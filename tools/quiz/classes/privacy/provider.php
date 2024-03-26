@@ -52,29 +52,29 @@ class provider implements
     public static function get_metadata(collection $collection): collection {
 
         $collection->add_database_table(
-            'mtmt_quiz_answers',
+            'mootimetertool_quiz_answers',
             [
-                'usermodified' => 'privacy:metadata:mtmt_quiz_answers:userid',
-                'pageid' => 'privacy:metadata:mtmt_quiz_answers:pageid',
-                'optionid' => 'privacy:metadata:mtmt_quiz_answers:optionid',
-                'timecreated' => 'privacy:metadata:mtmt_quiz_answers:timecreated',
-                'timemodified' => 'privacy:metadata:mtmt_quiz_answers:timemodified',
+                'usermodified' => 'privacy:metadata:mootimetertool_quiz_answers:userid',
+                'pageid' => 'privacy:metadata:mootimetertool_quiz_answers:pageid',
+                'optionid' => 'privacy:metadata:mootimetertool_quiz_answers:optionid',
+                'timecreated' => 'privacy:metadata:mootimetertool_quiz_answers:timecreated',
+                'timemodified' => 'privacy:metadata:mootimetertool_quiz_answers:timemodified',
 
             ],
-            'privacy:metadata:mtmt_quiz_answers'
+            'privacy:metadata:mootimetertool_quiz_answers'
         );
 
         $collection->add_database_table(
-            'mtmt_quiz_options',
+            'mootimetertool_quiz_options',
             [
-                'pageid' => 'privacy:metadata:mtmt_quiz_options:pageid',
-                'optiontext' => 'privacy:metadata:mtmt_quiz_options:optiontext',
-                'optioniscorrect' => 'privacy:metadata:mtmt_quiz_options:optioniscorrect',
-                'timecreated' => 'privacy:metadata:mtmt_quiz_options:timecreated',
-                'timemodified' => 'privacy:metadata:mtmt_quiz_options:timemodified',
+                'pageid' => 'privacy:metadata:mootimetertool_quiz_options:pageid',
+                'optiontext' => 'privacy:metadata:mootimetertool_quiz_options:optiontext',
+                'optioniscorrect' => 'privacy:metadata:mootimetertool_quiz_options:optioniscorrect',
+                'timecreated' => 'privacy:metadata:mootimetertool_quiz_options:timecreated',
+                'timemodified' => 'privacy:metadata:mootimetertool_quiz_options:timemodified',
 
             ],
-            'privacy:metadata:mtmt_quiz_options'
+            'privacy:metadata:mootimetertool_quiz_options'
         );
         return $collection;
     }
@@ -100,7 +100,7 @@ class provider implements
                   JOIN {mootimeter} mtm ON cm.instance = mtm.id
                   JOIN {context} ctx ON cm.id = ctx.instanceid AND ctx.contextlevel = :contextlevel
                   JOIN {mootimeter_pages} mtmp ON mtmp.instance = mtm.id
-                  JOIN {mtmt_quiz_answers} mtmta ON mtmta.pageid = mtmp.id AND mtmta.usermodified = :userid";
+                  JOIN {mootimetertool_quiz_answers} mtmta ON mtmta.pageid = mtmp.id AND mtmta.usermodified = :userid";
 
         $contextlist->add_from_sql($sql, $params);
 
@@ -127,7 +127,7 @@ class provider implements
                   JOIN {course_modules} cm ON cm.id = ctx.instanceid
                   JOIN {mootimeter} mtm ON cm.instance = mtm.id
                   JOIN {mootimeter_pages} mtmp ON mtmp.instance = mtm.id
-                  JOIN {mtmt_quiz_answers} mtmta ON mtmta.pageid = mtmp.id
+                  JOIN {mootimetertool_quiz_answers} mtmta ON mtmta.pageid = mtmp.id
                   WHERE ctx.id = :contextid AND ctx.contextlevel = :contextlevel";
         $userlist->add_from_sql('userid', $sql, $params);
     }

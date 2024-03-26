@@ -30,7 +30,7 @@ class restore_mootimetertool_wordcloud_subplugin extends restore_subplugin {
     protected function define_mootimeter_subplugin_structure() {
         $paths = [];
 
-        $elepath = $this->get_pathfor('/mtmt_wordcloud_answers');
+        $elepath = $this->get_pathfor('/mootimetertool_wordcloud_answers');
         $paths[] = new restore_path_element('wordcloud_answers', $elepath);
 
         return $paths;
@@ -48,7 +48,7 @@ class restore_mootimetertool_wordcloud_subplugin extends restore_subplugin {
         $oldid = $data->id;
         $data->pageid = $this->get_new_parentid('mootimeter_page');
         $data->usermodified = $this->get_mappingid('user', $data->usermodified, 0);
-        $newitemid = $DB->insert_record('mtmt_wordcloud_answers', $data);
+        $newitemid = $DB->insert_record('mootimetertool_wordcloud_answers', $data);
         $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);
     }
 }

@@ -38,12 +38,12 @@ class poll extends \mootimetertool_quiz\quiz {
     /**
      * @var string Answer table
      */
-    const ANSWER_TABLE = "mtmt_poll_answers";
+    const ANSWER_TABLE = "mootimetertool_poll_answers";
 
     /**
      * @var string Answer option table name.
      */
-    const ANSWER_OPTION_TABLE = "mtmt_poll_options";
+    const ANSWER_OPTION_TABLE = "mootimetertool_poll_options";
 
     /**
      * Get the tools answer column.

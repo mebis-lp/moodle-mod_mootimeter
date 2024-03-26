@@ -48,7 +48,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     /**
      * @var string Answer table
      */
-    const ANSWER_TABLE = "mtmt_wordcloud_answers";
+    const ANSWER_TABLE = "mootimetertool_wordcloud_answers";
 
     /** Show Results live */
     const MTMT_VIEW_RESULT_LIVE = 1;

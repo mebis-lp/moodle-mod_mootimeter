@@ -85,7 +85,7 @@ class store_answer extends external_api {
 
         $maxnumberofanswers = helper::get_tool_config($page->id, "maxinputsperuser");
         $wordcloud = new \mootimetertool_wordcloud\wordcloud();
-        $submittedanswers = $wordcloud->get_user_answers('mtmt_wordcloud_answers', $page->id, 'answer', $USER->id);
+        $submittedanswers = $wordcloud->get_user_answers('mootimetertool_wordcloud_answers', $page->id, 'answer', $USER->id);
 
         if (count($submittedanswers) >= $maxnumberofanswers && $maxnumberofanswers > 0) {
             return [

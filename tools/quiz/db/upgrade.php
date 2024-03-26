@@ -74,5 +74,21 @@ function xmldb_mootimetertool_quiz_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023101600, 'mootimetertool', 'quiz');
     }
 
+    if ($oldversion < 2024030600) {
+
+        // Define table mtmt_quiz_options to be renamed to mootimetertool_quiz_options.
+        $table = new xmldb_table('mtmt_quiz_options');
+        // Launch rename table for mootimetertool_quiz_options.
+        $dbman->rename_table($table, 'mootimetertool_quiz_options');
+
+        // Define table mtmt_quiz_answers to be renamed to mootimetertool_quiz_answers.
+        $table = new xmldb_table('mtmt_quiz_answers');
+        // Launch rename table for mootimetertool_quiz_answers.
+        $dbman->rename_table($table, 'mootimetertool_quiz_answers');
+
+        // Quiz savepoint reached.
+        upgrade_plugin_savepoint(true, 2024030600, 'mootimetertool', 'quiz');
+    }
+
     return true;
 }

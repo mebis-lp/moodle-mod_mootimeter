@@ -88,7 +88,7 @@ class store_answeroption_is_correct extends external_api {
 
             $dataset = json_decode($datasetjson);
 
-            $record = $DB->get_record('mtmt_quiz_options', ['id' => $dataset->aoid, 'pageid' => $pageid]);
+            $record = $DB->get_record('mootimetertool_quiz_options', ['id' => $dataset->aoid, 'pageid' => $pageid]);
             $record->optioniscorrect = $inputvalue;
             $quiz->store_answer_option($record);
 

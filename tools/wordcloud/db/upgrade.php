@@ -52,5 +52,16 @@ function xmldb_mootimetertool_wordcloud_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023040601, 'mootimetertool', 'wordcloud');
     }
 
+    if ($oldversion < 2024030600) {
+
+        // Define table mtmt_wordcloud_answers to be renamed to mootimetertool_wordcloud_answers.
+        $table = new xmldb_table('mtmt_wordcloud_answers');
+        // Launch rename table for mootimetertool_wordcloud_answers.
+        $dbman->rename_table($table, 'mootimetertool_wordcloud_answers');
+
+        // Wordcloud savepoint reached.
+        upgrade_plugin_savepoint(true, 2024030600, 'mootimetertool', 'wordcloud');
+    }
+
     return true;
 }

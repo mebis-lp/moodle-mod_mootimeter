@@ -52,7 +52,7 @@ class restore_mootimetertool_quiz_subplugin extends restore_subplugin {
 
         $data->pageid = $this->get_new_parentid('mootimeter_page');
 
-        $newitemid = $DB->insert_record('mtmt_quiz_options', $data);
+        $newitemid = $DB->insert_record('mootimetertool_quiz_options', $data);
         $this->set_mapping($this->get_namefor(), $oldid, $newitemid, true);
     }
 
@@ -68,7 +68,7 @@ class restore_mootimetertool_quiz_subplugin extends restore_subplugin {
         $oldid = $data->id;
         $data->pageid = $this->get_new_parentid('mootimeter_page');
         $data->usermodified = $this->get_mappingid('user', $data->usermodified, 0);
-        $newitemid = $DB->insert_record('mtmt_quiz_answers', $data);
+        $newitemid = $DB->insert_record('mootimetertool_quiz_answers', $data);
         $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);
     }
 }

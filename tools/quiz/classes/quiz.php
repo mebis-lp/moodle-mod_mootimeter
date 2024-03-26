@@ -49,12 +49,12 @@ class quiz extends \mod_mootimeter\toolhelper {
     /**
      * @var string Answer table
      */
-    const ANSWER_TABLE = "mtmt_quiz_answers";
+    const ANSWER_TABLE = "mootimetertool_quiz_answers";
 
     /**
      * @var string Answer option table name.
      */
-    const ANSWER_OPTION_TABLE = "mtmt_quiz_options";
+    const ANSWER_OPTION_TABLE = "mootimetertool_quiz_options";
 
     /** @var string ChartJS default color
      * TODO: Make it an admin setting.

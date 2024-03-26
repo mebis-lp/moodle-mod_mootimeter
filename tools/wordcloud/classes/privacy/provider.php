@@ -90,7 +90,7 @@ class provider implements
                   JOIN {mootimeter} mtm ON cm.instance = mtm.id
                   JOIN {context} ctx ON cm.id = ctx.instanceid AND ctx.contextlevel = :contextlevel
                   JOIN {mootimeter_pages} mtmp ON mtmp.instance = mtm.id
-                  JOIN {mtmt_wordcloud_answers} mtmta ON mtmta.pageid = mtmp.id AND mtmta.usermodified = :userid";
+                  JOIN {mootimetertool_wordcloud_answers} mtmta ON mtmta.pageid = mtmp.id AND mtmta.usermodified = :userid";
 
         $contextlist->add_from_sql($sql, $params);
 
@@ -117,7 +117,7 @@ class provider implements
                   JOIN {course_modules} cm ON cm.id = ctx.instanceid
                   JOIN {mootimeter} mtm ON cm.instance = mtm.id
                   JOIN {mootimeter_pages} mtmp ON mtmp.instance = mtm.id
-                  JOIN {mtmt_wordcloud_answers} mtmta ON mtmta.pageid = mtmp.id
+                  JOIN {mootimetertool_wordcloud_answers} mtmta ON mtmta.pageid = mtmp.id
                   WHERE ctx.id = :contextid AND ctx.contextlevel = :contextlevel";
         $userlist->add_from_sql('userid', $sql, $params);
 
