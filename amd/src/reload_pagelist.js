@@ -90,16 +90,19 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
             reloadPage(loadpageid, cmid, '');
         }
 
-        // Set new refreshinterval state.
-        mtmstate.setAttribute('data-refreshinterval', pagelist.refreshinterval);
+        // Set all datasets to mootimeterstate.
+        for (let dataattribute in pagelist.dataset) {
+            if (pagelist.dataset.hasOwnProperty(dataattribute)) {
+                mtmstate.setAttribute('data-' + dataattribute, pagelist.dataset[dataattribute]);
+            }
+        }
 
         // If there are no changes in pagelist. We are finished.
-        if (mtmstate.dataset.pagelisttime == pagelist.pagelisttime && !forcereload) {
+        if (mtmstate.dataset.pagelisttime == pagelist.dataset.pagelisttime && !forcereload) {
             return;
         }
 
         // Set new pagelisttime state.
-        mtmstate.setAttribute('data-pagelisttime', pagelist.pagelisttime);
 
         // Replace the pages list.
         Templates.renderForPromise('mod_mootimeter/elements/snippet_page_list', pagelist)

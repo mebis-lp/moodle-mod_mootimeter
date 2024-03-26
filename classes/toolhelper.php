@@ -63,6 +63,14 @@ abstract class toolhelper extends \mod_mootimeter\helper {
     abstract public function insert_answer(object $page, $answer);
 
     /**
+     * Get the timestamp of the last answer.
+     *
+     * @param int|object $pageorid
+     * @return int
+     */
+    abstract public function get_last_update_time(int|object $pageorid);
+
+    /**
      * Delete Page
      *
      * @param object $page

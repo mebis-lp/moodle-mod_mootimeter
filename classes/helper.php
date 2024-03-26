@@ -1264,6 +1264,31 @@ class helper {
     }
 
     /**
+     * Get the lastupdated timestamp.
+     *
+     * @param int|object $pageorid
+     * @return mixed
+     */
+    public function get_answer_last_update_time(int|object $pageorid): string|int {
+        $page = $pageorid;
+        if (!is_object($page)) {
+            $page = $this->get_page($page);
+        }
+
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+        if (!class_exists($classname)) {
+            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        }
+
+        $toolhelper = new $classname();
+        if (!method_exists($toolhelper, 'get_last_update_time')) {
+            return "Method 'get_last_update_time' is missing in tools helper class " . $page->tool;
+        }
+
+        return $toolhelper->get_last_update_time($page->id);
+    }
+
+    /**
      * Clear all caches.
      *
      * @param int $pageid

@@ -409,24 +409,29 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     /**
      * Get the lastupdated timestamp.
      *
-     * @param int $pageid
+     * @param int|object $pageorid
      * @return int
      */
-    public function get_last_update_time(int $pageid): int {
+    public function get_last_update_time(int|object $pageorid): int {
         global $DB;
 
-        $instance = self::get_instance_by_pageid($pageid);
+        $page = $pageorid;
+        if (!is_object($page)) {
+            $page = $this->get_page($page);
+        }
+
+        $instance = self::get_instance_by_pageid($page->id);
         $cm = self::get_cm_by_instance($instance);
 
         // We only want to deliver results if the teacher allowed to view it.
         if (
-            empty($this->get_tool_config($pageid, 'showonteacherpermission'))
+            empty($this->get_tool_config($page->id, 'showonteacherpermission'))
             && !has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
         ) {
             return 100;
         }
 
-        $records = $DB->get_records(self::ANSWER_TABLE, ['pageid' => $pageid], 'timecreated DESC', 'timecreated', 0, 1);
+        $records = $DB->get_records(self::ANSWER_TABLE, ['pageid' => $page->id], 'timecreated DESC', 'timecreated', 0, 1);
 
         if (empty($records)) {
             return 0;
