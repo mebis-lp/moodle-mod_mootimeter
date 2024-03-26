@@ -1,4 +1,4 @@
-import {call as fetchMany} from 'core/ajax';
+import { call as fetchMany } from 'core/ajax';
 import WordCloud from 'mootimetertool_wordcloud/wordcloud2';
 
 export const init = (id) => {
@@ -44,7 +44,7 @@ const execGetAnswers = (
  * @param {string} id
  * @returns {mixed}
  */
-const getAnswers = async(id) => {
+const getAnswers = async (id) => {
 
     if (!document.getElementById(id)) {
         return;
@@ -52,20 +52,19 @@ const getAnswers = async(id) => {
 
     var pageid = document.getElementById(id).dataset.pageid;
 
-    var lastposttimestamp = 0;
-    if (document.getElementById('mootimeterstate').dataset.lastupdated) {
-       lastposttimestamp = document.getElementById('mootimeterstate').dataset.lastupdated;
-    }
+    const mtmstate = document.getElementById('mootimeterstate');
 
-    const response = await execGetAnswers(pageid, lastposttimestamp);
-
-    if (
-        response.lastupdated == lastposttimestamp
-        &&
-        JSON.stringify(response.answerlist) == document.getElementById(id).dataset.answers
-    ) {
+    // Early exit if there are no changes.
+    if (mtmstate.dataset.lastupdated == mtmstate.dataset.lastnewanswer) {
         return;
     }
+
+    var lastposttimestamp = 0;
+    if (document.getElementById('mootimeterstate').dataset.lastupdated) {
+        lastposttimestamp = document.getElementById('mootimeterstate').dataset.lastupdated;
+    }
+    // Get the answer list.
+    const response = await execGetAnswers(pageid, lastposttimestamp);
 
     // Set lastupdated.
     let nodelastupdated = document.getElementById('mootimeterstate');
@@ -86,5 +85,5 @@ function redrawwordcloud(id) {
     let mtmtcanvas = document.getElementById(id);
     let answers = JSON.parse(mtmtcanvas.dataset.answers);
 
-    WordCloud(mtmtcanvas, {list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans'});
+    WordCloud(mtmtcanvas, { list: answers, weightFactor: 24, color: '#f98012', fontFamily: 'OpenSans' });
 }
