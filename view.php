@@ -93,5 +93,5 @@ $params['mootimeterstate-dataset'] = \mod_mootimeter\local\mootimeterstate::get_
 
 // START OUTPUT.
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template("mod_mootimeter/main_screen2", $params);
+echo $OUTPUT->render_from_template("mod_mootimeter/main_screen", $params);
 echo $OUTPUT->footer();

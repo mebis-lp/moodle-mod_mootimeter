@@ -288,7 +288,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         // Parameter for initializing Badges.
         $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
-        $params['template'] = "mootimetertool_" . $page->tool . "/view_content2";
+        $params['template'] = "mootimetertool_" . $page->tool . "/view_content";
 
         $params["answers"] = array_values(array_map(function ($element) use ($page) {
 

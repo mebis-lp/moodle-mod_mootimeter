@@ -414,7 +414,7 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         // Parameter for initializing Badges.
         $params["toolname"] = ['pill' => get_string("pluginname", "mootimetertool_" . $page->tool)];
-        $params['template'] = "mootimetertool_quiz/view_content2";
+        $params['template'] = "mootimetertool_quiz/view_content";
 
         $answeroptions = $this->get_answer_options($page->id);
 

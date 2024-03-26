@@ -399,7 +399,7 @@ class helper {
 
         $params = $this->get_rendered_page_content_params($cm, $page, $withwrapper, $dataset);
 
-        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content2", $params['pagecontent']);
+        return $OUTPUT->render_from_template("mootimetertool_" . $page->tool . "/view_content", $params['pagecontent']);
     }
 
     /**
