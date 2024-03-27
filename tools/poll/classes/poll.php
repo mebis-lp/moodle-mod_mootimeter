@@ -41,6 +41,11 @@ class poll extends \mootimetertool_quiz\quiz {
     const ANSWER_TABLE = "mootimetertool_poll_answers";
 
     /**
+     * @var string Name of table column of the answer table where the user id is stored
+     */
+    const ANSWER_USERID_COLUMN = 'usermodified';
+
+    /**
      * @var string Answer option table name.
      */
     const ANSWER_OPTION_TABLE = "mootimetertool_poll_options";
@@ -59,6 +64,15 @@ class poll extends \mootimetertool_quiz\quiz {
      */
     public function get_answer_table() {
         return self::ANSWER_TABLE;
+    }
+
+    /**
+     * Get the userid column name in the answer table of the tool.
+     *
+     * @return ?string the column name where the user id is stored in the answer table, null if no user id is stored
+     */
+    public function get_answer_userid_column(): ?string {
+        return self::ANSWER_USERID_COLUMN;
     }
 
     /**

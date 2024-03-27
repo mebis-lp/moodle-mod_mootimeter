@@ -98,6 +98,14 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mod_mootimeter_delete_answers_of_user' => [
+            'classname'     => 'mod_mootimeter\external\delete_answers_of_user',
+            'methodname'    => 'execute',
+            'description'   => 'Delete all answers of a user of a page',
+            'type'          => 'write',
+            'ajax'          => true,
+            'capabilities'  => 'mod/mootimeter:view',
+    ],
     'mod_mootimeter_get_pagecontentparams' => [
         'classname'     => 'mod_mootimeter\external\get_pagecontentparams',
         'methodname'    => 'execute',

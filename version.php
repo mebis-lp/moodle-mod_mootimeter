@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_mootimeter';
 $plugin->release = '0.1.0';
-$plugin->version = 2023121102;
+$plugin->version = 2024032700;
 $plugin->requires = 2022112800;
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->supported = [403, 403]; // A range of branch numbers of supported moodle versions.
+$plugin->supported = [403, 404]; // A range of branch numbers of supported moodle versions.

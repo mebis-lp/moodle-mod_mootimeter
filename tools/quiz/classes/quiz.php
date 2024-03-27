@@ -52,6 +52,11 @@ class quiz extends \mod_mootimeter\toolhelper {
     const ANSWER_TABLE = "mootimetertool_quiz_answers";
 
     /**
+     * @var string Name of table column of the answer table where the user id is stored
+     */
+    const ANSWER_USERID_COLUMN = 'usermodified';
+
+    /**
      * @var string Answer option table name.
      */
     const ANSWER_OPTION_TABLE = "mootimetertool_quiz_options";
@@ -91,6 +96,15 @@ class quiz extends \mod_mootimeter\toolhelper {
      */
     public function get_answer_table() {
         return self::ANSWER_TABLE;
+    }
+
+    /**
+     * Get the userid column name in the answer table of the tool.
+     *
+     * @return ?string the column name where the user id is stored in the answer table, null if no user id is stored
+     */
+    public function get_answer_userid_column(): ?string {
+        return self::ANSWER_USERID_COLUMN;
     }
 
     /**
@@ -426,7 +440,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         ));
 
         $inputtype = 'cb';
-        if (self::get_tool_config($page->id, 'maxanswersperuser') == 1) {
+        if (intval(self::get_tool_config($page->id, 'maxanswersperuser')) === 1) {
             $inputtype = 'rb';
         }
         foreach ($answeroptions as $answeroption) {
@@ -468,7 +482,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-button-dataset' => 'data-pageid="' . $page->id . '"',
             ];
 
-            if (self::get_tool_config($page, 'maxanswersperuser') == 1) {
+            if (intval(self::get_tool_config($page, 'maxanswersperuser')) == 1) {
                 $sendbuttoncontext = get_string('sendbutton_context_one_answers_possible', 'mootimetertool_quiz');
             } else {
                 $sendbuttoncontext = get_string('sendbutton_context_more_answers_possible', 'mootimetertool_quiz');
@@ -622,18 +636,23 @@ class quiz extends \mod_mootimeter\toolhelper {
             ],
         ];
 
+        $maxanswers = self::get_tool_config($page->id, "maxanswersperuser");
+        if (empty($maxanswers) && !is_number($maxanswers)) {
+            // Empty also evaluates to true if $maxanswers equals "0", so we have to check that separately.
+            // If not specified set default value.
+            $maxanswers = 1;
+        } else {
+            $maxanswers = intval($maxanswers);
+        }
         $params['maxanswers'] = [
             'title' => get_string('answers_max_number', 'mootimetertool_quiz'),
             'additional_class' => 'mootimeter_settings_selector',
             'id' => "maxanswersperuser",
             'name' => "maxanswersperuser",
-            'min' => 0,
+            'min' => '0',
             'pageid' => $page->id,
             'ajaxmethode' => "mod_mootimeter_store_setting",
-            'value' => (empty(self::get_tool_config($page->id, "maxanswersperuser"))) ? '1' : self::get_tool_config(
-                $page->id,
-                "maxanswersperuser"
-            ),
+            'value' => strval($maxanswers),
         ];
 
         $params['anonymousmode'] = [
@@ -890,6 +909,8 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         $renderer = $PAGE->get_renderer('core');
 
+        $answers = $this->convert_answers_to_grouped_answers($answers);
+
         foreach ($answers as $answer) {
 
             $user = $this->get_user_by_id($answer->usermodified);
@@ -903,11 +924,12 @@ class quiz extends \mod_mootimeter\toolhelper {
 
             // Add delte button to answer.
             $dataseticonrestart = [
-                'data-ajaxmethode = "mod_mootimeter_delete_single_answer"',
+                'data-ajaxmethode = "mod_mootimeter_delete_answers_of_user"',
                 'data-pageid="' . $page->id . '"',
                 'data-answerid="' . $answer->id . '"',
-                'data-confirmationtitlestr="' . get_string('delete_single_answer_dialog_title', 'mod_mootimeter') . '"',
-                'data-confirmationquestionstr="' . get_string('delete_single_answer_dialog_question', 'mod_mootimeter') . '"',
+                'data-userid="' . $answer->usermodified . '"',
+                'data-confirmationtitlestr="' . get_string('delete_answers_of_user_dialog_title', 'mod_mootimeter') . '"',
+                'data-confirmationquestionstr="' . get_string('delete_answers_of_user_dialog_question', 'mod_mootimeter') . '"',
                 'data-confirmationtype="DELETE_CANCEL"',
             ];
 
@@ -932,6 +954,44 @@ class quiz extends \mod_mootimeter\toolhelper {
         }
 
         return $params;
+    }
+
+    /**
+     * Based of an array of answers returns an array of answers grouped by userid.
+     *
+     * @param array $answers the answers to convert
+     * @return array array with key: id of the first answer in a group, value is an answer object containing all optionids
+     */
+    public function convert_answers_to_grouped_answers(array $answers): array {
+        $groupedanswers = [];
+        foreach ($answers as $answer) {
+            $groupedanswers[$answer->usermodified][] = $answer;
+        }
+        $answers = [];
+        foreach ($groupedanswers as $groupedanswer) {
+            $optionids = [];
+            foreach ($groupedanswer as $answer) {
+                $optionids[] = $answer->optionid;
+            }
+            $firstansweringroup = (object) reset($groupedanswer);
+            $firstansweringroup->optionid = implode(';', $optionids);
+            $answers[$firstansweringroup->id] = $firstansweringroup;
+        }
+        return $answers;
+    }
+
+    /**
+     * Extracts the answer option names from an array of answer option objects.
+     *
+     * @param array $answeroptions Array of answer options
+     * @return array Array of strings with the names of the answer options
+     */
+    public static function extract_answer_option_strings(array $answeroptions): array {
+        $answeroptionsstrings = [];
+        foreach ($answeroptions as $answeroption) {
+            $answeroptionsstrings[$answeroption->id] = $answeroption->optiontext;
+        }
+        return $answeroptionsstrings;
     }
 
     /**
