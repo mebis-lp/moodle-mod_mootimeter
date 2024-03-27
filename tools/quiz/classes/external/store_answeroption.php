@@ -25,16 +25,12 @@
 
 namespace mootimetertool_quiz\external;
 
+use core_external\external_api;
+use core_external\external_function_parameters;
+use core_external\external_single_structure;
+use core_external\external_value;
 use dml_exception;
-use external_api;
-use external_function_parameters;
-use external_multiple_structure;
-use external_single_structure;
-use external_value;
 use invalid_parameter_exception;
-
-defined('MOODLE_INTERNAL') || die();
-require_once($CFG->libdir . '/externallib.php');
 
 /**
  * Web service to store an option.
@@ -69,7 +65,7 @@ class store_answeroption extends external_api {
      * @throws invalid_parameter_exception
      * @throws dml_exception
      */
-    public static function execute(int $pageid, int $aoid, string $value, string $id): void {
+    public static function execute(int $pageid, int $aoid, string $value, string $id): array {
         global $USER;
 
         [
@@ -84,26 +80,38 @@ class store_answeroption extends external_api {
             'id' => $id,
         ]);
 
-        $quiz = new \mootimetertool_quiz\quiz();
+        try {
+            $quiz = new \mootimetertool_quiz\quiz();
 
-        $record = new \stdClass();
-        $record->id = $aoid;
-        $record->pageid = $pageid;
-        $record->usermodified = $USER->id;
-        $record->optiontext = $value;
-        $record->optioniscorrect = 0;
-        $record->timecreated = time();
+            $record = new \stdClass();
+            $record->id = $aoid;
+            $record->pageid = $pageid;
+            $record->usermodified = $USER->id;
+            $record->optiontext = $value;
+            $record->optioniscorrect = 0;
+            $record->timecreated = time();
 
-        $quiz->store_answer_option($record);
+            $quiz->store_answer_option($record);
+            $return = ['code' => 200, 'string' => 'ok'];
+        } catch (\Exception $e) {
 
-        return;
+            $return = ['code' => 500, 'string' => $e->getMessage()];
+        }
+        return $return;
     }
 
     /**
-     * Describes the return structure of the service.
+     * Describes the return structure of the service..
      *
-     * @return external_multiple_structure
+     * @return external_single_structure
      */
     public static function execute_returns() {
+        return new external_single_structure(
+                [
+                        'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
+                        'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+                ],
+                'Response of storing the answer option details'
+        );
     }
 }

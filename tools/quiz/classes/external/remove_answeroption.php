@@ -25,16 +25,12 @@
 
 namespace mootimetertool_quiz\external;
 
+use core_external\external_api;
+use core_external\external_function_parameters;
+use core_external\external_single_structure;
+use core_external\external_value;
 use dml_exception;
-use external_api;
-use external_function_parameters;
-use external_multiple_structure;
-use external_single_structure;
-use external_value;
 use invalid_parameter_exception;
-
-defined('MOODLE_INTERNAL') || die();
-require_once($CFG->libdir . '/externallib.php');
 
 /**
  * Web service to remove an answer option.
