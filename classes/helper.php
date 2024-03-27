@@ -869,8 +869,8 @@ class helper {
         if (!empty($name)) {
             $conditions['name'] = $name;
             $field = $DB->get_field('mootimeter_tool_settings', 'value', $conditions);
-            if ($field === false) {
-                return "";
+            if (is_null($field) || $field === false) {
+                return '';
             }
             return $field;
         }
@@ -1191,6 +1191,44 @@ class helper {
     }
 
     /**
+     * Delete all answers of a user of a page.
+     *
+     * @param string $table the table name to delete the answers from
+     * @param int $pageid the id of the page
+     * @param int $userid the id of the user whose answers should be deleted
+     * @return bool
+     */
+    public function delete_answers_of_user(string $table, int $pageid, int $userid): bool {
+        global $DB;
+
+        if ($userid <= 0) {
+            throw new moodle_exception('Invalid user id: ' . $userid);
+        }
+
+        $instance = self::get_instance_by_pageid($pageid);
+        $cm = self::get_cm_by_instance($instance);
+        $context = \context_module::instance($cm->id);
+
+        if (!has_capability('mod/mootimeter:moderator', $context)) {
+            throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
+        }
+
+        $helper = new \mod_mootimeter\helper();
+        $page = $helper->get_page($pageid);
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+        /** @var \mod_mootimeter\toolhelper $toolhelper */
+        $toolhelper = new $classname();
+
+        if (is_null($toolhelper->get_answer_userid_column())) {
+            throw new coding_exception('Tool ' . $page->tool . ' has no user id stored, you cannot use this function!');
+        }
+        $params = ['pageid' => $pageid, $toolhelper->get_answer_userid_column() => $userid];
+        $return = $DB->delete_records($table, $params);
+        $this->clear_caches($pageid);
+        return $return;
+    }
+
+    /**
      * Get all page answers of a specific user. Using get_answers method to use the cache.
      *
      * @param string $table
@@ -1235,7 +1273,8 @@ class helper {
             $cache->set($cachekey, json_encode($records));
         }
 
-        return $records;
+        // Ensure we return an array, because json_decode by default creates a stdClass object.
+        return (array) $records;
     }
 
     /**

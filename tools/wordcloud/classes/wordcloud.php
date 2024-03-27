@@ -50,6 +50,11 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      */
     const ANSWER_TABLE = "mootimetertool_wordcloud_answers";
 
+    /**
+     * @var string Name of table column of the answer table where the user id is stored
+     */
+    const ANSWER_USERID_COLUMN = 'usermodified';
+
     /** Show Results live */
     const MTMT_VIEW_RESULT_LIVE = 1;
     /** Show Results after teacher permission */
@@ -69,6 +74,15 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      */
     public function get_answer_table() {
         return self::ANSWER_TABLE;
+    }
+
+    /**
+     * Get the userid column name in the answer table of the tool.
+     *
+     * @return ?string the column name where the user id is stored in the answer table, null if no user id is stored
+     */
+    public function get_answer_userid_column(): ?string {
+        return self::ANSWER_USERID_COLUMN;
     }
 
     /**

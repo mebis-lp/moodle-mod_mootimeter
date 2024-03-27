@@ -54,6 +54,14 @@ abstract class toolhelper extends \mod_mootimeter\helper {
     abstract public function get_answer_table();
 
     /**
+     * Get the userid column name in the answer table of the tool.
+     * @return ?string the column name where the user id is stored in the answer table, null if no user id is stored
+     */
+    public function get_answer_userid_column(): ?string {
+        return null;
+    }
+
+    /**
      * Insert the answer.
      *
      * @param object $page
