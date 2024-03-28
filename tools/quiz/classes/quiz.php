@@ -309,6 +309,9 @@ class quiz extends \mod_mootimeter\toolhelper {
             return 0;
         }
 
+        // Set the default value for timemodified to 0. This is necessary to make usage of GREATEST SQL method possible.
+        $record->timemodified = 0;
+
         if (!empty($record->id)) {
             $page = $this->get_page($record->pageid);
             $origrecord = $DB->get_record($this->get_answer_option_table(), ['id' => $record->id], '*', MUST_EXIST);
@@ -861,14 +864,27 @@ class quiz extends \mod_mootimeter\toolhelper {
             return 0;
         }
 
-        $records = $DB->get_records($this->get_answer_table(), ['pageid' => $page->id], 'timecreated DESC', 'timecreated', 0, 1);
+        // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
+        $sql = 'SELECT MAX(GREATEST(COALESCE(timecreated, 0), COALESCE(timemodified, 0))) as time FROM '
+            . '{' . $this->get_answer_table() . '} WHERE pageid = :pageid';
+        $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
 
-        if (empty($records)) {
-            return 0;
+        $mostrecenttimeanswer = 0;
+        if (!empty($record)) {
+            $mostrecenttimeanswer = $record->time;
         }
 
-        $record = array_shift($records);
-        return $record->timecreated;
+        // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
+        $sql = 'SELECT MAX(GREATEST(COALESCE(timecreated, 0), COALESCE(timemodified, 0))) as time FROM '
+            . '{' . $this->get_answer_option_table() . '} WHERE pageid = :pageid';
+        $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
+
+        $mostrecenttimeoptions = 0;
+        if (!empty($record)) {
+            $mostrecenttimeoptions = $record->time;
+        }
+
+        return max($mostrecenttimeanswer, $mostrecenttimeoptions, $mostrecenttimesettings);
     }
 
     /**

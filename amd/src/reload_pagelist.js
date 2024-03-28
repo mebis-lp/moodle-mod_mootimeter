@@ -7,16 +7,20 @@ import SortableList from 'core/sortable_list';
 import jQuery from 'jquery';
 import {ajaxRequestInput} from 'mod_mootimeter/utils';
 
-export const init = () => {
+export const init = (pagerefreshintervall) => {
     var obj = document.getElementById('mootimeterstate');
 
     if (!obj) {
         return;
     }
 
+    if (pagerefreshintervall < 500) {
+        pagerefreshintervall = 500;
+    }
+
     setInterval(() => {
         getPagelist();
-    }, 5000);
+    }, pagerefreshintervall);
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);

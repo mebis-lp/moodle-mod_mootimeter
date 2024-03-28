@@ -44,7 +44,15 @@ const execGetAnswers = (
  * @param {string} id
  * @returns {mixed}
  */
-const getAnswers = async(pageid, lastposttimestamp, id) => {
+const getAnswers = async (pageid, lastposttimestamp, id) => {
+
+    const mtmstate = document.getElementById('mootimeterstate');
+
+    // Early exit if there are no changes.
+    if (mtmstate.dataset.lastupdated == mtmstate.dataset.lastnewanswer) {
+        return;
+    }
+
     const response = await execGetAnswers(pageid);
 
     if (!document.getElementById(id)) {
@@ -52,17 +60,17 @@ const getAnswers = async(pageid, lastposttimestamp, id) => {
     }
 
     // We do not want to do anything if nothing has changed.
-    if (
-        lastposttimestamp == response.lastupdated
-        &&
-        response.chartsettings == document.getElementById(id).dataset.chartsettings
-        &&
-        response.values == document.getElementById(id).dataset.values
-        &&
-        response.labels == document.getElementById(id).dataset.labels
-    ) {
-        return;
-    }
+    // if (
+    //     lastposttimestamp == response.lastupdated
+    //     &&
+    //     response.chartsettings == document.getElementById(id).dataset.chartsettings
+    //     &&
+    //     response.values == document.getElementById(id).dataset.values
+    //     &&
+    //     response.labels == document.getElementById(id).dataset.labels
+    // ) {
+    //     return;
+    // }
 
     // Write the new data to the canvas data attributes.
     let nodelastupdated = document.getElementById('mootimeterstate');

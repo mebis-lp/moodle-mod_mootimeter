@@ -445,13 +445,16 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             return 100;
         }
 
-        $records = $DB->get_records(self::ANSWER_TABLE, ['pageid' => $page->id], 'timecreated DESC', 'timecreated', 0, 1);
+        $sql = 'SELECT MAX(GREATEST(COALESCE(timecreated, 0), COALESCE(timemodified, 0))) as time FROM '
+            . '{' . self::ANSWER_TABLE . '} WHERE pageid = :pageid';
+        $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
 
-        if (empty($records)) {
-            return 0;
+        $mostrecenttimeanswer = 0;
+        if (!empty($record)) {
+            $mostrecenttimeanswer = $record->time;
         }
-        $record = array_shift($records);
-        return $record->timecreated;
+
+        return $mostrecenttimeanswer;
     }
 
     /**

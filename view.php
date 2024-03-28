@@ -88,6 +88,7 @@ $pagehelper = new \mod_mootimeter\local\pagelist();
 $params = [
     'cmid' => $cm->id,
     'isediting' => $PAGE->user_is_editing(),
+    'refreshinterval' => get_config('mod_mootimeter', 'refreshinterval'),
 ];
 $params['mootimeterstate-dataset'] = \mod_mootimeter\local\mootimeterstate::get_mootimeterstate_renderable();
 

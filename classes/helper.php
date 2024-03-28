@@ -1086,6 +1086,9 @@ class helper {
                 // Add usermodified to dataobject.
                 $dataobject->usermodified = $USER->id;
 
+                // Set the default value for timemodified to 0. This is necessary to make usage of GREATEST SQL method possible.
+                $dataobject->timemodified = 0;
+
                 $answerids[] = $DB->insert_record($table, $dataobject);
                 $pageid = $dataobject->pageid;
             }
@@ -1102,6 +1105,9 @@ class helper {
 
             // Add usermodified to dataobject.
             $dataobject->usermodified = $USER->id;
+
+            // Set the default value for timemodified to 0. This is necessary to make usage of GREATEST SQL method possible.
+            $dataobject->timemodified = 0;
 
             // Store the answer to db or update it.
             if ($updateexisting) {
@@ -1309,6 +1315,8 @@ class helper {
      * @return mixed
      */
     public function get_answer_last_update_time(int|object $pageorid): string|int {
+        global $DB;
+
         $page = $pageorid;
         if (!is_object($page)) {
             $page = $this->get_page($page);
@@ -1324,7 +1332,17 @@ class helper {
             return "Method 'get_last_update_time' is missing in tools helper class " . $page->tool;
         }
 
-        return $toolhelper->get_last_update_time($page->id);
+        // Make the settings change test in the global helper class. Because its everywhere the same.
+        // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
+        $sql = 'SELECT MAX(timemodified) as time FROM {mootimeter_tool_settings} WHERE pageid = :pageid';
+        $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
+
+        $mostrecenttimesettings = 0;
+        if (!empty($record)) {
+            $mostrecenttimesettings = $record->time;
+        }
+
+        return max($mostrecenttimesettings, $toolhelper->get_last_update_time($page->id));
     }
 
     /**
