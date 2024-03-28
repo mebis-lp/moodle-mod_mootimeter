@@ -114,8 +114,8 @@ class pagelist {
         $temppages['dataset']['pagelisttime'] = $maxtimecreated;
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('pagelisttime', $maxtimecreated);
 
-        $temppages['dataset']['lastnewanswer'] = $helper->get_answer_last_update_time($temppages['pageid']);
-        \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('lastnewanswer', $temppages['dataset']['lastnewanswer']);
+        $temppages['dataset']['contentchangedat'] = $helper->get_answer_last_update_time($temppages['pageid']);
+        \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('contentchangedat', $temppages['dataset']['contentchangedat']);
 
         $temppages['dataset']['refreshinterval'] = get_config('mod_mootimeter', 'refreshinterval');
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('refreshinterval', $temppages['dataset']['refreshinterval']);

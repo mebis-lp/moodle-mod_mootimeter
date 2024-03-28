@@ -8,17 +8,16 @@ export const init = (id) => {
     }
 
     const pageid = document.getElementById(id).dataset.pageid;
-    let lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
-    getAnswers(pageid, lastposttimestamp, id);
+    getAnswers(pageid, id);
 
     setTimeout(() => {
         const intervalms = document.getElementById('mootimeterstate').dataset.refreshinterval;
         const interval = setInterval(() => {
-            lastposttimestamp = parseInt(document.getElementById('mootimeterstate').dataset.lastupdated);
-            getAnswers(pageid, lastposttimestamp, id);
             if (!document.getElementById(id)) {
                 clearInterval(interval);
+                return;
             }
+            getAnswers(pageid, id);
         }, intervalms);
     }, 5000);
 };
@@ -40,16 +39,15 @@ const execGetAnswers = (
 /**
  * Get the answers and other important data, as well as processing them.
  * @param {int} pageid
- * @param {int} lastposttimestamp
  * @param {string} id
  * @returns {mixed}
  */
-const getAnswers = async (pageid, lastposttimestamp, id) => {
+const getAnswers = async (pageid, id) => {
 
     const mtmstate = document.getElementById('mootimeterstate');
 
     // Early exit if there are no changes.
-    if (mtmstate.dataset.lastupdated == mtmstate.dataset.lastnewanswer) {
+    if (mtmstate.dataset.lastupdated == mtmstate.dataset.contentchangedat) {
         return;
     }
 
@@ -58,19 +56,6 @@ const getAnswers = async (pageid, lastposttimestamp, id) => {
     if (!document.getElementById(id)) {
         return;
     }
-
-    // We do not want to do anything if nothing has changed.
-    // if (
-    //     lastposttimestamp == response.lastupdated
-    //     &&
-    //     response.chartsettings == document.getElementById(id).dataset.chartsettings
-    //     &&
-    //     response.values == document.getElementById(id).dataset.values
-    //     &&
-    //     response.labels == document.getElementById(id).dataset.labels
-    // ) {
-    //     return;
-    // }
 
     // Write the new data to the canvas data attributes.
     let nodelastupdated = document.getElementById('mootimeterstate');

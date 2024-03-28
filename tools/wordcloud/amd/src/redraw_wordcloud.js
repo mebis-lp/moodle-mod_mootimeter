@@ -12,10 +12,11 @@ export const init = (id) => {
     setTimeout(() => {
         const intervalms = document.getElementById('mootimeterstate').dataset.refreshinterval;
         const interval = setInterval(() => {
-            getAnswers(id);
             if (!document.getElementById(id)) {
                 clearInterval(interval);
+                return;
             }
+            getAnswers(id);
         }, intervalms);
     }, 5000);
 
@@ -55,7 +56,7 @@ const getAnswers = async (id) => {
     const mtmstate = document.getElementById('mootimeterstate');
 
     // Early exit if there are no changes.
-    if (mtmstate.dataset.lastupdated == mtmstate.dataset.lastnewanswer) {
+    if (mtmstate.dataset.lastupdated == mtmstate.dataset.contentchangedat) {
         return;
     }
 
