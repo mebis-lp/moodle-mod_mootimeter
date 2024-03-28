@@ -879,7 +879,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             . '{' . $this->get_answer_option_table() . '} WHERE pageid = :pageid';
         $mostrecenttimeoptions = $DB->get_field_sql($sql, ['pageid' => $page->id]);
 
-        return $mostrecenttimeanswer +  $mostrecenttimeoptions;
+        return $mostrecenttimeanswer + $mostrecenttimeoptions;
     }
 
     /**

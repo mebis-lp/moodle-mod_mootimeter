@@ -57,6 +57,7 @@ class reload_pagelist extends external_api {
      *
      * @param int $pageid
      * @param int $cmid
+     * @param string $dataset
      * @return array
      */
     public static function execute(int $pageid, int $cmid, string $dataset): array {

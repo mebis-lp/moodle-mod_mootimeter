@@ -1,21 +1,20 @@
 import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
-import ModalFactory from 'core/modal_factory';
+import ModalDeleteCancel from 'core/modal_delete_cancel';
 import ModalEvents from 'core/modal_events';
 import {get_string as getString} from 'core/str';
 import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 import {removeGetParam} from 'mod_mootimeter/utils';
 
 export const init = async(id) => {
+    const pageid = document.getElementById('mootimeterstate').dataset.pageid;
 
-    const modal = await ModalFactory.create({
-        type: ModalFactory.types.DELETE_CANCEL,
+    const modal = await ModalDeleteCancel.create({
         title: getString('delete', 'core'),
         body: getString('areyousure'),
     });
 
     modal.getRoot().on(ModalEvents.delete, function() {
-        var pageid = document.getElementById(id).dataset.pageid;
         execDeletePage(pageid);
     });
 

@@ -1,6 +1,7 @@
 import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
-import ModalFactory from 'core/modal_factory';
+import ModalSaveCancel from 'core/modal_save_cancel';
+import ModalDeleteCancel from 'core/modal_delete_cancel';
 import ModalEvents from 'core/modal_events';
 import {get_string as getString} from 'core/str';
 import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
@@ -13,7 +14,7 @@ export const init = async(uniqueID) => {
     }
 
     obj.addEventListener("click", buttonClicked);
-
+    const pageid = document.getElementById('mootimeterstate').dataset.pageid;
     var dataset = obj.dataset;
     var confirmationTitleStr;
     if (!obj.getAttribute("data-confirmationtitlestr")) {
@@ -29,26 +30,37 @@ export const init = async(uniqueID) => {
         confirmationQuestionStr = dataset.confirmationquestionstr;
     }
 
-    var confirmationType;
+    var modal;
     if (!obj.getAttribute("data-confirmationtype")) {
-        confirmationType = ModalFactory.types.DELETE_CANCEL;
+        window.console.log('No confirmationtype specified! Abort!');
+        return;
     } else {
         switch (dataset.confirmationtype) {
             case 'DELETE_CANCEL':
-                confirmationType = ModalFactory.types.DELETE_CANCEL;
+                modal = await ModalDeleteCancel.create({
+                    title: confirmationTitleStr,
+                    body: confirmationQuestionStr,
+                    pageid: pageid,
+                });
+                break;
+            case 'SAVE_CANCEL':
+                modal = await ModalSaveCancel.create({
+                    title: confirmationTitleStr,
+                    body: confirmationQuestionStr,
+                    pageid: pageid,
+                });
                 break;
         }
     }
 
-    const modal = await ModalFactory.create({
-        type: confirmationType,
-        title: confirmationTitleStr,
-        body: confirmationQuestionStr,
-        pageid: 5,
+    modal.getRoot().on(ModalEvents.delete, function() {
+        var uniqueID = obj.id;
+        var ajaxmethode = obj.dataset.ajaxmethode;
+
+        buttonClickedHandle(pageid, uniqueID, ajaxmethode);
     });
 
-    modal.getRoot().on(ModalEvents.delete, function() {
-        var pageid = obj.dataset.pageid;
+    modal.getRoot().on(ModalEvents.save, function() {
         var uniqueID = obj.id;
         var ajaxmethode = obj.dataset.ajaxmethode;
 
