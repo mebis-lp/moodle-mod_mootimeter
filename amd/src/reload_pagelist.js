@@ -56,16 +56,19 @@ export const init = (pagerefreshintervall) => {
  * Call to store input value
  * @param {int} pageid
  * @param {int} cmid
+ * @param {string} dataset
  * @returns {array}
  */
 const reloadPagelist = (
     pageid,
-    cmid
+    cmid,
+    dataset
 ) => fetchMany([{
     methodname: 'mod_mootimeter_get_pages_list',
     args: {
         pageid,
-        cmid
+        cmid,
+        dataset
     },
 }])[0];
 
@@ -76,7 +79,8 @@ const reloadPagelist = (
  * @param {bool} forcereload
  */
 export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
-    const response = await reloadPagelist(pageid, cmid);
+    var mtmstate = document.getElementById('mootimeterstate');
+    const response = await reloadPagelist(pageid, cmid, JSON.stringify(mtmstate.dataset));
 
     if (response.code != 200) {
         Log.error(response.string);
@@ -84,7 +88,7 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
 
     if (response.code == 200) {
 
-        var mtmstate = document.getElementById('mootimeterstate');
+        mtmstate = document.getElementById('mootimeterstate');
 
         const pagelist = JSON.parse(response.pagelist);
         const loadpageid = pagelist.loadpageid;

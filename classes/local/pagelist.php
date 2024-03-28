@@ -51,12 +51,13 @@ class pagelist {
      *
      * @param int $cmid
      * @param int $pageidselected
+     * @param object $dataset
      * @return array
      * @throws dml_exception
      * @throws coding_exception
      * @throws moodle_exception
      */
-    public function get_pagelist_params(int $cmid, int $pageidselected): array {
+    public function get_pagelist_params(int $cmid, int $pageidselected, object $dataset): array {
         global $USER, $PAGE;
 
         $helper = new \mod_mootimeter\helper();
@@ -114,7 +115,13 @@ class pagelist {
         $temppages['dataset']['pagelisttime'] = $maxtimecreated;
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('pagelisttime', $maxtimecreated);
 
-        $temppages['dataset']['contentchangedat'] = $helper->get_answer_last_update_time($temppages['pageid']);
+        // We have to distinguish from which page the request comes.
+        // We differentiate between the standard content page (question page) and other pages (eg. results and overview page).
+        if (empty($dataset->r) && empty($dataset->o)) {
+            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid'], true);
+        } else {
+            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid']);
+        }
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('contentchangedat', $temppages['dataset']['contentchangedat']);
 
         $temppages['dataset']['refreshinterval'] = get_config('mod_mootimeter', 'refreshinterval');

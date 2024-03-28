@@ -1,7 +1,7 @@
 {{#withwrapper}}
 <div class="mootimetercontainer {{{containerclasses}}}">
   {{/withwrapper}}
-  <div class="mootimeter-colcontent-preview mootimeter-width-s">
+  <div class="mootimeter-colcontent-preview mootimeter-width-s" id="mtmt_quiz_overview_{{uniqid}}">
 
     {{{error}}}
 
@@ -44,3 +44,7 @@
   {{#withwrapper}}
 </div>
 {{/withwrapper}}
+
+{{#js}}
+require(['mod_mootimeter/reload_page_on_state_change'], (module) => module.init("mtmt_quiz_overview_{{uniqid}}"));
+{{/js}}

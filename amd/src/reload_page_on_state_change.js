@@ -1,5 +1,11 @@
 import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 
+/**
+ * Initializes refresh on state change.
+ *
+ * @param {string} id
+ * @returns
+ */
 export const init = (id) => {
     if (!document.getElementById('mootimeterstate').dataset.pageid) {
         return;

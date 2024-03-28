@@ -74,9 +74,10 @@ abstract class toolhelper extends \mod_mootimeter\helper {
      * Get the timestamp of the last answer.
      *
      * @param int|object $pageorid
+     * @param bool $ignoreanswers
      * @return int
      */
-    abstract public function get_last_update_time(int|object $pageorid);
+    abstract function get_last_update_time(int|object $pageorid, bool $ignoreanswers = false);
 
     /**
      * Delete Page

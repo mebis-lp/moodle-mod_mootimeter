@@ -843,9 +843,10 @@ class quiz extends \mod_mootimeter\toolhelper {
      * Get the lastupdated timestamp.
      *
      * @param int|object $pageorid
+     * @param bool $ignoreanswers
      * @return int
      */
-    public function get_last_update_time(int|object $pageorid): int {
+    public function get_last_update_time(int|object $pageorid, bool $ignoreanswers = false): int {
         global $DB;
 
         $page = $pageorid;
@@ -864,27 +865,21 @@ class quiz extends \mod_mootimeter\toolhelper {
             return 0;
         }
 
-        // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
-        $sql = 'SELECT MAX(GREATEST(COALESCE(timecreated, 0), COALESCE(timemodified, 0))) as time FROM '
-            . '{' . $this->get_answer_table() . '} WHERE pageid = :pageid';
-        $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
-
         $mostrecenttimeanswer = 0;
-        if (!empty($record)) {
-            $mostrecenttimeanswer = $record->time;
+        if (!$ignoreanswers) {
+            // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
+            $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
+                . '{' . $this->get_answer_table() . '} WHERE pageid = :pageid';
+            $mostrecenttimeanswer = $DB->get_field_sql($sql, ['pageid' => $page->id]);
         }
 
         // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
-        $sql = 'SELECT MAX(GREATEST(COALESCE(timecreated, 0), COALESCE(timemodified, 0))) as time FROM '
-            . '{' . $this->get_answer_option_table() . '} WHERE pageid = :pageid';
-        $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
-
         $mostrecenttimeoptions = 0;
-        if (!empty($record)) {
-            $mostrecenttimeoptions = $record->time;
-        }
+        $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
+            . '{' . $this->get_answer_option_table() . '} WHERE pageid = :pageid';
+        $mostrecenttimeoptions = $DB->get_field_sql($sql, ['pageid' => $page->id]);
 
-        return max($mostrecenttimeanswer, $mostrecenttimeoptions, $mostrecenttimesettings);
+        return $mostrecenttimeanswer +  $mostrecenttimeoptions;
     }
 
     /**

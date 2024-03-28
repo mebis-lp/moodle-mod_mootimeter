@@ -424,9 +424,10 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      * Get the lastupdated timestamp.
      *
      * @param int|object $pageorid
+     * @param bool $ignoreanswers
      * @return int
      */
-    public function get_last_update_time(int|object $pageorid): int {
+    public function get_last_update_time(int|object $pageorid, bool $ignoreanswers = false): int {
         global $DB;
 
         $page = $pageorid;
@@ -445,13 +446,11 @@ class wordcloud extends \mod_mootimeter\toolhelper {
             return 100;
         }
 
-        $sql = 'SELECT MAX(GREATEST(COALESCE(timecreated, 0), COALESCE(timemodified, 0))) as time FROM '
-            . '{' . self::ANSWER_TABLE . '} WHERE pageid = :pageid';
-        $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
-
         $mostrecenttimeanswer = 0;
-        if (!empty($record)) {
-            $mostrecenttimeanswer = $record->time;
+        if (!$ignoreanswers) {
+            $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
+                . '{' . self::ANSWER_TABLE . '} WHERE pageid = :pageid';
+            $mostrecenttimeanswer = $DB->get_field_sql($sql, ['pageid' => $page->id]);
         }
 
         return $mostrecenttimeanswer;

@@ -48,6 +48,7 @@ class reload_pagelist extends external_api {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_REQUIRED),
             'cmid' => new external_value(PARAM_INT, 'The coursemodule id.', VALUE_REQUIRED),
+            'dataset' => new external_value(PARAM_RAW, 'The dataset of the page.', VALUE_REQUIRED),
         ]);
     }
 
@@ -58,20 +59,22 @@ class reload_pagelist extends external_api {
      * @param int $cmid
      * @return array
      */
-    public static function execute(int $pageid, int $cmid): array {
+    public static function execute(int $pageid, int $cmid, string $dataset): array {
 
         [
             'pageid' => $pageid,
             'cmid' => $cmid,
+            'dataset' => $dataset,
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
             'cmid' => $cmid,
+            'dataset' => $dataset,
         ]);
 
         try {
-
+            $dataset = json_decode($dataset);
             $pageslisthelper = new \mod_mootimeter\local\pagelist();
-            $pageslistparams = json_encode($pageslisthelper->get_pagelist_params($cmid, $pageid));
+            $pageslistparams = json_encode($pageslisthelper->get_pagelist_params($cmid, $pageid, $dataset));
 
             $return = ['code' => 200, 'string' => 'ok', 'pagelist' => $pageslistparams];
         } catch (\Exception $e) {

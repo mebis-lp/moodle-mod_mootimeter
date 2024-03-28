@@ -1312,9 +1312,10 @@ class helper {
      * Get the lastupdated timestamp.
      *
      * @param int|object $pageorid
+     * @param bool $ignoreanswers
      * @return mixed
      */
-    public function get_answer_last_update_time(int|object $pageorid): string|int {
+    public function get_page_last_update_time(int|object $pageorid, bool $ignoreanswers = false): string|int {
         global $DB;
 
         $page = $pageorid;
@@ -1342,7 +1343,7 @@ class helper {
             $mostrecenttimesettings = $record->time;
         }
 
-        return max($mostrecenttimesettings, $toolhelper->get_last_update_time($page->id));
+        return $mostrecenttimesettings + $toolhelper->get_last_update_time($page->id, $ignoreanswers);
     }
 
     /**
