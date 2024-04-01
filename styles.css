@@ -529,6 +529,9 @@
   width: 100%;
   height: 600px;
   justify-content: center;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #60616D #f8f9fa;
 }
 @media screen and (max-width: 539px) {
   .mootimetercontainer .mootimetercolcontent .mootimeter-colcontent-preview {

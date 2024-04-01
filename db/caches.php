@@ -31,3 +31,16 @@ $definitions = [
         'mode' => cache_store::MODE_APPLICATION,
     ],
 ];
+
+$plugininfotools = new mod_mootimeter\plugininfo\mootimetertool;
+$enabledtools = $plugininfotools->get_enabled_plugins();
+
+foreach ($enabledtools as $tool => $toolname) {
+    // Hook to do further actions depending on mtmt tool.
+    $classname = "\mootimetertool_" . $tool . "\\" . $tool;
+    $toolhelper = new $classname();
+    $tooldefinitions = $toolhelper->get_tool_cachedefinition();
+    if (!empty($tooldefinitions)) {
+        $definitions = array_merge($definitions, $tooldefinitions);
+    }
+}

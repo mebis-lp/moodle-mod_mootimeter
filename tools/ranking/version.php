@@ -17,17 +17,14 @@
 /**
  * Plugin version and other meta-data are defined here.
  *
- * @package     mod_mootimeter
- * @copyright   2023, ISB Bayern
+ * @package     mootimetertool_ranking
+ * @copyright   2024, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_mootimeter';
-$plugin->release = '0.2.0';
-$plugin->version = 2024032803;
-$plugin->requires = 2022112800;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->supported = [403, 404]; // A range of branch numbers of supported moodle versions.
+$plugin->version   = 2024030609;
+$plugin->requires  = 2022111800;
+$plugin->component = 'mootimetertool_ranking';

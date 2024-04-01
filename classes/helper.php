@@ -50,6 +50,8 @@ class helper {
     const ERRORCODE_TO_MANY_ANSWERS = 1001;
     /** @var int Webservice returning error code - Duplicate Answers */
     const ERRORCODE_DUPLICATE_ANSWER = 1002;
+    /** @var int Webservice returning error code - Unspecified error occured */
+    const ERRORCODE_ERROR_OCCURED = 999;
 
     /** @var int Page is visible */
     const PAGE_VISIBLE = 1;
@@ -1037,18 +1039,15 @@ class helper {
      *
      * @param string $table
      * @param object|array $record
-     * @param bool $updateexisting
+     * @param array $updateexisting - Updatecondition - empty: not updating existing records.
      * @param string $answercolumn
      * @param bool $allowmultipleanswers
      * @return array
-     * @throws dml_exception
-     * @throws coding_exception
-     * @throws cache_exception
      */
     public function store_answer(
         string $table,
         object|array $record,
-        bool $updateexisting = false,
+        array $updateexisting = [],
         string $answercolumn = 'answer',
         bool $allowmultipleanswers =  false
     ): array {
@@ -1076,9 +1075,8 @@ class helper {
 
         if ($allowmultipleanswers) {
 
-            if ($updateexisting) {
-                $params = ['pageid' => $recordtemp->pageid, 'usermodified' => $USER->id];
-                $DB->delete_records($table, $params);
+            if (!empty($updateexisting)) {
+                $DB->delete_records($table, $updateexisting);
             }
 
             foreach ($record as $dataobject) {
@@ -1111,15 +1109,13 @@ class helper {
 
             // Store the answer to db or update it.
             if ($updateexisting) {
-                $params = ['pageid' => $dataobject->pageid, 'usermodified' => $dataobject->usermodified];
-
                 // This is necessary, because if one user changes the setting, there could be more than one answer already stored.
                 // In this cases we want to delete all previous answers and start from scratch.
-                if ($DB->count_records($table, $params) > 1) {
-                    $DB->delete_records($table, $params);
+                if ($DB->count_records($table, $updateexisting) > 1) {
+                    $DB->delete_records($table, $updateexisting);
                 }
 
-                $origrecord = $DB->get_record($table, $params);
+                $origrecord = $DB->get_record($table, $updateexisting);
             }
 
             if (!empty($origrecord)) {
@@ -1241,11 +1237,18 @@ class helper {
      * @param int $pageid
      * @param string $answercolumn
      * @param int $userid
+     * @param string $cacheidentifier
      * @return array
      * @throws dml_exception
      */
-    public function get_user_answers(string $table, int $pageid, string $answercolumn = 'answer', int $userid = 0): array {
-        $pageanswers = $this->get_answers($table, $pageid, $answercolumn);
+    public function get_user_answers(
+        string $table,
+        int $pageid,
+        string $answercolumn = 'answer',
+        int $userid = 0,
+        string $cacheidentifier = 'answers'
+    ): array {
+        $pageanswers = $this->get_answers($table, $pageid, $answercolumn, $cacheidentifier);
 
         $useranswers = [];
 
@@ -1263,15 +1266,15 @@ class helper {
      *
      * @param string $table
      * @param int $pageid
-     * @param string $answercolumn
+     * @param string $answercolumn NOT uses yet. This is just because of simular arguments with get_answers_grouped.
+     * @param string $cacheidentifier
      * @return array
      * @throws dml_exception
      */
-    public function get_answers(string $table, int $pageid, string $answercolumn = 'answer') {
+    public function get_answers(string $table, int $pageid, string $answercolumn = 'answer', string $cacheidentifier = 'answers') {
         global $DB;
-
-        $cache = \cache::make('mod_mootimeter', 'answers');
-        $cachekey = 'answers_' . $pageid;
+        $cache = \cache::make('mod_mootimeter', $cacheidentifier);
+        $cachekey = $cacheidentifier . '_' . $pageid;
         $records = json_decode($cache->get($cachekey));
 
         if (empty($records)) {
@@ -1288,15 +1291,21 @@ class helper {
      * @param string $table
      * @param array $params
      * @param string $answercolumn
+     * @param string $cacheidentifier
      * @return array
      * @throws coding_exception
      * @throws dml_exception
      */
-    public function get_answers_grouped(string $table, array $params, string $answercolumn = 'answer'): array {
+    public function get_answers_grouped(
+        string $table,
+        array $params,
+        string $answercolumn = 'answer',
+        string $cacheidentifier = 'answers'
+    ): array {
         global $DB;
 
-        $cache = \cache::make('mod_mootimeter', 'answers');
-        $cachekey = 'cnt_' . $params['pageid'];
+        $cache = \cache::make('mod_mootimeter', $cacheidentifier);
+        $cachekey = 'cnt_' . $cacheidentifier . '_' . $params['pageid'];
         $records = json_decode($cache->get($cachekey), true);
 
         if (empty($records)) {
@@ -1350,14 +1359,15 @@ class helper {
      * Clear all caches.
      *
      * @param int $pageid
+     * @param string $cacheidentifier
      * @return void
      * @throws coding_exception
      * @throws cache_exception
      */
-    public function clear_caches(int $pageid): void {
-        $cache = \cache::make('mod_mootimeter', 'answers');
-        $cache->delete('answers_' . $pageid);
-        $cache->delete('cnt_' . $pageid);
+    public function clear_caches(int $pageid, string $cacheidentifier = 'answers'): void {
+        $cache = \cache::make('mod_mootimeter', $cacheidentifier);
+        $cache->delete($cacheidentifier . '_' . $pageid);
+        $cache->delete('cnt_' . $cacheidentifier . '_' . $pageid);
     }
 
     /**

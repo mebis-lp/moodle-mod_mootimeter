@@ -150,4 +150,12 @@ abstract class toolhelper extends \mod_mootimeter\helper {
         return false;
     }
 
+    /**
+     * Tool specific cache definitions used in mootimeter core methods
+     * @return array
+     */
+    public function get_tool_cachedefinition() {
+        return [];
+    }
+
 }

@@ -1,0 +1,62 @@
+{{#withwrapper}}
+<div class="mootimetercontainer {{{containerclasses}}}">
+  {{/withwrapper}}
+
+  <div class="mootimeter-colcontent-preview mootimeter-width-xl mtmt_ranking_phase_3" id="mtmt_ranking_refresh_{{uniqid}}">
+
+    {{{error}}}
+
+    <div class="mootimeter-colcontent-preview-header mtmt-ranking-flex-row" id="mtmt_tool-colct-header">
+
+      {{#toolname}}
+      {{> mod_mootimeter/elements/snippet_pill}}
+      {{/toolname}}
+
+      {{#indicator_bar}}
+      {{> mootimetertool_ranking/snippet_phase_selector}}
+      {{/indicator_bar}}
+
+    <div class="mootimeter-colcontent-preview-header" id="mtmt_tool-colct-header">
+      <h4 id="mtm_heading_phase_3_{{uniqid}}">{{{heading_phase_3}}}</h4>
+    </div>
+
+    <div id="mtmt_ranking_phrases">
+
+      {{#phrases}}
+        <div class="mtmt_ranking_phrase_box row">
+          <div class="col-11">{{phrase}}</div>
+          <div class="mtmt_ranking_div_thumbs col-1">
+          {{#thumbup}}
+            {{> mod_mootimeter/elements/snippet_clickable_icon}}
+          {{/thumbup}}
+          {{#thumbdown}}
+            {{> mod_mootimeter/elements/snippet_clickable_icon}}
+          {{/thumbdown}}
+          </div>
+        </div>
+      {{/phrases}}
+    </div>
+
+    {{#input_answer}}
+    {{> mod_mootimeter/elements/snippet_input}}
+    {{#js}}
+    require(['mootimetertool_ranking/store_phrase'], (module) => module.init(
+    "{{mtm-input-id}}_{{uniqid}}",
+    "{{mtm-button-id}}_{{uniqid}}"
+    ));
+    {{/js}}
+    {{/input_answer}}
+
+    {{#button_answer}}
+    {{> mod_mootimeter/elements/snippet_button_full}}
+    {{/button_answer}}
+
+
+  </div>
+  {{#withwrapper}}
+</div>
+{{/withwrapper}}
+
+{{#js}}
+require(['mod_mootimeter/reload_page_on_state_change'], (module) => module.init("mtmt_ranking_refresh_{{uniqid}}"));
+{{/js}}

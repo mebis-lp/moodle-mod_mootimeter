@@ -1,0 +1,31 @@
+      <div class="mootimeter-pill mtmt-ranking-phase">
+        <div class="mtmt_ranking_timeline ">
+          <div class="mtmt_ranking_indicators">
+
+            {{#phase_1}}
+            <div class="mtmt_ranking_indicator-1 {{active}}" id='{{id}}_{{uniqid}}' {{{dataset}}}>{{value}}</div>
+            {{#js}}
+                require(['mod_mootimeter/handle_clicked_element_use_dataset'], (module) => module.init("{{id}}_{{uniqid}}"));
+            {{/js}}
+            {{/phase_1}}
+
+
+            {{#phase_2}}
+            <div class="mtmt_ranking_indicator-2 {{active}}" id='{{id}}_{{uniqid}}' {{{dataset}}}>{{value}}</div>
+            {{#js}}
+                require(['mod_mootimeter/handle_clicked_element_use_dataset'], (module) => module.init("{{id}}_{{uniqid}}"));
+            {{/js}}
+            {{/phase_2}}
+
+
+            {{#phase_3}}
+            <div class="mtmt_ranking_indicator-3 {{active}}" id='{{id}}_{{uniqid}}' {{{dataset}}}>{{value}}</div>
+            {{#js}}
+                require(['mod_mootimeter/handle_clicked_element_use_dataset'], (module) => module.init("{{id}}_{{uniqid}}"));
+            {{/js}}
+            {{/phase_3}}
+
+          </div>
+        </div>
+      </div>
+    </div>

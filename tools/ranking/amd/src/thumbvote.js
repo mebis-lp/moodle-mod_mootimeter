@@ -16,9 +16,12 @@ export const init = async (uniqueID) => {
     const pageid = document.getElementById('mootimeterstate').dataset.pageid;
     var dataset = obj.dataset;
     var confirmationTitleStr;
-    var modal;
+
+    window.console.log(obj.getAttribute("data-confirmationtype"));
+    window.console.log("TEST");
 
     if (obj.getAttribute("data-confirmationtype")) {
+        window.console.log("POST");
 
         obj.addEventListener("click", showModal);
 
@@ -34,6 +37,8 @@ export const init = async (uniqueID) => {
         } else {
             confirmationQuestionStr = dataset.confirmationquestionstr;
         }
+
+        var modal;
 
         switch (dataset.confirmationtype) {
             case 'DELETE_CANCEL':
@@ -52,14 +57,14 @@ export const init = async (uniqueID) => {
                 break;
         }
 
-        modal.getRoot().on(ModalEvents.delete, function() {
+        modal.getRoot().on(ModalEvents.delete, function () {
             var uniqueID = obj.id;
             var ajaxmethode = obj.dataset.ajaxmethode;
 
             buttonClickedHandle(pageid, uniqueID, ajaxmethode);
         });
 
-        modal.getRoot().on(ModalEvents.save, function() {
+        modal.getRoot().on(ModalEvents.save, function () {
             var uniqueID = obj.id;
             var ajaxmethode = obj.dataset.ajaxmethode;
 
