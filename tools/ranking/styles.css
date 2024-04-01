@@ -1,0 +1,130 @@
+:root {
+    --timeline-background: #e8e8ea
+}
+
+.mtmt-ranking-flex-row {
+    flex-direction: row !important;
+    gap: 0 !important;
+}
+
+.mtmt-ranking-phase {
+    background-color: var(--white);
+    color: var(--black);
+    margin-left: auto;
+    margin-top: -10px;
+}
+
+.mtmt_ranking_phase_2,
+.mtmt_ranking_phase_3 {
+    height: auto !important;
+    overflow: visible !important;
+}
+
+.mtmt-ranking-green.active {
+    background-color: var(--success) !important;
+}
+
+.mtmt-ranking-red.active {
+    background-color: var(--danger) !important;
+}
+
+.mtmt_ranking_phrase_box {
+    padding: 20px 10px;
+    border: 1px solid var(--secondary);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    /* position: relative; */
+}
+
+.mtmt_ranking_thumbup,
+.mtmt_ranking_thumbdown {
+    color: var(--secondary);
+    cursor: pointer;
+}
+
+.mtmt_ranking_thumbup.active,
+.mtmt_ranking_thumbdown.active {
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.mtmt_ranking_thumbup:hover,
+.mtmt_ranking_thumbdown:hover {
+    color: var(--primary);
+}
+
+.mtmt_ranking_thumbup.active:hover,
+.mtmt_ranking_thumbdown.active:hover {
+    color: var(--secondary);
+}
+
+/*
+=== Timeline indicators - START
+*/
+
+.mtmt_ranking_timeline {
+    width: 120px;
+    height: 10px;
+    margin: 20px;
+    background: var(--timeline-background);
+    position: relative;
+}
+
+.mtmt_ranking_indicators {
+    position: relative;
+}
+
+.mtmt_ranking_indicator-1,
+.mtmt_ranking_indicator-2,
+.mtmt_ranking_indicator-3 {
+    border: 1px var(--timeline-background);
+    background: var(--timeline-background);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    top: -11px;
+    position: absolute;
+    font-weight: 900;
+    text-align: center;
+    padding: 1px;
+    cursor: pointer;
+}
+
+.mtmt_ranking_indicator-1 {
+    left: -7px;
+}
+
+.mtmt_ranking_indicator-2 {
+    left: 53px;
+}
+
+.mtmt_ranking_indicator-3 {
+    left: 113px;
+}
+
+.mtmt_ranking_indicator-1:hover,
+.mtmt_ranking_indicator-2:hover,
+.mtmt_ranking_indicator-3:hover {
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    color: var(--white);
+}
+
+.mtmt_ranking_indicator-1.active,
+.mtmt_ranking_indicator-2.active,
+.mtmt_ranking_indicator-3.active {
+    border: 1px var(--primary);
+    background: var(--primary);
+    color: var(--white)
+}
+
+.mtmt_ranking_indicator-1.active:hover,
+.mtmt_ranking_indicator-2.active:hover,
+.mtmt_ranking_indicator-3.active:hover {
+    background: var(--timeline-background);
+    color: var(--black)
+}
+
+/*
+=== Timeline indicators - END
+*/

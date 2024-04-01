@@ -15,19 +15,24 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Plugin strings are defined here.
  *
- * @package     mod_mootimeter
- * @copyright   2023, ISB Bayern
+ * @package     mootimetertool_ranking
+ * @category    string
+ * @copyright   2024, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_mootimeter';
-$plugin->release = '0.2.0';
-$plugin->version = 2024032803;
-$plugin->requires = 2022112800;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->supported = [403, 404]; // A range of branch numbers of supported moodle versions.
+$string['pluginname'] = 'Ranking';
+$string['tool_description_short'] = "Bewerten von Aussagen";
+$string['error_empty_phrases'] = 'Es gibt noch keine Aussagen.';
+$string['phase_one_heading'] = 'Phase 1: Aussagen sammeln';
+$string['phase_two_heading'] = 'Phase 2: Aussagen freigeben';
+$string['phase_three_heading'] = 'Phase 3: Abstimmung';
+$string['phrase'] = 'Aussage';
+$string['visibility'] = 'Sichtbarkeit';
+$string['phases'] = 'Phasen';
+$string['approved'] = 'Freigegeben für Phase 3';

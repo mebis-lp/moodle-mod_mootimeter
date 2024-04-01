@@ -89,9 +89,11 @@ class store_setting extends external_api {
 
         try {
 
+            $dataset = json_decode($datasetjson);
+
             $helper = new \mod_mootimeter\helper();
             $helper->set_tool_config($pageid, $inputname, $inputvalue);
-            $return = ['code' => 200, 'string' => 'ok'];
+            $return = ['code' => 200, 'string' => 'ok', 'options' => json_encode(['reload' => !empty($dataset->reload)])];
 
         } catch (\Exception $e) {
 

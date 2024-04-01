@@ -215,7 +215,7 @@ class quiz extends \mod_mootimeter\toolhelper {
      * @return void
      */
     public function insert_answer(object $page, mixed $aoids) {
-        global $DB;
+        global $DB, $USER;
 
         $records = [];
 
@@ -247,7 +247,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         $this->store_answer(
             $this->get_answer_table(),
             $records,
-            true,
+            ['pageid' => $page->id, 'usermodified' => $USER->id],
             $this->get_answer_column(),
             $enablemultipleanswers
         );

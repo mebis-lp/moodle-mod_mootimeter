@@ -15,32 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to create a new page.
+ * Web service to store a phrase.
  *
- * @package     mod_mootimeter
- * @copyright   2023, ISB Bayern
+ * @package     mootimetertool_ranking
+ * @copyright   2024, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_mootimeter\external;
+namespace mootimetertool_ranking\external;
 
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
-use dml_exception;
-use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 /**
- * Web service to create a new page.
+ * Web service to store a phrase.
  *
- * @package     mod_mootimeter
- * @copyright   2023, ISB Bayern
+ * @package     mootimetertool_ranking
+ * @copyright   2024, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class add_new_page extends external_api {
+class vote_phrase_thumb extends external_api {
     /**
      * Describes the parameters.
      *
@@ -48,53 +47,35 @@ class add_new_page extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'tool' => new external_value(PARAM_TEXT, 'The new page tool.', VALUE_REQUIRED),
-            'instance' => new external_value(PARAM_INT, 'The mootimeter instance.', VALUE_REQUIRED),
+            'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
+            'thisDataset' => new external_value(PARAM_TEXT, 'The dataset of the clicked object.', VALUE_REQUIRED),
         ]);
     }
 
     /**
      * Execute the service.
      *
-     * @param string $tool
-     * @param int $instance
+     * @param int $pageid
+     * @param string $thisdataset
      * @return array
-     * @throws invalid_parameter_exception
-     * @throws dml_exception
      */
-    public static function execute(string $tool, int $instance): array {
+    public static function execute(int $pageid, string $thisdataset): array {
         global $USER;
 
         [
-            'tool' => $tool,
-            'instance' => $instance,
+            'pageid' => $pageid,
+            'thisDataset' => $thisdataset,
         ] = self::validate_parameters(self::execute_parameters(), [
-            'tool' => $tool,
-            'instance' => $instance,
+            'pageid' => $pageid,
+            'thisDataset' => $thisdataset,
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
-        $record = new \stdClass();
-        $record->tool = $tool;
-        $record->instance = $instance;
-        $record->title = "";
-        try {
-            $pageid = $mtmhelper->store_page($record);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        $dataset = json_decode($thisdataset);
+        $ranking = new \mootimetertool_ranking\ranking();
 
-        $return = [
-            'pageid' => $pageid,
-            'cmid' => $cm->id,
-        ];
-
-        // If the user is not in editing mode. Switch to editing mode.
-        // This is the case if the user enters an blank mootimeter instance with disabled editing mode.
-        $USER->editing = true;
-
-        return $return;
+        $phrase = $ranking->get_phrase($dataset->phraseid);
+        $ranking->insert_answer($phrase, $dataset->thumbvalue);
+        return ['code' => helper::ERRORCODE_OK, 'string' => 'ok', 'reload' => true];
     }
 
     /**
@@ -105,10 +86,11 @@ class add_new_page extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'pageid' => new external_value(PARAM_INT, 'Pageid of the page created.'),
-                'cmid' => new external_value(PARAM_INT, 'Pageid of the page created.'),
+                'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
+                'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
+                'reload' => new external_value(PARAM_BOOL, 'Indicator to reload page.', VALUE_DEFAULT, false),
             ],
-            'New page info.'
+            'Status of phrase storing process'
         );
     }
 }

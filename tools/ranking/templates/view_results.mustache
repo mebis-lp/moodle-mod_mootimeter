@@ -1,0 +1,15 @@
+
+
+<div
+  class="mootimeterfullwidth mootimeter-colcontent-preview mootimeter-width-xl"
+  id="wordcloudcanvas_{{uniqid}}"
+  style="display:block;"
+  data-answers="{{answerslist}}"
+  data-pageid="{{pageid}}"
+  data-lastupdated="{{lastupdated}}"
+>
+</div>
+
+{{#js}}
+    require(['mootimetertool_wordcloud/redraw_wordcloud'], (module) => module.init("wordcloudcanvas_{{uniqid}}"));
+{{/js}}

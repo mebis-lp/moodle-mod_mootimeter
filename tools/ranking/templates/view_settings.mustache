@@ -1,0 +1,51 @@
+<div class="mootimetersettings mootimeterfullwidth">
+
+    {{> mod_mootimeter/elements/snippet_settings_col_header}}
+
+    {{#settings}}
+
+        {{> mod_mootimeter/elements/snippet_divider}}
+
+        <p class="text-bold">{{#str}} phase , mootimetertool_ranking, 1 {{/str}}</p>
+        <p>{{#str}} settings_heading_phase, mootimetertool_ranking{{/str}}
+        {{#heading_phase_1}}
+        {{> mod_mootimeter/elements/snippet_input}}
+        {{/heading_phase_1}}
+        </p>
+        {{#maxphrasesperuser}}
+        {{> mod_mootimeter/elements/snippet_number_input}}
+        {{/maxphrasesperuser}}
+
+        {{> mod_mootimeter/elements/snippet_divider}}
+
+        <p class="text-bold">{{#str}} phase , mootimetertool_ranking, 2 {{/str}}</p>
+        <p>{{#str}} settings_heading_phase, mootimetertool_ranking{{/str}}
+
+        {{#heading_phase_2}}
+        {{> mod_mootimeter/elements/snippet_input}}
+        {{/heading_phase_2}}
+        </p>
+
+        {{> mod_mootimeter/elements/snippet_divider}}
+
+        <p class="text-bold">{{#str}} phase , mootimetertool_ranking, 3 {{/str}}</p>
+        <p>{{#str}} settings_heading_phase, mootimetertool_ranking{{/str}}
+        {{#heading_phase_3}}
+        {{> mod_mootimeter/elements/snippet_input}}
+        {{/heading_phase_3}}
+        </p>
+        {{#maxvotesperuser}}
+        {{> mod_mootimeter/elements/snippet_number_input}}
+        {{/maxvotesperuser}}
+
+        {{> mod_mootimeter/elements/snippet_divider}}
+
+        <p class="text-bold">{{#str}} settings {{/str}}</p>
+
+        {{#anonymousmode}}
+        {{> mod_mootimeter/elements/snippet_checkbox_with_label}}
+        {{/anonymousmode}}
+
+    {{/settings}}
+
+</div>

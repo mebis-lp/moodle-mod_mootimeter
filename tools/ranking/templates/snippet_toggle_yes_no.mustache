@@ -1,0 +1,12 @@
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
+  <label class="btn btn-secondary mtmt-ranking-green {{yes_active}}">
+    <input type="radio" name="{{radioname}}" id="{{yes_id}}_{{uniqid}}" {{{yes_dataset}}} {{yes_checked}}> {{#str}} yes {{/str}}
+  </label>
+  <label class="btn btn-secondary mtmt-ranking-red {{no_active}}">
+    <input type="radio" name="{{radioname}}" id="{{no_id}}_{{uniqid}}" {{{no_dataset}}} {{no_checked}}> {{#str}} no {{/str}}
+  </label>
+</div>
+
+{{#js}}
+require(['mootimetertool_ranking/approve_phrase'], (module) => module.init("{{yes_id}}_{{uniqid}}", "{{no_id}}_{{uniqid}}", "{{radioname}}"));
+{{/js}}
