@@ -15,32 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service to create a new page.
+ * Web service to approve a phrase.
  *
- * @package     mod_mootimeter
- * @copyright   2023, ISB Bayern
+ * @package     mootimetertool_ranking
+ * @copyright   2024, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_mootimeter\external;
+namespace mootimetertool_ranking\external;
 
+use coding_exception;
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
-use dml_exception;
 use invalid_parameter_exception;
+use dml_exception;
+use mod_mootimeter\helper;
 
 /**
- * Web service to create a new page.
+ * Web service to approve a phrase.
  *
- * @package     mod_mootimeter
- * @copyright   2023, ISB Bayern
+ * @package     mootimetertool_ranking
+ * @copyright   2024, ISB Bayern
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class add_new_page extends external_api {
+class approve_phrase extends external_api {
     /**
      * Describes the parameters.
      *
@@ -48,53 +50,44 @@ class add_new_page extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'tool' => new external_value(PARAM_TEXT, 'The new page tool.', VALUE_REQUIRED),
-            'instance' => new external_value(PARAM_INT, 'The mootimeter instance.', VALUE_REQUIRED),
+            'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
+            'phraseid' => new external_value(PARAM_INT, 'The phraseid of the phrase to be approved.', VALUE_REQUIRED),
+            'value' => new external_value(PARAM_INT, 'The new state value.', VALUE_REQUIRED),
         ]);
     }
 
     /**
      * Execute the service.
      *
-     * @param string $tool
-     * @param int $instance
+     * @param int $pageid
+     * @param int $phraseid
+     * @param int $value
      * @return array
-     * @throws invalid_parameter_exception
-     * @throws dml_exception
      */
-    public static function execute(string $tool, int $instance): array {
+    public static function execute(int $pageid, int $phraseid, int $value): array {
         global $USER;
 
         [
-            'tool' => $tool,
-            'instance' => $instance,
+            'pageid' => $pageid,
+            'phraseid' => $phraseid,
+            'value' => $value,
         ] = self::validate_parameters(self::execute_parameters(), [
-            'tool' => $tool,
-            'instance' => $instance,
+            'pageid' => $pageid,
+            'phraseid' => $phraseid,
+            'value' => $value,
         ]);
 
-        $mtmhelper = new \mod_mootimeter\helper();
-        $record = new \stdClass();
-        $record->tool = $tool;
-        $record->instance = $instance;
-        $record->title = "";
-        try {
-            $pageid = $mtmhelper->store_page($record);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
+        $helper = new helper();
+        $page = $helper->get_page($pageid);
+
+        $ranking = new \mootimetertool_ranking\ranking();
+
+        $success = $ranking->set_phrase_approval_state($phraseid, $value);
+
+        if ($success) {
+            return ['code' => helper::ERRORCODE_OK, 'string' => 'ok'];
         }
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
-
-        $return = [
-            'pageid' => $pageid,
-            'cmid' => $cm->id,
-        ];
-
-        // If the user is not in editing mode. Switch to editing mode.
-        // This is the case if the user enters an blank mootimeter instance with disabled editing mode.
-        $USER->editing = true;
-
-        return $return;
+        return ['code' => helper::ERRORCODE_TO_MANY_ANSWERS, 'string' => 'ok'];
     }
 
     /**
@@ -105,10 +98,10 @@ class add_new_page extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'pageid' => new external_value(PARAM_INT, 'Pageid of the page created.'),
-                'cmid' => new external_value(PARAM_INT, 'Pageid of the page created.'),
+                'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
+                'string' => new external_value(PARAM_TEXT, 'Return string of storage process.'),
             ],
-            'New page info.'
+            'Status of phrase state storing process'
         );
     }
 }

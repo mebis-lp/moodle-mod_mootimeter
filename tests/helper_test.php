@@ -323,7 +323,7 @@ final class helper_test extends advanced_testcase {
         $helper->store_answer(
             'mootimetertool_wordcloud_answers',
             $records,
-            false,
+            [],
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers')
         );
@@ -357,7 +357,7 @@ final class helper_test extends advanced_testcase {
         $helper->store_answer(
             'mootimetertool_wordcloud_answers',
             $records,
-            true,
+            ['pageid' => $page->id, 'usermodified' => $this->users['student']->id],
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers')
         );
@@ -393,7 +393,7 @@ final class helper_test extends advanced_testcase {
         $helper->store_answer(
             'mootimetertool_wordcloud_answers',
             $records,
-            true,
+            ['pageid' => $page->id, 'usermodified' => $this->users['student']->id],
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // False.
         );
@@ -412,7 +412,7 @@ final class helper_test extends advanced_testcase {
         $helper->store_answer(
             'mootimetertool_wordcloud_answers',
             $records,
-            true,
+            ['pageid' => $page->id, 'usermodified' => $this->users['student']->id],
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // False.
         );
@@ -453,7 +453,7 @@ final class helper_test extends advanced_testcase {
         $helper->store_answer(
             'mootimetertool_wordcloud_answers',
             $records,
-            false,
+            [],
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
         );
@@ -473,7 +473,7 @@ final class helper_test extends advanced_testcase {
         $helper->store_answer(
             'mootimetertool_wordcloud_answers',
             $records,
-            false,
+            [],
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
         );
@@ -500,7 +500,7 @@ final class helper_test extends advanced_testcase {
         $helper->store_answer(
             'mootimetertool_wordcloud_answers',
             $records,
-            true,
+            ['pageid' => $page->id, 'usermodified' => $this->users['student']->id],
             self::ANSWER_COLUMN_WORDCLOD,
             (bool)$helper::get_tool_config($page, 'multipleanswers') // True.
         );
