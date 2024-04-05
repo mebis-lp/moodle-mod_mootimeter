@@ -31,6 +31,7 @@ use core_external\external_single_structure;
 use core_external\external_value;
 use dml_exception;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 /**
  * Web service to store visualizationtype.
@@ -43,7 +44,7 @@ class store_visualizationtype extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'visuid' => new external_value(PARAM_INT, 'The visualizationid to store.', VALUE_REQUIRED),
@@ -59,7 +60,6 @@ class store_visualizationtype extends external_api {
      * @throws dml_exception
      */
     public static function execute(int $pageid, int $visuid): array {
-
         [
             'pageid' => $pageid,
             'visuid' => $visuid,
@@ -67,16 +67,17 @@ class store_visualizationtype extends external_api {
             'pageid' => $pageid,
             'visuid' => $visuid,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        $cmcontext = \context_module::instance($cm->id);
+        self::validate_context($cmcontext);
 
-        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+        if (!has_capability('mod/mootimeter:moderator', $cmcontext)) {
             return ['code' => 403, 'string' => 'Forbidden'];
         }
 
         try {
 
-            $helper = new \mod_mootimeter\helper();
+            $helper = new helper();
 
             $helper->set_tool_config($pageid, 'visualizationtype', $visuid);
 
@@ -95,7 +96,7 @@ class store_visualizationtype extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),

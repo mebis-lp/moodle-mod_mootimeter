@@ -17,7 +17,7 @@
 /**
  * This file contains the mootimetertool_user_provider interface.
  *
- * Mootimeter Sub plugins should implement this if they store personal information and can retrieve a userid.
+ * Mootimeter sub plugins should implement this if they store personal information and can retrieve a userid.
  *
  * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
@@ -26,6 +26,16 @@
  */
 namespace mod_mootimeter\privacy;
 
+/**
+ * The mootimetertool_user_provider interface.
+ *
+ * Mootimeter sub plugins should implement this if they store personal information and can retrieve a userid.
+ *
+ * @package     mod_mootimeter
+ * @copyright   2023, ISB Bayern
+ * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 interface mootimetertool_user_provider extends
         \core_privacy\local\request\plugin\subplugin_provider,
         \core_privacy\local\request\shared_userlist_provider {

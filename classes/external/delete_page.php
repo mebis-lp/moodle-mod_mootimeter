@@ -31,6 +31,7 @@ use core_external\external_single_structure;
 use core_external\external_value;
 use dml_exception;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 /**
  * Web service to delete a page.
@@ -46,7 +47,7 @@ class delete_page extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The new pageid.', VALUE_REQUIRED),
         ]);
@@ -67,15 +68,14 @@ class delete_page extends external_api {
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
         ]);
-
-        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
         try {
 
             $transaction = $DB->start_delegated_transaction();
 
-            $mtmhelper = new \mod_mootimeter\helper();
+            $mtmhelper = new helper();
             $success = $mtmhelper->delete_page($pageid);
 
             if (!$success) {

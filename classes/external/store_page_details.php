@@ -31,6 +31,7 @@ use core_external\external_single_structure;
 use core_external\external_value;
 use dml_exception;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 /**
  * Web service to store setting.
@@ -46,7 +47,7 @@ class store_page_details extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'inputname' => new external_value(PARAM_TEXT, 'The name of the input to store.', VALUE_REQUIRED),
@@ -67,7 +68,6 @@ class store_page_details extends external_api {
      * @throws dml_exception
      */
     public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = ""): array {
-
         [
             'pageid' => $pageid,
             'inputname' => $inputname,
@@ -79,9 +79,11 @@ class store_page_details extends external_api {
             'inputvalue' => $inputvalue,
             'thisDataset' => $datasetjson,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
-        $mtmhelper = new \mod_mootimeter\helper();
         try {
+            $mtmhelper = new helper();
             $mtmhelper->store_page_detail($pageid, $inputname, $inputvalue);
             return ['code' => 200, 'string' => get_string('ok')];
         } catch (\Exception $e) {
@@ -94,7 +96,7 @@ class store_page_details extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),

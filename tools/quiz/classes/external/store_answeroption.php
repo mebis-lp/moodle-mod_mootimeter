@@ -31,6 +31,8 @@ use core_external\external_single_structure;
 use core_external\external_value;
 use dml_exception;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
+use mootimetertool_quiz\quiz;
 
 /**
  * Web service to store an option.
@@ -46,7 +48,7 @@ class store_answeroption extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'aoid' => new external_value(PARAM_INT, 'The id of the answer option.', VALUE_REQUIRED),
@@ -67,7 +69,6 @@ class store_answeroption extends external_api {
      */
     public static function execute(int $pageid, int $aoid, string $value, string $id): array {
         global $USER;
-
         [
             'pageid' => $pageid,
             'aoid' => $aoid,
@@ -79,9 +80,11 @@ class store_answeroption extends external_api {
             'value' => $value,
             'id' => $id,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
         try {
-            $quiz = new \mootimetertool_quiz\quiz();
+            $quiz = new quiz();
 
             $record = new \stdClass();
             $record->id = $aoid;
@@ -105,7 +108,7 @@ class store_answeroption extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
                 [
                         'code' => new external_value(PARAM_INT, 'Return code of storage process.'),

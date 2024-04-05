@@ -31,6 +31,7 @@ use core_external\external_single_structure;
 use core_external\external_value;
 use dml_exception;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 /**
  * Web service to store an option.
@@ -46,7 +47,7 @@ class new_answeroption extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
         ]);
@@ -61,14 +62,15 @@ class new_answeroption extends external_api {
      */
     public static function execute(int $pageid): array {
         global $USER;
-
         [
             'pageid' => $pageid,
         ] = self::validate_parameters(self::execute_parameters(), [
             'pageid' => $pageid,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
-        $helper = new \mod_mootimeter\helper();
+        $helper = new helper();
         $page = $helper->get_page($pageid);
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 

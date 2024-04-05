@@ -29,6 +29,7 @@ use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
+use mod_mootimeter\helper;
 
 /**
  * Web service to get all answers.
@@ -44,9 +45,9 @@ class get_answers extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
+                'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
         ]);
     }
 
@@ -58,15 +59,14 @@ class get_answers extends external_api {
      */
     public static function execute(int $pageid): array {
         [
-            'pageid' => $pageid,
-        ] = self::validate_parameters(
-            self::execute_parameters(),
-            [
                 'pageid' => $pageid,
-            ]
-        );
+        ] = self::validate_parameters(self::execute_parameters(), [
+                'pageid' => $pageid,
+        ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
-        $helper = new \mod_mootimeter\helper();
+        $helper = new helper();
         $page = $helper->get_page($pageid);
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
         $toolhelper = new $classname();
@@ -78,16 +78,16 @@ class get_answers extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
-            [
-                'values' => new external_value(PARAM_TEXT, 'Answer options count'),
-                'labels' => new external_value(PARAM_TEXT, 'Answer options text'),
-                'chartsettings' => new external_value(PARAM_TEXT, 'chartsettings'),
-                'question' => new external_value(PARAM_TEXT, 'Question text'),
-                'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated'),
-            ],
-            'Information to redraw quiz'
+                [
+                        'values' => new external_value(PARAM_TEXT, 'Answer options count'),
+                        'labels' => new external_value(PARAM_TEXT, 'Answer options text'),
+                        'chartsettings' => new external_value(PARAM_TEXT, 'chartsettings'),
+                        'question' => new external_value(PARAM_TEXT, 'Question text'),
+                        'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated'),
+                ],
+                'Information to redraw quiz'
         );
     }
 }

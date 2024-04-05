@@ -29,6 +29,7 @@ use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
+use mod_mootimeter\helper;
 
 /**
  * Web service to get a state.
@@ -44,7 +45,7 @@ class get_state extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'statename' => new external_value(PARAM_TEXT, 'The name of the state to be toggled', VALUE_REQUIRED),
@@ -59,7 +60,6 @@ class get_state extends external_api {
      * @return array
      */
     public static function execute(int $pageid, string $statename): array {
-
         [
             'pageid' => $pageid,
             'statename' => $statename,
@@ -67,10 +67,12 @@ class get_state extends external_api {
             'pageid' => $pageid,
             'statename' => $statename,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
         try {
 
-            $mtmhelper = new \mod_mootimeter\helper();
+            $mtmhelper = new helper();
             $state = $mtmhelper->get_tool_config($pageid, $statename);
 
             $return = ['code' => 200, 'string' => 'ok', 'state' => (int)$state];
@@ -86,7 +88,7 @@ class get_state extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),

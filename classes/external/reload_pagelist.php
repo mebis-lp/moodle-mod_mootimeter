@@ -29,6 +29,8 @@ use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
+use mod_mootimeter\helper;
+use mod_mootimeter\local\pagelist;
 
 /**
  * Web service to reload_pagelist.
@@ -44,7 +46,7 @@ class reload_pagelist extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_REQUIRED),
             'cmid' => new external_value(PARAM_INT, 'The coursemodule id.', VALUE_REQUIRED),
@@ -61,7 +63,6 @@ class reload_pagelist extends external_api {
      * @return array
      */
     public static function execute(int $pageid, int $cmid, string $dataset): array {
-
         [
             'pageid' => $pageid,
             'cmid' => $cmid,
@@ -71,10 +72,11 @@ class reload_pagelist extends external_api {
             'cmid' => $cmid,
             'dataset' => $dataset,
         ]);
+        self::validate_context(\context_module::instance($cmid));
 
         try {
             $dataset = json_decode($dataset);
-            $pageslisthelper = new \mod_mootimeter\local\pagelist();
+            $pageslisthelper = new pagelist();
             $pageslistparams = json_encode($pageslisthelper->get_pagelist_params($cmid, $pageid, $dataset));
 
             $return = ['code' => 200, 'string' => 'ok', 'pagelist' => $pageslistparams];
@@ -91,7 +93,7 @@ class reload_pagelist extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of pagelist.'),

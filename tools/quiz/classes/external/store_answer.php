@@ -44,7 +44,7 @@ class store_answer extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'aoids' => new external_value(PARAM_TEXT, 'The ids of the selected answer options in json format.', VALUE_REQUIRED),
@@ -68,12 +68,14 @@ class store_answer extends external_api {
             'pageid' => $pageid,
             'aoids' => $aoids,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
         try {
 
             $aoids = json_decode($aoids);
 
-            $helper = new \mod_mootimeter\helper();
+            $helper = new helper();
             $page = $helper->get_page($pageid);
 
             $maxanswersperuser = helper::get_tool_config($page->id, "maxanswersperuser");
@@ -102,7 +104,7 @@ class store_answer extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),

@@ -31,6 +31,7 @@ use core_external\external_value;
 use dml_exception;
 use core_external\external_single_structure;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 /**
  * Web service to store an option.
@@ -43,7 +44,7 @@ class store_answeroption_text extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'inputname' => new external_value(PARAM_TEXT, 'The name of the input to store.', VALUE_REQUIRED),
@@ -63,8 +64,6 @@ class store_answeroption_text extends external_api {
      * @throws dml_exception
      */
     public static function execute(int $pageid, string $inputname, string $inputvalue, string $datasetjson = ""): array {
-        global $DB;
-
         [
             'pageid' => $pageid,
             'inputname' => $inputname,
@@ -76,9 +75,11 @@ class store_answeroption_text extends external_api {
             'inputvalue' => $inputvalue,
             'thisDataset' => $datasetjson,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
         try {
-            $helper = new \mod_mootimeter\helper();
+            $helper = new helper();
             $page = $helper->get_page($pageid);
             $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
 
@@ -111,7 +112,7 @@ class store_answeroption_text extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),

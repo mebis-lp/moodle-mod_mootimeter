@@ -29,6 +29,7 @@ use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
+use mod_mootimeter\helper;
 
 /**
  * Web service to get_pagecontentparams.
@@ -44,7 +45,7 @@ class get_pagecontentparams extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_REQUIRED),
             'cmid' => new external_value(PARAM_INT, 'The coursemodule id.', VALUE_REQUIRED),
@@ -55,7 +56,7 @@ class get_pagecontentparams extends external_api {
     /**
      * Execute the service.
      *
-     * @param int|null $pageid
+     * @param int $pageid
      * @param int $cmid
      * @param string $dataset
      * @return array
@@ -71,13 +72,10 @@ class get_pagecontentparams extends external_api {
             'cmid' => $cmid,
             'dataset' => $dataset,
         ]);
-
-        $modulecontext = \context_module::instance($cmid);
-        external_api::validate_context($modulecontext);
+        self::validate_context(\context_module::instance($cmid));
 
         try {
-
-            $helper = new \mod_mootimeter\helper();
+            $helper = new helper();
             $pageparams = json_encode($helper->get_page_content_params($cmid, $pageid, true, $dataset));
 
             $return = ['code' => 200, 'string' => 'ok', 'pageparams' => $pageparams];
@@ -94,7 +92,7 @@ class get_pagecontentparams extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of pageparams.'),

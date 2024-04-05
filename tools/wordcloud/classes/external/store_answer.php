@@ -45,7 +45,7 @@ class store_answer extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'answer' => new external_value(PARAM_RAW, 'The answer the user entered.', VALUE_REQUIRED),
@@ -69,6 +69,8 @@ class store_answer extends external_api {
             'pageid' => $pageid,
             'answer' => $answer,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
         if (empty($answer) && strlen($answer) == 0) {
             return [
@@ -109,7 +111,7 @@ class store_answer extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),

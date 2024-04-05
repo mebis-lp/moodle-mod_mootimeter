@@ -31,6 +31,7 @@ use core_external\external_single_structure;
 use core_external\external_value;
 use dml_exception;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 /**
  * Web service to store setting.
@@ -46,7 +47,7 @@ class store_setting extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'inputname' => new external_value(PARAM_RAW, 'The name of the input to store.', VALUE_REQUIRED),
@@ -80,16 +81,17 @@ class store_setting extends external_api {
             'thisDataset' => $datasetjson,
         ]);
 
-        $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+        $cm = helper::get_cm_by_pageid($pageid);
+        $cmcontext = \context_module::instance($cm->id);
+        self::validate_context($cmcontext);
 
-        if (!has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))) {
+        if (!has_capability('mod/mootimeter:moderator', $cmcontext)) {
             return ['code' => 403, 'string' => 'Forbidden'];
         }
 
         try {
 
-            $helper = new \mod_mootimeter\helper();
+            $helper = new helper();
             $helper->set_tool_config($pageid, $inputname, $inputvalue);
             $return = ['code' => 200, 'string' => 'ok'];
 
@@ -107,7 +109,7 @@ class store_setting extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),

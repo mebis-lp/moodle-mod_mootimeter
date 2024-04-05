@@ -31,6 +31,7 @@ use core_external\external_single_structure;
 use core_external\external_value;
 use dml_exception;
 use invalid_parameter_exception;
+use mod_mootimeter\helper;
 
 /**
  * Web service to create a new page.
@@ -46,7 +47,7 @@ class add_new_page extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'tool' => new external_value(PARAM_TEXT, 'The new page tool.', VALUE_REQUIRED),
             'instance' => new external_value(PARAM_INT, 'The mootimeter instance.', VALUE_REQUIRED),
@@ -72,15 +73,16 @@ class add_new_page extends external_api {
             'tool' => $tool,
             'instance' => $instance,
         ]);
+        $cm = helper::get_cm_by_instance($instance);
+        self::validate_context(\context_module::instance($cm->id));
 
-        $mtmhelper = new \mod_mootimeter\helper();
+        $mtmhelper = new helper();
         $record = new \stdClass();
         $record->tool = $tool;
         $record->instance = $instance;
         $record->title = "";
 
         $pageid = $mtmhelper->store_page($record);
-        $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
 
         $return = [
             'pageid' => $pageid,
@@ -99,7 +101,7 @@ class add_new_page extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'pageid' => new external_value(PARAM_INT, 'Pageid of the page created.'),

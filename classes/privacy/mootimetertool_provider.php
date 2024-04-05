@@ -17,7 +17,7 @@
 /**
  * This file contains the mootimetertool_provider interface.
  *
- * Assignment Sub plugins should implement this if they store personal information.
+ * Mootimeter sub plugins should implement this if they store personal information.
  *
  * @package     mod_mootimeter
  * @copyright   2023, ISB Bayern
@@ -28,6 +28,16 @@ namespace mod_mootimeter\privacy;
 
 use core_privacy\local\request\contextlist;
 
+/**
+ * The mootimetertool_provider interface.
+ *
+ * Mootimeter sub plugins should implement this if they store personal information.
+ *
+ * @package     mod_mootimeter
+ * @copyright   2023, ISB Bayern
+ * @author      Peter Mayer <peter.mayer@isb.bayern.de>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 interface mootimetertool_provider extends \core_privacy\local\request\plugin\subplugin_provider {
 
     /**

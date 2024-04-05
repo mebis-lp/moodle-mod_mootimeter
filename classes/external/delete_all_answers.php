@@ -30,6 +30,7 @@ use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
 use dml_transaction_exception;
+use mod_mootimeter\helper;
 use Throwable;
 
 /**
@@ -46,7 +47,7 @@ class delete_all_answers extends external_api {
      *
      * @return external_function_parameters
      */
-    public static function execute_parameters() {
+    public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The new pageid.', VALUE_REQUIRED),
             'thisDataset' => new external_value(PARAM_RAW, 'The dataset of the button.', VALUE_REQUIRED),
@@ -71,11 +72,13 @@ class delete_all_answers extends external_api {
             'pageid' => $pageid,
             'thisDataset' => $thisdataset,
         ]);
+        $cm = helper::get_cm_by_pageid($pageid);
+        self::validate_context(\context_module::instance($cm->id));
 
         try {
 
             $transaction = $DB->start_delegated_transaction();
-            $mtmhelper = new \mod_mootimeter\helper();
+            $mtmhelper = new helper();
 
             $page = $mtmhelper->get_page($pageid);
             $answertable = $mtmhelper->get_tool_answer_table($page);
@@ -102,7 +105,7 @@ class delete_all_answers extends external_api {
      *
      * @return external_single_structure
      */
-    public static function execute_returns() {
+    public static function execute_returns(): external_single_structure {
         return new external_single_structure(
             [
                 'code' => new external_value(PARAM_INT, 'Return code of storage process.'),
