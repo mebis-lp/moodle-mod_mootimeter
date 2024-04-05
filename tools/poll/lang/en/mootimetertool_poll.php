@@ -28,5 +28,5 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Poll';
 $string['poll'] = "Poll";
-$string['tool_description_short'] = "Get a live feedback to a question";
 $string['privacy:answerspath'] = 'Answer poll';
+$string['tool_description_short'] = "Get a live feedback to a question";
