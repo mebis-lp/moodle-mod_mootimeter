@@ -27,6 +27,7 @@ namespace mootimetertool_quiz;
 
 use dml_exception;
 use coding_exception;
+use mod_mootimeter\helper;
 use required_capability_exception;
 use moodle_exception;
 use stdClass;
@@ -786,7 +787,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'labels' => json_encode($labels),
             'values' => json_encode($values),
             'question' => $question,
-            'lastupdated' => $this->get_last_update_time($page->id, "quiz"),
+            'lastupdated' => $this->get_page_last_update_time($page->id),
         ];
 
         return $params;

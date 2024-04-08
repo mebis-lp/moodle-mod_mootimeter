@@ -73,7 +73,7 @@ class get_answers extends external_api {
         self::validate_context(\context_module::instance($cm->id));
 
         $wordcloud = new wordcloud();
-        $lastupdatednew = $wordcloud->get_last_update_time($pageid);
+        $lastupdatednew = $wordcloud->get_page_last_update_time($pageid);
 
         $answerlist = $wordcloud->get_answerlist_wordcloud($pageid);
 
