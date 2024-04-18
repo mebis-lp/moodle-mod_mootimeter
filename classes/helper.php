@@ -1180,13 +1180,17 @@ class helper {
      * @throws required_capability_exception
      */
     public function delete_single_answer(string $table, int $pageid, int $answerid): bool {
-        global $DB;
+        global $DB, $USER;
 
         $instance = self::get_instance_by_pageid($pageid);
         $cm = self::get_cm_by_instance($instance);
         $context = \context_module::instance($cm->id);
 
-        if (!has_capability('mod/mootimeter:moderator', $context)) {
+        $useranswers = $this->get_user_answers(
+                $this->get_tool_answer_table($pageid), $pageid, $this->get_tool_answer_column($pageid), $USER->id);
+        $isownanswer = in_array($answerid, array_map(fn($useranswers) => $useranswers->id, $useranswers));
+
+        if (!has_capability('mod/mootimeter:moderator', $context) && !$isownanswer) {
             throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
@@ -1243,14 +1247,25 @@ class helper {
      * @param int $userid
      * @return array
      * @throws dml_exception
+     * @throws coding_exception in case that the current tool does not have user information in the answers table
      */
     public function get_user_answers(string $table, int $pageid, string $answercolumn = 'answer', int $userid = 0): array {
+        $page = $this->get_page($pageid);
+        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
+        /** @var \mod_mootimeter\toolhelper $toolhelper */
+        $toolhelper = new $classname();
+        $useridcolumn = $toolhelper->get_answer_userid_column();
+
+        if (is_null($useridcolumn)) {
+            throw new coding_exception('Tool ' . $page->tool . ' has no user id stored, you cannot use this function!');
+        }
+
         $pageanswers = $this->get_answers($table, $pageid, $answercolumn);
 
         $useranswers = [];
 
         foreach ($pageanswers as $pageanswer) {
-            if ($userid > 0 && $pageanswer->usermodified == $userid) {
+            if ($userid > 0 && $pageanswer->{$useridcolumn} == $userid) {
                 $useranswers[$pageanswer->{$answercolumn}] = $pageanswer;
             }
         }
