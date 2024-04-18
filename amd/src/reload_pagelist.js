@@ -127,9 +127,11 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
                     new SortableList('#mootimeter-pages-list', {
                         moveHandlerSelector: '.mootimeter_page_move_sortablehandle_' + uniqid,
                     });
-                    jQuery('.mootimeter_pages_li_sortable_' + uniqid).on(SortableList.EVENTS.DROP, function(_, info) {
+                    jQuery('.mootimeter_pages_li_sortable_' + uniqid).on(SortableList.EVENTS.DROP, async function(_, info) {
                         var newIndex = info.targetList.children().index(info.element);
-                        storePagePosition(this.dataset.pageid, newIndex);
+                        await storePagePosition(this.dataset.pageid, newIndex);
+                        // We need to reload the pagelist, because the page numbers would not update otherwise.
+                        execReloadPagelist(pageid, cmid, true);
                     });
                 }
 
