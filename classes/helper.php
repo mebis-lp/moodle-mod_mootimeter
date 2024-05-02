@@ -1209,7 +1209,7 @@ class helper {
      * @return bool
      */
     public function delete_answers_of_user(string $table, int $pageid, int $userid): bool {
-        global $DB;
+        global $DB, $USER;
 
         if ($userid <= 0) {
             throw new moodle_exception('Invalid user id: ' . $userid);
@@ -1219,7 +1219,7 @@ class helper {
         $cm = self::get_cm_by_instance($instance);
         $context = \context_module::instance($cm->id);
 
-        if (!has_capability('mod/mootimeter:moderator', $context)) {
+        if (!has_capability('mod/mootimeter:moderator', $context) && intval($USER->id) !== $userid) {
             throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
         }
 
