@@ -70,7 +70,9 @@ class store_answer extends external_api {
             'answer' => $answer,
         ]);
         $cm = helper::get_cm_by_pageid($pageid);
-        self::validate_context(\context_module::instance($cm->id));
+        $cmcontext = \context_module::instance($cm->id);
+        self::validate_context($cmcontext);
+        require_capability('mod/mootimeter:view', $cmcontext);
 
         if (empty($answer) && strlen($answer) == 0) {
             return [

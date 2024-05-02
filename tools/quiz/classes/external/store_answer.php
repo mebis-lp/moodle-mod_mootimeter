@@ -69,7 +69,9 @@ class store_answer extends external_api {
             'aoids' => $aoids,
         ]);
         $cm = helper::get_cm_by_pageid($pageid);
-        self::validate_context(\context_module::instance($cm->id));
+        $cmcontext = \context_module::instance($cm->id);
+        self::validate_context($cmcontext);
+        require_capability('mod/mootimeter:view', $cmcontext);
 
         try {
 

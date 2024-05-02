@@ -1065,12 +1065,6 @@ class helper {
         }
 
         $instanceid = $this->get_instance_by_pageid($recordtemp->pageid);
-        $cm = self::get_cm_by_instance($instanceid);
-        $context = \context_course::instance($cm->course);
-
-        if (!is_enrolled($context, $USER->id)) {
-            throw new \moodle_exception('notenrolledtocourse', 'error');
-        }
 
         $answerids = [];
 

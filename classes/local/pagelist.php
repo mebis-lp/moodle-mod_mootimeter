@@ -66,13 +66,6 @@ class pagelist {
         $PAGE->set_context($modulecontext);
         $cm = get_coursemodule_from_id('mootimeter', $cmid, 0, false, MUST_EXIST);
 
-        // Check if the user is enrolled to the course to wich the instance belong to.
-        // If not, the user is not allowed to view the page list.
-        $context = \context_course::instance($cm->course);
-        if (!is_enrolled($context, $USER->id)) {
-            throw new \moodle_exception('notenrolledtocourse', 'error');
-        }
-
         $pages = $helper->get_pages($cm->instance, "sortorder ASC");
 
         $temppages = [];

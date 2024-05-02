@@ -72,7 +72,9 @@ class get_pagecontentparams extends external_api {
             'cmid' => $cmid,
             'dataset' => $dataset,
         ]);
-        self::validate_context(\context_module::instance($cmid));
+        $cmcontext = \context_module::instance($cmid);
+        self::validate_context($cmcontext);
+        require_capability('mod/mootimeter:view', $cmcontext);
 
         try {
             $helper = new helper();

@@ -70,7 +70,9 @@ class get_answers extends external_api {
                 'lastupdated' => $lastupdated,
         ]);
         $cm = helper::get_cm_by_pageid($pageid);
-        self::validate_context(\context_module::instance($cm->id));
+        $cmcontext = \context_module::instance($cm->id);
+        self::validate_context($cmcontext);
+        require_capability('mod/mootimeter:view', $cmcontext);
 
         $wordcloud = new wordcloud();
         $lastupdatednew = $wordcloud->get_page_last_update_time($pageid);

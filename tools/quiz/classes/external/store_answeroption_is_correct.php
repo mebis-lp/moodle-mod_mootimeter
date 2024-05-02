@@ -83,10 +83,7 @@ class store_answeroption_is_correct extends external_api {
         self::validate_context(\context_module::instance($cm->id));
 
         try {
-
             $quiz = new quiz();
-            $record = new stdClass();
-
             $dataset = json_decode($datasetjson);
 
             $record = $DB->get_record('mootimetertool_quiz_options', ['id' => $dataset->aoid, 'pageid' => $pageid]);
