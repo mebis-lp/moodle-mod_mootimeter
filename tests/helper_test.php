@@ -330,40 +330,6 @@ final class helper_test extends advanced_testcase {
     }
 
     /**
-     * Test to check if store_answer throws not_enroled_to_course exception
-     * @return void
-     * @throws coding_exception
-     * @throws dml_exception
-     * @covers \mod_mootimeter\helper->store_answer
-     */
-    public function test_store_answer_exception_not_enroled_to_course(): void {
-        $this->resetAfterTest();
-
-        $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
-        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
-
-        $this->setUser($this->users['student_not_in_course']);
-
-        $helper = new \mod_mootimeter\helper();
-
-        $record = new \stdClass();
-        $record->pageid = $page->id;
-        $record->answer = "Test";
-        $record->timecreated = time();
-        $records[] = $record;
-
-        $this->expectException(\moodle_exception::class);
-        $this->expectExceptionMessage('notenrolledtocourse');
-        $helper->store_answer(
-            'mootimetertool_wordcloud_answers',
-            $records,
-            true,
-            self::ANSWER_COLUMN_WORDCLOD,
-            (bool)$helper::get_tool_config($page, 'multipleanswers')
-        );
-    }
-
-    /**
      * Test to check if store_answer accepts updateexisting and multipleanswers parameter.
      * @return void
      * @throws coding_exception

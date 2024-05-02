@@ -1064,8 +1064,6 @@ class helper {
             throw new \moodle_exception('pageidmissing', 'error');
         }
 
-        $instanceid = $this->get_instance_by_pageid($recordtemp->pageid);
-
         $answerids = [];
 
         if ($allowmultipleanswers) {
