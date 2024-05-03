@@ -450,7 +450,8 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         if (!$ignoreanswers) {
             $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
                 . '{' . self::ANSWER_TABLE . '} WHERE pageid = :pageid';
-            $mostrecenttimeanswer = $DB->get_field_sql($sql, ['pageid' => $page->id]);
+                $queryresult = $DB->get_field_sql($sql, ['pageid' => $page->id]);
+                $mostrecenttimeanswer = !is_null($queryresult) ? $queryresult : 0;
         }
 
         return $mostrecenttimeanswer;
