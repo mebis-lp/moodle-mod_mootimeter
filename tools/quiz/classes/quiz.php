@@ -871,14 +871,16 @@ class quiz extends \mod_mootimeter\toolhelper {
             // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
             $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
                 . '{' . $this->get_answer_table() . '} WHERE pageid = :pageid';
-            $mostrecenttimeanswer = $DB->get_field_sql($sql, ['pageid' => $page->id]);
+            $queryresultanswer = $DB->get_field_sql($sql, ['pageid' => $page->id]);
+            $mostrecenttimeanswer = !is_null($queryresultanswer) ? $queryresultanswer : 0;
         }
 
         // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
         $mostrecenttimeoptions = 0;
         $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
             . '{' . $this->get_answer_option_table() . '} WHERE pageid = :pageid';
-        $mostrecenttimeoptions = $DB->get_field_sql($sql, ['pageid' => $page->id]);
+        $queryresultoptions = $DB->get_field_sql($sql, ['pageid' => $page->id]);
+        $mostrecenttimeoptions = !is_null($queryresultoptions) ? $queryresultoptions : 0;
 
         return $mostrecenttimeanswer + $mostrecenttimeoptions;
     }
