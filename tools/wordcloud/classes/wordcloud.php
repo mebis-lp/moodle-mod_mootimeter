@@ -438,14 +438,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
         $instance = self::get_instance_by_pageid($page->id);
         $cm = self::get_cm_by_instance($instance);
 
-        // We only want to deliver results if the teacher allowed to view it.
-        if (
-            empty($this->get_tool_config($page->id, 'showonteacherpermission'))
-            && !has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
-        ) {
-            return 100;
-        }
-
         $mostrecenttimeanswer = 0;
         if (!$ignoreanswers) {
             $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '

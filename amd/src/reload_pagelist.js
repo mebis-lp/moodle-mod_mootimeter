@@ -80,7 +80,21 @@ const reloadPagelist = (
  */
 export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
     var mtmstate = document.getElementById('mootimeterstate');
-    const response = await reloadPagelist(pageid, cmid, JSON.stringify(mtmstate.dataset));
+    var dataset = mtmstate.dataset;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    if (urlParams.get('r')) {
+        dataset.r = urlParams.get('r');
+    }
+
+    if (urlParams.get('o')) {
+        dataset.o = urlParams.get('o');
+    }
+
+    dataset.useUrlParams = 1;
+
+    const response = await reloadPagelist(pageid, cmid, JSON.stringify(dataset));
 
     if (response.code != 200) {
         Log.error(response.string);
@@ -88,14 +102,20 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
 
     if (response.code == 200) {
 
-        mtmstate = document.getElementById('mootimeterstate');
-
         const pagelist = JSON.parse(response.pagelist);
         const loadpageid = pagelist.loadpageid;
 
         // Reload pagecontent if page does not exit any more.
         if (pagelist.loadpageid) {
             reloadPage(loadpageid, cmid, '');
+        }
+
+        // Reload page if teacherpermission to view changed.
+        if (
+            mtmstate.getAttribute('data-teacherpermissiontoview')
+            && mtmstate.getAttribute('data-teacherpermissiontoview') != pagelist.dataset['teacherpermissiontoview']
+        ) {
+            reloadPage(mtmstate.getAttribute('data-pageid'), cmid, '');
         }
 
         // Set all datasets to mootimeterstate.

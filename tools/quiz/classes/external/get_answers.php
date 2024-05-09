@@ -88,6 +88,7 @@ class get_answers extends external_api {
                         'chartsettings' => new external_value(PARAM_TEXT, 'chartsettings'),
                         'question' => new external_value(PARAM_TEXT, 'Question text'),
                         'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated'),
+                        'teacherpermissiontoview' =>  new external_value(PARAM_TEXT, 'Timestamp of last updated'),
                 ],
                 'Information to redraw quiz'
         );

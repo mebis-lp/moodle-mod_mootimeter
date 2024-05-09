@@ -8,7 +8,8 @@ export const init = (id) => {
     }
 
     // Initially getAnswers.
-    getAnswers(id);
+    getAnswersAsync(id);
+
     setTimeout(() => {
         const intervalms = document.getElementById('mootimeterstate').dataset.refreshinterval;
         const interval = setInterval(() => {
@@ -18,9 +19,17 @@ export const init = (id) => {
             }
             getAnswers(id);
         }, intervalms);
-    }, 5000);
+    }, 2000);
 
 };
+
+/**
+ * This is because the execution should be finished befor proceeding.
+ * @param {string} id
+ */
+async function getAnswersAsync(id) {
+    await getAnswers(id);
+}
 
 /**
  * Call to get all answers

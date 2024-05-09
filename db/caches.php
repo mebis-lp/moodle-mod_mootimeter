@@ -30,4 +30,7 @@ $definitions = [
     'answers' => [
         'mode' => cache_store::MODE_APPLICATION,
     ],
+    'lastupdated' => [
+        'mode' => cache_store::MODE_APPLICATION,
+    ],
 ];

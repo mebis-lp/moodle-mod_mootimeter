@@ -100,8 +100,8 @@ class pagelist {
                 'tooltip' => mb_strimwidth($helper::get_tool_config($pagerow, 'question'), 0, 40, '...'),
             ];
 
-            $questionmodified = $helper::get_tool_config_timemodified($pagerow, 'question');
-            $maxtimecreated = max($maxtimecreated, $questionmodified, $pagerow->timecreated, $pagerow->timemodified);
+            $pageupdatedat = $helper->get_lastupdate_tool_settings($pagerow);
+            $maxtimecreated = max($maxtimecreated, $pageupdatedat);
 
             $pagenumber++;
         }
@@ -111,14 +111,22 @@ class pagelist {
         // We have to distinguish from which page the request comes.
         // We differentiate between the standard content page (question page) and other pages (eg. results and overview page).
         if (empty($dataset->r) && empty($dataset->o)) {
-            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid']);
-        } else {
             $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid'], true);
+        } else {
+            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid']);
         }
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('contentchangedat', $temppages['dataset']['contentchangedat']);
 
         $temppages['dataset']['refreshinterval'] = get_config('mod_mootimeter', 'refreshinterval');
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('refreshinterval', $temppages['dataset']['refreshinterval']);
+
+        $temppages['dataset']['teacherpermissiontoview'] = $helper->get_teacherpermission_to_view(
+            $helper->get_page($temppages['pageid'])
+        );
+        \mod_mootimeter\local\mootimeterstate::add_mootimeterstate(
+            'teacherpermissiontoview',
+            $temppages['dataset']['teacherpermissiontoview']
+        );
         return $temppages;
     }
 

@@ -847,6 +847,9 @@ class helper {
         $record->value = $value;
         $record->timemodified = time();
         $DB->update_record('mootimeter_tool_settings', $record);
+
+        // Lastupdated timestamp hast to be reset in cache.
+        $this->clear_caches($page->id);
     }
 
     /**
@@ -1132,7 +1135,8 @@ class helper {
         $this->clear_caches($pageid);
         $this->get_answers($table, $pageid, $answercolumn);
         $this->get_answers_grouped($table, ['pageid' => $pageid], $answercolumn);
-
+        $this->get_page_last_update_time($pageid, true);
+        $this->get_page_last_update_time($pageid, false);
         return $answerids;
     }
 
@@ -1179,8 +1183,12 @@ class helper {
         $context = \context_module::instance($cm->id);
 
         $useranswers = $this->get_user_answers(
-                $this->get_tool_answer_table($pageid), $pageid, $this->get_tool_answer_column($pageid), $USER->id);
-        $isownanswer = in_array($answerid, array_map(fn($useranswers) => $useranswers->id, $useranswers));
+            $this->get_tool_answer_table($pageid),
+            $pageid,
+            $this->get_tool_answer_column($pageid),
+            $USER->id
+        );
+        $isownanswer = in_array($answerid, array_map(fn ($useranswers) => $useranswers->id, $useranswers));
 
         if (!has_capability('mod/mootimeter:moderator', $context) && !$isownanswer) {
             throw new \required_capability_exception($context, 'mod/mootimeter:moderator', 'nopermission', 'mod_mootimeter');
@@ -1323,13 +1331,42 @@ class helper {
      * @return mixed
      */
     public function get_page_last_update_time(int|object $pageorid, bool $ignoreanswers = false): string|int {
-        global $DB;
+        global $USER;
 
         $page = $pageorid;
         if (!is_object($page)) {
             $page = $this->get_page($page);
         }
 
+        if (empty($page)) {
+            return 0;
+        }
+
+        // We only want to deliver results if the teacher allowed to view it.
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
+        if (
+            empty($this->get_tool_config($page->id, 'showonteacherpermission'))
+            && !has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
+        ) {
+            return 0;
+        }
+
+        $settingslastupdated = $this->get_lastupdate_tool_settings($page);
+        $answerslastupdated = $this->get_lastupdate_answers($page, $ignoreanswers);
+
+        return $settingslastupdated + $answerslastupdated;
+    }
+
+    /**
+     * Get the last updated timestamp of the answers.
+     *
+     * @param object $page
+     * @param bool $ignoreanswers
+     * @return int
+     * @throws coding_exception
+     */
+    public function get_lastupdate_answers(object $page, bool $ignoreanswers = false): int {
         $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
         if (!class_exists($classname)) {
             return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
@@ -1340,17 +1377,71 @@ class helper {
             return "Method 'get_last_update_time' is missing in tools helper class " . $page->tool;
         }
 
-        // Make the settings change test in the global helper class. Because its everywhere the same.
-        // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
-        $sql = 'SELECT MAX(timemodified) as time FROM {mootimeter_tool_settings} WHERE pageid = :pageid';
-        $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
+        $cache = \cache::make('mod_mootimeter', 'lastupdated');
+        $cachekey = 'lastupdate_answers_' . (int) $ignoreanswers . '_' . $page->id;
+        $answerslastupdated = $cache->get($cachekey);
 
-        $mostrecenttimesettings = 0;
-        if (!empty($record)) {
-            $mostrecenttimesettings = $record->time;
+        if (empty($answerslastupdated)) {
+            $answerslastupdated = $toolhelper->get_last_update_time($page->id, $ignoreanswers);
+            $cache->set($cachekey, $answerslastupdated);
         }
 
-        return $mostrecenttimesettings + $toolhelper->get_last_update_time($page->id, $ignoreanswers);
+        return $answerslastupdated;
+    }
+
+    /**
+     * Get the most recent timestamp of tool settings.
+     *
+     * @param object $page
+     * @return int
+     * @throws coding_exception
+     */
+    public function get_lastupdate_tool_settings(object $page): int {
+        global $DB;
+
+        $cache = \cache::make('mod_mootimeter', 'lastupdated');
+        $cachekey = 'lastupdate_settings_' . $page->id;
+        $mostrecenttimesettings = $cache->get($cachekey);
+
+        if (empty($mostrecenttimesettings)) {
+            // Make the settings change test in the global helper class. Because its everywhere the same.
+            // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
+            $sql = 'SELECT MAX(timemodified) as time FROM {mootimeter_tool_settings} WHERE pageid = :pageid';
+            $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
+
+            $mostrecenttimesettings = 0;
+            if (!empty($record)) {
+                $mostrecenttimesettings = $record->time;
+            }
+
+            $mostrecenttimesettings = max($page->timemodified, $page->timecreated, $mostrecenttimesettings);
+            $cache->set($cachekey, $mostrecenttimesettings);
+        }
+
+        return $mostrecenttimesettings;
+    }
+
+    /**
+     * Get the teacherpermission to view state.
+     *
+     * @param object $page
+     * @return int
+     * @throws dml_exception
+     * @throws coding_exception
+     */
+    public function get_teacherpermission_to_view(object $page): int {
+
+        $instance = self::get_instance_by_pageid($page->id);
+        $cm = self::get_cm_by_instance($instance);
+
+        if (
+            self::get_tool_config($page, 'showonteacherpermission')
+            || has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
+        ) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -1365,6 +1456,13 @@ class helper {
         $cache = \cache::make('mod_mootimeter', 'answers');
         $cache->delete('answers_' . $pageid);
         $cache->delete('cnt_' . $pageid);
+
+        $cache = \cache::make('mod_mootimeter', 'lastupdated');
+        $cache->delete('lastupdate_settings_' . $pageid);
+        // Lastupdate timestamp with answers.
+        $cache->delete('lastupdate_answers_0_' . $pageid);
+        // Lastupdate timestamp without answers.
+        $cache->delete('lastupdate_answers_1_' . $pageid);
     }
 
     /**

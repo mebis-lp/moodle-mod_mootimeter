@@ -265,7 +265,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         $record = new stdClass();
         $record->pageid = $page->id;
         $record->usermodified = $USER->id;
-        $record->optiontext = "";
+        $record->optiontext = '';
         if ($page->tool == 'quiz') {
             $record->optioniscorrect = 0;
         }
@@ -448,10 +448,10 @@ class quiz extends \mod_mootimeter\toolhelper {
             $inputtype = 'rb';
         }
         foreach ($answeroptions as $answeroption) {
-            $wrapperadditionalclass = (self::get_tool_config($page->id, 'showanswercorrection')) ? "mootimeter-highlighter" : "";
+            $wrapperadditionalclass = (self::get_tool_config($page->id, 'showanswercorrection')) ? "mootimeter-highlighter" : '';
             $wrapperadditionalclass .= (
                 self::get_tool_config($page->id, 'showanswercorrection') && $answeroption->optioniscorrect
-            ) ? " mootimeter-success" : "";
+            ) ? " mootimeter-success" : '';
 
             if (
                 empty($answeroption->optiontext)
@@ -473,9 +473,9 @@ class quiz extends \mod_mootimeter\toolhelper {
                 $inputtype . '_with_label_value' => $answeroption->id,
                 $inputtype . '_with_label_additional_class' => 'mootimeter_settings_selector ' .
                     'mootimeter-highlighter mootimeter-success',
-                $inputtype . '_with_label_checked' => (in_array($answeroption->id, $useransweroptionsid)) ? "checked" : "",
+                $inputtype . '_with_label_checked' => (in_array($answeroption->id, $useransweroptionsid)) ? "checked" : '',
                 $inputtype . '_with_label_additional_attribut' => (self::get_tool_config($page->id, 'showanswercorrection')) ?
-                    "disabled" : "",
+                    "disabled" : '',
             ];
         }
 
@@ -587,7 +587,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                 'mtm-cb-without-label-id' => 'ao_iscorrect_' . $answeroption->id,
                 'mtm-cb-without-label-name' => 'ao_iscorrect',
                 'mtm-cb-without-label-ajaxmethode' => "mootimetertool_quiz_store_answeroption_is_correct",
-                'mtm-cb-without-label-checked' => ($answeroption->optioniscorrect) ? "checked" : "",
+                'mtm-cb-without-label-checked' => ($answeroption->optioniscorrect) ? "checked" : '',
                 'mtm-cb-without-label-dataset' => 'data-pageid=' . $page->id . ' data-aoid=' . $answeroption->id,
 
                 'button_icon_only_transparent_id' => 'ao_delete_' . $answeroption->id,
@@ -667,7 +667,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'cb_with_label_name' => 'anonymousmode',
             'cb_with_label_additional_class' => 'mootimeter_settings_selector',
             'cb_with_label_ajaxmethod' => "mod_mootimeter_store_setting",
-            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'anonymousmode') ? "checked" : ""),
+            'cb_with_label_checked' => (\mod_mootimeter\helper::get_tool_config($page, 'anonymousmode') ? "checked" : ''),
         ];
 
         $answers = $this->get_answers($this->get_answer_table(), $page->id, $this->get_answer_column());
@@ -720,10 +720,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         $instance = self::get_instance_by_pageid($page->id);
         $cm = self::get_cm_by_instance($instance);
 
-        if (
-            self::get_tool_config($page, 'showonteacherpermission')
-            || has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
-        ) {
+        if ($this->get_teacherpermission_to_view($page)) {
             $answersgrouped = (array)$this->get_answers_grouped(
                 $this->get_answer_table(),
                 ["pageid" => $page->id],
@@ -771,23 +768,13 @@ class quiz extends \mod_mootimeter\toolhelper {
             : self::VISUALIZATION_ID_CHART_BAR;
         $chartsettings = $this->get_visualization_settings_charjs($visualizationtype, $page->id);
 
-        $instance = self::get_instance_by_pageid($page->id);
-        $cm = self::get_cm_by_instance($instance);
-        if (
-            self::get_tool_config($page, 'showonteacherpermission')
-            || has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
-        ) {
-            $question = self::get_tool_config($page, 'question');
-        } else {
-            $question = get_string('no_answer_due_to_showteacherpermission', 'mootimetertool_quiz');
-        }
-
         $params = [
             'chartsettings' => json_encode($chartsettings),
             'labels' => json_encode($labels),
             'values' => json_encode($values),
-            'question' => $question,
-            'lastupdated' => $this->get_page_last_update_time($page->id),
+            'question' => self::get_tool_config($page, 'question'),
+            'lastupdated' =>  $this->get_page_last_update_time($page->id),
+            'teacherpermissiontoview' => $this->get_teacherpermission_to_view($page),
         ];
 
         return $params;
@@ -855,17 +842,6 @@ class quiz extends \mod_mootimeter\toolhelper {
             $page = $this->get_page($page);
         }
 
-        $instance = self::get_instance_by_pageid($page->id);
-        $cm = self::get_cm_by_instance($instance);
-
-        // We only want to deliver results if the teacher allowed to view it.
-        if (
-            empty($this->get_tool_config($page->id, 'showonteacherpermission'))
-            && !has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
-        ) {
-            return 0;
-        }
-
         $mostrecenttimeanswer = 0;
         if (!$ignoreanswers) {
             // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
@@ -929,7 +905,7 @@ class quiz extends \mod_mootimeter\toolhelper {
 
             $user = $this->get_user_by_id($answer->usermodified);
 
-            $userfullname = "";
+            $userfullname = '';
             if (!empty($user) && empty(self::get_tool_config($page->id, "anonymousmode"))) {
                 $userfullname = $user->firstname . " " . $user->lastname;
             } else if (!empty(self::get_tool_config($page->id, "anonymousmode"))) {

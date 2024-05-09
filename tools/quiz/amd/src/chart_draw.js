@@ -1,5 +1,6 @@
 import ChartJS from 'mootimetertool_quiz/chart.umd';
 import {call as fetchMany} from 'core/ajax';
+import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 
 export const init = (id) => {
 
@@ -7,8 +8,9 @@ export const init = (id) => {
         return;
     }
 
-    const pageid = document.getElementById(id).dataset.pageid;
-    getAnswers(pageid, id);
+    const pageid = document.getElementById('mootimeterstate').dataset.pageid;
+
+    getAnswersAsync(pageid, id);
 
     setTimeout(() => {
         const intervalms = document.getElementById('mootimeterstate').dataset.refreshinterval;
@@ -19,8 +21,18 @@ export const init = (id) => {
             }
             getAnswers(pageid, id);
         }, intervalms);
-    }, 5000);
+    }, 2000);
+
 };
+
+/**
+ * This is because the execution should be finished befor proceeding.
+ * @param {int} pageid
+ * @param {string} id
+ */
+async function getAnswersAsync(pageid, id) {
+    await getAnswers(pageid, id);
+}
 
 /**
  * Execute the ajax call to get the aswers and more important data.
@@ -54,12 +66,12 @@ const getAnswers = async (pageid, id) => {
     const response = await execGetAnswers(pageid);
 
     if (!document.getElementById(id)) {
+        window.console.log("Canvas not found");
         return;
     }
 
     // Write the new data to the canvas data attributes.
-    let nodelastupdated = document.getElementById('mootimeterstate');
-    nodelastupdated.setAttribute('data-lastupdated', response.lastupdated);
+    mtmstate.setAttribute('data-lastupdated', response.lastupdated);
 
     let nodecanvas = document.getElementById(id);
     nodecanvas.setAttribute('data-labels', response.labels);

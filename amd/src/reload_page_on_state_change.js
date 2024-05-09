@@ -40,8 +40,4 @@ const reloadPageOnStateChange = () => {
     const cmid = urlParams.get('id');
 
     reloadPage(mtmstate.dataset.pageid, cmid, mtmstate.dataset);
-
-    // Set lastupdated.
-    let nodelastupdated = document.getElementById('mootimeterstate');
-    nodelastupdated.setAttribute('data-lastupdated', mtmstate.dataset.contentchangedat);
 };

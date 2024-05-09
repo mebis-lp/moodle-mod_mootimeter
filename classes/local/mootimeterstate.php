@@ -77,6 +77,9 @@ class mootimeterstate {
      */
     public static function get_mootimeterstate(string $paramname): string {
         $stateinstanc = self::get_instance();
+        if (empty($stateinstanc->mootimeterstate["data-" . $paramname])) {
+            return 'state_not_set_yet';
+        }
         return $stateinstanc->mootimeterstate["data-" . $paramname];
     }
 
