@@ -102,10 +102,8 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
 
                 // Set subpage URL parameters.
             if (pageparmas.contentmenu.sp) {
-                var container = document.querySelector(".mootimetercontainer");
                 for (const [key, value] of Object.entries(pageparmas.contentmenu.sp)) {
                     setGetParam(key, value);
-                    setFullscreenClass(container, key, value);
                 }
             }
         }
@@ -137,44 +135,3 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
         document.querySelectorAll('.tooltip').forEach(e => e.remove());
     }
 };
-
-/**
- * Set the fullscreen class to the mootimetercontainr
- * @param {mixed} container
- * @param {string} key
- * @param {int} value
- */
-function setFullscreenClass(container, key, value) {
-    if (key == 'f' && value == 1) {
-        container.classList.add("fullscreen");
-        document.getElementById("page-wrapper").classList.add("fullscreen");
-        openBrowserFullscreen(document.getElementById("page-wrapper"));
-    } else if (key == 'f' && value == 0 && document.fullscreenElement !== null) {
-        container.classList.remove("fullscreen");
-        document.getElementById("page-wrapper").classList.remove("fullscreen");
-        closeBrowswerFullscreen();
-    }
-}
-
-/**
- * Trigger browsers fullscreen mode.
- * @param {mixed} elem
- */
-function openBrowserFullscreen(elem) {
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) { /* Safari */
-        elem.webkitRequestFullscreen();
-    }
-}
-
-/**
- * Close browsers fullscreen.
- */
-function closeBrowswerFullscreen() {
-    if (document.exitFullscreen) {
-        document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) { /* Safari */
-        document.webkitExitFullscreen();
-    }
-}
