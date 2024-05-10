@@ -32,6 +32,7 @@ global $CFG;
 use core_privacy\tests\provider_testcase;
 use core_privacy\local\request\writer;
 use core_privacy\local\request\approved_contextlist;
+use mod_mootimeter\helper;
 
 /**
  * Unit tests for mod/mootimeter/classes/privacy/
@@ -101,7 +102,7 @@ final class provider_test extends provider_testcase {
             true
         );
 
-        $helper = new \mod_mootimeter\helper();
+        $helper = new helper();
 
         // Create multiple mootimeter instances.
         $this->setUser($this->users['teacher']);
@@ -110,7 +111,7 @@ final class provider_test extends provider_testcase {
         $mtmthelper = new \mootimetertool_quiz\quiz();
         $record = ['course' => $this->courses[1], 'name' => self::INSTANCE_1_NAME];
         $this->mootimeter[1]['instance'] = $this->generator->create_module('mootimeter', ['course' => $this->courses[1]]);
-        $record = ['instance' => $this->mootimeter[1]['instance']->id, 'tool' => 'quiz'];
+        $record = ['instance' => $this->mootimeter[1]['instance']->id, 'tool' => 'quiz', 'visible' => helper::PAGE_VISIBLE];
         $this->mootimeter[1]['pages'][1]['page'] = $helper->get_page($helper->store_page((object) $record));
         $pageid = $this->mootimeter[1]['pages'][1]['page']->id;
 
@@ -127,7 +128,7 @@ final class provider_test extends provider_testcase {
         // Mootimeter with a tool poll.
         $mtmthelper = new \mootimetertool_poll\poll();
         $this->mootimeter[2]['instance'] = $this->generator->create_module('mootimeter', ['course' => $this->courses[2]]);
-        $record = ['instance' => $this->mootimeter[2]['instance']->id, 'tool' => 'poll'];
+        $record = ['instance' => $this->mootimeter[2]['instance']->id, 'tool' => 'poll', 'visible' => helper::PAGE_VISIBLE];
         $this->mootimeter[2]['pages'][1]['page'] = $helper->get_page($helper->store_page((object) $record));
         $pageid = $this->mootimeter[2]['pages'][1]['page']->id;
 
@@ -145,7 +146,7 @@ final class provider_test extends provider_testcase {
         // Mootimeter with a tool wordcloud.
         $mtmthelper = new \mootimetertool_wordcloud\wordcloud();
         $this->mootimeter[3]['instance'] = $this->generator->create_module('mootimeter', ['course' => $this->courses[3]]);
-        $record = ['instance' => $this->mootimeter[3]['instance']->id, 'tool' => 'wordcloud'];
+        $record = ['instance' => $this->mootimeter[3]['instance']->id, 'tool' => 'wordcloud', 'visible' => helper::PAGE_VISIBLE];
         $this->mootimeter[3]['pages'][1]['page'] = $helper->get_page($helper->store_page((object) $record));
 
         $this->generator->enrol_user($this->users['teacher']->id, $this->courses[1]->id, 'teacher');

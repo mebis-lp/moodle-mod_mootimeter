@@ -340,7 +340,8 @@ final class helper_test extends advanced_testcase {
         $this->resetAfterTest();
 
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
-        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud',
+                'visible' => helper::PAGE_VISIBLE]);
 
         $this->setAdminUser();
 
@@ -402,7 +403,8 @@ final class helper_test extends advanced_testcase {
         $this->resetAfterTest();
 
         $mtmgenerator = $this->getDataGenerator()->get_plugin_generator('mod_mootimeter');
-        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud']);
+        $page = $mtmgenerator->create_page($this, ['instance' => $this->mootimeter->id, 'tool' => 'wordcloud',
+                'visible' => helper::PAGE_VISIBLE]);
 
         $helper = new \mod_mootimeter\helper();
 
