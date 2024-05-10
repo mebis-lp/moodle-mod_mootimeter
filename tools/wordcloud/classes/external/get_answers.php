@@ -75,7 +75,7 @@ class get_answers extends external_api {
         require_capability('mod/mootimeter:view', $cmcontext);
 
         $wordcloud = new wordcloud();
-        $lastupdatednew = $wordcloud->get_page_last_update_time($pageid);
+        $lastupdatednew = $wordcloud->get_page_last_update_time($pageid, 'answers');
 
         $answerlist = $wordcloud->get_answerlist_wordcloud($pageid);
 

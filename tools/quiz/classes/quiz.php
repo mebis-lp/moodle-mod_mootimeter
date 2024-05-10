@@ -773,7 +773,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             'labels' => json_encode($labels),
             'values' => json_encode($values),
             'question' => self::get_tool_config($page, 'question'),
-            'lastupdated' =>  $this->get_page_last_update_time($page->id),
+            'lastupdated' =>  $this->get_page_last_update_time($page->id, ''),
             'teacherpermissiontoview' => $this->get_teacherpermission_to_view($page),
         ];
 
@@ -825,40 +825,6 @@ class quiz extends \mod_mootimeter\toolhelper {
         global $DB;
         $DB->delete_records($this->get_answer_table(), $conditions);
         $this->clear_caches($page->id);
-    }
-
-    /**
-     * Get the lastupdated timestamp.
-     *
-     * @param int|object $pageorid
-     * @param bool $ignoreanswers
-     * @return int
-     */
-    public function get_last_update_time(int|object $pageorid, bool $ignoreanswers = false): int {
-        global $DB;
-
-        $page = $pageorid;
-        if (!is_object($page)) {
-            $page = $this->get_page($page);
-        }
-
-        $mostrecenttimeanswer = 0;
-        if (!$ignoreanswers) {
-            // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
-            $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
-                . '{' . $this->get_answer_table() . '} WHERE pageid = :pageid';
-            $queryresultanswer = $DB->get_field_sql($sql, ['pageid' => $page->id]);
-            $mostrecenttimeanswer = !is_null($queryresultanswer) ? $queryresultanswer : 0;
-        }
-
-        // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
-        $mostrecenttimeoptions = 0;
-        $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
-            . '{' . $this->get_answer_option_table() . '} WHERE pageid = :pageid';
-        $queryresultoptions = $DB->get_field_sql($sql, ['pageid' => $page->id]);
-        $mostrecenttimeoptions = !is_null($queryresultoptions) ? $queryresultoptions : 0;
-
-        return $mostrecenttimeanswer + $mostrecenttimeoptions;
     }
 
     /**

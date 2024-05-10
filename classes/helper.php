@@ -850,6 +850,7 @@ class helper {
 
         // Lastupdated timestamp hast to be reset in cache.
         $this->clear_caches($page->id);
+        $this->notify_data_changed($page, 'settings');
     }
 
     /**
@@ -1135,8 +1136,8 @@ class helper {
         $this->clear_caches($pageid);
         $this->get_answers($table, $pageid, $answercolumn);
         $this->get_answers_grouped($table, ['pageid' => $pageid], $answercolumn);
-        $this->get_page_last_update_time($pageid, true);
-        $this->get_page_last_update_time($pageid, false);
+        $this->notify_data_changed($this->get_page($pageid), 'answers', true);
+        $this->notify_data_changed($this->get_page($pageid), 'answers', false);
         return $answerids;
     }
 
@@ -1161,6 +1162,7 @@ class helper {
         $params = ['pageid' => $pageid];
         $return = $DB->delete_records($table, $params);
         $this->clear_caches($pageid);
+        $this->notify_data_changed($this->get_page($pageid), 'answers');
         return $return;
     }
 
@@ -1197,6 +1199,7 @@ class helper {
         $params = ['pageid' => $pageid, 'id' => $answerid];
         $return = $DB->delete_records($table, $params);
         $this->clear_caches($pageid);
+        $this->notify_data_changed($this->get_page($pageid), 'answers');
         return $return;
     }
 
@@ -1235,6 +1238,7 @@ class helper {
         $params = ['pageid' => $pageid, $toolhelper->get_answer_userid_column() => $userid];
         $return = $DB->delete_records($table, $params);
         $this->clear_caches($pageid);
+        $this->notify_data_changed($page, 'answers');
         return $return;
     }
 
@@ -1324,22 +1328,63 @@ class helper {
     }
 
     /**
+     * Notify, that data changed. This sets a new timestamp to the cache.
+     * Clients then knew, there is someting new, and they have to update this.
+     *
+     * @param object $page
+     * @param string $identifier
+     * @param bool $ignoreanswers
+     * @return void
+     */
+    public function notify_data_changed(object $page, string $identifier  = '', bool $ignoreanswers = false): void {
+
+        $cache = \cache::make('mod_mootimeter', 'lastupdated');
+        $cachekey = 'lastupdate_' . $identifier . '_' . (int) $ignoreanswers . '_' . $page->id;
+        $cache->set($cachekey, time());
+    }
+
+    /**
+     * Get the recent data changed timestamp
+     *
+     * @param object $page
+     * @param string $identifier
+     * @param bool $ignoreanswers
+     * @return int
+     */
+    public function get_data_changed(object $page, string $identifier  = '', bool $ignoreanswers = false): int {
+
+        $cache = \cache::make('mod_mootimeter', 'lastupdated');
+        $cachekey = 'lastupdate_' . $identifier . '_' . (int) $ignoreanswers . '_' . $page->id;
+
+        return (int) $cache->get($cachekey);
+    }
+
+    /**
      * Get the lastupdated timestamp.
      *
      * @param int|object $pageorid
      * @param bool $ignoreanswers
      * @return mixed
      */
-    public function get_page_last_update_time(int|object $pageorid, bool $ignoreanswers = false): string|int {
-        global $USER;
+    public function get_page_last_update_time(
+        int|object $pageorid,
+        string $identifier = '',
+        bool $ignoreanswers = false
+    ): string|int {
 
-        $page = $pageorid;
-        if (!is_object($page)) {
-            $page = $this->get_page($page);
+        if (!in_array($identifier, ['settings', 'answers', ''])) {
+            throw new moodle_exception(
+                'generalexceptionmessage',
+                'error',
+                '',
+                get_string("cacheidentifiernotallowed", "mootimeter") . " => " . $identifier
+            );
         }
 
-        if (empty($page)) {
-            return 0;
+        if (is_object($pageorid)) {
+            $page = $pageorid;
+        } else {
+            $page = $this->get_page($pageorid);
         }
 
         // We only want to deliver results if the teacher allowed to view it.
@@ -1352,84 +1397,30 @@ class helper {
             return 0;
         }
 
-        $settingslastupdated = $this->get_lastupdate_tool_settings($page);
-        $answerslastupdated = $this->get_lastupdate_answers($page, $ignoreanswers);
-
-        return $settingslastupdated + $answerslastupdated;
-    }
-
-    /**
-     * Get the last updated timestamp of the answers.
-     *
-     * @param object $page
-     * @param bool $ignoreanswers
-     * @return int
-     * @throws coding_exception
-     */
-    public function get_lastupdate_answers(object $page, bool $ignoreanswers = false): int {
-        $classname = "\mootimetertool_" . $page->tool . "\\" . $page->tool;
-        if (!class_exists($classname)) {
-            return "Class '" . $page->tool . "' is missing in tool " . $page->tool;
+        if (empty($identifier)) {
+            $lastupdatesettings = (int) $this->get_data_changed($page, 'settings');
+            $lastupdateanswers = (int) $this->get_data_changed($page, 'answers', $ignoreanswers);
+            return max($lastupdatesettings, $lastupdateanswers);
         }
 
-        $toolhelper = new $classname();
-        if (!method_exists($toolhelper, 'get_last_update_time')) {
-            return "Method 'get_last_update_time' is missing in tools helper class " . $page->tool;
-        }
 
-        $cache = \cache::make('mod_mootimeter', 'lastupdated');
-        $cachekey = 'lastupdate_answers_' . (int) $ignoreanswers . '_' . $page->id;
-        $answerslastupdated = $cache->get($cachekey);
-
-        if (empty($answerslastupdated)) {
-            $answerslastupdated = $toolhelper->get_last_update_time($page->id, $ignoreanswers);
-            $cache->set($cachekey, $answerslastupdated);
-        }
-
-        return $answerslastupdated;
-    }
-
-    /**
-     * Get the most recent timestamp of tool settings.
-     *
-     * @param object $page
-     * @return int
-     * @throws coding_exception
-     */
-    public function get_lastupdate_tool_settings(object $page): int {
-        global $DB;
-
-        $cache = \cache::make('mod_mootimeter', 'lastupdated');
-        $cachekey = 'lastupdate_settings_' . $page->id;
-        $mostrecenttimesettings = $cache->get($cachekey);
-
-        if (empty($mostrecenttimesettings)) {
-            // Make the settings change test in the global helper class. Because its everywhere the same.
-            // It's important, that the default value is NOT null, but 0 instead. Otherwise GREATEST will return null anyway.
-            $sql = 'SELECT MAX(timemodified) as time FROM {mootimeter_tool_settings} WHERE pageid = :pageid';
-            $record = $DB->get_record_sql($sql, ['pageid' => $page->id]);
-
-            $mostrecenttimesettings = 0;
-            if (!empty($record)) {
-                $mostrecenttimesettings = $record->time;
-            }
-
-            $mostrecenttimesettings = max($page->timemodified, $page->timecreated, $mostrecenttimesettings);
-            $cache->set($cachekey, $mostrecenttimesettings);
-        }
-
-        return $mostrecenttimesettings;
+        return (int) $this->get_data_changed($page, $identifier, $ignoreanswers);
     }
 
     /**
      * Get the teacherpermission to view state.
      *
-     * @param object $page
+     * @param object|bool $page
      * @return int
      * @throws dml_exception
      * @throws coding_exception
      */
-    public function get_teacherpermission_to_view(object $page): int {
+    public function get_teacherpermission_to_view(object|bool $page): int {
+
+        // On empty page, there are no permissions needed. This is normally the case, if a new page is added.
+        if (empty($page)) {
+            return 0;
+        }
 
         $instance = self::get_instance_by_pageid($page->id);
         $cm = self::get_cm_by_instance($instance);
@@ -1456,13 +1447,6 @@ class helper {
         $cache = \cache::make('mod_mootimeter', 'answers');
         $cache->delete('answers_' . $pageid);
         $cache->delete('cnt_' . $pageid);
-
-        $cache = \cache::make('mod_mootimeter', 'lastupdated');
-        $cache->delete('lastupdate_settings_' . $pageid);
-        // Lastupdate timestamp with answers.
-        $cache->delete('lastupdate_answers_0_' . $pageid);
-        // Lastupdate timestamp without answers.
-        $cache->delete('lastupdate_answers_1_' . $pageid);
     }
 
     /**

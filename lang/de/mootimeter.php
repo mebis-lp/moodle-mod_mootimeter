@@ -31,6 +31,7 @@ $string['anonymous_name'] = 'Anonym';
 $string['anonymousmode'] = 'Anonymer Modus';
 $string['anonymousmode_desc'] = ' - Dieses Setting kann nicht verändert werden, sobald Antworten existieren';
 $string['cachedef_answers'] = 'Enthält die Antworten für die Seiten.';
+$string['cacheidentifiernotallowed'] = 'Der verwendete Cache Identifier ist hier nicht zulässig.';
 $string['cannotview'] = 'Sie haben keine Berechtigung, auf diese Seite zuzugreifen!';
 $string['createnewpagesettings'] = 'Neue Seiteneinstellungen';
 $string['default_new_page_visibility'] = 'Neue Seiten standardmäßig sichtbar';

@@ -100,7 +100,7 @@ class pagelist {
                 'tooltip' => mb_strimwidth($helper::get_tool_config($pagerow, 'question'), 0, 40, '...'),
             ];
 
-            $pageupdatedat = $helper->get_lastupdate_tool_settings($pagerow);
+            $pageupdatedat = $helper->get_page_last_update_time($temppages['pageid'], 'settings');
             $maxtimecreated = max($maxtimecreated, $pageupdatedat);
 
             $pagenumber++;
@@ -111,9 +111,9 @@ class pagelist {
         // We have to distinguish from which page the request comes.
         // We differentiate between the standard content page (question page) and other pages (eg. results and overview page).
         if (empty($dataset->r) && empty($dataset->o)) {
-            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid'], true);
+            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid'], '', true);
         } else {
-            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid']);
+            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid'], '');
         }
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('contentchangedat', $temppages['dataset']['contentchangedat']);
 

@@ -421,35 +421,6 @@ class wordcloud extends \mod_mootimeter\toolhelper {
     }
 
     /**
-     * Get the lastupdated timestamp.
-     *
-     * @param int|object $pageorid
-     * @param bool $ignoreanswers
-     * @return int
-     */
-    public function get_last_update_time(int|object $pageorid, bool $ignoreanswers = false): int {
-        global $DB;
-
-        $page = $pageorid;
-        if (!is_object($page)) {
-            $page = $this->get_page($page);
-        }
-
-        $instance = self::get_instance_by_pageid($page->id);
-        $cm = self::get_cm_by_instance($instance);
-
-        $mostrecenttimeanswer = 0;
-        if (!$ignoreanswers) {
-            $sql = 'SELECT SUM(GREATEST(timecreated, timemodified)) as time FROM '
-                . '{' . self::ANSWER_TABLE . '} WHERE pageid = :pageid';
-            $queryresult = $DB->get_field_sql($sql, ['pageid' => $page->id]);
-            $mostrecenttimeanswer = !is_null($queryresult) ? $queryresult : 0;
-        }
-
-        return $mostrecenttimeanswer;
-    }
-
-    /**
      * Delete all DB entries related to a specific page.
      * @param object $page
      * @return bool
