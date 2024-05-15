@@ -21,6 +21,8 @@ export const init = (id) => {
         }, intervalms);
     }, 2000);
 
+    const mtmstate = document.getElementById('mootimeterstate');
+    mtmstate.setAttribute('data-wclastupdated', 0);
 };
 
 /**
@@ -65,20 +67,15 @@ const getAnswers = async (id) => {
     const mtmstate = document.getElementById('mootimeterstate');
 
     // Early exit if there are no changes.
-    if (mtmstate.dataset.lastupdated == mtmstate.dataset.contentchangedat) {
+    if (mtmstate.dataset.wclastupdated && mtmstate.dataset.wclastupdated == mtmstate.dataset.contentchangedat) {
         return;
     }
 
-    var lastposttimestamp = 0;
-    if (document.getElementById('mootimeterstate').dataset.lastupdated) {
-        lastposttimestamp = document.getElementById('mootimeterstate').dataset.lastupdated;
-    }
     // Get the answer list.
-    const response = await execGetAnswers(pageid, lastposttimestamp);
+    const response = await execGetAnswers(pageid);
 
-    // Set lastupdated.
-    let nodelastupdated = document.getElementById('mootimeterstate');
-    nodelastupdated.setAttribute('data-lastupdated', response.lastupdated);
+    // Set wclastupdated.
+    mtmstate.setAttribute('data-wclastupdated', mtmstate.dataset.contentchangedat);
 
     // Redraw wordcloud.
     document.getElementById(id).setAttribute('data-answers', JSON.stringify(response.answerlist));

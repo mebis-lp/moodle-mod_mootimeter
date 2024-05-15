@@ -1,6 +1,5 @@
 import ChartJS from 'mootimetertool_quiz/chart.umd';
 import {call as fetchMany} from 'core/ajax';
-import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 
 export const init = (id) => {
 
@@ -22,6 +21,9 @@ export const init = (id) => {
             getAnswers(pageid, id);
         }, intervalms);
     }, 2000);
+
+    const mtmstate = document.getElementById('mootimeterstate');
+    mtmstate.setAttribute('data-quizlastupdated', 0);
 
 };
 
@@ -59,7 +61,7 @@ const getAnswers = async (pageid, id) => {
     const mtmstate = document.getElementById('mootimeterstate');
 
     // Early exit if there are no changes.
-    if (mtmstate.dataset.lastupdated == mtmstate.dataset.contentchangedat) {
+    if (mtmstate.dataset.contentlastupdated == mtmstate.dataset.contentchangedat) {
         return;
     }
 
@@ -70,8 +72,11 @@ const getAnswers = async (pageid, id) => {
         return;
     }
 
+    if (mtmstate.dataset.quizlastupdated && mtmstate.dataset.quizlastupdated == mtmstate.dataset.contentchangedat) {
+        return;
+    }
+
     // Write the new data to the canvas data attributes.
-    mtmstate.setAttribute('data-lastupdated', response.lastupdated);
 
     let nodecanvas = document.getElementById(id);
     nodecanvas.setAttribute('data-labels', response.labels);
@@ -104,4 +109,7 @@ const getAnswers = async (pageid, id) => {
     new ChartJS(document.getElementById(id), config);
     ChartJS.defaults.font.size = 25;
     ChartJS.defaults.stepSize = 1;
+
+    // Set quizlastupdated.
+    mtmstate.setAttribute('data-quizlastupdated', mtmstate.dataset.contentchangedat);
 };

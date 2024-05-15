@@ -71,6 +71,7 @@ class mod_mootimeter_generator extends testing_module_generator {
             'title' => 'Test ' . $tool . " page",
             'timemodified' => time(),
             'sortorder' => $mtmhelper->get_page_next_sortorder($record['instance']),
+            'visible' => $mtmhelper::PAGE_VISIBLE,
         ];
 
         $atc->setAdminUser();

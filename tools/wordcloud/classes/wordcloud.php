@@ -475,7 +475,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
      */
     public function get_tool_result_page_params(object $page, array $params = []): array {
         $params['answerslist'] = "";
-        $params['lastupdated'] = 0;
+        $params['lastupdated'] = $this->get_data_changed($page, 'answers');
         $params['pageid'] = $page->id;
         $params['template'] = "mootimetertool_wordcloud/view_results";
         return $params;

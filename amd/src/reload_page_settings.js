@@ -65,9 +65,7 @@ const execReloadPage = async(pageid, cmid, dataset) => {
     }
 
     if (response.code == 200) {
-
         var mtmstate = document.getElementById('mootimeterstate');
-
         const pageparmas = JSON.parse(response.pageparams);
 
         // Set new pageid.
@@ -77,6 +75,7 @@ const execReloadPage = async(pageid, cmid, dataset) => {
         Templates.renderForPromise(pageparmas.colsettings.template, pageparmas.colsettings)
             .then(({html, js}) => {
                 Templates.replaceNodeContents('#mootimeter-col-settings', html, js);
+                mtmstate.setAttribute('data-settingschangedat_prev', mtmstate.dataset.settingschangedat);
                 return true;
             })
             .catch((error) => displayException(error));

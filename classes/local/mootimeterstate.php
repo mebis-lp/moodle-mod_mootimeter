@@ -26,6 +26,9 @@
 
 namespace mod_mootimeter\local;
 
+use coding_exception;
+use mod_mootimeter\helper;
+
 /**
  * The mod_mootimeter helper class for mootimeterstate.
  *
@@ -106,5 +109,69 @@ class mootimeterstate {
             $datasetarray[] = $name . '="' . $value . '"';
         }
         return join(' ', $datasetarray);
+    }
+
+    /**
+     * Get the params array for mootimeter state
+     *
+     * @param object $page
+     * @param object $dataset
+     * @return array
+     */
+    public static function get_mootimeterstate_params(object $page, object $dataset): array {
+
+        $stateinstance = self::get_instance();
+
+        $instance = $page->instance;
+        $cm = helper::get_cm_by_instance($instance);
+
+        $datasetarray = [];
+        foreach ($stateinstance->mootimeterstate as $name => $value) {
+            $datasetarray[$name] = $value;
+        }
+
+        // Get the most recent timestamp of the different sections.
+        $helper = new \mod_mootimeter\helper();
+        $datasetarray['pageid'] = $page->id;
+        $datasetarray['pagelistchangedat'] = $helper->get_data_changed($cm, 'pagelist');
+        $datasetarray['settingschangedat'] = $helper->get_data_changed($page, 'settings');
+
+        // We do not want to set the answerschangedat value if the user is on the question subpage.
+        $datasetarray['answerschangedat'] = 0;
+        if (!empty($dataset->o) || !empty($dataset->r)) {
+            $datasetarray['answerschangedat'] = $helper->get_data_changed($page, 'answers');
+        }
+
+        $datasetarray['teacherpermissiontoview'] = $helper->get_teacherpermission_to_view($helper->get_page($page->id));
+
+        $datasetarray['refreshinterval'] = get_config('mod_mootimeter', 'refreshinterval');
+
+        // We have to distinguish from which page the request comes.
+        // We differentiate between the standard content page (question page) and other pages (eg. results and overview page).
+        if (empty($dataset->r) && empty($dataset->o)) {
+            $datasetarray['contentchangedat'] = $helper->get_data_changed($page, 'settings');
+        } else {
+            $datasetarray['contentchangedat'] = $helper->get_data_changed($page, 'answers');
+        }
+
+        return $datasetarray;
+    }
+
+    /**
+     * Get the default params array for mootimeter state
+     *
+     * @param object $cm
+     * @return array
+     */
+    public static function get_mootimeterstate_default_params(object $cm): array {
+        $helper = new helper();
+        $datasetarray = [];
+        $datasetarray['pagelistchangedat'] = $helper->get_data_changed($cm, 'pagelist');
+        $datasetarray['settingschangedat'] = 0;
+        $datasetarray['answerschangedat'] = 0;
+        $datasetarray['teacherpermissiontoview'] = 0;
+        $datasetarray['refreshinterval'] = 1000;
+        $datasetarray['contentchangedat'] = 0;
+        return $datasetarray;
     }
 }

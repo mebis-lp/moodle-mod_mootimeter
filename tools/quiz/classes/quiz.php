@@ -324,10 +324,13 @@ class quiz extends \mod_mootimeter\toolhelper {
             $origrecord->timemodified = time();
 
             $DB->update_record($this->get_answer_option_table(), $origrecord);
+            $this->notify_data_changed($this->get_page($record->pageid), 'settings');
             return $origrecord->id;
         }
 
-        return $DB->insert_record($this->get_answer_option_table(), $record, true);
+        $insertreturn = $DB->insert_record($this->get_answer_option_table(), $record, true);
+        $this->notify_data_changed($this->get_page($record->pageid), 'settings');
+        return $insertreturn;
     }
 
     /**
@@ -408,6 +411,7 @@ class quiz extends \mod_mootimeter\toolhelper {
             $transaction->rollback($e);
             $return = ['code' => 500, 'string' => $e->getMessage()];
         }
+        $this->notify_data_changed($this->get_page($pageid), 'settings');
         return $return;
     }
 
@@ -773,8 +777,6 @@ class quiz extends \mod_mootimeter\toolhelper {
             'labels' => json_encode($labels),
             'values' => json_encode($values),
             'question' => self::get_tool_config($page, 'question'),
-            'lastupdated' =>  $this->get_page_last_update_time($page->id, ''),
-            'teacherpermissiontoview' => $this->get_teacherpermission_to_view($page),
         ];
 
         return $params;
@@ -962,4 +964,5 @@ class quiz extends \mod_mootimeter\toolhelper {
         $params = $this->get_answer_overview($cm, $page);
         return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
     }
+
 }

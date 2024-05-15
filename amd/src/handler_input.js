@@ -3,22 +3,12 @@ import Log from 'core/log';
 
 export const init = (uniqueID) => {
     const obj = document.getElementById(uniqueID);
-    let typingTimer;
-    let doneTypingInterval = 350;
 
     if (!document.getElementById(uniqueID)) {
         return;
     }
 
-    obj.addEventListener("keyup", eventHandler);
-
-    /**
-     * Eventhandler
-     */
-    function eventHandler() {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(mootimeterStoreInput, doneTypingInterval);
-    }
+    obj.addEventListener("focusout", mootimeterStoreInput);
 
     /**
      * Store the value.

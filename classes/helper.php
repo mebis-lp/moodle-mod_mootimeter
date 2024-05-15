@@ -152,14 +152,13 @@ class helper {
             $origrecord->visible = $record->visible;
             $origrecord->sortorder = $record->sortorder;
             $DB->update_record('mootimeter_pages', $origrecord);
+            $this->notify_data_changed($cm, 'pagelist');
             return $origrecord->id;
         }
         $record->timecreated = time();
         $record->sortorder = $this->get_page_next_sortorder($instance);
         $defaultvisibility = get_config('mod_mootimeter', 'default_new_page_visibility');
-        if (!property_exists($record, 'visible')) {
-            $record->visible = (empty($defaultvisibility)) ? 0 : $defaultvisibility;
-        }
+        $record->visible = (empty($defaultvisibility)) ? 0 : $defaultvisibility;
         $pageid = $DB->insert_record('mootimeter_pages', $record, true);
 
         // Hook to do further actions depending on mtmt tool.
@@ -174,6 +173,8 @@ class helper {
 
         $record->id = $pageid;
         $toolhelper->hook_after_new_page_created($record);
+
+        $this->notify_data_changed($cm, 'pagelist');
 
         return $pageid;
     }
@@ -512,22 +513,10 @@ class helper {
 
         $defaultparams = [
             'sp' => ['r' => 1],
+            'teacherpermissiontoview' => $this->get_teacherpermission_to_view($page),
         ];
 
         return $toolhelper->get_tool_result_page_params($page, $defaultparams);
-    }
-
-    /**
-     * Get the rendered page results
-     * @param object $cm
-     * @param object $page
-     * @return string
-     */
-    public function get_result_page(object $cm, object $page): string {
-        global $OUTPUT;
-
-        $params = $this->get_result_page_params($cm, $page);
-        return $OUTPUT->render_from_template($params['template'], $params);
     }
 
     /**
@@ -853,6 +842,8 @@ class helper {
         // Lastupdated timestamp hast to be reset in cache.
         $this->clear_caches($page->id);
         $this->notify_data_changed($page, 'settings');
+        $this->notify_data_changed($cm, 'pagelist');
+        $this->notify_data_changed($page, 'answers');
     }
 
     /**
@@ -980,6 +971,8 @@ class helper {
         // Call mootimeter-core deletion processes.
         $DB->delete_records('mootimeter_pages', ['id' => $page->id]);
         $DB->delete_records('mootimeter_tool_settings', ['pageid' => $page->id]);
+
+        $this->notify_data_changed($cm, 'pagelist');
         return true;
     }
 
@@ -1138,8 +1131,7 @@ class helper {
         $this->clear_caches($pageid);
         $this->get_answers($table, $pageid, $answercolumn);
         $this->get_answers_grouped($table, ['pageid' => $pageid], $answercolumn);
-        $this->notify_data_changed($this->get_page($pageid), 'answers', true);
-        $this->notify_data_changed($this->get_page($pageid), 'answers', false);
+        $this->notify_data_changed($this->get_page($pageid), 'answers');
         return $answerids;
     }
 
@@ -1333,80 +1325,32 @@ class helper {
      * Notify, that data changed. This sets a new timestamp to the cache.
      * Clients then knew, there is someting new, and they have to update this.
      *
-     * @param object $page
+     * @param object $obj  This is normally $page object or in case of the pagelist $cm object
      * @param string $identifier
-     * @param bool $ignoreanswers
      * @return void
      */
-    public function notify_data_changed(object $page, string $identifier  = '', bool $ignoreanswers = false): void {
+    public function notify_data_changed(object $obj, string $identifier  = ''): void {
 
         $cache = \cache::make('mod_mootimeter', 'lastupdated');
-        $cachekey = 'lastupdate_' . $identifier . '_' . (int) $ignoreanswers . '_' . $page->id;
+        $cachekey = 'lastupdate_' . $identifier . '_' . $obj->id;
         $cache->set($cachekey, time());
     }
 
     /**
      * Get the recent data changed timestamp
      *
-     * @param object $page
+     * @param object $obj  This is normally $page object or in case of the pagelist $cm object
      * @param string $identifier
-     * @param bool $ignoreanswers
      * @return int
      */
-    public function get_data_changed(object $page, string $identifier  = '', bool $ignoreanswers = false): int {
-
+    public function get_data_changed(object $obj, string $identifier  = ''): int {
         $cache = \cache::make('mod_mootimeter', 'lastupdated');
-        $cachekey = 'lastupdate_' . $identifier . '_' . (int) $ignoreanswers . '_' . $page->id;
-
-        return (int) $cache->get($cachekey);
-    }
-
-    /**
-     * Get the lastupdated timestamp.
-     *
-     * @param int|object $pageorid
-     * @param bool $ignoreanswers
-     * @return mixed
-     */
-    public function get_page_last_update_time(
-        int|object $pageorid,
-        string $identifier = '',
-        bool $ignoreanswers = false
-    ): string|int {
-
-        if (!in_array($identifier, ['settings', 'answers', ''])) {
-            throw new moodle_exception(
-                'generalexceptionmessage',
-                'error',
-                '',
-                get_string("cacheidentifiernotallowed", "mootimeter") . " => " . $identifier
-            );
+        $cachekey = 'lastupdate_' . $identifier . '_' . $obj->id;
+        if (empty($cachevalue = $cache->get($cachekey))) {
+            $this->notify_data_changed($obj, $identifier);
+            $cachevalue = $cache->get($cachekey);
         }
-
-        if (is_object($pageorid)) {
-            $page = $pageorid;
-        } else {
-            $page = $this->get_page($pageorid);
-        }
-
-        // We only want to deliver results if the teacher allowed to view it.
-        $instance = self::get_instance_by_pageid($page->id);
-        $cm = self::get_cm_by_instance($instance);
-        if (
-            empty($this->get_tool_config($page->id, 'showonteacherpermission'))
-            && !has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id))
-        ) {
-            return 0;
-        }
-
-        if (empty($identifier)) {
-            $lastupdatesettings = (int) $this->get_data_changed($page, 'settings');
-            $lastupdateanswers = (int) $this->get_data_changed($page, 'answers', $ignoreanswers);
-            return max($lastupdatesettings, $lastupdateanswers);
-        }
-
-
-        return (int) $this->get_data_changed($page, $identifier, $ignoreanswers);
+        return (int) $cachevalue;
     }
 
     /**

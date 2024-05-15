@@ -58,7 +58,7 @@ class pagelist {
      * @throws moodle_exception
      */
     public function get_pagelist_params(int $cmid, int $pageidselected, object $dataset): array {
-        global $USER, $PAGE;
+        global $PAGE, $USER;
 
         $helper = new \mod_mootimeter\helper();
 
@@ -69,18 +69,18 @@ class pagelist {
         $pages = $helper->get_pages($cm->instance, "sortorder ASC");
 
         $temppages = [];
-        if (!in_array($pageidselected, array_keys($pages)) && $pageidselected > 0) {
+        if (!in_array($pageidselected, array_keys($pages)) && $pageidselected > 0 && $dataset->pageid != $pageidselected) {
             $temppages = $pages;
             $temppages['loadpageid'] = array_shift($temppages)->id;
             $pageidselected = $temppages['loadpageid'];
         }
 
         $pagenumber = 1;
-        $maxtimecreated = 0;
 
         $temppages['pageid'] = $pageidselected;
         $temppages['cmid'] = $cm->id;
         $temppages['instance'] = $cm->instance;
+
         if (has_capability('mod/mootimeter:moderator', \context_module::instance($cm->id)) && !empty($USER->editing)) {
             $temppages['isediting'] = $USER->editing;
         }
@@ -99,34 +99,14 @@ class pagelist {
                 'id' => $uniqid,
                 'tooltip' => mb_strimwidth($helper::get_tool_config($pagerow, 'question'), 0, 40, '...'),
             ];
-
-            $pageupdatedat = $helper->get_page_last_update_time($temppages['pageid'], 'settings');
-            $maxtimecreated = max($maxtimecreated, $pageupdatedat);
-
             $pagenumber++;
         }
-        $temppages['dataset']['pagelisttime'] = $maxtimecreated;
-        \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('pagelisttime', $maxtimecreated);
 
-        // We have to distinguish from which page the request comes.
-        // We differentiate between the standard content page (question page) and other pages (eg. results and overview page).
-        if (empty($dataset->r) && empty($dataset->o)) {
-            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid'], '', true);
-        } else {
-            $temppages['dataset']['contentchangedat'] = $helper->get_page_last_update_time($temppages['pageid'], '');
-        }
-        \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('contentchangedat', $temppages['dataset']['contentchangedat']);
+        $temppages['dataset']['pagelistlastupdated'] = $helper->get_data_changed($cm, 'pagelist');
 
         $temppages['dataset']['refreshinterval'] = get_config('mod_mootimeter', 'refreshinterval');
         \mod_mootimeter\local\mootimeterstate::add_mootimeterstate('refreshinterval', $temppages['dataset']['refreshinterval']);
 
-        $temppages['dataset']['teacherpermissiontoview'] = $helper->get_teacherpermission_to_view(
-            $helper->get_page($temppages['pageid'])
-        );
-        \mod_mootimeter\local\mootimeterstate::add_mootimeterstate(
-            'teacherpermissiontoview',
-            $temppages['dataset']['teacherpermissiontoview']
-        );
         return $temppages;
     }
 
@@ -197,5 +177,6 @@ class pagelist {
         }
         // Finally store the new positioned page.
         $helper->store_page($page);
+        $helper->notify_data_changed($helper->get_cm_by_instance($instance), 'pagelist');
     }
 }

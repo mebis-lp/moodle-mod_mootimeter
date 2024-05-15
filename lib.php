@@ -238,5 +238,8 @@ function mootimeter_inplace_editable($itemtype, $itemid, $newvalue) {
 
     $toolhelper = new $classname();
 
-    return $toolhelper->handle_inplace_edit($type, $itemid, $newvalue);
+    $inplaceedit = $toolhelper->handle_inplace_edit($type, $itemid, $newvalue);
+    $helper = new \mod_mootimeter\helper();
+    $helper->notify_data_changed($helper->get_page($pageid), 'answers');
+    return $inplaceedit;
 }

@@ -72,7 +72,6 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
 
     dataset = JSON.stringify(dataset);
     const response = await reloadPage(pageid, cmid, dataset);
-
     if (response.code != 200) {
         Log.error(response.string);
     }
@@ -84,54 +83,92 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
         const pageparmas = JSON.parse(response.pageparams);
 
         // Replace the pagecontent.
-        Templates.renderForPromise(pageparmas.pagecontent.template, pageparmas.pagecontent)
-            .then(({html, js}) => {
-                Templates.replaceNodeContents('#mootimeter-pagecontent', html, js);
-                return true;
-            })
-            .catch((error) => displayException(error));
+        if (
+            !mtmstate.dataset.contentchangedat_prev
+            || mtmstate.dataset.contentchangedat_prev != mtmstate.contentchangedat
+            || !mtmstate.dataset.teacherpermissiontoview_prev
+            || mtmstate.dataset.teacherpermissiontoview_prev != mtmstate.dataset.teacherpermissiontoviewteacherpermissiontoview
+        ) {
+            reloadPageContent(pageparmas.pagecontent);
 
-        // Replace the pagecontent menu.
-        if (pageparmas.contentmenu) {
-            Templates.renderForPromise(pageparmas.contentmenu.template, pageparmas.contentmenu)
-                .then(({html, js}) => {
-                    Templates.replaceNode('#mootimeter-pagecontentmenu', html, js);
-                    return true;
-                })
-                .catch((error) => displayException(error));
-
-                // Set subpage URL parameters.
-            if (pageparmas.contentmenu.sp) {
-                for (const [key, value] of Object.entries(pageparmas.contentmenu.sp)) {
-                    setGetParam(key, value);
-                }
-            }
+            // Set active page marked in pageslist.
+            reloadPagelist(pageid, cmid, true);
         }
 
-        // Replace the settings col if necessary.
-        if (pageparmas.colsettings) {
-            Templates.renderForPromise(pageparmas.colsettings.template, pageparmas.colsettings)
-                .then(({html, js}) => {
-                    Templates.replaceNodeContents('#mootimeter-col-settings', html, js);
-                    return true;
-                })
-                .catch((error) => displayException(error));
+        // Replace the pagecontent menu.
+        if (
+            !mtmstate.dataset.pagecontentmenuchangedat_prev
+            || mtmstate.dataset.pagecontentmenuchangedat_prev != mtmstate.settingschangedat
+        ) {
+            reloadContentMenu(pageparmas.contentmenu);
+        }
+
+        if (
+            pageparmas.colsettings
+            && (
+                !mtmstate.dataset.settingschangedat_prev
+                || mtmstate.dataset.settingschangedat_prev != mtmstate.settingschangedat
+            )
+        ) {
+            reloadSettingsCol(pageparmas.colsettings);
         }
 
         if (pageparmas.pageid) {
-
             // Set new pageid.
             mtmstate.setAttribute('data-pageid', pageparmas.pageid);
 
             // Set URL parameter - pageid.
             setGetParam('pageid', pageparmas.pageid);
-
         }
-
-        // Set active page marked in pageslist.
-        reloadPagelist(pageid, cmid, true);
-
-        // Remove all tooltips of pageslist that are still present.
-        document.querySelectorAll('.tooltip').forEach(e => e.remove());
     }
+};
+
+export const reloadSettingsCol = async(pageparmas) => {
+
+    var mtmstate = document.getElementById('mootimeterstate');
+
+    // Replace the settings col if necessary.
+    Templates.renderForPromise(pageparmas.template, pageparmas)
+        .then(({html, js}) => {
+            Templates.replaceNodeContents('#mootimeter-col-settings', html, js);
+            mtmstate.setAttribute('data-settingschangedat_prev', mtmstate.dataset.settingschangedat);
+            return true;
+        })
+        .catch((error) => displayException(error));
+
+};
+
+export const reloadContentMenu = async(pageparmas) => {
+
+    var mtmstate = document.getElementById('mootimeterstate');
+
+    // Replace the settings col if necessary.
+    Templates.renderForPromise(pageparmas.template, pageparmas)
+        .then(({html, js}) => {
+            Templates.replaceNode('#mootimeter-pagecontentmenu', html, js);
+            mtmstate.setAttribute('data-pagecontentmenuchangedat_prev', mtmstate.dataset.pagecontentmenuchangedat);
+            return true;
+        })
+        .catch((error) => displayException(error));
+
+    // Set subpage URL parameters.
+    if (pageparmas.sp) {
+        for (const [key, value] of Object.entries(pageparmas.sp)) {
+            setGetParam(key, value);
+        }
+    }
+};
+
+export const reloadPageContent = async(pageparmas) => {
+
+    var mtmstate = document.getElementById('mootimeterstate');
+
+    Templates.renderForPromise(pageparmas.template, pageparmas)
+        .then(({html, js}) => {
+            Templates.replaceNodeContents('#mootimeter-pagecontent', html, js);
+            mtmstate.setAttribute('data-contentchangedat_prev', mtmstate.dataset.contentchangedat);
+            mtmstate.setAttribute('data-teacherpermissiontoview_prev', mtmstate.dataset.teacherpermissiontoview);
+            return true;
+        })
+        .catch((error) => displayException(error));
 };

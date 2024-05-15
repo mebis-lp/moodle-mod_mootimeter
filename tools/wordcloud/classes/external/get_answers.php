@@ -50,7 +50,6 @@ class get_answers extends external_api {
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'lastupdated' => new external_value(PARAM_INT, 'The timestamp the last answer were added at.', VALUE_REQUIRED),
         ]);
     }
 
@@ -58,16 +57,13 @@ class get_answers extends external_api {
      * Execute the service.
      *
      * @param int $pageid
-     * @param int $lastupdated
      * @return array
      */
-    public static function execute(int $pageid, int $lastupdated): array {
+    public static function execute(int $pageid): array {
         [
                 'pageid' => $pageid,
-                'lastupdated' => $lastupdated,
         ] = self::validate_parameters(self::execute_parameters(), [
                 'pageid' => $pageid,
-                'lastupdated' => $lastupdated,
         ]);
         $cm = helper::get_cm_by_pageid($pageid);
         $cmcontext = \context_module::instance($cm->id);
@@ -75,11 +71,9 @@ class get_answers extends external_api {
         require_capability('mod/mootimeter:view', $cmcontext);
 
         $wordcloud = new wordcloud();
-        $lastupdatednew = $wordcloud->get_page_last_update_time($pageid, 'answers');
-
         $answerlist = $wordcloud->get_answerlist_wordcloud($pageid);
 
-        return ['answerlist' => $answerlist, 'lastupdated' => $lastupdatednew];
+        return ['answerlist' => $answerlist];
     }
 
     /**
@@ -97,8 +91,6 @@ class get_answers extends external_api {
                     ),
                     'The answerslist.',
                 ),
-                'lastupdated' => new external_value(PARAM_INT, 'Timestamp of last updated'),
-
             ],
             'Information to redraw wordcloud'
         );

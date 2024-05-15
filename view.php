@@ -66,7 +66,8 @@ $pages = $helper->get_pages($cm->instance);
 
 // Check if this page is in the recent mootimeter instance.
 if (!empty($pageid) && !$helper::validate_page_belongs_to_instance($pageid, $pages)) {
-    throw new moodle_exception('generalexceptionmessage', 'error', '', get_string("pageaccessexception", "mootimeter"));
+    $page = array_pop($pages);
+    redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]));
 }
 
 // If there is only one page. Redirect to this page if there is no pageid set.

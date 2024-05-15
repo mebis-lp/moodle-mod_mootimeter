@@ -114,4 +114,12 @@ $functions = [
         'ajax'          => true,
         'capabilities'  => 'mod/mootimeter:view',
     ],
+    'mod_mootimeter_get_mootimeterstate' => [
+        'classname'     => 'mod_mootimeter\external\get_mootimeterstate',
+        'methodname'    => 'execute',
+        'description'   => 'Get the params to set the mootimeterstate',
+        'type'          => 'read',
+        'ajax'          => true,
+        'capabilities'  => 'mod/mootimeter:view',
+    ],
 ];

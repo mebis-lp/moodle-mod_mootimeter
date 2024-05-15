@@ -51,7 +51,7 @@ const reloadPage = (
  * @param {int} cmid
  * @param {array} dataset
  */
-const execReloadPage = async(pageid, cmid, dataset) => {
+export const execReloadPage = async(pageid, cmid, dataset) => {
 
     if (!dataset) {
         dataset = JSON.stringify([]);
@@ -78,6 +78,7 @@ const execReloadPage = async(pageid, cmid, dataset) => {
         Templates.renderForPromise(pageparmas.pagecontent.template, pageparmas.pagecontent)
             .then(({html, js}) => {
                 Templates.replaceNodeContents('#mootimeter-pagecontent', html, js);
+                mtmstate.setAttribute('data-contentchangedat_prev', mtmstate.dataset.contentchangedat);
                 return true;
             })
             .catch((error) => displayException(error));
@@ -88,7 +89,5 @@ const execReloadPage = async(pageid, cmid, dataset) => {
         // Set active page marked in pageslist.
         reloadPagelist(pageid, cmid, true);
 
-        // Remove all tooltips of pageslist that are still present.
-        document.querySelectorAll('.tooltip').forEach(e => e.remove());
     }
 };

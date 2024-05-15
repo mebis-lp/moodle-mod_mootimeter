@@ -2,7 +2,6 @@ import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
-import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 import SortableList from 'core/sortable_list';
 import jQuery from 'jquery';
 import {ajaxRequestInput} from 'mod_mootimeter/utils';
@@ -21,16 +20,6 @@ export const init = (pagerefreshintervall) => {
     setInterval(() => {
         getPagelist();
     }, pagerefreshintervall);
-
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const cmid = urlParams.get('id');
-    var pageid = urlParams.get('pageid');
-
-    if (pageid === null || pageid === undefined || pageid.length == 0) {
-        pageid = 0;
-    }
-    reloadPage(pageid, cmid, '');
 
     /**
      * Store the value.
@@ -81,6 +70,18 @@ const reloadPagelist = (
 export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
     var mtmstate = document.getElementById('mootimeterstate');
     var dataset = mtmstate.dataset;
+
+    // Early exit if there were no changes.
+    if (
+        (
+            mtmstate.dataset.pagelistchangedat_prev
+            && mtmstate.dataset.pagelistchangedat == mtmstate.dataset.pagelistchangedat_prev
+        )
+        && !forcereload
+    ) {
+        return;
+    }
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
 
@@ -103,34 +104,6 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
     if (response.code == 200) {
 
         const pagelist = JSON.parse(response.pagelist);
-        const loadpageid = pagelist.loadpageid;
-
-        // Reload pagecontent if page does not exit any more.
-        if (pagelist.loadpageid) {
-            reloadPage(loadpageid, cmid, '');
-        }
-
-        // Reload page if teacherpermission to view changed.
-        if (
-            mtmstate.getAttribute('data-teacherpermissiontoview')
-            && mtmstate.getAttribute('data-teacherpermissiontoview') != pagelist.dataset['teacherpermissiontoview']
-        ) {
-            reloadPage(mtmstate.getAttribute('data-pageid'), cmid, '');
-        }
-
-        // Set all datasets to mootimeterstate.
-        for (let dataattribute in pagelist.dataset) {
-            if (pagelist.dataset.hasOwnProperty(dataattribute)) {
-                mtmstate.setAttribute('data-' + dataattribute, pagelist.dataset[dataattribute]);
-            }
-        }
-
-        // If there are no changes in pagelist. We are finished.
-        if (mtmstate.dataset.pagelisttime == pagelist.dataset.pagelisttime && !forcereload) {
-            return;
-        }
-
-        // Set new pagelisttime state.
 
         // Replace the pages list.
         Templates.renderForPromise('mod_mootimeter/elements/snippet_page_list', pagelist)
@@ -150,8 +123,6 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
                     jQuery('.mootimeter_pages_li_sortable_' + uniqid).on(SortableList.EVENTS.DROP, async function(_, info) {
                         var newIndex = info.targetList.children().index(info.element);
                         await storePagePosition(this.dataset.pageid, newIndex);
-                        // We need to reload the pagelist, because the page numbers would not update otherwise.
-                        execReloadPagelist(pageid, cmid, true);
                     });
                 }
 
@@ -161,6 +132,12 @@ export const execReloadPagelist = async(pageid, cmid, forcereload = false) => {
                 return true;
             })
             .catch((error) => displayException(error));
+
+        // Set new pagelistchangedat_prev state.
+        mtmstate.setAttribute('data-pagelistchangedat_prev', mtmstate.dataset.pagelistchangedat);
+
+        // Remove all tooltips of pageslist that are still present.
+        document.querySelectorAll('.tooltip').forEach(e => e.remove());
     }
 };
 

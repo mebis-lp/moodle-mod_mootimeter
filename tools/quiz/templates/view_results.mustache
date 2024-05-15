@@ -4,9 +4,6 @@
     >
         {{#str}}no_answer_due_to_showteacherpermission, mootimetertool_quiz{{/str}}
     </div>
-    {{#js}}
-    require(['mod_mootimeter/reload_page_on_state_change'], (module) => module.init("mtmt_quiz_no_answer_wrapper_{{uniqid}}"));
-    {{/js}}
 {{/teacherpermissiontoview}}
 
 {{#teacherpermissiontoview}}

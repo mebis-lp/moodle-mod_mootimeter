@@ -114,6 +114,7 @@ final class provider_test extends provider_testcase {
         $record = ['instance' => $this->mootimeter[1]['instance']->id, 'tool' => 'quiz', 'visible' => helper::PAGE_VISIBLE];
         $this->mootimeter[1]['pages'][1]['page'] = $helper->get_page($helper->store_page((object) $record));
         $pageid = $this->mootimeter[1]['pages'][1]['page']->id;
+        $helper->toggle_state($this->mootimeter[1]['pages'][1]['page'], 'page_visibility');
 
         // Insert some answeroption text.
         $answeroptions = $mtmthelper->get_answer_options($pageid);
@@ -131,6 +132,7 @@ final class provider_test extends provider_testcase {
         $record = ['instance' => $this->mootimeter[2]['instance']->id, 'tool' => 'poll', 'visible' => helper::PAGE_VISIBLE];
         $this->mootimeter[2]['pages'][1]['page'] = $helper->get_page($helper->store_page((object) $record));
         $pageid = $this->mootimeter[2]['pages'][1]['page']->id;
+        $helper->toggle_state($this->mootimeter[2]['pages'][1]['page'], 'page_visibility');
 
         // Insert some answeroption text.
         $answeroptions = $mtmthelper->get_answer_options($pageid);
@@ -148,6 +150,7 @@ final class provider_test extends provider_testcase {
         $this->mootimeter[3]['instance'] = $this->generator->create_module('mootimeter', ['course' => $this->courses[3]]);
         $record = ['instance' => $this->mootimeter[3]['instance']->id, 'tool' => 'wordcloud', 'visible' => helper::PAGE_VISIBLE];
         $this->mootimeter[3]['pages'][1]['page'] = $helper->get_page($helper->store_page((object) $record));
+        $helper->toggle_state($this->mootimeter[3]['pages'][1]['page'], 'page_visibility');
 
         $this->generator->enrol_user($this->users['teacher']->id, $this->courses[1]->id, 'teacher');
         $this->generator->enrol_user($this->users['teacher']->id, $this->courses[2]->id, 'teacher');
