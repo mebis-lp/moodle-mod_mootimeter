@@ -1,0 +1,102 @@
+@import "../../../theme/boost/scss/bootstrap/functions";
+@import "../../../theme/boost/scss/bootstrap/variables";
+@import "../../../theme/boost/scss/bootstrap/mixins";
+
+$grey-100: #e8e8ea;
+$grey-200: #a4a5ac;
+$grey-300: #60616d;
+$grey-400: #303142;
+$grey-500: #00091e;
+
+$white-standard: #fff;
+
+// wahrscheinlich ersetzen durch moodle vars:
+$lernplatform-200: #e99f80;
+$lernplatform-300: #dc6534;
+$lernplatform-400: #d33f01;
+$lernplatform-500: #a93201;
+
+$feedback-error: #ff0000;
+$notification-warning: #ff00001a;
+
+$feedback-success-200: #00c431;
+$feedback-success-100: #d9f6e0;
+
+@mixin rounded-s {
+  border-radius: 0.25rem;
+}
+
+@mixin rounded-m {
+  border-radius: 0.5rem;
+}
+
+@mixin flex-center-all {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.mootimetercontainer {
+  max-width: 1400px;
+
+  *:focus {
+    outline: none;
+  }
+
+  &.fullscreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: unset;
+    height: 100vh;
+    overflow: auto;
+    z-index: 99999;
+
+    .mootimetercolpages,
+    .mootimetercoledit,
+    .mootimetercolcontent {
+      @media screen and (min-width: 680px) {
+        min-height: unset;
+        max-height: unset;
+      }
+    }
+
+    .mootimetercolcontent {
+      height: 100%;
+    }
+
+    .row:first-child {
+      height: 100%;
+    }
+  }
+
+  .mootimetercolpages,
+  .mootimetercoledit,
+  .mootimetercolcontent {
+    @media screen and (min-width: 680px) {
+      min-height: 646px;
+      max-height: 850px;
+    }
+  }
+}
+
+.tooltip {
+  z-index: 100000 !important;
+}
+
+/** This is to hide the topbar on fullscreen mode. */
+#mootimetertool_wordcloud_get_answers {
+  #page-wrapper.fullscreen {
+
+    .navbar,
+    bycs-topbar {
+      display: none;
+    }
+
+    /** Setting for theme_boost */
+    #page {
+      margin-top: 0;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "wordcloud": "^1.2.2"
+  },
+  "eslintIgnore": [
+    "amd/src/wordcloud2.js"
+  ],
+  "scripts": {
+    "deploy-wordcloud": "npm i wordcloud && cp node_modules/wordcloud/src/wordcloud2.js amd/src/ && grunt amd"
+  }
+}

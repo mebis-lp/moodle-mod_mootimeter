@@ -29,8 +29,21 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     $settings = new admin_settingpage('mod_mootimeter_settings', new lang_string('pluginname', 'mod_mootimeter'));
 
-    // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
     if ($ADMIN->fulltree) {
-        // TODO: Define actual plugin settings page and add it to the tree - {@link https://docs.moodle.org/dev/Admin_settings}.
+        $settings->add(new admin_setting_configtext(
+            'mod_mootimeter/refreshinterval',
+            get_string('refreshinterval', 'mod_mootimeter'),
+            get_string('refreshinterval_desc', 'mod_mootimeter'),
+            1000,
+            PARAM_INT
+        ));
+
+        $settings->add(new admin_setting_configcheckbox(
+            'mod_mootimeter/default_new_page_visibility',
+            get_string('default_new_page_visibility', 'mod_mootimeter'),
+            get_string('default_new_page_visibility_desc', 'mod_mootimeter'),
+            0
+        ));
+
     }
 }

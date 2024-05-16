@@ -23,48 +23,77 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/lib.php');
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
 
 // Course module id.
 $id = optional_param('id', 0, PARAM_INT);
+$action = optional_param('a', "", PARAM_ALPHA);
+$paramtool = optional_param('tool', "", PARAM_ALPHA);
+$pageid = optional_param('pageid', 0, PARAM_INT);
+$isresultpage = optional_param('r', false, PARAM_BOOL);
+$isansweroverview = optional_param('o', false, PARAM_BOOL);
+$helper = new \mod_mootimeter\helper();
+
+// Set the pageid pageparam for $PAGE object.
+if ($pageid) {
+    $pageparams['pageid'] = $pageid;
+    $page = $helper->get_page($pageid);
+}
 
 // Activity instance id.
 $m = optional_param('m', 0, PARAM_INT);
 
 if ($id) {
     $cm = get_coursemodule_from_id('mootimeter', $id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $moduleinstance = $DB->get_record('mootimeter', array('id' => $cm->instance), '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+    $moduleinstance = $DB->get_record('mootimeter', ['id' => $cm->instance], '*', MUST_EXIST);
 } else {
-    $moduleinstance = $DB->get_record('mootimeter', array('id' => $m), '*', MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
+    $moduleinstance = $DB->get_record('mootimeter', ['id' => $m], '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $moduleinstance->course], '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('mootimeter', $moduleinstance->id, $course->id, false, MUST_EXIST);
 }
 
-require_login($course, true, $cm);
+// Set the cm pageparam for $PAGE object.
+$pageparams['id'] = $cm->id;
 
+// Check if user is logged in.
+require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 
-$event = \mod_mootimeter\event\course_module_viewed::create(array(
-    'objectid' => $moduleinstance->id,
-    'context' => $modulecontext
-));
-$event->add_record_snapshot('course', $course);
-$event->add_record_snapshot('mootimeter', $moduleinstance);
-$event->trigger();
+$mt = new \mod_mootimeter\plugininfo\mootimetertool();
+$pages = $helper->get_pages($cm->instance);
 
-$PAGE->set_url('/mod/mootimeter/view.php', array('id' => $cm->id));
+// Check if this page is in the recent mootimeter instance.
+if (!empty($pageid) && !$helper::validate_page_belongs_to_instance($pageid, $pages)) {
+    $page = array_pop($pages);
+    redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]));
+}
+
+// If there is only one page. Redirect to this page if there is no pageid set.
+if (count($pages) == 1 && empty($pageid) && $action != "addpage") {
+    $page = array_pop($pages);
+    redirect(new moodle_url('/mod/mootimeter/view.php', ['id' => $cm->id, 'pageid' => $page->id]));
+}
+
+$modulecontext = context_module::instance($cm->id);
+mootimeter_trigger_event_course_module_viewed($moduleinstance, $modulecontext, $course);
+
+$PAGE->set_url('/mod/mootimeter/view.php', $pageparams);
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
+$pagehelper = new \mod_mootimeter\local\pagelist();
+
+$params = [
+    'cmid' => $cm->id,
+    'isediting' => $PAGE->user_is_editing(),
+    'refreshinterval' => get_config('mod_mootimeter', 'refreshinterval'),
+];
+$params['mootimeterstate-dataset'] = \mod_mootimeter\local\mootimeterstate::get_mootimeterstate_renderable();
+
+// START OUTPUT.
 echo $OUTPUT->header();
-
-if(has_capability('mod/mootimeter:addinstance', \context_module::instance($cm->id))) {
-
-
-
-}
-
+echo $OUTPUT->render_from_template("mod_mootimeter/main_screen", $params);
 echo $OUTPUT->footer();

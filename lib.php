@@ -31,14 +31,14 @@
  */
 function mootimeter_supports($feature) {
     switch ($feature) {
-        case FEATURE_GRADE_HAS_GRADE:
-            return false;
         case FEATURE_MOD_INTRO:
+            return true;
+        case FEATURE_MOD_PURPOSE:
+            return MOD_PURPOSE_COLLABORATION;
+        case FEATURE_BACKUP_MOODLE2:
             return true;
         default:
             return null;
-        case FEATURE_MOD_PURPOSE:
-            return MOD_PURPOSE_COLLABORATION;
     }
 }
 
@@ -83,133 +83,21 @@ function mootimeter_update_instance($moduleinstance, $mform = null) {
 }
 
 /**
- * Removes an instance of the mod_mootimeter from the database.
+ * Deletes a mootimeter instance with all related pages and tool settings.
  *
- * @param int $id Id of the module instance.
- * @return bool True if successful, false on failure.
+ * @param int $id Id of the mootimeter instance.
+ * @return bool true if successful.
  */
 function mootimeter_delete_instance($id) {
     global $DB;
+    $pages = $DB->get_fieldset_sql('SELECT id FROM {mootimeter_pages} WHERE instance = :id', ['id' => $id]);
 
-    $exists = $DB->get_record('mootimeter', array('id' => $id));
-    if (!$exists) {
-        return false;
+    $helper = new \mod_mootimeter\helper();
+    foreach ($pages as $page) {
+        $helper->delete_page($page);
     }
 
-    $DB->delete_records('mootimeter', array('id' => $id));
-
-    return true;
-}
-
-/**
- * Is a given scale used by the instance of mod_mootimeter?
- *
- * This function returns if a scale is being used by one mod_mootimeter
- * if it has support for grading and scales.
- *
- * @param int $moduleinstanceid ID of an instance of this module.
- * @param int $scaleid ID of the scale.
- * @return bool True if the scale is used by the given mod_mootimeter instance.
- */
-function mootimeter_scale_used($moduleinstanceid, $scaleid) {
-    global $DB;
-
-    if ($scaleid && $DB->record_exists('mootimeter', array('id' => $moduleinstanceid, 'grade' => -$scaleid))) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/**
- * Checks if scale is being used by any instance of mod_mootimeter.
- *
- * This is used to find out if scale used anywhere.
- *
- * @param int $scaleid ID of the scale.
- * @return bool True if the scale is used by any mod_mootimeter instance.
- */
-function mootimeter_scale_used_anywhere($scaleid) {
-    global $DB;
-
-    if ($scaleid && $DB->record_exists('mootimeter', array('grade' => -$scaleid))) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/**
- * Creates or updates grade item for the given mod_mootimeter instance.
- *
- * Needed by {@see grade_update_mod_grades()}.
- *
- * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
- * @param bool $reset Reset grades in the gradebook.
- * @return void.
- */
-function mootimeter_grade_item_update($moduleinstance, $reset = false) {
-    global $CFG;
-    require_once($CFG->libdir . '/gradelib.php');
-
-    $item = array();
-    $item['itemname'] = clean_param($moduleinstance->name, PARAM_NOTAGS);
-    $item['gradetype'] = GRADE_TYPE_VALUE;
-
-    if ($moduleinstance->grade > 0) {
-        $item['gradetype'] = GRADE_TYPE_VALUE;
-        $item['grademax']  = $moduleinstance->grade;
-        $item['grademin']  = 0;
-    } else if ($moduleinstance->grade < 0) {
-        $item['gradetype'] = GRADE_TYPE_SCALE;
-        $item['scaleid']   = -$moduleinstance->grade;
-    } else {
-        $item['gradetype'] = GRADE_TYPE_NONE;
-    }
-    if ($reset) {
-        $item['reset'] = true;
-    }
-
-    grade_update('/mod/mootimeter', $moduleinstance->course, 'mod', 'mod_mootimeter', $moduleinstance->id, 0, null, $item);
-}
-
-/**
- * Delete grade item for given mod_mootimeter instance.
- *
- * @param stdClass $moduleinstance Instance object.
- * @return grade_item.
- */
-function mootimeter_grade_item_delete($moduleinstance) {
-    global $CFG;
-    require_once($CFG->libdir . '/gradelib.php');
-
-    return grade_update(
-        '/mod/mootimeter',
-        $moduleinstance->course,
-        'mod',
-        'mootimeter',
-        $moduleinstance->id,
-        0,
-        null,
-        array('deleted' => 1)
-    );
-}
-
-/**
- * Update mod_mootimeter grades in the gradebook.
- *
- * Needed by {@see grade_update_mod_grades()}.
- *
- * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
- * @param int $userid Update grade of specific user only, 0 means all participants.
- */
-function mootimeter_update_grades($moduleinstance, $userid = 0) {
-    global $CFG, $DB;
-    require_once($CFG->libdir . '/gradelib.php');
-
-    // Populate array of grade objects indexed by userid.
-    $grades = array();
-    grade_update('/mod/mootimeter', $moduleinstance->course, 'mod', 'mod_mootimeter', $moduleinstance->id, 0, $grades);
+    return $DB->delete_records('mootimeter', ['id' => $id]);
 }
 
 /**
@@ -227,7 +115,7 @@ function mootimeter_update_grades($moduleinstance, $userid = 0) {
  * @return string[].
  */
 function mootimeter_get_file_areas($course, $cm, $context) {
-    return array();
+    return [];
 }
 
 /**
@@ -265,7 +153,7 @@ function mootimeter_get_file_info($browser, $areas, $course, $cm, $context, $fil
  * @param bool $forcedownload Whether or not force download.
  * @param array $options Additional options affecting the file serving.
  */
-function mootimeter_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
+function mootimeter_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = []) {
     global $DB, $CFG;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -299,9 +187,59 @@ function mootimeter_extend_navigation($mootimeternode, $course, $module, $cm) {
  * @param navigation_node $mootimeternode {@see navigation_node}
  */
 function mootimeter_extend_settings_navigation($settingsnav, $mootimeternode = null) {
+}
 
-    $url = new moodle_url('/mod/mootimeter/teacherview.php', ['id' => $settingsnav->get_page()->cm->id]);
-    $linktext =
-    get_string("teacherview", "mod_mootimeter");
-    $mootimeternode->add($linktext, $url);
+/**
+ * Trigger the course_module viewed event.
+ *
+ * @param object $moduleinstance
+ * @param object $ctx
+ * @param object $course
+ * @return void
+ * @throws coding_exception
+ * @throws ddl_exception
+ */
+function mootimeter_trigger_event_course_module_viewed(object $moduleinstance, object $ctx, object $course): void {
+    $event = \mod_mootimeter\event\course_module_viewed::create(
+        [
+            'objectid' => $moduleinstance->id,
+            'context' => $ctx,
+        ]
+    );
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('mootimeter', $moduleinstance);
+    $event->trigger();
+}
+
+/**
+ * Routing the callbacks for inplace editing to the specific tools.
+ *
+ * @param mixed $itemtype
+ * @param mixed $itemid
+ * @param mixed $newvalue
+ * @return string|void
+ */
+function mootimeter_inplace_editable($itemtype, $itemid, $newvalue) {
+
+    list($pageid, $answerid) = explode("_", $itemid);
+    $instance = \mod_mootimeter\helper::get_instance_by_pageid($pageid);
+    $cm = \mod_mootimeter\helper::get_cm_by_instance($instance);
+    $modulecontext = \context_module::instance($cm->id);
+
+    \core_external\external_api::validate_context($modulecontext);
+
+    list($tool, $type) = explode("_", $itemtype);
+
+    $classname = "\mootimetertool_" . $tool . "\\" . $tool;
+
+    if (!class_exists($classname)) {
+        return "Class '" . $tool . "' is missing in tool " . $tool;
+    }
+
+    $toolhelper = new $classname();
+
+    $inplaceedit = $toolhelper->handle_inplace_edit($type, $itemid, $newvalue);
+    $helper = new \mod_mootimeter\helper();
+    $helper->notify_data_changed($helper->get_page($pageid), 'answers');
+    return $inplaceedit;
 }
