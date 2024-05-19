@@ -5,6 +5,7 @@ import Templates from 'core/templates';
 import {execReloadPagelist as reloadPagelist} from 'mod_mootimeter/reload_pagelist';
 import {getGetParams} from 'mod_mootimeter/utils';
 import {setGetParam} from 'mod_mootimeter/utils';
+import {getMootimeterstate} from 'mod_mootimeter/get_mootimeterstate';
 
 export const init = (uniqueID) => {
 
@@ -77,6 +78,12 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
     }
 
     dataset = JSON.stringify(dataset);
+
+    // Get the most recent timestamps.
+    await getMootimeterstate();
+
+    mtmstate = document.getElementById('mootimeterstate');
+
     const response = await reloadPage(pageid, cmid, dataset);
     if (response.code != 200) {
         Log.error(response.string);
