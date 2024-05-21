@@ -34,12 +34,6 @@ require_course_login($course);
 
 $coursecontext = context_course::instance($course->id);
 
-$event = \mod_mootimeter\event\course_module_instance_list_viewed::create([
-    'context' => $modulecontext,
-]);
-$event->add_record_snapshot('course', $course);
-$event->trigger();
-
 $PAGE->set_url('/mod/mootimeter/index.php', ['id' => $id]);
 $PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
