@@ -29,6 +29,7 @@ namespace mod_mootimeter;
 use coding_exception;
 use cache_exception;
 use dml_exception;
+use stdClass;
 
 /**
  * The toolhelper methods must be implemented of each tool.
@@ -39,7 +40,7 @@ use dml_exception;
  * @author      Peter Mayer <peter.mayer@isb.bayern.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class toolhelper extends \mod_mootimeter\helper {
+abstract class toolhelper extends helper {
 
     /**
      * Get the tools answer column.
@@ -139,6 +140,57 @@ abstract class toolhelper extends \mod_mootimeter\helper {
         }
 
         return false;
+    }
+
+
+    /**
+     * Helper function to add the form definition for this subplugin to the reset userdata form.
+     *
+     * @param \MoodleQuickForm $mform The mform object to use
+     */
+    public function reset_course_form_definition(\MoodleQuickForm $mform): void {
+        $shortclassname = preg_replace('/.*\\\\/', '', get_class($this));
+        $mform->addElement('checkbox', 'reset_mootimetertool_' . $shortclassname . '_answers',
+            get_string('resetuserdata', 'mod_mootimeter',
+                get_string('pluginname', 'mootimetertool_' . $shortclassname)));
+    }
+
+    /**
+     * Defines the form defaults for the course reset form.
+     *
+     * @param stdClass $course the course object
+     * @return array the array of defaults
+     */
+    public function reset_course_form_defaults(stdClass $course): array {
+        $shortclassname = preg_replace('/.*\\\\/', '', get_class($this));
+        return [
+            'reset_mootimetertool_' . $shortclassname . '_answers' => 1,
+        ];
+    }
+
+    /**
+     *
+     * @param stdClass $data The data from the mform submission
+     * @return array array of associative arrays representing the status of the course reset
+     */
+    public function reset_userdata(stdClass $data): array {
+        $shortclassname = preg_replace('/.*\\\\/', '', get_class($this));
+        foreach (get_all_instances_in_course('mootimeter', get_course($data->courseid)) as $instance) {
+            $pages = $this->get_pages($instance->id);
+            $pages = array_filter($pages, fn($page) => $page->tool === $shortclassname);
+            foreach ($pages as $page) {
+                $this->delete_all_answers($this->get_answer_table(), $page->id);
+            }
+        }
+
+        return [
+            [
+                'component' => get_string('pluginname', 'mootimetertool_' . $shortclassname),
+                'item' => get_string('resetuserdata', 'mod_mootimeter',
+                    get_string('pluginname', 'mootimetertool_' . $shortclassname)),
+                'error' => false,
+            ],
+        ];
     }
 
 }
