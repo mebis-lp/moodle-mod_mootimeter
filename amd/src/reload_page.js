@@ -64,6 +64,12 @@ const reloadPage = (
  */
 export const execReloadPage = async(pageid, cmid, dataset) => {
 
+    // Check if the pagereload is locked.
+    var mtmstate = document.getElementById('mootimeterstate');
+    if (mtmstate.dataset.lockpagereload) {
+        return;
+    }
+
     if (!dataset) {
         dataset = getGetParams();
     } else {
@@ -77,8 +83,6 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
     }
 
     if (response.code == 200) {
-
-        var mtmstate = document.getElementById('mootimeterstate');
 
         const pageparmas = JSON.parse(response.pageparams);
 
