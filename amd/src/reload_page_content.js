@@ -21,7 +21,7 @@ export const init = (uniqueID) => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const cmid = urlParams.get('id');
-        execReloadPage(pageid, cmid, this.dataset);
+        execReloadPageContent(pageid, cmid, this.dataset);
     }
 };
 
@@ -32,7 +32,7 @@ export const init = (uniqueID) => {
  * @param {string} dataset
  * @returns {array}
  */
-const reloadPage = (
+const reloadPageContent = (
     pageid,
     cmid,
     dataset
@@ -51,7 +51,7 @@ const reloadPage = (
  * @param {int} cmid
  * @param {array} dataset
  */
-export const execReloadPage = async(pageid, cmid, dataset) => {
+export const execReloadPageContent = async(pageid, cmid, dataset) => {
 
     if (!dataset) {
         dataset = JSON.stringify([]);
@@ -59,7 +59,7 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
         dataset = JSON.stringify(dataset);
     }
 
-    const response = await reloadPage(pageid, cmid, dataset);
+    const response = await reloadPageContent(pageid, cmid, dataset);
 
     if (response.code != 200) {
         Log.error(response.string);

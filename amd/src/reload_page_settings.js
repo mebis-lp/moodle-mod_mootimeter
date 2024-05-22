@@ -3,6 +3,7 @@ import Log from 'core/log';
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 import {execReloadPagelist as reloadPagelist} from 'mod_mootimeter/reload_pagelist';
+import {getMootimeterstate} from 'mod_mootimeter/get_mootimeterstate';
 
 export const init = (uniqueID) => {
 
@@ -57,6 +58,9 @@ const execReloadPage = async(pageid, cmid, dataset) => {
     } else {
         dataset = JSON.stringify(dataset);
     }
+
+    // Get the most recent timestamps.
+    await getMootimeterstate();
 
     const response = await reloadPage(pageid, cmid, dataset);
 
