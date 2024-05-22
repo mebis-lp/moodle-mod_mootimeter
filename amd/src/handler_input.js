@@ -8,6 +8,8 @@ export const init = (uniqueID) => {
         return;
     }
 
+    obj.addEventListener("focusin", mootimeterlockstore);
+
     obj.addEventListener("focusout", mootimeterStoreInput);
 
     /**
@@ -21,7 +23,19 @@ export const init = (uniqueID) => {
         const inputname = obj.dataset.name;
         const inputvalue = document.getElementById(id).value;
         const thisDataset = JSON.stringify(obj.dataset);
+
+        var mtmstate = document.getElementById('mootimeterstate');
+        delete mtmstate.dataset.lockpagereload;
+
         return execStoreInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+    }
+
+    /**
+     * Callback to lock pagereload until focusout event is triggered.
+     */
+    function mootimeterlockstore() {
+        var mtmstate = document.getElementById('mootimeterstate');
+        mtmstate.setAttribute('data-lockpagereload', 1);
     }
 };
 
