@@ -80,7 +80,9 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
     dataset = JSON.stringify(dataset);
 
     // Get the most recent timestamps.
-    await getMootimeterstate();
+    if (pageid != 0) {
+        await getMootimeterstate();
+    }
 
     mtmstate = document.getElementById('mootimeterstate');
 
