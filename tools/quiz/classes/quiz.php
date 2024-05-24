@@ -555,7 +555,7 @@ class quiz extends \mod_mootimeter\toolhelper {
 
         $params['question'] = [
             'mtm-input-id' => 'mtm_input_question',
-            'mtm-input-value' => s(self::get_tool_config($page, 'question')),
+            'mtm-input-value' => clean_param(self::get_tool_config($page, 'question'), PARAM_TEXT),
             'mtm-input-placeholder' => get_string('enter_question', 'mod_mootimeter'),
             'mtm-input-name' => "question",
             'additional_class' => 'mootimeter_settings_selector',
@@ -964,5 +964,4 @@ class quiz extends \mod_mootimeter\toolhelper {
         $params = $this->get_answer_overview($cm, $page);
         return $OUTPUT->render_from_template("mod_mootimeter/answers_overview", $params);
     }
-
 }

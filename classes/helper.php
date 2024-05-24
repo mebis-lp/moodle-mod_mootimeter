@@ -373,7 +373,7 @@ class helper {
         $params = [
             'pageid' => $page->id,
             'cmid' => $cm->id,
-            'question' => s(self::get_tool_config($page, 'question')),
+            'question' => clean_param(self::get_tool_config($page, 'question'), PARAM_TEXT),
             'isediting' => $isediting,
             'withwrapper' => $withwrapper,
             'sp' => [
