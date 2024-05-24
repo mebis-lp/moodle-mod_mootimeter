@@ -283,7 +283,7 @@ function mootimeter_reset_course_form_defaults(stdClass $course): array {
 function mootimeter_reset_userdata(stdClass $data): array {
     $status = [];
 
-    foreach (\mod_mootimeter\plugininfo\mootimetertool::get_enabled_plugins() as $tool) {
+    foreach (array_keys(core_plugin_manager::instance()->get_installed_plugins('mootimetertool')) as $tool) {
         if (empty($data->{'reset_mootimetertool_' . $tool . '_answers'})) {
             continue;
         }

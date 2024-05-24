@@ -169,6 +169,7 @@ abstract class toolhelper extends helper {
     }
 
     /**
+     * Callback function for the form definition of the reset course functionality.
      *
      * @param stdClass $data The data from the mform submission
      * @return array array of associative arrays representing the status of the course reset
