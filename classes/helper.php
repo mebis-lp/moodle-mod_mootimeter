@@ -849,59 +849,35 @@ class helper {
     /**
      * Get the tools config.
      *
-     * @param int|object $pageorid
+     * @param mixed $pageorid
      * @param string $name
+     * @param string $default
      * @return mixed
-     * @throws dml_exception
      */
-    public static function get_tool_config($pageorid, $name = "") {
+    public static function get_tool_config(mixed $pageorid, string $name = '', string $default = '') {
         global $DB;
 
+        $pageid = $pageorid;
         if (is_object($pageorid)) {
-            $pageorid = $pageorid->id;
+            $pageid = $pageorid->id;
         }
 
-        $conditions = ['pageid' => $pageorid];
+        $conditions = ['pageid' => $pageid];
 
         if (!empty($name)) {
             $conditions['name'] = $name;
             $field = $DB->get_field('mootimeter_tool_settings', 'value', $conditions);
             if (is_null($field) || $field === false) {
-                return '';
+                if (!empty($default)) {
+                    $helper = new \mod_mootimeter\helper();
+                    $helper->set_tool_config($pageid, $name, $default);
+                }
+                return $default;
             }
             return $field;
         }
 
         return (object) $DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, value');
-    }
-
-    /**
-     * Get the modified timestamp of setting.
-     *
-     * @param int|object $pageorid
-     * @param string $name
-     * @return mixed
-     * @throws dml_exception
-     */
-    public static function get_tool_config_timemodified(int|object $pageorid, string $name = "") {
-        global $DB;
-
-        if (is_object($pageorid)) {
-            $pageorid = $pageorid->id;
-        }
-
-        $conditions = ['pageid' => $pageorid];
-
-        if (!empty($name)) {
-            $conditions['name'] = $name;
-            $field = $DB->get_field('mootimeter_tool_settings', 'timemodified', $conditions);
-            if (empty($field)) {
-                return "";
-            }
-            return $field;
-        }
-
-        return (object) $DB->get_records_menu('mootimeter_tool_settings', $conditions, '', 'name, timemodified');
     }
 
     /**
