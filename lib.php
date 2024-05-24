@@ -243,3 +243,54 @@ function mootimeter_inplace_editable($itemtype, $itemid, $newvalue) {
     $helper->notify_data_changed($helper->get_page($pageid), 'answers');
     return $inplaceedit;
 }
+
+/**
+ * Callback function for the form definition of the reset course functionality.
+ *
+ * @param MoodleQuickform $mform The mform object to use
+ */
+function mootimeter_reset_course_form_definition(MoodleQuickform $mform): void {
+    $mform->addElement('header', 'mootimeterheader', get_string('pluginnameplural', 'mod_mootimeter'));
+    foreach (\mod_mootimeter\plugininfo\mootimetertool::get_enabled_plugins() as $tool) {
+        $classname = '\mootimetertool_' . $tool . '\\' . $tool;
+        $toolhelper = new $classname();
+        $toolhelper->reset_course_form_definition($mform);
+    }
+}
+
+/**
+ * Callback function to define the course reset form defaults.
+ *
+ * @param stdClass $course The course object
+ */
+function mootimeter_reset_course_form_defaults(stdClass $course): array {
+    $defaults = [];
+    foreach (\mod_mootimeter\plugininfo\mootimetertool::get_enabled_plugins() as $tool) {
+        $classname = '\mootimetertool_' . $tool . '\\' . $tool;
+        $toolhelper = new $classname();
+        $defaults = array_merge($defaults, $toolhelper->reset_course_form_defaults($course));
+    }
+    return $defaults;
+}
+
+
+/**
+ * Callback function for resetting the user data in a course.
+ *
+ * @param stdClass $data the data submitted by the related mform
+ * @return array array of associative arrays representing the status of the performed actions
+ */
+function mootimeter_reset_userdata(stdClass $data): array {
+    $status = [];
+
+    foreach (array_keys(core_plugin_manager::instance()->get_installed_plugins('mootimetertool')) as $tool) {
+        if (empty($data->{'reset_mootimetertool_' . $tool . '_answers'})) {
+            continue;
+        }
+        $classname = '\mootimetertool_' . $tool . '\\' . $tool;
+        $toolhelper = new $classname();
+        // If we get to this point, no exception has occured, so we are pretty confident that everyting went well.
+        $status = array_merge($status, $toolhelper->reset_userdata($data));
+    }
+    return $status;
+}
