@@ -12,7 +12,7 @@
   max-width: unset;
   height: 100vh;
   overflow: auto;
-  z-index: 99999;
+  z-index: 1051;
 }
 @media screen and (min-width: 680px) {
   .mootimetercontainer.fullscreen .mootimetercolpages,
@@ -876,8 +876,7 @@
   border-radius: 3.125rem;
   border: 0.125rem solid #a4a5ac;
   -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   outline: none;
   cursor: pointer;
   background-color: unset;
