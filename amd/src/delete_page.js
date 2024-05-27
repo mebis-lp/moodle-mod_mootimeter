@@ -18,9 +18,12 @@ export const init = async(id) => {
         execDeletePage(pageid);
     });
 
-    document.getElementById(id).addEventListener('click', () => {
-        modal.show();
-    });
+    const element = document.getElementById(id);
+    if (element) {
+        element.addEventListener('click', () => {
+            modal.show();
+        });
+    }
 
     /**
      * Call to store input value
