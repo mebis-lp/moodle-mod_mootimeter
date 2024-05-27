@@ -50,8 +50,8 @@ class store_setting extends external_api {
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'inputname' => new external_value(PARAM_RAW, 'The name of the input to store.', VALUE_REQUIRED),
-            'inputvalue' => new external_value(PARAM_RAW, 'The value of the input to store.', VALUE_REQUIRED),
+            'inputname' => new external_value(PARAM_TEXT, 'The name of the input to store.', VALUE_REQUIRED),
+            'inputvalue' => new external_value(PARAM_TEXT, 'The value of the input to store.', VALUE_REQUIRED),
             'thisDataset' => new external_value(PARAM_RAW, 'The value of the input to store.', VALUE_REQUIRED),
         ]);
     }

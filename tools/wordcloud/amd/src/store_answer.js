@@ -3,6 +3,7 @@ import {execReloadPage as reloadPage} from 'mod_mootimeter/reload_page';
 import {renderInfoBox} from 'mod_mootimeter/utils';
 import {removeInfoBox} from 'mod_mootimeter/utils';
 import {delay} from 'mod_mootimeter/utils';
+import {exception as displayException} from 'core/notification';
 
 export const init = (inputid, enterid) => {
 
@@ -63,8 +64,12 @@ const storeAnswer = async(pageid, answer, inputid) => {
 
     // Disable the input field until the page is refreshed.
     document.getElementById(inputid).disabled = true;
-
-    const response = await execStoreAnswer(pageid, answer);
+    let response = null;
+    try {
+        response = await execStoreAnswer(pageid, answer);
+    } catch (err) {
+        displayException(err);
+    }
 
     const infoboxid = "mtmt_answer_warning";
 

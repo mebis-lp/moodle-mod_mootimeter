@@ -62,7 +62,14 @@ const storeAnswer = async(pageid, selectedanswerids) => {
     selectedanswerids = JSON.stringify(selectedanswerids);
 
     const successString = await getString('notification_success_store_answer', 'mod_mootimeter');
-    const response = await execStoreAnswer(pageid, selectedanswerids);
+    let response = null;
+    // We need to also catch exceptions here, because we could have invalid parameters exception which will not even
+    // make it to a valid response.
+    try {
+        response = await execStoreAnswer(pageid, selectedanswerids);
+    } catch (err) {
+        displayException(err);
+    }
 
     if (response.code == 1000 || response.code == 1001 || response.code == 1002) {
         renderInfoBox("warning", response.string, "fa-exclamation");

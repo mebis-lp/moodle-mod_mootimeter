@@ -48,7 +48,7 @@ class store_answer extends external_api {
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
-            'answer' => new external_value(PARAM_RAW, 'The answer the user entered.', VALUE_REQUIRED),
+            'answer' => new external_value(PARAM_TEXT, 'The answer the user entered.', VALUE_REQUIRED),
         ]);
     }
 

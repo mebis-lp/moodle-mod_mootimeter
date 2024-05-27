@@ -47,7 +47,7 @@ class get_pagecontentparams extends external_api {
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'pageid' => new external_value(PARAM_RAW, 'pageid to be active', VALUE_REQUIRED),
+            'pageid' => new external_value(PARAM_INT, 'pageid to be active', VALUE_REQUIRED),
             'cmid' => new external_value(PARAM_INT, 'The coursemodule id.', VALUE_REQUIRED),
             'dataset' => new external_value(PARAM_RAW, 'The dataset of the button clicked', VALUE_REQUIRED),
         ]);
