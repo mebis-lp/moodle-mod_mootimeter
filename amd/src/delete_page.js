@@ -41,12 +41,14 @@ export const init = async(id) => {
      * @param {int} pageid
      */
     const execDeletePage = async(pageid) => {
+        var mtmstate = document.getElementById('mootimeterstate');
         const response = await deletePageCall(pageid);
         if (response.code != 200) {
             Log.error(response.string);
             return;
         }
         removeGetParam('pageid', window.location.href);
+        mtmstate.setAttribute('data-pageid', 0);
         reloadPage(0, response.cmid);
     };
 };
