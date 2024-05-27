@@ -80,6 +80,9 @@ class quiz extends \mod_mootimeter\toolhelper {
     /** @var int Visualization id for pie chart */
     const VISUALIZATION_ID_CHART_PIE = 4;
 
+    /** @var int Default value of maximum count of answers */
+    const MAXANSWERSDEFAULT = 1;
+
     /** @var Answer cloum */
     const MTMT_VIEW_RESULT_TEACHERPERMISSION = 2;
 
@@ -448,7 +451,7 @@ class quiz extends \mod_mootimeter\toolhelper {
         ));
 
         $inputtype = 'cb';
-        if (intval(self::get_tool_config($page->id, 'maxanswersperuser')) === 1) {
+        if (intval(self::get_tool_config($page->id, 'maxanswersperuser', self::MAXANSWERSDEFAULT)) === 1) {
             $inputtype = 'rb';
         }
         foreach ($answeroptions as $answeroption) {
@@ -644,14 +647,11 @@ class quiz extends \mod_mootimeter\toolhelper {
             ],
         ];
 
-        $maxanswers = self::get_tool_config($page->id, "maxanswersperuser");
-        if (empty($maxanswers) && !is_number($maxanswers)) {
-            // Empty also evaluates to true if $maxanswers equals "0", so we have to check that separately.
-            // If not specified set default value.
-            $maxanswers = 1;
-        } else {
+        $maxanswers = self::get_tool_config($page->id, "maxanswersperuser", self::MAXANSWERSDEFAULT);
+        if (!is_number($maxanswers)) {
             $maxanswers = intval($maxanswers);
         }
+
         $params['maxanswers'] = [
             'title' => get_string('answers_max_number', 'mootimetertool_quiz'),
             'additional_class' => 'mootimeter_settings_selector',
