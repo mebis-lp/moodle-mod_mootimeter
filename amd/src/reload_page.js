@@ -113,7 +113,9 @@ export const execReloadPage = async(pageid, cmid, dataset) => {
             !mtmstate.dataset.pagecontentmenuchangedat_prev
             || mtmstate.dataset.pagecontentmenuchangedat_prev != mtmstate.settingschangedat
         ) {
-            reloadContentMenu(pageparmas.contentmenu);
+            if (pageparmas.contentmenu) {
+                reloadContentMenu(pageparmas.contentmenu);
+            }
         }
 
         if (

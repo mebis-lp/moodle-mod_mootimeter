@@ -52,7 +52,7 @@ class store_answeroption extends external_api {
         return new external_function_parameters([
             'pageid' => new external_value(PARAM_INT, 'The page id to obtain results for.', VALUE_REQUIRED),
             'aoid' => new external_value(PARAM_INT, 'The id of the answer option.', VALUE_REQUIRED),
-            'value' => new external_value(PARAM_RAW, 'The text value of the answer option.', VALUE_REQUIRED),
+            'value' => new external_value(PARAM_TEXT, 'The text value of the answer option.', VALUE_REQUIRED),
             'id' => new external_value(PARAM_RAW, 'The inputs id.', VALUE_REQUIRED),
         ]);
     }

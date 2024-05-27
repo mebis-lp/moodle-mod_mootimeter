@@ -1,5 +1,6 @@
 import {call as fetchMany} from 'core/ajax';
 import Log from 'core/log';
+import {exception as displayException} from 'core/notification';
 
 export const init = (uniqueID) => {
     const obj = document.getElementById(uniqueID);
@@ -73,7 +74,12 @@ const storeInputValue = (
  * @param {string} thisDataset
  */
 const execStoreInputValue = async(ajaxmethode, pageid, inputname, inputvalue, thisDataset) => {
-    const response = await storeInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+    let response = null;
+    try {
+        response = await storeInputValue(ajaxmethode, pageid, inputname, inputvalue, thisDataset);
+    } catch (err) {
+        displayException(err);
+    }
     if (response.code != 200) {
         Log.error(response.string);
     }

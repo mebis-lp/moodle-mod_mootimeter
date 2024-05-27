@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['add_question_option'] = "Antwortmöglichkeit hinzufügen";
 $string['answeroptions'] = "Antwortmöglichkeiten";
-$string['answers_max_number'] = 'Maximale Anzahl von Antworten die pro Teilnehmer ausgewählt werden können (0: unbegrenzt)';
+$string['answers_max_number'] = 'Maximale Anzahl an Antwortmöglichkeiten, die ein Teilnehmer auswählen kann (0: unbegrenzt)';
 $string['atleastoneanswer'] = 'Sie müssen mindestens eine Antwortoption auswählen';
 $string['enter_answeroption'] = 'Bitte eine Antwortoption eingeben.';
 $string['error_to_many_answers'] = 'Sie haben zu viele Antworten ausgewählt. Sie können nur {$a} Optionen auswählen.';
