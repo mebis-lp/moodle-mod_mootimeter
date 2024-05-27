@@ -1,5 +1,6 @@
 import { call as fetchMany } from 'core/ajax';
 import WordCloud from 'mootimetertool_wordcloud/wordcloud2';
+import {getMootimeterstate} from "mod_mootimeter/get_mootimeterstate";
 
 export const init = (id) => {
 
@@ -71,6 +72,7 @@ const getAnswers = async (id) => {
         return;
     }
 
+    await getMootimeterstate();
     // Get the answer list.
     const response = await execGetAnswers(pageid);
 
@@ -78,10 +80,10 @@ const getAnswers = async (id) => {
     mtmstate.setAttribute('data-wclastupdated', mtmstate.dataset.contentchangedat);
 
     // Redraw wordcloud.
-    document.getElementById(id).setAttribute('data-answers', JSON.stringify(response.answerlist));
-    redrawwordcloud(id);
-
-    return;
+    if (document.getElementById(id)) {
+        document.getElementById(id).setAttribute('data-answers', JSON.stringify(response.answerlist));
+        redrawwordcloud(id);
+    }
 };
 
 /**
