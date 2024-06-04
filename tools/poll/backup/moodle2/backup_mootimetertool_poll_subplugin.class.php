@@ -16,12 +16,12 @@
 
 /**
  * Backup definition for this tool
- * @package     mootimetertool_wordcloud
- * @copyright   2023, ISB Bayern
+ * @package     mootimetertool_poll
+ * @copyright   2024, ISB Bayern
  * @author      Stefan Hanauska <stefan.hanauska@csg-in.de>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class backup_mootimetertool_wordcloud_subplugin extends backup_subplugin {
+class backup_mootimetertool_poll_subplugin extends backup_subplugin {
 
     /**
      * Returns the nested structure of this content type
@@ -37,11 +37,20 @@ class backup_mootimetertool_wordcloud_subplugin extends backup_subplugin {
             $subpluginwordcloudanswers = new backup_nested_element(
                 'mootimetertool_wordcloud_answers',
                 ['id'],
-                ['pageid', 'usermodified', 'answer', 'timecreated', 'timemodified']
+                ['pageid', 'usermodified', 'optionid', 'timecreated', 'timemodified']
             );
             $subpluginwordcloudanswers->set_source_table('mootimetertool_wordcloud_answers', ['pageid' => backup::VAR_PARENTID]);
             $subpluginwrapper->add_child($subpluginwordcloudanswers);
         }
+
+        $subpluginpolloptions = new backup_nested_element(
+            'mootimetertool_poll_options',
+            ['id'],
+            ['pageid', 'optiontext', 'timecreated', 'timemodified']
+        );
+        $subpluginpolloptions->set_source_table('mootimetertool_poll_options', ['pageid' => backup::VAR_PARENTID]);
+        $subpluginwrapper->add_child($subpluginpolloptions);
+
         return $subplugin;
     }
 }
