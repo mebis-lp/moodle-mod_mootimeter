@@ -30,11 +30,11 @@ class mod_mootimeter_generator extends testing_module_generator {
     /**
      * Creates an instance of a mootimeter.
      *
-     * @param array $record
-     * @param array|null $options
+     * @param ?array $record
+     * @param ?array $options
      * @return stdClass mootimeter instance
      */
-    public function create_instance($record = null, array $options = null): stdClass {
+    public function create_instance($record = null, ?array $options = null): stdClass {
 
         $newrecord = [];
         $newrecord['name'] = (empty($record['name'])) ? 'Test Mootimeter' : $record['name'];
