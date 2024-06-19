@@ -338,7 +338,7 @@ class wordcloud extends \mod_mootimeter\toolhelper {
 
         $params['button_answer'] = [
             'mtm-button-id' => 'mootimeter_enter_answer',
-            'mtm-button-text' => 'Senden',
+            'mtm-button-text' => get_string('submit', 'mootimetertool_wordcloud'),
         ];
 
         return $params;
