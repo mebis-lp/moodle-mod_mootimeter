@@ -43,52 +43,6 @@ function xmldb_mootimetertool_quiz_upgrade($oldversion) {
     //
     // You will also have to create the db/install.xml file by using the XMLDB Editor.
     // Documentation for the XMLDB Editor can be found at {@link https://docs.moodle.org/dev/XMLDB_editor}.
-    if ($oldversion < 2023060801) {
-
-        mootimetertool_quiz_create_tables();
-
-        // Quiz savepoint reached.
-        upgrade_plugin_savepoint(true, 2023060801, 'mootimetertool', 'quiz');
-    }
-
-    if ($oldversion < 2023061400) {
-
-        mootimeter_quiz_add_field_optioniscorrect();
-
-        // Quiz savepoint reached.
-        upgrade_plugin_savepoint(true, 2023061400, 'mootimetertool', 'quiz');
-    }
-
-    if ($oldversion < 2023101600) {
-
-        // Define field usermodified to be dropped from mtmt_quiz_options.
-        $table = new xmldb_table('mtmt_quiz_options');
-        $field = new xmldb_field('usermodified');
-
-        // Conditionally launch drop field usermodified.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->drop_field($table, $field);
-        }
-
-        // Quiz savepoint reached.
-        upgrade_plugin_savepoint(true, 2023101600, 'mootimetertool', 'quiz');
-    }
-
-    if ($oldversion < 2024030600) {
-
-        // Define table mtmt_quiz_options to be renamed to mootimetertool_quiz_options.
-        $table = new xmldb_table('mtmt_quiz_options');
-        // Launch rename table for mootimetertool_quiz_options.
-        $dbman->rename_table($table, 'mootimetertool_quiz_options');
-
-        // Define table mtmt_quiz_answers to be renamed to mootimetertool_quiz_answers.
-        $table = new xmldb_table('mtmt_quiz_answers');
-        // Launch rename table for mootimetertool_quiz_answers.
-        $dbman->rename_table($table, 'mootimetertool_quiz_answers');
-
-        // Quiz savepoint reached.
-        upgrade_plugin_savepoint(true, 2024030600, 'mootimetertool', 'quiz');
-    }
 
     return true;
 }

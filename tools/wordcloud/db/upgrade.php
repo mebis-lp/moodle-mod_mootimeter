@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__.'/upgradelib.php');
+require_once($CFG. '/mod/mootimeter/tools/wordcloud/db/upgradelib.php');
 
 /**
  * Execute mootimetertool_wordcloud upgrade from the given old version.
@@ -43,25 +43,6 @@ function xmldb_mootimetertool_wordcloud_upgrade($oldversion) {
     //
     // You will also have to create the db/install.xml file by using the XMLDB Editor.
     // Documentation for the XMLDB Editor can be found at {@link https://docs.moodle.org/dev/XMLDB_editor}.
-
-    if ($oldversion < 2023040601) {
-
-        mootimetertool_wordcloud_create_tables();
-
-        // Mootimeter savepoint reached.
-        upgrade_plugin_savepoint(true, 2023040601, 'mootimetertool', 'wordcloud');
-    }
-
-    if ($oldversion < 2024030600) {
-
-        // Define table mtmt_wordcloud_answers to be renamed to mootimetertool_wordcloud_answers.
-        $table = new xmldb_table('mtmt_wordcloud_answers');
-        // Launch rename table for mootimetertool_wordcloud_answers.
-        $dbman->rename_table($table, 'mootimetertool_wordcloud_answers');
-
-        // Wordcloud savepoint reached.
-        upgrade_plugin_savepoint(true, 2024030600, 'mootimetertool', 'wordcloud');
-    }
 
     return true;
 }

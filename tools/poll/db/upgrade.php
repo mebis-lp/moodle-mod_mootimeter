@@ -38,22 +38,5 @@ function xmldb_mootimetertool_poll_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2024030600) {
-
-        // Define table mtmt_poll_options to be renamed to mootimetertool_poll_options.
-        $table = new xmldb_table('mtmt_poll_options');
-        // Launch rename table for mootimetertool_poll_options.
-        $dbman->rename_table($table, 'mootimetertool_poll_options');
-
-        // Define table mtmt_poll_answers to be renamed to mootimetertool_poll_answers.
-        $table = new xmldb_table('mtmt_poll_answers');
-        // Launch rename table for mootimetertool_poll_answers.
-        $dbman->rename_table($table, 'mootimetertool_poll_answers');
-
-        // Poll savepoint reached.
-        upgrade_plugin_savepoint(true, 2024030600, 'mootimetertool', 'poll');
-
-    }
-
     return true;
 }
