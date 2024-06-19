@@ -40,5 +40,6 @@ $string['privacy:answerspath'] = 'Antworten';
 $string['show_results'] = 'Show result wordcloud';
 $string['showresultlive'] = 'Show results live';
 $string['showresultteacherpermission'] = 'Show results on teacher permission';
+$string['submit'] = 'Submit';
 $string['tool_description_short'] = "Collect words or statements live";
 $string['type_answer'] = 'Insert a word or statement and hit Enter.';
