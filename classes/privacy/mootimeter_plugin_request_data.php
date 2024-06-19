@@ -57,10 +57,10 @@ class mootimeter_plugin_request_data {
      *
      * @param \context $context Context object.
      * @param object $page The Mootimeter object.
-     * @param object $user The user object.
+     * @param ?object $user The user object.
      * @param array  $subcontext
      */
-    public function __construct(\context $context, object $page, object $user = null, array $subcontext = []) {
+    public function __construct(\context $context, object $page, ?object $user = null, array $subcontext = []) {
         $this->context = $context;
         $this->page = $page;
         if ($user == null) {
