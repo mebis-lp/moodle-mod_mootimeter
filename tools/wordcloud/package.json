@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "wordcloud": "^1.2.2"
+    "wordcloud": "^1.2.3"
   },
   "eslintIgnore": [
     "amd/src/wordcloud2.js"
