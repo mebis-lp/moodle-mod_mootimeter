@@ -52,7 +52,7 @@ $string['modulename_help'] = 'The Mootimeter activity allows your students to pa
 <ul>
     <li>Poll: Your learners respond directly to one or more questions.</li>
     <li>Quiz: Live quiz which allows you to show users the correct answers afterwards.</li>
-    <li>Worldcloud: Appears immediately after the terms are entered.</li>
+    <li>Wordcloud: Appears immediately after the terms are entered.</li>
 </ul>';
 $string['modulenameplural'] = 'Mootimeter';
 $string['mootimeter:addinstance'] = 'Add mootimeter activity';
