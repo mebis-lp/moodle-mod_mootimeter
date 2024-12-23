@@ -27,7 +27,7 @@ class backup_mootimetertool_wordcloud_subplugin extends backup_subplugin {
      * Returns the nested structure of this content type
      * @return \backup_subplugin_element
      */
-    protected function define_mootimeter_subplugin_structure() {
+    protected function define_mootimeter_page_structure() {
         $subplugin = $this->get_subplugin_element();
         $userinfo = $this->get_setting_value('userinfo');
         $subpluginwrapper = new backup_nested_element($this->get_recommended_name());
@@ -39,8 +39,8 @@ class backup_mootimetertool_wordcloud_subplugin extends backup_subplugin {
                 ['id'],
                 ['pageid', 'usermodified', 'answer', 'timecreated', 'timemodified']
             );
-            $subpluginwordcloudanswers->set_source_table('mootimetertool_wordcloud_answers', ['pageid' => backup::VAR_PARENTID]);
             $subpluginwrapper->add_child($subpluginwordcloudanswers);
+            $subpluginwordcloudanswers->set_source_table('mootimetertool_wordcloud_answers', ['pageid' => backup::VAR_PARENTID]);
         }
         return $subplugin;
     }

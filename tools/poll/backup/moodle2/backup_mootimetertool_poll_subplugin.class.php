@@ -27,20 +27,20 @@ class backup_mootimetertool_poll_subplugin extends backup_subplugin {
      * Returns the nested structure of this content type
      * @return \backup_subplugin_element
      */
-    protected function define_mootimeter_subplugin_structure() {
+    protected function define_page_subplugin_structure() {
         $subplugin = $this->get_subplugin_element();
         $userinfo = $this->get_setting_value('userinfo');
         $subpluginwrapper = new backup_nested_element($this->get_recommended_name());
         $subplugin->add_child($subpluginwrapper);
 
         if ($userinfo) {
-            $subpluginwordcloudanswers = new backup_nested_element(
-                'mootimetertool_wordcloud_answers',
+            $subpluginpollanswers = new backup_nested_element(
+                'mootimetertool_poll_answers',
                 ['id'],
                 ['pageid', 'usermodified', 'optionid', 'timecreated', 'timemodified']
             );
-            $subpluginwordcloudanswers->set_source_table('mootimetertool_wordcloud_answers', ['pageid' => backup::VAR_PARENTID]);
-            $subpluginwrapper->add_child($subpluginwordcloudanswers);
+            $subpluginwrapper->add_child($subpluginpollanswers);
+            $subpluginpollanswers->set_source_table('mootimetertool_poll_answers', ['pageid' => backup::VAR_PARENTID]);
         }
 
         $subpluginpolloptions = new backup_nested_element(
@@ -48,8 +48,8 @@ class backup_mootimetertool_poll_subplugin extends backup_subplugin {
             ['id'],
             ['pageid', 'optiontext', 'timecreated', 'timemodified']
         );
-        $subpluginpolloptions->set_source_table('mootimetertool_poll_options', ['pageid' => backup::VAR_PARENTID]);
         $subpluginwrapper->add_child($subpluginpolloptions);
+        $subpluginpolloptions->set_source_table('mootimetertool_poll_options', ['pageid' => backup::VAR_PARENTID]);
 
         return $subplugin;
     }

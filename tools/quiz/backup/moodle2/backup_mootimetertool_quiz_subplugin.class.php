@@ -27,7 +27,7 @@ class backup_mootimetertool_quiz_subplugin extends backup_subplugin {
      * Returns the nested structure of this content type
      * @return \backup_subplugin_element
      */
-    protected function define_mootimeter_subplugin_structure() {
+    protected function define_page_subplugin_structure() {
         $userinfo = $this->get_setting_value('userinfo');
 
         $subplugin = $this->get_subplugin_element();
@@ -47,8 +47,8 @@ class backup_mootimetertool_quiz_subplugin extends backup_subplugin {
                 ['id'],
                 ['pageid', 'usermodified', 'optionid', 'timecreated', 'timemodified']
             );
-            $subpluginquizanswers->set_source_table('mootimetertool_quiz_answers', ['pageid' => backup::VAR_PARENTID]);
             $subpluginwrapper->add_child($subpluginquizanswers);
+            $subpluginquizanswers->set_source_table('mootimetertool_quiz_answers', ['pageid' => backup::VAR_PARENTID]);
         }
 
         return $subplugin;
