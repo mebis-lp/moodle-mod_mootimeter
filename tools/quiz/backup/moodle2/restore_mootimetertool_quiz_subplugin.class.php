@@ -27,7 +27,7 @@ class restore_mootimetertool_quiz_subplugin extends restore_subplugin {
      * Returns the paths to be handled by the subplugin at mootimeter level
      * @return array
      */
-    protected function define_mootimeter_subplugin_structure() {
+    protected function define_page_subplugin_structure() {
         $paths = [];
 
         $elepath = $this->get_pathfor('/mootimetertool_quiz_options');
@@ -44,13 +44,13 @@ class restore_mootimetertool_quiz_subplugin extends restore_subplugin {
      * @param array $data
      * @return void
      */
-    public function process_mootimetertool_quiz_options($data) {
+    public function process_quiz_options($data) {
         global $DB;
 
         $data = (object)$data;
         $oldid = $data->id;
 
-        $data->pageid = $this->get_new_parentid('mootimeter_page');
+        $data->pageid = $this->get_new_parentid($this->get_namefor('page'));
 
         $newitemid = $DB->insert_record('mootimetertool_quiz_options', $data);
         $this->set_mapping($this->get_namefor(), $oldid, $newitemid, true);
@@ -61,12 +61,12 @@ class restore_mootimetertool_quiz_subplugin extends restore_subplugin {
      * @param array $data
      * @return void
      */
-    public function process_mootimetertool_quiz_answers($data) {
+    public function process_quiz_answers($data) {
         global $DB;
 
         $data = (object)$data;
         $oldid = $data->id;
-        $data->pageid = $this->get_new_parentid('mootimeter_page');
+        $data->pageid = $this->get_new_parentid($this->get_namefor('page'));
         $data->usermodified = $this->get_mappingid('user', $data->usermodified, 0);
         $newitemid = $DB->insert_record('mootimetertool_quiz_answers', $data);
         $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);

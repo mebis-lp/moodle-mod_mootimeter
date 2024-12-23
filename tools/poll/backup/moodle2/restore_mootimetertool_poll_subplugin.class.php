@@ -27,7 +27,7 @@ class restore_mootimetertool_poll_subplugin extends restore_subplugin {
      * Returns the paths to be handled by the subplugin at mootimeter level
      * @return array
      */
-    protected function define_mootimeter_subplugin_structure() {
+    protected function define_page_subplugin_structure() {
         $paths = [];
 
         $elepath = $this->get_pathfor('/mootimetertool_poll_answers');
@@ -48,7 +48,7 @@ class restore_mootimetertool_poll_subplugin extends restore_subplugin {
 
         $data = (object)$data;
         $oldid = $data->id;
-        $data->pageid = $this->get_new_parentid('mootimeter_page');
+        $data->pageid = $this->get_new_parentid($this->get_namefor('page'));
         $data->usermodified = $this->get_mappingid('user', $data->usermodified, 0);
         $newitemid = $DB->insert_record('mootimetertool_poll_answers', $data);
         $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);
@@ -64,7 +64,7 @@ class restore_mootimetertool_poll_subplugin extends restore_subplugin {
 
         $data = (object)$data;
         $oldid = $data->id;
-        $data->pageid = $this->get_new_parentid('mootimeter_page');
+        $data->pageid = $this->get_new_parentid($this->get_namefor('page'));
         $newitemid = $DB->insert_record('mootimetertool_poll_options', $data);
         $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);
     }

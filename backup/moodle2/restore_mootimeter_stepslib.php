@@ -34,8 +34,19 @@ class restore_mootimeter_activity_structure_step extends restore_activity_struct
         $paths = [];
         $paths[] = new restore_path_element('mootimeter', '/activity/mootimeter');
 
-        $paths[] = new restore_path_element('page', '/activity/mootimeter/pages/page');
+        $page = new restore_path_element('page', '/activity/mootimeter/pages/page');
+        $paths[] = $page;
         $paths[] = new restore_path_element('tool_setting', '/activity/mootimeter/pages/page/tool_settings/tool_setting');
+
+        $this->add_subplugin_structure('mootimetertool', $page);
+
+        // To know if we are including userinfo.
+        $userinfo = $this->get_setting_value('userinfo');
+
+        if ($userinfo) {
+            $paths[] = new restore_path_element('poll_answers',
+                                                   '/activity/mootimeter/pages/page/???');
+        }
 
         return $this->prepare_activity_structure($paths);
     }
@@ -96,5 +107,15 @@ class restore_mootimeter_activity_structure_step extends restore_activity_struct
 
         $newid = $DB->insert_record('mootimeter_tool_settings', $data);
         $this->set_mapping('mootimeter_tool_settings_id', $oldid, $newid);
+    }
+
+    /**
+     * After restoring this instance restore related files too.
+     *
+     * @return void
+     */
+    protected function after_execute() {
+        // Add mootimeter related files, no need to match by itemname (just internally handled context).
+        $this->add_related_files('mod_mootimeter', 'intro', null);
     }
 }
