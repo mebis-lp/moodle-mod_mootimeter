@@ -45,10 +45,8 @@ class restore_mootimetertool_wordcloud_subplugin extends restore_subplugin {
         global $DB;
 
         $data = (object)$data;
-        $oldid = $data->id;
-        $data->pageid = $this->get_new_parentid($this->get_namefor('page'));
+        $data->pageid = $this->get_mappingid('mootimeter_page_id', $data->pageid);
         $data->usermodified = $this->get_mappingid('user', $data->usermodified, 0);
-        $newitemid = $DB->insert_record('mootimetertool_wordcloud_answers', $data);
-        $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);
+        $DB->insert_record('mootimetertool_wordcloud_answers', $data);
     }
 }

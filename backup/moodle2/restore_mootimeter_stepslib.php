@@ -40,14 +40,6 @@ class restore_mootimeter_activity_structure_step extends restore_activity_struct
 
         $this->add_subplugin_structure('mootimetertool', $page);
 
-        // To know if we are including userinfo.
-        $userinfo = $this->get_setting_value('userinfo');
-
-        if ($userinfo) {
-            $paths[] = new restore_path_element('poll_answers',
-                                                   '/activity/mootimeter/pages/page/???');
-        }
-
         return $this->prepare_activity_structure($paths);
     }
 

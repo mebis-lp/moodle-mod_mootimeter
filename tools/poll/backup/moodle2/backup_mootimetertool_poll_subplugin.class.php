@@ -33,6 +33,14 @@ class backup_mootimetertool_poll_subplugin extends backup_subplugin {
         $subpluginwrapper = new backup_nested_element($this->get_recommended_name());
         $subplugin->add_child($subpluginwrapper);
 
+        $subpluginpolloptions = new backup_nested_element(
+            'mootimetertool_poll_options',
+            ['id'],
+            ['pageid', 'optiontext', 'timecreated', 'timemodified']
+        );
+        $subpluginwrapper->add_child($subpluginpolloptions);
+        $subpluginpolloptions->set_source_table('mootimetertool_poll_options', ['pageid' => backup::VAR_PARENTID]);
+
         if ($userinfo) {
             $subpluginpollanswers = new backup_nested_element(
                 'mootimetertool_poll_answers',
@@ -42,14 +50,6 @@ class backup_mootimetertool_poll_subplugin extends backup_subplugin {
             $subpluginwrapper->add_child($subpluginpollanswers);
             $subpluginpollanswers->set_source_table('mootimetertool_poll_answers', ['pageid' => backup::VAR_PARENTID]);
         }
-
-        $subpluginpolloptions = new backup_nested_element(
-            'mootimetertool_poll_options',
-            ['id'],
-            ['pageid', 'optiontext', 'timecreated', 'timemodified']
-        );
-        $subpluginwrapper->add_child($subpluginpolloptions);
-        $subpluginpolloptions->set_source_table('mootimetertool_poll_options', ['pageid' => backup::VAR_PARENTID]);
 
         return $subplugin;
     }

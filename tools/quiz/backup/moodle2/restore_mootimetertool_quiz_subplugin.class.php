@@ -49,11 +49,9 @@ class restore_mootimetertool_quiz_subplugin extends restore_subplugin {
 
         $data = (object)$data;
         $oldid = $data->id;
-
-        $data->pageid = $this->get_new_parentid($this->get_namefor('page'));
-
-        $newitemid = $DB->insert_record('mootimetertool_quiz_options', $data);
-        $this->set_mapping($this->get_namefor(), $oldid, $newitemid, true);
+        $data->pageid = $this->get_mappingid('mootimeter_page_id', $data->pageid);
+        $newid = $DB->insert_record('mootimetertool_quiz_options', $data);
+        $this->set_mapping('mootimetertool_quiz_options', $oldid, $newid);
     }
 
     /**
@@ -65,10 +63,9 @@ class restore_mootimetertool_quiz_subplugin extends restore_subplugin {
         global $DB;
 
         $data = (object)$data;
-        $oldid = $data->id;
-        $data->pageid = $this->get_new_parentid($this->get_namefor('page'));
+        $data->pageid = $this->get_mappingid('mootimeter_page_id', $data->pageid);
+        $data->optionid = $this->get_mappingid('mootimetertool_quiz_options', $data->optionid);
         $data->usermodified = $this->get_mappingid('user', $data->usermodified, 0);
-        $newitemid = $DB->insert_record('mootimetertool_quiz_answers', $data);
-        $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);
+        $DB->insert_record('mootimetertool_quiz_answers', $data);
     }
 }
