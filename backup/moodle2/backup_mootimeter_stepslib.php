@@ -45,8 +45,7 @@ class backup_mootimeter_activity_structure_step extends backup_activity_structur
         );
         $mootimeter->add_child($pages);
         $pages->add_child($page);
-        $this->add_subplugin_structure('mootimetertool', $page, false);
-        $page->set_source_table('mootimeter_pages', ['instance' => backup::VAR_PARENTID]);
+        $page->set_source_table('mootimeter_pages', ['instance' => backup::VAR_ACTIVITYID]);
 
         $toolsettings = new backup_nested_element('tool_settings');
         $toolsetting = new backup_nested_element(
@@ -57,6 +56,8 @@ class backup_mootimeter_activity_structure_step extends backup_activity_structur
         $page->add_child($toolsettings);
         $toolsettings->add_child($toolsetting);
         $toolsetting->set_source_table('mootimeter_tool_settings', ['pageid' => backup::VAR_PARENTID]);
+
+        $this->add_subplugin_structure('mootimetertool', $page, true);
 
         return $this->prepare_activity_structure($mootimeter);
     }

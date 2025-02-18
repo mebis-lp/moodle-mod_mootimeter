@@ -27,13 +27,13 @@ class restore_mootimetertool_poll_subplugin extends restore_subplugin {
      * Returns the paths to be handled by the subplugin at mootimeter level
      * @return array
      */
-    protected function define_mootimeter_subplugin_structure() {
+    protected function define_page_subplugin_structure() {
         $paths = [];
 
-        $elepath = $this->get_pathfor('/mootimetertool_poll_answers');
-        $paths[] = new restore_path_element('poll_answers', $elepath);
         $elepath = $this->get_pathfor('/mootimetertool_poll_options');
         $paths[] = new restore_path_element('poll_options', $elepath);
+        $elepath = $this->get_pathfor('/mootimetertool_poll_answers');
+        $paths[] = new restore_path_element('poll_answers', $elepath);
 
         return $paths;
     }
@@ -47,11 +47,10 @@ class restore_mootimetertool_poll_subplugin extends restore_subplugin {
         global $DB;
 
         $data = (object)$data;
-        $oldid = $data->id;
-        $data->pageid = $this->get_new_parentid('mootimeter_page');
+        $data->pageid = $this->get_mappingid('mootimeter_page_id', $data->pageid);
+        $data->optionid = $this->get_mappingid('mootimetertool_poll_options', $data->optionid);
         $data->usermodified = $this->get_mappingid('user', $data->usermodified, 0);
-        $newitemid = $DB->insert_record('mootimetertool_poll_answers', $data);
-        $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);
+        $DB->insert_record('mootimetertool_poll_answers', $data);
     }
 
     /**
@@ -64,8 +63,8 @@ class restore_mootimetertool_poll_subplugin extends restore_subplugin {
 
         $data = (object)$data;
         $oldid = $data->id;
-        $data->pageid = $this->get_new_parentid('mootimeter_page');
-        $newitemid = $DB->insert_record('mootimetertool_poll_options', $data);
-        $this->set_mapping($this->get_namefor('page'), $oldid, $newitemid, true);
+        $data->pageid = $this->get_mappingid('mootimeter_page_id', $data->pageid);
+        $newid = $DB->insert_record('mootimetertool_poll_options', $data);
+        $this->set_mapping('mootimetertool_poll_options', $oldid, $newid);
     }
 }
