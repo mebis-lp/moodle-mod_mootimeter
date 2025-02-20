@@ -48,6 +48,12 @@ $string['dialogue_move_pagelistelement'] = 'Move question page';
 $string['enter_question'] = 'Please enter a question.';
 $string['loading'] = 'Loading! Please wait...';
 $string['modulename'] = 'Mootimeter';
+$string['modulename_help'] = 'The Mootimeter activity allows your students to participate live in class in a variety of ways.
+<ul>
+    <li>Poll: Your learners respond directly to one or more questions.</li>
+    <li>Quiz: Live quiz which allows you to show users the correct answers afterwards.</li>
+    <li>Wordcloud: Appears immediately after the terms are entered.</li>
+</ul>';
 $string['modulenameplural'] = 'Mootimeter';
 $string['mootimeter:addinstance'] = 'Add mootimeter activity';
 $string['mootimeter:moderator'] = 'Mootimeter moderator capability';
