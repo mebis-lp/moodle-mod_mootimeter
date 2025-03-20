@@ -31,6 +31,7 @@ $string['anonymous_name'] = 'Anonymous';
 $string['anonymousmode'] = 'If checked, teachers can not view voters names.';
 $string['anonymousmode_desc'] = 'This setting can not be changed when answers exist!';
 $string['cachedef_answers'] = 'Contains the pages answers.';
+$string['cachedef_lastupdated'] = 'Contains the timestamps for managing frontend live updates.';
 $string['cacheidentifiernotallowed'] = 'The used cache identifier is not allowed here.';
 $string['cannotview'] = 'You are not allowed to access this page!';
 $string['createnewpagesettings'] = 'New page settings';
