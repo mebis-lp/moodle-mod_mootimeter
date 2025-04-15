@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "chart.js": "^4.4.8",
+    "chart.js": "^4.4.9",
     "chartjs": "^0.3.24"
   },
   "eslintIgnore": [
