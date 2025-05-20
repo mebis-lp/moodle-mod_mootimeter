@@ -96,7 +96,7 @@ const getAnswers = async (pageid, id) => {
                 pointStyle: JSON.parse(response.chartsettings).pointStyle,
                 pointRadius: JSON.parse(response.chartsettings).pointRadius,
                 pointHoverRadius: JSON.parse(response.chartsettings).pointHoverRadius,
-            }]
+            }],
         },
         options: JSON.parse(response.chartsettings).options
     };

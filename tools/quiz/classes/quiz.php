@@ -149,7 +149,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                             ],
                         ],
                     ],
-                    'backgroundColor' => $this->get_chartjs_background_color($pageid),
+                    'backgroundColor' => explode(",", str_replace(' ', '', get_config('mod_mootimeter', 'chartcolors'))),
                     'borderRadius' => 20,
                 ];
             case self::VISUALIZATION_ID_CHART_LINE:
@@ -166,7 +166,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                             ],
                         ],
                     ],
-                    'backgroundColor' => $this->get_chartjs_background_color($pageid),
+                    'backgroundColor' => explode(",", str_replace(' ', '', get_config('mod_mootimeter', 'chartcolors'))),
                     'pointStyle' => 'circle',
                     'pointRadius' => 10,
                     'pointHoverRadius' => 15,
@@ -189,7 +189,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                             ],
                         ],
                     ],
-                    'backgroundColor' => $this->get_chartjs_background_color($pageid),
+                    'backgroundColor' => explode(",", str_replace(' ', '', get_config('mod_mootimeter', 'chartcolors'))),
                     'borderRadius' => 20,
                 ];
             case self::VISUALIZATION_ID_CHART_PIE:
@@ -207,6 +207,7 @@ class quiz extends \mod_mootimeter\toolhelper {
                             ],
                         ],
                     ],
+                    'backgroundColor' => explode(",", str_replace(' ', '', get_config('mod_mootimeter', 'chartcolors'))),
                 ];
         }
     }
