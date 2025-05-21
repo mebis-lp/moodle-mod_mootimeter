@@ -45,5 +45,12 @@ if ($hassiteconfig) {
             0
         ));
 
+        $settings->add(new admin_setting_configtext(
+            'mod_mootimeter/chartcolors',
+            get_string('chartcolors', 'mod_mootimeter'),
+            get_string('chartcolors_desc', 'mod_mootimeter'),
+            "#975FA8, #4F6EC1, #D42C67, #917000, #5A7F31",
+            PARAM_TEXT
+        ));
     }
 }
